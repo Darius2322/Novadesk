@@ -36,8 +36,9 @@
     role           TEXT DEFAULT 'user'
                    CHECK (role IN ('user','admin','banned')),
     avatar_url     TEXT,
-    visit_count    INTEGER DEFAULT 0,
-    last_visit     TIMESTAMPTZ,
+    visit_count      INTEGER DEFAULT 0,
+    loyalty_points   INTEGER DEFAULT 0,
+    last_visit       TIMESTAMPTZ,
     created_at     TIMESTAMPTZ DEFAULT NOW(),
     updated_at     TIMESTAMPTZ DEFAULT NOW()
   );
@@ -104,7 +105,22 @@
     ('Photo Editing',      'Background removal, retouching & colour correction','fa-wand-magic-sparkles','photos','From KES 200',   true, 23),
     ('USB & Cloud Backup', 'Copy, organise & backup files to USB or Drive',    'fa-cloud-arrow-up','digital',  'From KES 100',      true, 24),
     ('Phone Repair Ref.',  'Referral to certified phone repair technicians',   'fa-mobile',        'digital',  'Free referral',     false, 25),
-    ('Data Bundle Help',   'Airtime, bundles & M-Pesa merchant payments',      'fa-sim-card',      'digital',  'Face value',        false, 26);
+    ('Data Bundle Help',   'Airtime, bundles &amp; M-Pesa merchant payments',      'fa-sim-card',      'digital',  'Face value',        false, 26),
+    ('Logo Design',        'Professional logo &amp; brand identity design',          'fa-paintbrush',    'design',   'From KES 800',      false, 27),
+    ('Flyer Design',       'Digital &amp; printable flyer design for events/promos', 'fa-rectangle-ad',  'design',   'From KES 400',      false, 28),
+    ('WhatsApp Business',  'Set up WhatsApp Business profile &amp; product catalog', 'fa-whatsapp',      'digital',  'From KES 200',      false, 29),
+    ('Online Form Fill',   'Fill in online forms, applications on your behalf',      'fa-list-check',    'digital',  'From KES 100',      false, 30),
+    ('Bank Statement',     'Download &amp; print bank statements from mobile banking','fa-university',   'docs',     'From KES 50',       false, 31),
+    ('Certificate Design', 'Design &amp; print award, training, attendance certs',   'fa-certificate',   'print',    'From KES 300',      false, 32),
+    ('Video Download',     'Download YouTube/TikTok videos &amp; audio extraction',  'fa-youtube',       'digital',  'From KES 50',       false, 33),
+    ('Govt Job Reg.',      'Register on Ajira, Kazi Mtaani, GovHR portals',         'fa-person-walking','govt',     'From KES 150',      false, 34),
+    ('Safaricom Services', 'Line reg, SIM swap, data bundles, M-Pesa setup',        'fa-sim-card',      'digital',  'From KES 100',      false, 35),
+    ('Academic Research',  'Literature review &amp; research paper typing/editing',  'fa-microscope',    'academic', 'From KES 500',      true,  36),
+    ('Translation',        'English–Kiswahili document translation',                 'fa-language',      'docs',     'From KES 150',      true,  37),
+    ('Event Programme',    'Design &amp; print event programmes &amp; booklets',     'fa-calendar-days', 'print',    'From KES 400',      true,  38),
+    ('Company Profile',    'Corporate profile design &amp; full-colour printing',    'fa-building',      'docs',     'From KES 1,000',    true,  39),
+    ('Legal Document',     'Power of Attorney, affidavit &amp; contract typing',     'fa-scale-balanced','docs',     'From KES 500',      true,  40),
+    ('Bulk SMS Service',   'Send bulk SMS alerts for events, schools &amp; business','fa-message',       'digital',  'From KES 200',      false, 41);
 
   -- ── SERVICE REQUESTS ─────────────────────────────────────────────
   CREATE TABLE public.service_requests (
@@ -206,6 +222,15 @@
   CREATE POLICY "tech_req_insert" ON public.tech_service_requests FOR INSERT WITH CHECK (true);
   CREATE POLICY "tech_req_admin"  ON public.tech_service_requests FOR ALL   USING (public.get_my_role()='admin');
 
+  -- ── LOYALTY POINTS RPC ──────────────────────────────────────────
+  CREATE OR REPLACE FUNCTION public.increment_loyalty(user_id UUID, points INTEGER)
+  RETURNS VOID AS $$
+    UPDATE public.profiles
+    SET loyalty_points = COALESCE(loyalty_points, 0) + points,
+        updated_at = NOW()
+    WHERE id = user_id;
+  $$ LANGUAGE sql SECURITY DEFINER;
+
   -- ── AUTO-CREATE PROFILE TRIGGER ──────────────────────────────────
   CREATE OR REPLACE FUNCTION public.handle_new_user()
   RETURNS TRIGGER AS $$
@@ -249,8 +274,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,viewport-fit=cover">
 <!-- ══ PRODUCTION CONFIG ══ Fill these in ══ -->
-<meta name="nd-sb-url" content="https://YOUR_PROJECT.supabase.co">
-<meta name="nd-sb-key" content="YOUR_ANON_PUBLIC_KEY">
+<meta name="nd-sb-url" content="https://ihkwomhxdfthxaynljuw.supabase.co">
+<meta name="nd-sb-key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imloa3dvbWh4ZGZ0aHhheW5sanV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjIxMzEsImV4cCI6MjA5MjAzODEzMX0.Y1elTjbbHViH9awUQSiRpfjR-FBMRjTCJhRw1cJY7rI">
 <!-- ══════════════════════════════════════════ -->
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -299,8 +324,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin="anonymous">
-<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"></noscript>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
 <style>
 /* ══ TOKENS ══ */
@@ -555,16 +579,58 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 .svc-pill{padding:6px 14px;border-radius:20px;font-size:.64rem;font-weight:500;letter-spacing:.06em;border:1px solid var(--bd);color:var(--t3);background:transparent;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
 .svc-pill.on{background:var(--gold);color:#000;border-color:var(--gold)}
 
-.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px 16px 80px}
-.svc-app{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px 8px 12px;text-align:center;cursor:pointer;transition:all .2s var(--ease);-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden}
-.svc-app::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--gold-a8) 0%,transparent 60%);opacity:0;transition:opacity .2s}
-.svc-app:hover{border-color:var(--gold-a45);transform:translateY(-2px);box-shadow:var(--shg)}
-.svc-app:hover::before{opacity:1}
-.svc-app:active{transform:scale(.96) translateY(0)}
-.svc-app-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--bg4),var(--bg5));border:1px solid var(--gold-a15);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;color:var(--gold);font-size:1.1rem;transition:all .2s}
-.svc-app:hover .svc-app-icon{background:var(--gold-a8);border-color:var(--gold-a45)}
-.svc-app-name{font-size:.63rem;font-weight:500;color:var(--t1);line-height:1.3;margin-bottom:3px}
-.svc-app-price{font-size:.55rem;color:var(--t3)}
+/* ── SERVICES 2-COLUMN GRID ─────────────────────────────────────── */
+.svc-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  padding:10px 16px 80px;
+}
+.svc-list-card{
+  background:var(--bg3);
+  border:1px solid var(--bd);
+  border-radius:var(--rl);
+  padding:14px 12px 12px;
+  display:flex;
+  flex-direction:column;
+  transition:border-color .2s,box-shadow .2s;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+}
+.svc-list-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,var(--gold-a8) 0%,transparent 65%);
+  opacity:0;transition:opacity .2s;pointer-events:none;
+}
+.svc-list-card:hover{border-color:var(--gold-a45);box-shadow:var(--shg)}
+.svc-list-card:hover::before{opacity:1}
+.svc-list-card:active{transform:scale(.96)}
+.svc-list-icon{
+  width:46px;height:46px;border-radius:13px;
+  background:linear-gradient(135deg,var(--bg4),var(--bg5));
+  border:1px solid var(--gold-a15);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);font-size:1.05rem;
+  margin-bottom:10px;flex-shrink:0;transition:all .2s;
+}
+.svc-list-card:hover .svc-list-icon{background:var(--gold-a8);border-color:var(--gold-a45)}
+.svc-list-info{flex:1;min-width:0;margin-bottom:10px}
+.svc-list-name{
+  font-size:.74rem;font-weight:600;color:var(--t1);
+  line-height:1.3;margin-bottom:4px;
+  overflow:hidden;display:-webkit-box;
+  -webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.svc-list-price{font-size:.6rem;font-weight:600;color:var(--gold)}
+.svc-list-desc{display:none}
+.svc-list-btns{display:flex;flex-direction:column;gap:5px;margin-top:auto}
+.svc-list-req-btn{width:100%;padding:7px 6px;font-size:.6rem;letter-spacing:.06em}
+.svc-list-det-btn{width:100%;padding:5px 6px;font-size:.58rem;letter-spacing:.06em}
+
+/* ── SVC PILL ── */
+.svc-pill.on{background:var(--gold);color:#fff;border-color:var(--gold)}
 
 /* ── NOTES SCREEN ───────────────────────────────────────────────── */
 .notes-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 16px 80px}
@@ -616,6 +682,21 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 .acct-item-arr{color:var(--t4);font-size:.72rem}
 .acct-item-val{font-size:.7rem;color:var(--t3);margin-right:4px}
 
+/* ── LOYALTY POINTS ─────────────────────────────────────────────── */
+.loyalty-card{margin:0 16px 16px;background:linear-gradient(135deg,#1a0040,#2d0060,#1a0040);border:1px solid var(--gold-a45);border-radius:var(--rl);padding:16px;position:relative;overflow:hidden}
+.loyalty-card::before{content:'';position:absolute;top:-30%;right:-10%;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(167,139,250,.15) 0%,transparent 70%);pointer-events:none}
+.loyalty-pts-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.loyalty-pts-val{font-family:var(--fd);font-size:2.2rem;color:#a78bfa;line-height:1}
+.loyalty-pts-lbl{font-size:.58rem;color:rgba(167,139,250,.7);text-transform:uppercase;letter-spacing:.14em;margin-top:2px}
+.loyalty-tier{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.loyalty-tier.bronze{background:rgba(205,127,50,.12);color:#cd7f32;border:1px solid rgba(205,127,50,.25)}
+.loyalty-tier.silver{background:rgba(192,192,192,.12);color:#c0c0c0;border:1px solid rgba(192,192,192,.25)}
+.loyalty-tier.gold{background:rgba(255,200,30,.12);color:#ffc81e;border:1px solid rgba(255,200,30,.3)}
+.loyalty-tier.platinum{background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.3)}
+.loyalty-prog-bar{height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.loyalty-prog-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:3px;transition:width .6s var(--ease)}
+.loyalty-prog-lbl{font-size:.58rem;color:rgba(167,139,250,.6)}
+
 /* ── DIVIDER ────────────────────────────────────────────────────── */
 .divider{height:1px;background:var(--bd);margin:8px 16px}
 
@@ -648,6 +729,53 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 .tech-svc-body p{font-size:.74rem;color:var(--t3);line-height:1.7;padding:12px 0 8px}
 .tech-svc-features{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 .tech-feat-chip{font-size:.58rem;padding:3px 9px;border-radius:12px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2)}
+
+/* ── AUTH FIELD ROWS ────────────────────────────────────────────── */
+.auth-field-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}
+.auth-field-icon{width:36px;height:36px;border-radius:10px;background:var(--gold-a8);border:1px solid var(--gold-a15);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.82rem;flex-shrink:0;margin-top:18px}
+.auth-fi{background:var(--inp)!important}
+
+/* ── OTHER PRODUCTS GRID ────────────────────────────────────────── */
+.op-screen-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 80px}
+/* Category tile — shown when no category selected */
+.op-cat-tile{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:18px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;transition:all .22s var(--ease);-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden}
+.op-cat-tile::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .2s;pointer-events:none}
+.op-cat-tile.elec::before{background:radial-gradient(circle at 50% 0%,rgba(255,200,30,.1),transparent 65%)}
+.op-cat-tile.wifi::before{background:radial-gradient(circle at 50% 0%,rgba(30,180,255,.1),transparent 65%)}
+.op-cat-tile.web::before{background:radial-gradient(circle at 50% 0%,rgba(124,58,237,.1),transparent 65%)}
+.op-cat-tile:hover::before{opacity:1}
+.op-cat-tile:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.op-cat-tile.elec:hover{border-color:rgba(255,200,30,.4)}
+.op-cat-tile.wifi:hover{border-color:rgba(30,180,255,.4)}
+.op-cat-tile.web:hover{border-color:rgba(124,58,237,.45)}
+.op-cat-tile:active{transform:scale(.96)}
+.op-tile-icon{width:52px;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;margin-bottom:10px}
+.op-tile-icon.elec{background:rgba(255,200,30,.1);border:1px solid rgba(255,200,30,.25);color:#FFC81E}
+.op-tile-icon.wifi{background:rgba(30,180,255,.1);border:1px solid rgba(30,180,255,.25);color:#1EB4FF}
+.op-tile-icon.web{background:var(--gold-a8);border:1px solid var(--gold-a25);color:var(--gold)}
+.op-tile-name{font-size:.82rem;font-weight:700;color:var(--t1);margin-bottom:4px;line-height:1.2}
+.op-tile-sub{font-size:.6rem;color:var(--t3);line-height:1.4;margin-bottom:10px}
+.op-tile-count{font-size:.58rem;font-weight:700;padding:3px 9px;border-radius:10px;background:var(--gold-a8);color:var(--gold);border:1px solid var(--gold-a25)}
+/* Sub-service card in grid */
+.op-sub-card{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px 12px 12px;display:flex;flex-direction:column;transition:border-color .2s,box-shadow .2s;-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden}
+.op-sub-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--gold-a8),transparent 65%);opacity:0;transition:opacity .2s;pointer-events:none}
+.op-sub-card:hover{box-shadow:var(--shg)}
+.op-sub-card.elec:hover{border-color:rgba(255,200,30,.4)}
+.op-sub-card.wifi:hover{border-color:rgba(30,180,255,.4)}
+.op-sub-card.web:hover{border-color:rgba(124,58,237,.45)}
+.op-sub-card:hover::before{opacity:1}
+.op-sub-card:active{transform:scale(.96)}
+.op-sub-card-icon{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:9px;flex-shrink:0}
+.op-sub-card-icon.elec{background:rgba(255,200,30,.08);border:1px solid rgba(255,200,30,.2);color:#FFC81E}
+.op-sub-card-icon.wifi{background:rgba(30,180,255,.08);border:1px solid rgba(30,180,255,.2);color:#1EB4FF}
+.op-sub-card-icon.web{background:var(--gold-a8);border:1px solid var(--gold-a15);color:var(--gold)}
+.op-sub-card-name{font-size:.74rem;font-weight:600;color:var(--t1);line-height:1.25;margin-bottom:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.op-sub-card-sub{font-size:.6rem;color:var(--t3);line-height:1.35;margin-bottom:10px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;flex:1}
+.op-sub-card-btns{display:flex;flex-direction:column;gap:5px;margin-top:auto}
+/* Back button */
+.op-back-btn{grid-column:1/-1;display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);cursor:pointer;-webkit-tap-highlight-color:transparent;margin-bottom:4px}
+.op-back-btn:hover{border-color:var(--bd2)}
+
 /* ── INSTITUTION AUTH PANEL ─────────────────────────────────────── */
 #panel-institution{display:none;padding:16px}
 .inst-auth-tab{flex:1;text-align:center;padding:10px 8px;font-size:.66rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;color:var(--t3)}
@@ -989,76 +1117,131 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
       </div>
       <div id="si-err" class="ferr" style="margin-bottom:12px"></div>
       <button class="btn btn-gold btn-full" id="si-btn" onclick="doSignIn()"><i class="fas fa-arrow-right-to-bracket"></i> Sign In</button>
-      <p style="text-align:center;font-size:.68rem;color:var(--t3);margin-top:12px">
-        Forgot password? <span style="color:var(--gold);cursor:pointer" onclick="authTab('resetpw')">Reset it here</span>
-      </p>
-      <p style="text-align:center;font-size:.68rem;color:var(--t3);margin-top:6px">
-        New here? <span style="color:var(--gold);cursor:pointer" onclick="authTab('register')">Create an account</span>
-      </p>
-      <p style="text-align:center;font-size:.68rem;color:var(--t3);margin-top:6px">
-        Want to earn? <span style="color:var(--gold);cursor:pointer" onclick="closeAuth();openAgentRegisterModal()"><i class="fas fa-user-tie" style="font-size:.6rem"></i> Apply as Agent</span>
-      </p>
+      <!-- Quick action links as styled rows -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+        <div onclick="authTab('resetpw')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg4);border:1px solid var(--bd);border-radius:var(--r);cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='var(--bd2)'" onmouseout="this.style.borderColor='var(--bd)'">
+          <div style="width:32px;height:32px;border-radius:9px;background:rgba(167,139,250,.1);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.78rem;flex-shrink:0"><i class="fas fa-key"></i></div>
+          <div style="flex:1"><div style="font-size:.76rem;font-weight:500;color:var(--t1)">Forgot Password?</div><div style="font-size:.62rem;color:var(--t3)">Reset via email link</div></div>
+          <i class="fas fa-chevron-right" style="color:var(--t4);font-size:.68rem"></i>
+        </div>
+        <div onclick="authTab('register')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg4);border:1px solid var(--bd);border-radius:var(--r);cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='var(--bd2)'" onmouseout="this.style.borderColor='var(--bd)'">
+          <div style="width:32px;height:32px;border-radius:9px;background:rgba(50,180,100,.08);border:1px solid rgba(50,180,100,.2);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:.78rem;flex-shrink:0"><i class="fas fa-user-plus"></i></div>
+          <div style="flex:1"><div style="font-size:.76rem;font-weight:500;color:var(--t1)">Create New Account</div><div style="font-size:.62rem;color:var(--t3)">Track requests, save notes & earn points</div></div>
+          <i class="fas fa-chevron-right" style="color:var(--t4);font-size:.68rem"></i>
+        </div>
+        <div onclick="closeAuth();openAgentRegisterModal()" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:linear-gradient(135deg,rgba(167,139,250,.06),rgba(167,139,250,.02));border:1px solid var(--gold-a25);border-radius:var(--r);cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='var(--gold-a45)'" onmouseout="this.style.borderColor='var(--gold-a25)'">
+          <div style="width:32px;height:32px;border-radius:9px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.78rem;flex-shrink:0"><i class="fas fa-user-tie"></i></div>
+          <div style="flex:1"><div style="font-size:.76rem;font-weight:500;color:var(--t1)">Apply as Agent</div><div style="font-size:.62rem;color:var(--t3)">Earn commissions by referring clients</div></div>
+          <i class="fas fa-chevron-right" style="color:var(--t4);font-size:.68rem"></i>
+        </div>
+      </div>
     </div>
 
     <!-- ── REGISTER ── -->
     <div class="auth-panel" id="panel-register">
-      <div class="fg">
-        <label class="flbl">Full Name <span class="req">*</span></label>
-        <input class="fi" id="reg-name" type="text" placeholder="Your full name" autocomplete="name">
+      <!-- Header banner -->
+      <div style="background:linear-gradient(135deg,rgba(50,180,100,.08),rgba(50,180,100,.03));border:1px solid rgba(50,180,100,.2);border-radius:var(--rl);padding:14px;margin-bottom:18px;display:flex;align-items:center;gap:12px">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(50,180,100,.12);border:1px solid rgba(50,180,100,.25);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:1.1rem;flex-shrink:0"><i class="fas fa-user-plus"></i></div>
+        <div><div style="font-size:.85rem;font-weight:600;color:var(--t1);margin-bottom:2px">Create Your Account</div><div style="font-size:.64rem;color:var(--t3)">Track requests, earn loyalty points &amp; more</div></div>
       </div>
-      <div class="fg">
-        <label class="flbl">National ID Number <span class="req">*</span></label>
-        <input class="fi" id="reg-id" type="text" placeholder="e.g. 12345678" maxlength="16" autocomplete="off">
-        <div class="form-hint">Government-issued ID (cannot be changed later)</div>
+      <!-- Perks row -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+        <span style="font-size:.58rem;padding:3px 9px;border-radius:12px;background:var(--gold-a8);color:var(--gold);border:1px solid var(--gold-a25)"><i class="fas fa-star" style="margin-right:3px"></i>Loyalty Points</span>
+        <span style="font-size:.58rem;padding:3px 9px;border-radius:12px;background:rgba(50,180,100,.08);color:var(--green);border:1px solid rgba(50,180,100,.2)"><i class="fas fa-list-check" style="margin-right:3px"></i>Track Requests</span>
+        <span style="font-size:.58rem;padding:3px 9px;border-radius:12px;background:rgba(74,144,217,.08);color:var(--blue);border:1px solid rgba(74,144,217,.2)"><i class="fas fa-note-sticky" style="margin-right:3px"></i>Save Notes</span>
+        <span style="font-size:.58rem;padding:3px 9px;border-radius:12px;background:rgba(167,139,250,.08);color:var(--gold);border:1px solid var(--gold-a25)"><i class="fas fa-file-pdf" style="margin-right:3px"></i>PDF Receipts</span>
       </div>
-      <div class="fg">
-        <label class="flbl">Email Address <span class="req">*</span></label>
-        <input class="fi" id="reg-email" type="email" placeholder="you@example.com" autocomplete="email">
+      <!-- Form fields with icons -->
+      <div class="auth-field-row">
+        <div class="auth-field-icon"><i class="fas fa-user"></i></div>
+        <div class="fg" style="flex:1;margin:0">
+          <label class="flbl">Full Name <span class="req">*</span></label>
+          <input class="fi auth-fi" id="reg-name" type="text" placeholder="Your full name" autocomplete="name">
+        </div>
       </div>
-      <div class="fg">
-        <label class="flbl">WhatsApp Number <span class="req">*</span></label>
-        <input class="fi" id="reg-wa" type="tel" placeholder="e.g. 0712345678" autocomplete="tel">
-        <div class="form-hint"><i class="fab fa-whatsapp" style="color:#25D366"></i> Service updates sent here</div>
+      <div class="auth-field-row">
+        <div class="auth-field-icon"><i class="fas fa-id-card"></i></div>
+        <div class="fg" style="flex:1;margin:0">
+          <label class="flbl">National ID Number <span class="req">*</span></label>
+          <input class="fi auth-fi" id="reg-id" type="text" placeholder="e.g. 12345678" maxlength="16" autocomplete="off">
+          <div class="form-hint"><i class="fas fa-lock" style="font-size:.55rem"></i> Cannot be changed after registration</div>
+        </div>
       </div>
-      <div class="fg">
-        <label class="flbl">Alternative Phone <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(optional)</span></label>
-        <input class="fi" id="reg-alt" type="tel" placeholder="For calls if WhatsApp unreachable" autocomplete="tel">
+      <div class="auth-field-row">
+        <div class="auth-field-icon"><i class="fas fa-envelope"></i></div>
+        <div class="fg" style="flex:1;margin:0">
+          <label class="flbl">Email Address <span class="req">*</span></label>
+          <input class="fi auth-fi" id="reg-email" type="email" placeholder="you@example.com" autocomplete="email">
+        </div>
       </div>
-      <div class="fg" style="position:relative">
-        <label class="flbl">Password <span class="req">*</span></label>
-        <input class="fi" id="reg-pw" type="password" placeholder="Min. 8 characters" autocomplete="new-password" style="padding-right:42px">
-        <button type="button" onclick="togglePw('reg-pw','reg-eye')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="reg-eye"><i class="fas fa-eye"></i></button>
+      <div class="auth-field-row">
+        <div class="auth-field-icon" style="color:#25D366"><i class="fab fa-whatsapp"></i></div>
+        <div class="fg" style="flex:1;margin:0">
+          <label class="flbl">WhatsApp Number <span class="req">*</span></label>
+          <input class="fi auth-fi" id="reg-wa" type="tel" placeholder="e.g. 0712345678" autocomplete="tel">
+          <div class="form-hint">Service updates &amp; notifications sent here</div>
+        </div>
       </div>
-      <div class="fg" style="position:relative">
-        <label class="flbl">Confirm Password <span class="req">*</span></label>
-        <input class="fi" id="reg-pw2" type="password" placeholder="Repeat your password" autocomplete="new-password" style="padding-right:42px">
-        <button type="button" onclick="togglePw('reg-pw2','reg-eye2')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="reg-eye2"><i class="fas fa-eye"></i></button>
+      <div class="auth-field-row">
+        <div class="auth-field-icon"><i class="fas fa-phone"></i></div>
+        <div class="fg" style="flex:1;margin:0">
+          <label class="flbl">Alternative Phone <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(optional)</span></label>
+          <input class="fi auth-fi" id="reg-alt" type="tel" placeholder="Backup calling number" autocomplete="tel">
+        </div>
+      </div>
+      <div class="auth-field-row">
+        <div class="auth-field-icon"><i class="fas fa-lock"></i></div>
+        <div class="fg" style="flex:1;margin:0;position:relative">
+          <label class="flbl">Password <span class="req">*</span></label>
+          <input class="fi auth-fi" id="reg-pw" type="password" placeholder="Min. 8 characters" autocomplete="new-password" style="padding-right:42px">
+          <button type="button" onclick="togglePw('reg-pw','reg-eye')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="reg-eye"><i class="fas fa-eye"></i></button>
+        </div>
+      </div>
+      <div class="auth-field-row">
+        <div class="auth-field-icon"><i class="fas fa-shield-check"></i></div>
+        <div class="fg" style="flex:1;margin:0;position:relative">
+          <label class="flbl">Confirm Password <span class="req">*</span></label>
+          <input class="fi auth-fi" id="reg-pw2" type="password" placeholder="Repeat password" autocomplete="new-password" style="padding-right:42px">
+          <button type="button" onclick="togglePw('reg-pw2','reg-eye2')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="reg-eye2"><i class="fas fa-eye"></i></button>
+        </div>
       </div>
       <div id="reg-err" class="ferr" style="margin-bottom:12px"></div>
-      <button class="btn btn-gold btn-full" id="reg-btn" onclick="doRegister()"><i class="fas fa-user-plus"></i> Create Account</button>
-      <p style="text-align:center;font-size:.68rem;color:var(--t3);margin-top:12px">
-        Already registered? <span style="color:var(--gold);cursor:pointer" onclick="authTab('signin')">Sign in</span>
+      <button class="btn btn-gold btn-full" id="reg-btn" onclick="doRegister()" style="padding:13px;font-size:.76rem"><i class="fas fa-user-plus"></i> Create Account — It's Free</button>
+      <p style="text-align:center;font-size:.68rem;color:var(--t3);margin-top:14px">
+        Already have an account? <span style="color:var(--gold);cursor:pointer;font-weight:600" onclick="authTab('signin')">Sign In</span>
       </p>
-      <div style="height:12px"></div>
+      <div style="height:16px"></div>
     </div>
 
-    <!-- ── RESET PASSWORD (hidden, accessed via link) ── -->
+    <!-- ── RESET PASSWORD ── -->
     <div class="auth-panel" id="panel-resetpw">
-      <div style="text-align:center;margin-bottom:18px">
-        <div style="width:50px;height:50px;background:var(--gold-a8);border:1.5px solid var(--gold-a25);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:1.3rem;color:var(--gold)"><i class="fas fa-key"></i></div>
-        <p style="font-size:.8rem;font-weight:500;color:var(--t1);margin-bottom:4px">Reset your password</p>
-        <p style="font-size:.7rem;color:var(--t3);line-height:1.6">Enter the email linked to your account. We will send a reset link.</p>
+      <!-- Visual header -->
+      <div style="background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(124,58,237,.04));border:1px solid var(--gold-a25);border-radius:var(--rl);padding:20px;margin-bottom:20px;text-align:center">
+        <div style="width:56px;height:56px;background:var(--gold-a8);border:2px solid var(--gold-a25);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1.4rem;color:var(--gold)"><i class="fas fa-key"></i></div>
+        <div style="font-family:var(--fd);font-size:1.1rem;color:var(--t1);margin-bottom:5px">Forgot Your Password?</div>
+        <p style="font-size:.7rem;color:var(--t3);line-height:1.6;max-width:240px;margin:0 auto">No worries. Enter your email and we'll send you a secure reset link instantly.</p>
       </div>
-      <div class="fg">
-        <label class="flbl">Email Address</label>
-        <input class="fi" id="fp-email" type="email" placeholder="your@email.com" autocomplete="email">
+      <!-- Steps -->
+      <div style="display:flex;gap:0;margin-bottom:18px">
+        <div style="flex:1;text-align:center;padding:8px;background:var(--gold-a8);border:1px solid var(--gold-a25);border-radius:var(--r) 0 0 var(--r)"><div style="font-size:.8rem;color:var(--gold)">1</div><div style="font-size:.58rem;color:var(--t3)">Enter email</div></div>
+        <div style="flex:1;text-align:center;padding:8px;background:var(--bg4);border:1px solid var(--bd);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)"><div style="font-size:.8rem;color:var(--t3)">2</div><div style="font-size:.58rem;color:var(--t4)">Get link</div></div>
+        <div style="flex:1;text-align:center;padding:8px;background:var(--bg4);border:1px solid var(--bd);border-radius:0 var(--r) var(--r) 0"><div style="font-size:.8rem;color:var(--t3)">3</div><div style="font-size:.58rem;color:var(--t4)">New password</div></div>
       </div>
-      <div id="fp-ok" style="display:none;font-size:.72rem;color:var(--green);padding:9px 12px;background:rgba(50,180,100,.07);border:1px solid rgba(50,180,100,.18);border-radius:6px;margin-bottom:12px"><i class="fas fa-check-circle"></i> Reset link sent! Check your inbox.</div>
+      <div class="auth-field-row">
+        <div class="auth-field-icon"><i class="fas fa-envelope"></i></div>
+        <div class="fg" style="flex:1;margin:0">
+          <label class="flbl">Email Address</label>
+          <input class="fi auth-fi" id="fp-email" type="email" placeholder="your@email.com" autocomplete="email">
+        </div>
+      </div>
+      <div id="fp-ok" style="display:none;font-size:.72rem;color:var(--green);padding:10px 14px;background:rgba(50,180,100,.07);border:1px solid rgba(50,180,100,.2);border-radius:var(--r);margin-bottom:14px;display:flex;align-items:center;gap:8px"><i class="fas fa-check-circle" style="font-size:.9rem"></i><div><strong>Reset link sent!</strong><br>Check your inbox — it may take 1–2 minutes.</div></div>
       <div id="fp-err" class="ferr" style="margin-bottom:12px"></div>
-      <button class="btn btn-gold btn-full" id="fp-btn" onclick="doForgotPassword()"><i class="fas fa-paper-plane"></i> Send Reset Link</button>
-      <p style="text-align:center;font-size:.68rem;color:var(--t3);margin-top:12px">
-        Remembered it? <span style="color:var(--gold);cursor:pointer" onclick="authTab('signin')">Sign in</span>
-      </p>
+      <button class="btn btn-gold btn-full" id="fp-btn" onclick="doForgotPassword()" style="padding:13px;font-size:.76rem"><i class="fas fa-paper-plane"></i> Send Reset Link</button>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-ghost btn-full btn-sm" onclick="authTab('signin')"><i class="fas fa-arrow-left"></i> Back to Sign In</button>
+        <button class="btn btn-ghost btn-full btn-sm" onclick="authTab('register')"><i class="fas fa-user-plus"></i> Create Account</button>
+      </div>
+      <div style="height:8px"></div>
     </div>
 
     <!-- ── INSTITUTION PANEL ── -->
@@ -1412,6 +1595,13 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
       <div class="footer">
         <div class="footer-brand">NovaDeskOnline</div>
         <div class="footer-sub">Cyber Services · Kemera, Nyamira</div>
+        <!-- Install App CTA -->
+        <div id="home-install-cta" style="display:none;margin:12px 0">
+          <button onclick="triggerPWAInstall()" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;border-radius:12px;padding:10px 20px;font-size:.72rem;font-weight:600;color:#fff;cursor:pointer;letter-spacing:.06em;box-shadow:0 4px 18px rgba(124,58,237,.4)">
+            <i class="fas fa-download"></i> Install App — Free
+          </button>
+          <div style="font-size:.6rem;color:var(--t4);margin-top:6px">Works offline · Faster access · No app store needed</div>
+        </div>
         <div class="footer-links">
           <a onclick="goNav('services')">Services</a>
           <a onclick="openContactModal()">Contact Us</a>
@@ -1445,6 +1635,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
         <div class="svc-pill" onclick="filterServices('academic',this)" data-cat="academic"><i class="fas fa-graduation-cap" style="font-size:.6rem;margin-right:3px"></i>Academic</div>
         <div class="svc-pill" onclick="filterServices('govt',this)" data-cat="govt"><i class="fas fa-landmark" style="font-size:.6rem;margin-right:3px"></i>Government</div>
         <div class="svc-pill" onclick="filterServices('digital',this)" data-cat="digital"><i class="fas fa-wifi" style="font-size:.6rem;margin-right:3px"></i>Digital</div>
+        <div class="svc-pill" onclick="filterServices('design',this)" data-cat="design"><i class="fas fa-palette" style="font-size:.6rem;margin-right:3px"></i>Design</div>
       </div>
       <!-- Service Examples Banner -->
       <div style="margin:4px 16px 12px;background:linear-gradient(135deg,#350060 0%,#1a0040 100%);border:1px solid var(--gold-a25);border-radius:var(--rl);padding:12px 14px">
@@ -1585,98 +1776,52 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
     <section class="scr" id="scr-techservices">
       <div class="scr-hdr">
         <div>
-          <div class="scr-ttl">Our Services</div>
-          <div class="scr-sub">Beyond cyber — full tech solutions</div>
+          <div class="scr-ttl" id="op-screen-title">Other Products</div>
+          <div class="scr-sub" id="op-screen-sub">Tap a category to explore</div>
         </div>
       </div>
 
-      <!-- Intro banner -->
-      <div style="margin:0 16px 16px;background:linear-gradient(135deg,#1a0040,#350060);border:1px solid var(--gold-a25);border-radius:var(--rl);padding:16px">
-        <div style="font-family:var(--fd);font-size:1.1rem;color:#E5E4E2;margin-bottom:4px"><i class="fas fa-tools" style="color:var(--gold);margin-right:8px"></i>NovaDeskOnline Tech Division</div>
-        <p style="font-size:.72rem;color:rgba(255,255,255,.65);line-height:1.65">We offer specialist installation and development services for homes, schools, and businesses in Kemera, Nyamira and surrounding areas. Request a quote and our team will respond within 24 hours.</p>
+      <!-- Intro banner (hidden when inside a category) -->
+      <div id="op-intro-banner" style="margin:0 16px 14px;background:linear-gradient(135deg,#1a0040,#350060);border:1px solid var(--gold-a25);border-radius:var(--rl);padding:14px 16px">
+        <div style="font-family:var(--fd);font-size:1rem;color:#E5E4E2;margin-bottom:3px">NovaDeskOnline · Other Products</div>
+        <p style="font-size:.7rem;color:rgba(200,190,255,.75);line-height:1.6">Specialist tech services for Kemera, Nyamira. Tap a category to see available services.</p>
       </div>
 
-      <!-- Electrical Installation -->
-      <div class="tech-svc-card">
-        <div class="tech-svc-header">
-          <div class="tech-svc-icon elec"><i class="fas fa-bolt"></i></div>
-          <div>
-            <div class="tech-svc-title">Electrical Installation</div>
-            <div class="tech-svc-subtitle">Wiring · Sockets · Panels · Safety checks</div>
-          </div>
-        </div>
-        <div class="tech-svc-body">
-          <p>Professional electrical installation and repair for residential and commercial properties. Our certified technicians handle everything from new sockets to full wiring projects and safety audits.</p>
-          <div class="tech-svc-features">
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>Home wiring</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>Socket installation</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>DB board setup</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>Safety inspection</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>CCTV wiring</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>Solar hookup</span>
-          </div>
-          <button class="btn btn-gold btn-full btn-sm" onclick="openTechRequest('Electrical Installation','fa-bolt')"><i class="fas fa-paper-plane"></i> Request Quote</button>
-        </div>
-      </div>
+      <!-- ══ MAIN GRID ══════════════════════════════════════════════ -->
+      <div class="op-screen-grid" id="op-grid">
 
-      <!-- WiFi / Home Fibre / Hotspot -->
-      <div class="tech-svc-card">
-        <div class="tech-svc-header">
-          <div class="tech-svc-icon wifi"><i class="fas fa-wifi"></i></div>
-          <div>
-            <div class="tech-svc-title">WiFi, Home Fibre &amp; Hotspot</div>
-            <div class="tech-svc-subtitle">Setup · Routers · Fibre install · Hotspots</div>
-          </div>
+        <!-- ── ELECTRICAL TILE ── -->
+        <div class="op-cat-tile elec" onclick="showOpCategory('elec')">
+          <div class="op-tile-icon elec"><i class="fas fa-bolt"></i></div>
+          <div class="op-tile-name">Electrical</div>
+          <div class="op-tile-sub">Wiring · Repairs · Solar · CCTV</div>
+          <span class="op-tile-count">3 services</span>
         </div>
-        <div class="tech-svc-body">
-          <p>End-to-end internet connectivity for homes, schools, and businesses. From fibre installations and router configuration to public hotspot billing setups for estates and restaurants.</p>
-          <div class="tech-svc-features">
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>Home fibre install</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>Router config</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>WiFi extenders</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>Hotspot billing</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>Network cabling</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>ISP liaison</span>
-          </div>
-          <button class="btn btn-gold btn-full btn-sm" onclick="openTechRequest('WiFi & Fibre Setup','fa-wifi')"><i class="fas fa-paper-plane"></i> Request Quote</button>
-        </div>
-      </div>
 
-      <!-- Web Development -->
-      <div class="tech-svc-card">
-        <div class="tech-svc-header">
-          <div class="tech-svc-icon web"><i class="fas fa-code"></i></div>
-          <div>
-            <div class="tech-svc-title">Web Development &amp; Maintenance</div>
-            <div class="tech-svc-subtitle">Websites · PWAs · E-commerce · Monthly care</div>
-          </div>
+        <!-- ── WIFI TILE ── -->
+        <div class="op-cat-tile wifi" onclick="showOpCategory('wifi')">
+          <div class="op-tile-icon wifi"><i class="fas fa-wifi"></i></div>
+          <div class="op-tile-name">WiFi &amp; Fibre</div>
+          <div class="op-tile-sub">Setup · Repair · Hotspot · LAN</div>
+          <span class="op-tile-count">5 services</span>
         </div>
-        <div class="tech-svc-body">
-          <p>Custom web solutions built to grow your business — landing pages, e-commerce stores, PWAs with M-Pesa integration, and Supabase backends. Ongoing maintenance plans keep you live and up-to-date.</p>
-          <div class="tech-svc-features">
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>Business websites</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>E-commerce stores</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>PWA development</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>M-Pesa integration</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>Hosting &amp; domain</span>
-            <span class="tech-feat-chip"><i class="fas fa-check" style="color:var(--green);font-size:.5rem;margin-right:3px"></i>Monthly maintenance</span>
-          </div>
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-gold btn-full btn-sm" onclick="openTechRequest('Web Development','fa-code')"><i class="fas fa-paper-plane"></i> Request Quote</button>
-            <button class="btn btn-outline btn-sm" onclick="openDevContactModal()" style="white-space:nowrap"><i class="fas fa-headset"></i> Talk to Dev</button>
-          </div>
-        </div>
-      </div>
 
-      <!-- WhatsApp CTA strip -->
-      <div style="margin:4px 16px 80px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;display:flex;align-items:center;gap:14px">
-        <div style="width:42px;height:42px;border-radius:12px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);display:flex;align-items:center;justify-content:center;color:#25D366;font-size:1rem;flex-shrink:0"><i class="fab fa-whatsapp"></i></div>
-        <div style="flex:1">
-          <div style="font-size:.78rem;font-weight:500;color:var(--t1);margin-bottom:2px">Prefer to chat first?</div>
-          <div style="font-size:.64rem;color:var(--t3)">WhatsApp us — we'll respond within minutes.</div>
+        <!-- ── WEB TILE ── -->
+        <div class="op-cat-tile web" onclick="showOpCategory('web')">
+          <div class="op-tile-icon web"><i class="fas fa-code"></i></div>
+          <div class="op-tile-name">Web Dev</div>
+          <div class="op-tile-sub">Sites · PWAs · Shops · Care</div>
+          <span class="op-tile-count">4 services</span>
         </div>
-        <button class="btn btn-ghost btn-sm" onclick="openWhatsApp()" style="flex-shrink:0"><i class="fab fa-whatsapp"></i></button>
-      </div>
+
+        <!-- WA CTA spans full width -->
+        <div style="grid-column:1/-1;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;display:flex;align-items:center;gap:12px">
+          <div style="width:40px;height:40px;border-radius:12px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);display:flex;align-items:center;justify-content:center;color:#25D366;font-size:.95rem;flex-shrink:0"><i class="fab fa-whatsapp"></i></div>
+          <div style="flex:1"><div style="font-size:.76rem;font-weight:500;color:var(--t1);margin-bottom:2px">Need advice?</div><div style="font-size:.62rem;color:var(--t3)">WhatsApp us — we respond within minutes.</div></div>
+          <button class="btn btn-ghost btn-sm" onclick="openWhatsApp()" style="flex-shrink:0"><i class="fab fa-whatsapp"></i></button>
+        </div>
+
+      </div><!-- /op-grid -->
     </section>
 
     <!-- ── MORE SCREEN ──────────────────────────────────── -->
@@ -1704,8 +1849,8 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
           <div class="more-quick-label">About Us</div>
         </div>
         <div class="more-quick" onclick="goNav('techservices')">
-          <div class="more-quick-icon" style="background:rgba(75,0,130,.08);border-color:rgba(75,0,130,.2);color:var(--gold)"><i class="fas fa-tools"></i></div>
-          <div class="more-quick-label">Our Services</div>
+          <div class="more-quick-icon" style="background:rgba(75,0,130,.08);border-color:rgba(75,0,130,.2);color:var(--gold)"><i class="fas fa-boxes-stacked"></i></div>
+          <div class="more-quick-label">Other Products</div>
         </div>
         <div class="more-quick" onclick="goNav('institution')">
           <div class="more-quick-icon" style="background:rgba(181,154,107,.08);border-color:rgba(181,154,107,.25);color:var(--warm)"><i class="fas fa-building-columns"></i></div>
@@ -1750,8 +1895,13 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
           <div class="more-item-text"><strong>Share App</strong><span>Refer friends and family</span></div>
           <i class="fas fa-chevron-right more-item-arr"></i>
         </div>
+        <div class="more-item" id="more-install-item" onclick="triggerPWAInstall()" style="display:none">
+          <div class="more-item-icon" style="background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(167,139,250,.08));border-color:rgba(167,139,250,.3);color:#a78bfa"><i class="fas fa-download"></i></div>
+          <div class="more-item-text"><strong>Install App</strong><span>Add to home screen — works offline</span></div>
+          <i class="fas fa-chevron-right more-item-arr"></i>
+        </div>
 
-        <div class="more-sect-ttl" style="margin-top:16px">Our Tech Services</div>
+        <div class="more-sect-ttl" style="margin-top:16px">Other Products</div>
         <div class="more-item" onclick="goNav('techservices')">
           <div class="more-item-icon" style="background:rgba(255,200,30,.08);border-color:rgba(255,200,30,.2);color:#FFC81E"><i class="fas fa-bolt"></i></div>
           <div class="more-item-text"><strong>Electrical Installation</strong><span>Wiring, sockets, panels &amp; safety checks</span></div>
@@ -1759,7 +1909,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
         </div>
         <div class="more-item" onclick="goNav('techservices')">
           <div class="more-item-icon" style="background:rgba(30,180,255,.08);border-color:rgba(30,180,255,.2);color:#1EB4FF"><i class="fas fa-wifi"></i></div>
-          <div class="more-item-text"><strong>WiFi, Fibre &amp; Hotspot</strong><span>Setup, installation &amp; network solutions</span></div>
+          <div class="more-item-text"><strong>WiFi, Fibre &amp; Hotspot</strong><span>Setup, repair, installation &amp; network solutions</span></div>
           <i class="fas fa-chevron-right more-item-arr"></i>
         </div>
         <div class="more-item" onclick="goNav('techservices')">
@@ -1847,6 +1997,27 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
           </div>
         </div>
 
+        <!-- ── LOYALTY POINTS CARD ── -->
+        <div class="loyalty-card" id="loyalty-card">
+          <div class="loyalty-pts-row">
+            <div>
+              <div class="loyalty-pts-val" id="loyalty-pts-val">0</div>
+              <div class="loyalty-pts-lbl">Loyalty Points</div>
+            </div>
+            <div style="text-align:right">
+              <div class="loyalty-tier bronze" id="loyalty-tier-badge"><i class="fas fa-medal" style="margin-right:4px"></i>Bronze</div>
+              <div style="font-size:.58rem;color:rgba(167,139,250,.55);margin-top:5px">10 pts per request</div>
+            </div>
+          </div>
+          <div class="loyalty-prog-bar"><div class="loyalty-prog-fill" id="loyalty-prog-fill" style="width:0%"></div></div>
+          <div class="loyalty-prog-lbl" id="loyalty-prog-lbl">0 / 100 pts to Silver</div>
+          <!-- Redeem hint -->
+          <div style="margin-top:10px;padding:8px 10px;background:rgba(255,255,255,.05);border-radius:8px;font-size:.62rem;color:rgba(167,139,250,.75);display:flex;align-items:center;gap:6px">
+            <i class="fas fa-gift" style="color:#a78bfa"></i>
+            Earn 10 points per completed request. Redeem for free services &amp; discounts.
+          </div>
+        </div>
+
         <div class="acct-menu">
           <!-- Contacts -->
           <div class="acct-section">
@@ -1874,7 +2045,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
             <div class="acct-section-ttl">My Activity</div>
             <div class="acct-item" onclick="goNav('services')">
               <div class="acct-item-icon"><i class="fas fa-concierge-bell"></i></div>
-              <div class="acct-item-text"><strong>Request a Service</strong><span>Browse all 26+ cyber services</span></div>
+              <div class="acct-item-text"><strong>Request a Service</strong><span>Browse all 41 cyber services</span></div>
               <i class="fas fa-chevron-right acct-item-arr"></i>
             </div>
             <div class="acct-item" onclick="goNav('institution')">
@@ -1942,7 +2113,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
   <nav id="botnav" aria-label="Bottom navigation">
     <button class="ni on" id="ni-home" onclick="goNav('home')"><i class="fas fa-house"></i><span>Home</span></button>
     <button class="ni" id="ni-services" onclick="goNav('services')"><i class="fas fa-concierge-bell"></i><span>Services</span></button>
-    <button class="ni" id="ni-techservices" onclick="goNav('techservices')"><i class="fas fa-tools"></i><span>Our Services</span></button>
+    <button class="ni" id="ni-techservices" onclick="goNav('techservices')"><i class="fas fa-boxes-stacked"></i><span>Other Products</span></button>
     <button class="ni" id="ni-account" onclick="goNav('account')"><i class="fas fa-circle-user"></i><span>Account</span></button>
     <button class="ni" id="ni-more" onclick="goNav('more')"><i class="fas fa-ellipsis"></i><span>More</span></button>
   </nav>
@@ -2062,7 +2233,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
     <p style="font-size:.78rem;color:var(--t3);line-height:1.7;margin-bottom:14px">NovaDeskOnline is your all-in-one digital services hub — offering fast, affordable printing, scanning, document services, and government service assistance right from your phone.</p>
     <div style="background:var(--bg4);border:1px solid var(--bd);border-radius:var(--r);padding:14px">
       <div style="font-size:.66rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:10px">Quick Facts</div>
-      <div style="display:flex;justify-content:space-between;font-size:.74rem;padding:6px 0;border-bottom:1px solid var(--bd)"><span style="color:var(--t3)">Services Offered</span><span style="color:var(--gold);font-weight:500">26 services</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:.74rem;padding:6px 0;border-bottom:1px solid var(--bd)"><span style="color:var(--t3)">Services Offered</span><span style="color:var(--gold);font-weight:500">41 cyber services</span></div>
       <div style="display:flex;justify-content:space-between;font-size:.74rem;padding:6px 0;border-bottom:1px solid var(--bd)"><span style="color:var(--t3)">Business Hours</span><span id="about-hrs" style="color:var(--t2)">Mon–Sat 7am–9pm</span></div>
       <div style="display:flex;justify-content:space-between;font-size:.74rem;padding:6px 0"><span style="color:var(--t3)">Location</span><span style="color:var(--t2)">Kemera, Nyamira County</span></div>
     </div>
@@ -2100,8 +2271,8 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 /* ════════════════════════════════════════════════════════════════════
    == CONFIG ==
 ════════════════════════════════════════════════════════════════════ */
-const SB_URL = document.querySelector('meta[name="nd-sb-url"]')?.content || 'https://YOUR_PROJECT.supabase.co';
-const SB_KEY = document.querySelector('meta[name="nd-sb-key"]')?.content || 'YOUR_ANON_KEY';
+const SB_URL = document.querySelector('meta[name="nd-sb-url"]')?.content || 'https://ihkwomhxdfthxaynljuw.supabase.co';
+const SB_KEY = document.querySelector('meta[name="nd-sb-key"]')?.content || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imloa3dvbWh4ZGZ0aHhheW5sanV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjIxMzEsImV4cCI6MjA5MjAzODEzMX0.Y1elTjbbHViH9awUQSiRpfjR-FBMRjTCJhRw1cJY7rI';
 let WA_NUM   = '254111923477'; // Kemera, Nyamira
 const SITE   = 'https://novadesk.vercel.app';
 const ALLOWED_FILE_TYPES = ['image/jpeg','image/png','image/jpg','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','text/plain','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
@@ -2201,6 +2372,8 @@ function closeAllModals(){
 /* ── NAVIGATION ────────────────────────────────────────────────── */
 const NAV_ITEMS = ['home','services','techservices','institution','account','more'];
 function goNav(name) {
+  // If account tab pressed and not logged in → open auth sheet directly
+  if (name === 'account' && !_user) { openAuth(); return; }
   NAV_ITEMS.forEach(n => {
     $(`scr-${n}`)?.classList.toggle('on', n===name);
     $(`ni-${n}`)?.classList.toggle('on', n===name);
@@ -2433,7 +2606,7 @@ function renderAccount(){
   $('acct-guest').style.display = loggedIn ? 'none' : 'block';
   $('acct-loggedin').style.display = loggedIn ? 'block' : 'none';
   $('auth-btn').innerHTML = loggedIn ? '<i class="fas fa-circle-user"></i>' : '<i class="fas fa-circle-user"></i>';
-  $('fab-notes').classList.toggle('show', loggedIn && window._currentScreen==='notes');
+  $('fab-notes')?.classList.toggle('show', loggedIn && window._currentScreen==='notes');
 
   if (!loggedIn || !_profile) return;
   const initials = (_profile.full_name||'ND').split(' ').map(w=>w[0]?.toUpperCase()||'').join('').substring(0,2);
@@ -2448,16 +2621,103 @@ function renderAccount(){
   if (_profile.avatar_url) {
     $('acct-ava').innerHTML = `<img src="${esc(_profile.avatar_url)}" alt="Avatar"><div class="acct-avatar-edit"><i class="fas fa-camera" style="margin-right:4px"></i> Edit</div>`;
   }
+  // Render loyalty points
+  renderLoyaltyPoints();
+}
+
+/* ── LOYALTY POINTS ────────────────────────────────────────────── */
+function calcLoyaltyTier(pts) {
+  if (pts >= 500) return { name:'Platinum', cls:'platinum', next:null,   nextPts:0,   icon:'fa-gem' };
+  if (pts >= 200) return { name:'Gold',     cls:'gold',     next:'Platinum', nextPts:500,  icon:'fa-trophy' };
+  if (pts >= 100) return { name:'Silver',   cls:'silver',   next:'Gold',     nextPts:200,  icon:'fa-medal' };
+  return             { name:'Bronze',   cls:'bronze',   next:'Silver',   nextPts:100,  icon:'fa-medal' };
+}
+function renderLoyaltyPoints() {
+  const pts = (_profile?.loyalty_points) || (_reqs.filter(r=>r.status==='completed').length * 10);
+  const tier = calcLoyaltyTier(pts);
+  const ptEl = $('loyalty-pts-val');
+  const tierEl = $('loyalty-tier-badge');
+  const fillEl = $('loyalty-prog-fill');
+  const lblEl  = $('loyalty-prog-lbl');
+  if (ptEl) ptEl.textContent = pts;
+  if (tierEl) tierEl.innerHTML = `<i class="fas ${tier.icon}" style="margin-right:4px"></i>${tier.name}`;
+  if (tierEl) tierEl.className = `loyalty-tier ${tier.cls}`;
+  if (fillEl && lblEl) {
+    if (tier.next) {
+      const prev = tier.cls==='bronze'?0:tier.cls==='silver'?100:200;
+      const pct = Math.min(100, Math.round(((pts-prev)/(tier.nextPts-prev))*100));
+      fillEl.style.width = pct + '%';
+      lblEl.textContent = `${pts} / ${tier.nextPts} pts to ${tier.next}`;
+    } else {
+      fillEl.style.width = '100%';
+      lblEl.textContent = `${pts} pts — Maximum tier reached! 🎉`;
+    }
+  }
+}
+async function awardLoyaltyPoints(userId, pts) {
+  try {
+    await sb.rpc('increment_loyalty', { user_id: userId, points: pts });
+  } catch(e) {
+    // Fallback: update directly
+    try {
+      await sb.from('profiles').update({
+        loyalty_points: (_profile?.loyalty_points||0) + pts
+      }).eq('id', userId);
+      if (_profile) _profile.loyalty_points = (_profile.loyalty_points||0) + pts;
+      renderLoyaltyPoints();
+    } catch(e2) {}
+  }
 }
 
 /* ── SERVICES ──────────────────────────────────────────────────── */
+/* ── STATIC FALLBACK SERVICES (always available, no DB needed) ── */
+const STATIC_SERVICES = [
+  {id:'s01',name:'Print Documents',    description:'Black & white or colour printing, any size — A4, A3, photos.',icon:'fa-print',           category:'print',    price_label:'From KES 5/page',   requires_file:true,  sort_order:1},
+  {id:'s02',name:'Scan & Send',        description:'Scan documents to email, WhatsApp or USB drive.',             icon:'fa-scanner',         category:'print',    price_label:'From KES 10/page',  requires_file:true,  sort_order:2},
+  {id:'s03',name:'Photocopy',          description:'Single or bulk photocopies on any paper size.',               icon:'fa-copy',            category:'print',    price_label:'From KES 5/page',   requires_file:true,  sort_order:3},
+  {id:'s04',name:'Laminating',         description:'Laminate ID cards, certificates, photos and more.',           icon:'fa-id-card',         category:'print',    price_label:'From KES 20',       requires_file:true,  sort_order:4},
+  {id:'s05',name:'Binding',            description:'Spiral or thermal binding for documents and reports.',        icon:'fa-book',            category:'print',    price_label:'From KES 50',       requires_file:true,  sort_order:5},
+  {id:'s06',name:'Poster & Brochure',  description:'Design and print marketing materials for your business.',    icon:'fa-palette',         category:'print',    price_label:'From KES 500',      requires_file:true,  sort_order:6},
+  {id:'s07',name:'CV & Resume',        description:'Professional CV writing, formatting and printing.',           icon:'fa-file-lines',      category:'docs',     price_label:'From KES 300',      requires_file:false, sort_order:7},
+  {id:'s08',name:'Typing Services',    description:'Type and format your documents professionally.',              icon:'fa-keyboard',        category:'docs',     price_label:'From KES 30/page',  requires_file:false, sort_order:8},
+  {id:'s09',name:'LinkedIn & CV Boost',description:'LinkedIn profile setup + optimised CV package.',             icon:'fa-linkedin',        category:'docs',     price_label:'From KES 500',      requires_file:false, sort_order:9},
+  {id:'s10',name:'Legal Document',     description:'Power of Attorney, affidavit and contract typing.',          icon:'fa-scale-balanced',  category:'docs',     price_label:'From KES 500',      requires_file:true,  sort_order:10},
+  {id:'s11',name:'Translation',        description:'English–Kiswahili document translation services.',           icon:'fa-language',        category:'docs',     price_label:'From KES 150',      requires_file:true,  sort_order:11},
+  {id:'s12',name:'Passport Photos',    description:'Standard passport and visa photos, printed immediately.',    icon:'fa-camera',          category:'photos',   price_label:'KES 100 (4 pcs)',   requires_file:false, sort_order:12},
+  {id:'s13',name:'Photo Editing',      description:'Background removal, retouching and colour correction.',      icon:'fa-wand-magic-sparkles',category:'photos',price_label:'From KES 200',      requires_file:true,  sort_order:13},
+  {id:'s14',name:'School Assignments', description:'Research, typing and printing of school assignments.',       icon:'fa-graduation-cap',  category:'academic', price_label:'From KES 200',      requires_file:true,  sort_order:14},
+  {id:'s15',name:'Online Applications',description:'KUCCPS, university and government portal applications.',     icon:'fa-laptop',          category:'academic', price_label:'From KES 200',      requires_file:true,  sort_order:15},
+  {id:'s16',name:'Academic Research',  description:'Literature review and research paper typing and editing.',   icon:'fa-microscope',      category:'academic', price_label:'From KES 500',      requires_file:true,  sort_order:16},
+  {id:'s17',name:'KRA PIN Services',   description:'PIN registration, iTax returns and compliance services.',    icon:'fa-landmark',        category:'govt',     price_label:'From KES 300',      requires_file:true,  sort_order:17},
+  {id:'s18',name:'NHIF / NSSF',        description:'Registration, contributions and statements.',                icon:'fa-hospital',        category:'govt',     price_label:'From KES 200',      requires_file:true,  sort_order:18},
+  {id:'s19',name:'Business Reg',       description:'Business name registration and certificates.',               icon:'fa-briefcase',       category:'govt',     price_label:'From KES 600',      requires_file:true,  sort_order:19},
+  {id:'s20',name:'eCitizen Services',  description:'Huduma Namba, passport and driving licence applications.',   icon:'fa-globe',           category:'govt',     price_label:'From KES 250',      requires_file:true,  sort_order:20},
+  {id:'s21',name:'Email & Social',     description:'Email setup and social media account creation.',             icon:'fa-envelope',        category:'digital',  price_label:'From KES 150',      requires_file:false, sort_order:21},
+  {id:'s22',name:'M-Pesa Services',    description:'Deposits, withdrawals and till payments.',                   icon:'fa-mobile-screen',   category:'digital',  price_label:'Standard rates',    requires_file:false, sort_order:22},
+  {id:'s23',name:'Internet Browsing',  description:'Fast broadband internet access per hour.',                   icon:'fa-wifi',            category:'digital',  price_label:'KES 30/hour',       requires_file:false, sort_order:23},
+  {id:'s24',name:'WhatsApp Business',  description:'Set up WhatsApp Business profile and product catalog.',     icon:'fa-whatsapp',        category:'digital',  price_label:'From KES 200',      requires_file:false, sort_order:24},
+  {id:'s25',name:'USB & Cloud Backup', description:'Copy, organise and backup files to USB or Google Drive.',   icon:'fa-cloud-arrow-up',  category:'digital',  price_label:'From KES 100',      requires_file:true,  sort_order:25},
+  {id:'s26',name:'Video Download',     description:'Download YouTube/TikTok videos and audio extraction.',      icon:'fa-youtube',         category:'digital',  price_label:'From KES 50',       requires_file:false, sort_order:26},
+  {id:'s27',name:'Logo Design',        description:'Professional logo and brand identity design.',               icon:'fa-paintbrush',      category:'design',   price_label:'From KES 800',      requires_file:false, sort_order:27},
+  {id:'s28',name:'Flyer Design',       description:'Digital and printable flyer design for events and promos.', icon:'fa-rectangle-ad',    category:'design',   price_label:'From KES 400',      requires_file:false, sort_order:28},
+  {id:'s29',name:'Certificate Design', description:'Design and print award and training certificates.',         icon:'fa-certificate',     category:'design',   price_label:'From KES 300',      requires_file:false, sort_order:29},
+  {id:'s30',name:'Event Programme',    description:'Design and print event programmes and booklets.',            icon:'fa-calendar-days',   category:'design',   price_label:'From KES 400',      requires_file:true,  sort_order:30},
+];
+
 async function loadServices(){
-  try {
-    const { data } = await sb.from('services').select('*').eq('is_active', true).order('sort_order');
-    if (data) _services = data;
-  } catch(e) {}
+  // Always start with static services so page works without Supabase
+  _services = [...STATIC_SERVICES];
   renderServices('all');
   renderQuickServices();
+  // Then try to load from DB and refresh
+  try {
+    const { data } = await sb.from('services').select('*').eq('is_active', true).order('sort_order');
+    if (data && data.length > 0) {
+      _services = data;
+      renderServices(_svcFilter || 'all');
+      renderQuickServices();
+    }
+  } catch(e) { /* DB not configured — static services stay */ }
 }
 function renderQuickServices(){
   const grid = $('quick-svcs');
@@ -2482,15 +2742,40 @@ function filterServices(cat, el){
 function renderServices(cat){
   const grid = $('svc-grid');
   if (!grid) return;
-  const list = cat==='all' ? _services : _services.filter(s=>s.category===cat);
-  if (!list.length) { grid.innerHTML='<div style="grid-column:1/-1" class="empty-state"><i class="fas fa-layer-group"></i><h3>No services</h3><p>Services will appear here once loaded.</p></div>'; return; }
+  const q = (_svcSearchTerm||'').toLowerCase();
+  let list = cat==='all' ? [..._services] : _services.filter(s=>s.category===cat);
+  if (q) list = list.filter(s=>(s.name+' '+s.description+' '+s.category).toLowerCase().includes(q));
+  if (!list.length) {
+    grid.innerHTML='<div style="grid-column:1/-1" class="empty-state"><i class="fas fa-layer-group"></i><h3>No services found</h3><p>Try a different search or category.</p></div>';
+    return;
+  }
   grid.innerHTML = list.map(s=>`
-    <div class="svc-app" onclick="openSvcReq('${esc(s.id)}')" title="${esc(s.name)}">
-      <div class="svc-app-icon"><i class="fas ${esc(s.icon||'fa-star')}"></i></div>
-      <div class="svc-app-name">${esc(s.name)}</div>
-      <div class="svc-app-price">${esc(s.price_label||'')}</div>
+    <div class="svc-list-card">
+      <div class="svc-list-icon"><i class="fas ${esc(s.icon||'fa-star')}"></i></div>
+      <div class="svc-list-info">
+        <div class="svc-list-name">${esc(s.name)}</div>
+        <div class="svc-list-price">${esc(s.price_label||'')}</div>
+      </div>
+      <div class="svc-list-btns">
+        <button class="btn btn-gold svc-list-req-btn" onclick="openSvcReq('${esc(s.id)}')"><i class="fas fa-paper-plane"></i> Request</button>
+        <button class="btn btn-outline svc-list-det-btn" onclick="openSvcDetail('${esc(s.id)}')"><i class="fas fa-circle-info"></i> Details</button>
+      </div>
     </div>
   `).join('');
+}
+
+function openSvcDetail(svcId){
+  const s = _services.find(x=>x.id===svcId);
+  if(!s) return;
+  const modal = $('svc-detail-modal');
+  if(!modal) return;
+  $('svc-detail-icon').className  = `fas ${s.icon||'fa-star'}`;
+  $('svc-detail-name').textContent = s.name;
+  $('svc-detail-price').textContent = s.price_label || 'Contact us for pricing';
+  $('svc-detail-desc').textContent  = s.description || '';
+  $('svc-detail-cat').textContent   = (s.category||'general').toUpperCase();
+  $('svc-detail-req-btn').onclick   = ()=>{ closeModal('svc-detail-modal'); openSvcReq(svcId); };
+  openModal('svc-detail-modal');
 }
 
 /* ── SERVICE REQUEST ───────────────────────────────────────────── */
@@ -2594,11 +2879,13 @@ async function submitSvcRequest(){
       }
     }
 
-    toast(`Request submitted! We'll reach you on WhatsApp.`, 'ok', 4000);
+    toast(`Request submitted! We'll reach you on WhatsApp. 🎉 +10 pts earned!`, 'ok', 4000);
     closeSvcReq();
     await loadMyReqs();
     refreshHomeCounts();
     renderHomeReqs();
+    // Award loyalty points
+    if (_user) awardLoyaltyPoints(_user.id, 10);
     // Offer PDF receipt download
     setTimeout(()=> showReceiptOffer(req, _profile), 600);
   } catch(e) {
@@ -3423,7 +3710,7 @@ function openTermsModal(){openModal('terms-modal');}
 
 /* ── CLOSE ALL MODALS UPDATE ── */
 function closeAllModals(){
-  ['contact-modal','about-modal','my-reqs-modal','my-files-modal','upload-modal','notif-panel','profile-modal','svc-req-modal','rating-modal','notes-sheet','agent-register-modal','dev-contact-modal','privacy-modal','terms-modal','inst-request-modal','inst-all-reqs-modal','tech-req-modal'].forEach(id=>{
+  ['contact-modal','about-modal','my-reqs-modal','my-files-modal','upload-modal','notif-panel','profile-modal','svc-req-modal','rating-modal','notes-sheet','agent-register-modal','dev-contact-modal','privacy-modal','terms-modal','inst-request-modal','inst-all-reqs-modal','tech-req-modal','svc-detail-modal','tech-detail-modal'].forEach(id=>{
     const el=$(id);el?.classList.remove('on');
   });
   hideOvl();
@@ -3482,34 +3769,89 @@ window.addEventListener('popstate', ()=>{
 <div id="agent-register-modal" class="modal" role="dialog" aria-modal="true">
   <div class="sheet-pull"></div>
   <div class="sheet-hdr">
-    <span class="sheet-title"><i class="fas fa-user-tie" style="margin-right:8px;color:var(--gold)"></i>Register as Agent</span>
+    <span class="sheet-title"><i class="fas fa-user-tie" style="margin-right:8px;color:var(--gold)"></i>Become an Agent</span>
     <button class="sheet-cls" onclick="closeModal('agent-register-modal')"><i class="fas fa-times"></i></button>
   </div>
   <div class="modal-body" style="padding-bottom:24px">
-    <div style="background:var(--gold-a8);border:1px solid var(--gold-a25);border-radius:var(--r);padding:12px;margin-bottom:14px">
-      <div style="font-size:.76rem;font-weight:500;color:var(--t1);margin-bottom:4px"><i class="fas fa-gift" style="color:var(--warm);margin-right:6px"></i>Earn with NovaDeskOnline</div>
-      <div style="font-size:.7rem;color:var(--t3);line-height:1.6">Refer customers, manage orders and earn commissions on every completed service.</div>
+    <!-- Hero -->
+    <div style="background:linear-gradient(135deg,#1a0040,#2d0060);border:1px solid var(--gold-a45);border-radius:var(--rl);padding:18px;margin-bottom:18px;text-align:center;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(167,139,250,.15),transparent 70%)"></div>
+      <div style="width:56px;height:56px;background:var(--gold-a15);border:2px solid var(--gold-a45);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:1.3rem;color:var(--gold)"><i class="fas fa-hand-holding-dollar"></i></div>
+      <div style="font-family:var(--fd);font-size:1.15rem;color:#E5E4E2;margin-bottom:4px">Earn with NovaDeskOnline</div>
+      <p style="font-size:.7rem;color:rgba(200,190,255,.75);line-height:1.6;max-width:240px;margin:0 auto">Refer clients, earn commissions on every completed service. Work from anywhere in Nyamira and beyond.</p>
     </div>
-    <div class="fg"><label class="flbl">Full Name <span class="req">*</span></label><input class="fi" id="ag-name" type="text" placeholder="Your full name"></div>
-    <div class="fg"><label class="flbl">Email Address <span class="req">*</span></label><input class="fi" id="ag-email" type="email" placeholder="your@email.com"></div>
-    <div class="fg"><label class="flbl">Phone / WhatsApp <span class="req">*</span></label><input class="fi" id="ag-phone" type="tel" placeholder="0712345678"></div>
-    <div class="fg"><label class="flbl">Location / Area</label><input class="fi" id="ag-location" type="text" placeholder="e.g. Westlands, Nairobi"></div>
-    <div class="fg"><label class="flbl">How will you refer clients?</label>
+    <!-- Commission tiers -->
+    <div style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin-bottom:8px">Commission Structure</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:18px">
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:10px;text-align:center">
+        <div style="font-family:var(--fd);font-size:1.1rem;color:#cd7f32;margin-bottom:2px">5%</div>
+        <div style="font-size:.56rem;color:var(--t3)">Standard</div>
+        <div style="font-size:.5rem;color:var(--t4)">1–10 referrals</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--gold-a25);border-radius:var(--r);padding:10px;text-align:center">
+        <div style="font-family:var(--fd);font-size:1.1rem;color:#a78bfa;margin-bottom:2px">10%</div>
+        <div style="font-size:.56rem;color:var(--t3)">Silver</div>
+        <div style="font-size:.5rem;color:var(--t4)">11–30 referrals</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid rgba(255,200,30,.25);border-radius:var(--r);padding:10px;text-align:center">
+        <div style="font-family:var(--fd);font-size:1.1rem;color:#ffc81e;margin-bottom:2px">15%</div>
+        <div style="font-size:.56rem;color:var(--t3)">Gold</div>
+        <div style="font-size:.5rem;color:var(--t4)">30+ referrals</div>
+      </div>
+    </div>
+    <!-- Form -->
+    <div class="auth-field-row">
+      <div class="auth-field-icon"><i class="fas fa-user"></i></div>
+      <div class="fg" style="flex:1;margin:0">
+        <label class="flbl">Full Name <span class="req">*</span></label>
+        <input class="fi auth-fi" id="ag-name" type="text" placeholder="Your full name">
+      </div>
+    </div>
+    <div class="auth-field-row">
+      <div class="auth-field-icon"><i class="fas fa-envelope"></i></div>
+      <div class="fg" style="flex:1;margin:0">
+        <label class="flbl">Email Address <span class="req">*</span></label>
+        <input class="fi auth-fi" id="ag-email" type="email" placeholder="your@email.com">
+      </div>
+    </div>
+    <div class="auth-field-row">
+      <div class="auth-field-icon" style="color:#25D366"><i class="fab fa-whatsapp"></i></div>
+      <div class="fg" style="flex:1;margin:0">
+        <label class="flbl">WhatsApp / Phone <span class="req">*</span></label>
+        <input class="fi auth-fi" id="ag-phone" type="tel" placeholder="0712345678">
+      </div>
+    </div>
+    <div class="auth-field-row">
+      <div class="auth-field-icon"><i class="fas fa-location-dot"></i></div>
+      <div class="fg" style="flex:1;margin:0">
+        <label class="flbl">Your Location</label>
+        <input class="fi auth-fi" id="ag-location" type="text" placeholder="e.g. Kemera, Nyamira">
+      </div>
+    </div>
+    <div class="fg">
+      <label class="flbl">How will you refer clients? <span class="req">*</span></label>
       <select class="fsel" id="ag-channel">
-        <option value="">Select method…</option>
-        <option value="social">Social Media (Facebook, Instagram, TikTok)</option>
-        <option value="whatsapp">WhatsApp Groups / Broadcast</option>
-        <option value="physical">Physical referrals / Walk-ins</option>
-        <option value="other">Other</option>
+        <option value="">Select your main channel…</option>
+        <option value="social">📱 Social Media (Facebook, TikTok, Instagram)</option>
+        <option value="whatsapp">💬 WhatsApp Groups &amp; Broadcasts</option>
+        <option value="physical">🤝 Physical referrals / Walk-ins</option>
+        <option value="community">🏘️ Community / Neighbourhood leader</option>
+        <option value="other">🔗 Other channels</option>
       </select>
     </div>
-    <div class="fg"><label class="flbl">Brief Bio</label><textarea class="fi" id="ag-bio" rows="2" placeholder="Tell us about yourself and why you want to be an agent…" maxlength="300"></textarea></div>
+    <div class="fg">
+      <label class="flbl">Why do you want to join?</label>
+      <textarea class="fi" id="ag-bio" rows="2" placeholder="Brief intro — your experience, audience size, or why you'd be a great agent…" maxlength="300" style="resize:none"></textarea>
+    </div>
     <div id="ag-err" class="ferr" style="margin-bottom:12px"></div>
-    <div id="ag-ok" style="display:none;font-size:.72rem;color:var(--green);padding:9px 12px;background:rgba(50,180,100,.07);border:1px solid rgba(50,180,100,.18);border-radius:6px;margin-bottom:12px"><i class="fas fa-check-circle"></i> Application submitted! We will contact you soon.</div>
-    <button class="btn btn-gold btn-full" id="ag-btn" onclick="submitAgentApplication()"><i class="fas fa-paper-plane"></i> Submit Application</button>
+    <div id="ag-ok" style="display:none;padding:14px;background:rgba(50,180,100,.07);border:1px solid rgba(50,180,100,.22);border-radius:var(--r);margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;font-weight:600;color:var(--green);margin-bottom:4px"><i class="fas fa-check-circle"></i> Application Submitted!</div>
+      <div style="font-size:.68rem;color:var(--t3)">We'll review your application and contact you via WhatsApp within 24 hours.</div>
+    </div>
+    <button class="btn btn-gold btn-full" id="ag-btn" onclick="submitAgentApplication()" style="padding:13px;font-size:.76rem"><i class="fas fa-paper-plane"></i> Submit Application</button>
+    <p style="text-align:center;font-size:.65rem;color:var(--t4);margin-top:10px">By applying you agree to our referral program terms</p>
   </div>
 </div>
-
 <!-- ══ DEVELOPER CONTACT MODAL ════════════════════════════════════════ -->
 <div id="dev-contact-modal" class="modal" role="dialog" aria-modal="true">
   <div class="sheet-pull"></div>
@@ -3638,6 +3980,45 @@ window.addEventListener('popstate', ()=>{
   <div class="modal-body" id="inst-all-reqs-body" style="padding-bottom:24px">
     <div style="text-align:center;padding:20px"><span class="spin"></span></div>
   </div>
+<!-- ══ SERVICE DETAIL MODAL ═══════════════════════════════════════════ -->
+<div id="svc-detail-modal" class="modal" role="dialog" aria-modal="true">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span class="sheet-title"><i id="svc-detail-icon" class="fas fa-star" style="margin-right:8px;color:var(--gold)"></i><span id="svc-detail-name">Service</span></span>
+    <button class="sheet-cls" onclick="closeModal('svc-detail-modal')"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body" style="padding-bottom:24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <span id="svc-detail-cat" style="font-size:.58rem;font-weight:700;letter-spacing:.14em;padding:4px 10px;border-radius:20px;background:var(--gold-a8);color:var(--gold);border:1px solid var(--gold-a25)"></span>
+      <span id="svc-detail-price" style="font-size:.8rem;font-weight:600;color:var(--gold)"></span>
+    </div>
+    <div id="svc-detail-desc" style="font-size:.78rem;color:var(--t2);line-height:1.75;margin-bottom:20px;padding:14px;background:var(--bg4);border-radius:var(--r);border:1px solid var(--bd)"></div>
+    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px;margin-bottom:16px">
+      <div style="font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin-bottom:8px">What to expect</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--t2)"><i class="fas fa-circle-check" style="color:var(--green);font-size:.7rem;width:14px"></i>Submit your request with any relevant files</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--t2)"><i class="fas fa-circle-check" style="color:var(--green);font-size:.7rem;width:14px"></i>We'll confirm via WhatsApp within 30 minutes</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--t2)"><i class="fas fa-circle-check" style="color:var(--green);font-size:.7rem;width:14px"></i>Same-day service for most requests</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--t2)"><i class="fas fa-circle-check" style="color:var(--green);font-size:.7rem;width:14px"></i>M-Pesa payment on collection</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-gold btn-full" id="svc-detail-req-btn"><i class="fas fa-paper-plane"></i> Request This Service</button>
+      <button class="btn btn-ghost btn-sm" onclick="openWhatsApp()" style="white-space:nowrap"><i class="fab fa-whatsapp"></i> Chat</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TECH PRODUCT DETAIL MODAL ══════════════════════════════════════ -->
+<div id="tech-detail-modal" class="modal" role="dialog" aria-modal="true">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span class="sheet-title"><i id="tdet-icon" class="fas fa-tools" style="margin-right:8px;color:var(--gold)"></i><span id="tdet-title">Product Details</span></span>
+    <button class="sheet-cls" onclick="closeModal('tech-detail-modal')"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body" id="tdet-body" style="padding-bottom:24px"></div>
+</div>
+
 <!-- ══ TECH SERVICE REQUEST MODAL ════════════════════════════════════ -->
 <div id="tech-req-modal" class="modal" role="dialog" aria-modal="true">
   <div class="sheet-pull"></div>
@@ -3802,54 +4183,292 @@ async function generateReceipt(reqId, svcName, clientName) {
   }
 }
 window.generateReceipt = generateReceipt;
+
+/* ── OTHER PRODUCTS GRID NAVIGATION ────────────────────────────── */
+const OP_CATEGORIES = {
+  elec: {
+    label: 'Electrical', color: 'elec', back: 'Other Products',
+    items: [
+      { key:'elec-install', icon:'fa-bolt',              cls:'elec', name:'New Electrical Installation', sub:'Full wiring · DB boards · Sockets · Switches',       req:'New Electrical Installation'  },
+      { key:'elec-repair',  icon:'fa-screwdriver-wrench',cls:'elec', name:'Electrical Repairs',           sub:'Faults · Tripping MCBs · Burnt sockets',             req:'Electrical Repairs'            },
+      { key:'elec-solar',   icon:'fa-solar-panel',       cls:'elec', name:'CCTV & Solar Wiring',          sub:'Security cameras · Solar hookup · Inverters',        req:'CCTV & Solar Wiring'           },
+    ]
+  },
+  wifi: {
+    label: 'WiFi & Fibre', color: 'wifi', back: 'Other Products',
+    items: [
+      { key:'fibre-home',      icon:'fa-house-signal',   cls:'wifi', name:'Home Fibre Installation',         sub:'Safaricom · Zuku · Faiba · Airtel — full setup',  req:'Home Fibre Installation'          },
+      { key:'wifi-setup',      icon:'fa-wifi',           cls:'wifi', name:'WiFi Setup & Config',              sub:'Router config · Password · Range boost',          req:'WiFi Setup & Configuration'       },
+      { key:'wifi-repair',     icon:'fa-wrench',         cls:'wifi', name:'WiFi Repair & Troubleshoot',       sub:'Slow speeds · Drops · No connection fix',         req:'WiFi Repair & Troubleshooting'    },
+      { key:'hotspot',         icon:'fa-tower-broadcast',cls:'wifi', name:'Public Hotspot Setup',             sub:'Estate · Hotel · School · M-Pesa billing',       req:'Public Hotspot Setup'             },
+      { key:'network-cabling', icon:'fa-network-wired',  cls:'wifi', name:'Network Cabling & LAN',            sub:'Cat5e/Cat6 · Switches · Patch panels',           req:'Network Cabling & LAN Setup'      },
+    ]
+  },
+  web: {
+    label: 'Web Development', color: 'web', back: 'Other Products',
+    items: [
+      { key:'web-business',    icon:'fa-globe',          cls:'web', name:'Business Website',   sub:'Landing pages · Multi-page · SEO · Mobile-first', req:'Business Website'         },
+      { key:'web-pwa',         icon:'fa-mobile-screen',  cls:'web', name:'PWA / Mobile App',   sub:'Offline · M-Pesa · Supabase · Push notifications', req:'PWA / Mobile App'         },
+      { key:'web-ecommerce',   icon:'fa-cart-shopping',  cls:'web', name:'E-Commerce Store',   sub:'M-Pesa checkout · Products · WA notifications',   req:'E-Commerce Store'         },
+      { key:'web-maintenance', icon:'fa-calendar-check', cls:'web', name:'Monthly Maintenance',sub:'Updates · Backups · Uptime · Priority support',    req:'Monthly Web Maintenance'  },
+    ]
+  }
+};
+
+function showOpCategory(catKey) {
+  const cat = OP_CATEGORIES[catKey];
+  if (!cat) return;
+  const grid  = $('op-grid');
+  const title = $('op-screen-title');
+  const sub   = $('op-screen-sub');
+  const banner= $('op-intro-banner');
+  if (!grid) return;
+  if (banner) banner.style.display = 'none';
+  if (title) title.textContent = cat.label;
+  if (sub)   sub.textContent = `${cat.items.length} services — tap to view or request`;
+  grid.innerHTML = `
+    <div class="op-back-btn" onclick="showOpHome()">
+      <i class="fas fa-arrow-left" style="color:var(--gold);font-size:.8rem"></i>
+      <span style="font-size:.74rem;font-weight:500;color:var(--t1)">Back to Other Products</span>
+    </div>
+    ${cat.items.map(it => `
+    <div class="op-sub-card ${it.cls}">
+      <div class="op-sub-card-icon ${it.cls}"><i class="fas ${it.icon}"></i></div>
+      <div class="op-sub-card-name">${it.name}</div>
+      <div class="op-sub-card-sub">${it.sub}</div>
+      <div class="op-sub-card-btns">
+        <button class="btn btn-gold svc-list-req-btn" style="padding:7px 6px;font-size:.61rem" onclick="openTechRequest('${it.req}','${it.icon}')"><i class="fas fa-paper-plane"></i> Request</button>
+        <button class="btn btn-outline svc-list-det-btn" style="padding:6px;font-size:.6rem" onclick="openTechDetail('${it.key}')"><i class="fas fa-circle-info"></i> Details</button>
+      </div>
+    </div>
+    `).join('')}
+    <div style="grid-column:1/-1;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;display:flex;align-items:center;gap:12px;margin-top:4px">
+      <div style="width:38px;height:38px;border-radius:12px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);display:flex;align-items:center;justify-content:center;color:#25D366;font-size:.9rem;flex-shrink:0"><i class="fab fa-whatsapp"></i></div>
+      <div style="flex:1"><div style="font-size:.74rem;font-weight:500;color:var(--t1);margin-bottom:2px">Need a quote?</div><div style="font-size:.6rem;color:var(--t3)">Chat with us — we respond quickly.</div></div>
+      <button class="btn btn-ghost btn-sm" onclick="openWhatsApp()" style="flex-shrink:0"><i class="fab fa-whatsapp"></i></button>
+    </div>
+  `;
+  // Smooth scroll to top of screen
+  $('scr-techservices')?.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showOpHome() {
+  const grid  = $('op-grid');
+  const title = $('op-screen-title');
+  const sub   = $('op-screen-sub');
+  const banner= $('op-intro-banner');
+  if (!grid) return;
+  if (banner) banner.style.display = 'block';
+  if (title) title.textContent = 'Other Products';
+  if (sub)   sub.textContent = 'Tap a category to explore';
+  grid.innerHTML = `
+    <div class="op-cat-tile elec" onclick="showOpCategory('elec')">
+      <div class="op-tile-icon elec"><i class="fas fa-bolt"></i></div>
+      <div class="op-tile-name">Electrical</div>
+      <div class="op-tile-sub">Wiring · Repairs · Solar · CCTV</div>
+      <span class="op-tile-count">3 services</span>
+    </div>
+    <div class="op-cat-tile wifi" onclick="showOpCategory('wifi')">
+      <div class="op-tile-icon wifi"><i class="fas fa-wifi"></i></div>
+      <div class="op-tile-name">WiFi &amp; Fibre</div>
+      <div class="op-tile-sub">Setup · Repair · Hotspot · LAN</div>
+      <span class="op-tile-count">5 services</span>
+    </div>
+    <div class="op-cat-tile web" onclick="showOpCategory('web')">
+      <div class="op-tile-icon web"><i class="fas fa-code"></i></div>
+      <div class="op-tile-name">Web Dev</div>
+      <div class="op-tile-sub">Sites · PWAs · Shops · Care</div>
+      <span class="op-tile-count">4 services</span>
+    </div>
+    <div style="grid-column:1/-1;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;display:flex;align-items:center;gap:12px">
+      <div style="width:40px;height:40px;border-radius:12px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);display:flex;align-items:center;justify-content:center;color:#25D366;font-size:.95rem;flex-shrink:0"><i class="fab fa-whatsapp"></i></div>
+      <div style="flex:1"><div style="font-size:.76rem;font-weight:500;color:var(--t1);margin-bottom:2px">Need advice?</div><div style="font-size:.62rem;color:var(--t3)">WhatsApp us — we respond within minutes.</div></div>
+      <button class="btn btn-ghost btn-sm" onclick="openWhatsApp()" style="flex-shrink:0"><i class="fab fa-whatsapp"></i></button>
+    </div>
+  `;
+}
+window.showOpCategory = showOpCategory;
+window.showOpHome = showOpHome;
+
+/* ── TECH PRODUCT DETAIL ────────────────────────────────────────── */
+const TECH_DETAIL_DATA = {
+  'elec-install': {
+    title:'New Electrical Installation', icon:'fa-bolt',
+    price:'Quote on request',
+    desc:'Full professional electrical installations for homes, offices, and commercial spaces. Our certified technicians plan, run, and terminate all wiring to code.',
+    steps:['Site inspection &amp; quotation','Material sourcing &amp; scheduling','Wiring installation','Testing &amp; sign-off'],
+    faq:[['How long does a full house take?','Typically 1–3 days depending on size.'],['Do you supply materials?','Yes — we can supply or you can purchase yourself.'],['Are you certified?','Yes, all our electricians are certified and insured.']]
+  },
+  'elec-repair': {
+    title:'Electrical Repairs', icon:'fa-screwdriver-wrench',
+    price:'From KES 500',
+    desc:'Same-day diagnosis and repair of electrical faults including burnt sockets, tripping MCBs, dead outlets, and damaged wiring.',
+    steps:['Call or WhatsApp us','Technician visits within 2–4 hours','Fault diagnosed &amp; fixed','Final testing'],
+    faq:[['Do you charge a call-out fee?','Yes, KES 300 call-out within Nyamira. Free for large jobs.'],['Can you fix a burnt socket?','Absolutely — most socket repairs take under 30 minutes.']]
+  },
+  'elec-solar': {
+    title:'CCTV &amp; Solar Wiring', icon:'fa-solar-panel',
+    price:'Quote on request',
+    desc:'Install and wire CCTV security camera systems and connect solar panels, inverters and battery backups to your electrical system.',
+    steps:['Assessment &amp; quote','Equipment supply (optional)','Installation &amp; wiring','Testing &amp; handover'],
+    faq:[['Do you supply CCTV cameras?','We can supply Hikvision/Dahua or wire your own.'],['What solar systems do you support?','Off-grid, hybrid, and grid-tie systems.']]
+  },
+  'fibre-home': {
+    title:'Home Fibre Installation', icon:'fa-house-signal',
+    price:'Quote on request',
+    desc:'Full fibre internet setup for your home — from ISP application to final speed test. We support Safaricom, Zuku, Faiba, and Airtel fibre.',
+    steps:['ISP application assistance','Cabling &amp; router placement','Configuration &amp; device connection','Speed testing &amp; handover'],
+    faq:[['Which ISPs do you support?','Safaricom Home Fibre, Zuku, Faiba 4G/Fibre, Airtel.'],['How long does installation take?','Usually 1–2 days after ISP activation.']]
+  },
+  'wifi-setup': {
+    title:'WiFi Setup &amp; Configuration', icon:'fa-wifi',
+    price:'From KES 500',
+    desc:'Configure your router for best performance, set a strong password, optimise channel settings, and extend your WiFi coverage with repeaters or mesh nodes.',
+    steps:['Connect to your router','Security &amp; password configuration','Channel &amp; band optimisation','Extender placement (if needed)'],
+    faq:[['Can you change my router password?','Yes, takes 5 minutes.'],['Do you install mesh systems?','Yes — TP-Link Deco, Tenda and other brands.']]
+  },
+  'wifi-repair': {
+    title:'WiFi Repair &amp; Troubleshooting', icon:'fa-wrench',
+    price:'From KES 500',
+    desc:'Diagnose and fix all WiFi issues — slow speeds, frequent drops, devices that won\'t connect, and dead router problems.',
+    steps:['Remote or on-site diagnosis','Root cause identification','Fix applied','Speed &amp; stability test'],
+    faq:[['Can you fix it remotely?','Yes for software issues — on-site for hardware.'],['What if the router is dead?','We can supply a replacement router.']]
+  },
+  'hotspot': {
+    title:'Public Hotspot Setup', icon:'fa-tower-broadcast',
+    price:'Quote on request',
+    desc:'Deploy a managed public WiFi hotspot with captive portal, voucher-based or M-Pesa billing, bandwidth management, and multi-access-point support.',
+    steps:['Site survey &amp; hardware spec','Hardware installation &amp; cabling','Captive portal &amp; billing setup','Staff training &amp; handover'],
+    faq:[['What hardware do you use?','MikroTik, Ubiquiti UniFi, or TP-Link EAP series.'],['Can customers pay via M-Pesa?','Yes — M-Pesa STK Push or PayBill integration.']]
+  },
+  'network-cabling': {
+    title:'Network Cabling &amp; LAN Setup', icon:'fa-network-wired',
+    price:'Quote on request',
+    desc:'Structured Cat5e/Cat6 cabling, patch panel installation, switch setup, and complete LAN builds for offices and institutions.',
+    steps:['Survey &amp; cabling plan','Cable routing &amp; trunking','Termination &amp; patch panels','Switch config &amp; testing'],
+    faq:[['What\'s the difference between Cat5e and Cat6?','Cat6 supports higher speeds (10Gbps) over short distances. We recommend Cat6 for new installs.'],['Do you certify the cabling?','Yes, we test each run with a cable tester.']]
+  },
+  'web-business': {
+    title:'Business Website', icon:'fa-globe',
+    price:'From KES 8,000',
+    desc:'Professional mobile-first business websites with SEO, contact forms, Google Maps, WhatsApp chat button, and optional CMS for self-updates.',
+    steps:['Briefing &amp; wireframe','Design &amp; development','Review &amp; revisions','Launch &amp; handover'],
+    faq:[['How long does it take?','5–14 days depending on complexity.'],['Do you include hosting?','Yes — 1 year Vercel/Netlify hosting included.']]
+  },
+  'web-pwa': {
+    title:'PWA / Mobile App', icon:'fa-mobile-screen',
+    price:'From KES 25,000',
+    desc:'Installable Progressive Web Apps with offline support, Supabase backend, real-time data, role-based auth, push notifications, and M-Pesa STK Push integration.',
+    steps:['Requirements &amp; schema design','UI/UX design','Full-stack development','Testing, deployment &amp; training'],
+    faq:[['Does it work without internet?','Yes — service worker caching enables offline mode.'],['Can it accept M-Pesa payments?','Yes — STK Push and C2B paybill integration.']]
+  },
+  'web-ecommerce': {
+    title:'E-Commerce Store', icon:'fa-cart-shopping',
+    price:'From KES 18,000',
+    desc:'Full online store with product catalog, shopping cart, M-Pesa checkout, order management, admin dashboard, and WhatsApp order notifications.',
+    steps:['Product catalog setup','Store design &amp; build','M-Pesa payment integration','Launch &amp; training'],
+    faq:[['Can I manage products myself?','Yes — full admin dashboard included.'],['What payment methods?','M-Pesa STK Push; other gateways on request.']]
+  },
+  'web-maintenance': {
+    title:'Monthly Web Maintenance', icon:'fa-calendar-check',
+    price:'From KES 2,000/month',
+    desc:'Keep your website secure and up-to-date with monthly content updates, security patches, daily backups, uptime monitoring, and priority WhatsApp support.',
+    steps:['Onboarding &amp; access setup','Monthly updates &amp; patches','Backup &amp; monitoring','Monthly report'],
+    faq:[['What\'s included each month?','Up to 4 content updates, security patches, daily backups, 99.9% uptime monitoring.'],['Can I cancel anytime?','Yes — no long-term contracts.']]
+  },
+  'portfolio-1': {
+    title:'Tote &amp; Tread Collection', icon:'fa-store',
+    price:'Live project',
+    desc:'A fully-featured fashion e-commerce PWA for a Nairobi-based boutique. Single-file Vanilla JS + Supabase v2. Features: animated splash, product grid, live search, cart &amp; wishlist, WhatsApp checkout, jsPDF PDF receipts, Supabase auth, admin dashboard, badge system, real-time channels, and service worker.',
+    steps:['Tech: Vanilla JS · Supabase · Vercel','Payment: WhatsApp checkout + M-Pesa','Auth: Email/password + phone OTP','Live at: tote-and-tread.vercel.app'],
+    faq:[['Can you build something like this for me?','Absolutely — contact us for a quote.'],['How long did it take?','Built over 3 months with incremental features.']]
+  },
+  'portfolio-2': {
+    title:'Don Bosco Kiobwoge VTI', icon:'fa-school',
+    price:'Live project',
+    desc:'Production-ready institutional portal for a vocational training institute. Public website + 6-role internal management system (Admin, Principal, Secretary, Teacher, Student, Finance). Three.js hero, CSS 3D tilt cards, full SQL schema.',
+    steps:['Tech: Next.js · Tailwind · Supabase','Roles: Admin, Principal, Secretary, Teacher, Student, Finance','Features: Fee schedule, M-Pesa, news, gallery','Built for: Kirinyaga County, Kenya'],
+    faq:[['Can you build a portal for our institution?','Yes — contact us to discuss your requirements.'],['Does it support M-Pesa?','Yes — fee payment via M-Pesa integrated.']]
+  },
+  'portfolio-3': {
+    title:'NovaDeskOnline', icon:'fa-desktop',
+    price:'This app',
+    desc:'The app you are using right now. A full-featured cyber café management PWA — service catalog with 41 services, Supabase auth, PDF receipts, institution portal, real-time notifications, admin dashboard, and PWA install.',
+    steps:['Tech: Vanilla JS · Supabase · Vercel','Features: 41 services, auth, PDF receipts','PWA: Offline-ready, installable','Admin: Full CRUD dashboard'],
+    faq:[['Can I get a copy of this app?','Yes — we can white-label it for your café.'],['What does it cost?','Contact us for licensing or custom build pricing.']]
+  }
+};
+
+function openTechDetail(key) {
+  const d = TECH_DETAIL_DATA[key];
+  if (!d) return;
+  $('tdet-icon').className  = `fas ${d.icon}`;
+  $('tdet-title').textContent = d.title.replace(/&amp;/g,'&');
+  const body = $('tdet-body');
+  body.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="width:52px;height:52px;border-radius:14px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.2rem"><i class="fas ${d.icon}"></i></div>
+      <span style="font-size:.8rem;font-weight:600;color:var(--gold)">${d.price}</span>
+    </div>
+    <p style="font-size:.76rem;color:var(--t2);line-height:1.75;margin-bottom:16px;padding:12px;background:var(--bg4);border-radius:var(--r);border:1px solid var(--bd)">${d.desc}</p>
+    <div style="font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin-bottom:8px">Process</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+      ${d.steps.map((s,i)=>`<div style="display:flex;align-items:flex-start;gap:10px">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--gold-a15);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:var(--gold);flex-shrink:0">${i+1}</div>
+        <div style="font-size:.72rem;color:var(--t2);line-height:1.5;padding-top:2px">${s}</div>
+      </div>`).join('')}
+    </div>
+    <div style="font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin-bottom:8px">FAQ</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+      ${d.faq.map(([q,a])=>`<div style="background:var(--bg4);border:1px solid var(--bd);border-radius:var(--r);padding:10px 12px">
+        <div style="font-size:.72rem;font-weight:600;color:var(--t1);margin-bottom:3px">${q}</div>
+        <div style="font-size:.68rem;color:var(--t3);line-height:1.55">${a}</div>
+      </div>`).join('')}
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-gold btn-full" onclick="closeModal('tech-detail-modal');openTechRequest('${d.title.replace(/'/g,"\\'")}','${d.icon}')"><i class="fas fa-paper-plane"></i> Request This</button>
+      <button class="btn btn-ghost btn-sm" onclick="openWhatsApp()" style="white-space:nowrap"><i class="fab fa-whatsapp"></i></button>
+    </div>
+  `;
+  openModal('tech-detail-modal');
+}
+window.openTechDetail = openTechDetail;
 </script>
 
 <!-- ══ PWA + SERVICE WORKER ═══════════════════════════════════════ -->
 <script>
 /* ── SERVICE WORKER (inline via Blob) ───────────────────────────── */
 (function(){
+  // SW requires https:// or localhost — skip on file:// or blob://
   if(!('serviceWorker' in navigator)) return;
-  const SW_VERSION = 'nd-v1.0.0';
-  const CACHE_NAME = SW_VERSION;
+  if(location.protocol !== 'https:' && location.hostname !== 'localhost') return;
+  const CACHE = 'nd-v1.0.0';
   const swCode = `
-const CACHE='${CACHE_NAME}';
-const PRECACHE=['/'];
-self.addEventListener('install',e=>{
-  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE)).then(()=>self.skipWaiting()));
-});
-self.addEventListener('activate',e=>{
-  e.waitUntil(caches.keys().then(keys=>Promise.all(
-    keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))
-  )).then(()=>self.clients.claim()));
-});
+const CACHE='${CACHE}';
+self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.add('/')).then(()=>self.skipWaiting()));});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{
-  if(e.request.method!=='GET') return;
-  const url=new URL(e.request.url);
-  // Network-first for Supabase/API calls
-  if(url.hostname.includes('supabase.co')||url.hostname.includes('googleapis.com')){
-    e.respondWith(fetch(e.request).catch(()=>new Response('',{status:503})));
-    return;
+  if(e.request.method!=='GET')return;
+  const u=new URL(e.request.url);
+  if(u.hostname.includes('supabase.co')||u.hostname.includes('googleapis.com')){
+    e.respondWith(fetch(e.request).catch(()=>new Response('',{status:503})));return;
   }
-  // Cache-first for static assets
-  e.respondWith(
-    caches.match(e.request).then(cached=>{
-      if(cached) return cached;
-      return fetch(e.request).then(res=>{
-        if(res.ok && e.request.url.startsWith('http')){
-          const clone=res.clone();
-          caches.open(CACHE).then(c=>c.put(e.request,clone));
-        }
-        return res;
-      }).catch(()=>caches.match('/'));
-    })
-  );
+  e.respondWith(caches.match(e.request).then(cached=>{
+    if(cached)return cached;
+    return fetch(e.request).then(res=>{
+      if(res.ok&&e.request.url.startsWith('http')){const c=res.clone();caches.open(CACHE).then(cc=>cc.put(e.request,c));}
+      return res;
+    }).catch(()=>caches.match('/'));
+  }));
 });
 `;
-  const blob = new Blob([swCode], {type:'text/javascript'});
-  const swUrl = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(swUrl, {scope:'/'})
-    .then(reg=>{ console.log('[SW] Registered, scope:', reg.scope); })
-    .catch(err=>{ console.warn('[SW] Registration failed:', err); });
+  try {
+    const blob = new Blob([swCode], {type:'text/javascript'});
+    const swUrl = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swUrl, {scope:'/'})
+      .then(r=>console.log('[SW] OK scope:', r.scope))
+      .catch(err=>console.info('[SW] Skipped:', err.message));
+  } catch(e){ console.info('[SW] Not available'); }
 })();
 
 /* ── PWA INSTALL PROMPT ─────────────────────────────────────────── */
@@ -3859,6 +4478,11 @@ let _pwaBannerShown  = false;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   _deferredPrompt = e;
+  // Show install CTAs
+  const homeCta = document.getElementById('home-install-cta');
+  const moreItem = document.getElementById('more-install-item');
+  if (homeCta) homeCta.style.display = 'block';
+  if (moreItem) moreItem.style.display = 'flex';
   // Show banner after a short delay (let app load first)
   if (!localStorage.getItem('nd-pwa-dismissed') && !_pwaBannerShown) {
     setTimeout(showPWABanner, 3500);
