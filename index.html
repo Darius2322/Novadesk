@@ -283,7 +283,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data: blob:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' blob:;">
 <title>NovaDeskOnline · Cyber Services</title>
 <meta name="description" content="Fast, affordable cyber services in Nairobi — printing, scanning, CV writing, government services and more.">
-<meta name="theme-color" content="#0A0A0A">
+<meta name="theme-color" content="#0066ff">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -298,8 +298,8 @@
     "description": "Fast, affordable cyber services in Nairobi — printing, scanning, CV writing, government services and more.",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#0d0018",
-    "theme_color": "#4b0082",
+    "background_color": "#060c18",
+    "theme_color": "#0066ff",
     "orientation": "portrait-primary",
     "icons": [
       {"src":"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='42' fill='%230d0018'/%3E%3Crect x='30' y='42' width='132' height='84' rx='9' stroke='%234b0082' stroke-width='5' fill='none'/%3E%3Ccircle cx='138' cy='60' r='10.5' fill='%234b0082'/%3E%3Cline x1='48' y1='60' x2='114' y2='60' stroke='%23b59a6b' stroke-width='3.6' opacity='.7'/%3E%3Cline x1='48' y1='75' x2='144' y2='75' stroke='%23b59a6b' stroke-width='3.6' opacity='.5'/%3E%3Cline x1='48' y1='90' x2='132' y2='90' stroke='%23b59a6b' stroke-width='3.6' opacity='.5'/%3E%3Crect x='66' y='126' width='60' height='9' fill='%234b0082' opacity='.6'/%3E%3Crect x='54' y='135' width='84' height='6' rx='3' fill='%234b0082' opacity='.35'/%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"},
@@ -329,14 +329,14 @@
 <style>
 /* ══ TOKENS ══ */
 :root{
-  /* PRIMARY accent — bright violet (visible in both themes) */
-  --gold:#7c3aed;--gold-l:#8b5cf6;--gold-d:#5b21b6;
-  --gold-a8:rgba(124,58,237,.08);--gold-a15:rgba(124,58,237,.15);
-  --gold-a25:rgba(124,58,237,.25);--gold-a45:rgba(124,58,237,.45);
-  /* SECONDARY warm accent (Desaturated Gold #b59a6b) */
-  --warm:#b59a6b;--warm-l:#cdb889;--warm-d:#8a7450;
-  --warm-a8:rgba(181,154,107,.08);--warm-a25:rgba(181,154,107,.25);
-  --red:#E05050;--green:#32B464;--blue:#1e6b6b;--teal:#1e6b6b;
+  /* PRIMARY: NovaDeskOnline Blue — matching the shield logo */
+  --gold:#0066ff;--gold-l:#338aff;--gold-d:#0044cc;
+  --gold-a8:rgba(0,102,255,.08);--gold-a15:rgba(0,102,255,.15);
+  --gold-a25:rgba(0,102,255,.25);--gold-a45:rgba(0,102,255,.45);
+  /* SECONDARY: Cyan accent */
+  --warm:#00c8ff;--warm-l:#33d4ff;--warm-d:#0099cc;
+  --warm-a8:rgba(0,200,255,.08);--warm-a25:rgba(0,200,255,.25);
+  --red:#E05050;--green:#32B464;--blue:#0066ff;--teal:#00c8ff;
   --fd:'Cormorant Garamond',Georgia,serif;--fb:'Jost',sans-serif;
   --r:8px;--rl:14px;--rxl:20px;
   --ease:cubic-bezier(.4,0,.2,1);
@@ -344,29 +344,28 @@
   --zi:50;--zs:200;--zm:400;--zt:600;
 }
 :root,[data-theme="dark"]{
-  --bg:#141414;--bg2:#1a1a1a;--bg3:#242424;--bg4:#2e2e2e;--bg5:#383838;
-  --t1:#F0EDFF;--t2:#c4bfe0;--t3:#8a84a0;--t4:#504a60;
-  --bd:rgba(139,92,246,.22);--bd2:rgba(139,92,246,.45);
-  --sh:0 2px 16px rgba(0,0,0,.65);--shg:0 4px 28px rgba(124,58,237,.35);
-  --inp:#0e0e16;--scrim:rgba(0,0,0,.88);
-  /* Brighter purple for dark mode so text is readable */
-  --gold:#a78bfa;--gold-l:#c4b5fd;--gold-d:#7c3aed;
-  --gold-a8:rgba(167,139,250,.10);--gold-a15:rgba(167,139,250,.18);
-  --gold-a25:rgba(167,139,250,.28);--gold-a45:rgba(167,139,250,.48);
+  --bg:#080d18;--bg2:#0d1424;--bg3:#111d32;--bg4:#162340;--bg5:#1c2c4e;
+  --t1:#e8f0ff;--t2:#a8c0e8;--t3:#6080a8;--t4:#3a506c;
+  --bd:rgba(0,102,255,.22);--bd2:rgba(0,102,255,.45);
+  --sh:0 2px 16px rgba(0,0,0,.7);--shg:0 4px 28px rgba(0,102,255,.4);
+  --inp:#060c18;--scrim:rgba(0,0,0,.88);
+  --gold:#4d9eff;--gold-l:#80b8ff;--gold-d:#0066ff;
+  --gold-a8:rgba(77,158,255,.10);--gold-a15:rgba(77,158,255,.18);
+  --gold-a25:rgba(77,158,255,.28);--gold-a45:rgba(77,158,255,.48);
 }
 [data-theme="light"]{
-  --bg:#f4f2fb;--bg2:#ece8f8;--bg3:#ffffff;--bg4:#ddd8f0;--bg5:#cfc8e8;
-  --t1:#120e2a;--t2:#2c1d5e;--t3:#5a4e80;--t4:#9080b0;
-  --bd:rgba(124,58,237,.15);--bd2:rgba(124,58,237,.38);
-  --sh:0 2px 14px rgba(30,10,60,.10);--shg:0 4px 22px rgba(124,58,237,.22);
-  --inp:#f8f6ff;--scrim:rgba(10,5,30,.75);
-  --gold:#7c3aed;--gold-l:#8b5cf6;--gold-d:#5b21b6;
-  --gold-a8:rgba(124,58,237,.08);--gold-a15:rgba(124,58,237,.15);
-  --gold-a25:rgba(124,58,237,.25);--gold-a45:rgba(124,58,237,.45);
+  --bg:#f0f4ff;--bg2:#e0eaff;--bg3:#ffffff;--bg4:#c8d8f8;--bg5:#b0c8f0;
+  --t1:#060d20;--t2:#1a2d60;--t3:#4060a0;--t4:#7090c0;
+  --bd:rgba(0,102,255,.15);--bd2:rgba(0,102,255,.38);
+  --sh:0 2px 14px rgba(0,20,80,.10);--shg:0 4px 22px rgba(0,102,255,.22);
+  --inp:#f8fbff;--scrim:rgba(0,10,40,.75);
+  --gold:#0066ff;--gold-l:#338aff;--gold-d:#0044cc;
+  --gold-a8:rgba(0,102,255,.08);--gold-a15:rgba(0,102,255,.15);
+  --gold-a25:rgba(0,102,255,.25);--gold-a45:rgba(0,102,255,.45);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
-body{font-family:var(--fb);background:#0d0018;color:var(--t1);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body{font-family:var(--fb);background:#060c18;color:var(--t1);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
 [data-theme="light"] body{background:var(--bg)}
 [data-theme="light"] #topbar{background:rgba(244,242,251,.96)}
 [data-theme="light"] #botnav{background:var(--bg2)}
@@ -386,9 +385,9 @@ button,input,textarea,select{font-family:var(--fb)}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 
 /* ── SPLASH ─────────────────────────────────────────────────────── */
-#splash{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 30% 20%,#2a0050 0%,#180028 40%,#0d0018 100%)}
-#splash::before{content:'';position:absolute;top:-20%;left:-10%;width:60%;height:60%;background:radial-gradient(circle,rgba(75,0,130,.10) 0%,transparent 65%);animation:splashOrb1 6s ease-in-out infinite;pointer-events:none}
-#splash::after{content:'';position:absolute;bottom:-15%;right:-10%;width:55%;height:55%;background:radial-gradient(circle,rgba(75,0,130,.07) 0%,transparent 65%);animation:splashOrb2 7s ease-in-out infinite;pointer-events:none}
+#splash{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 30% 20%,#001a4a 0%,#000d28 40%,#000814 100%)}
+#splash::before{content:'';position:absolute;top:-20%;left:-10%;width:60%;height:60%;background:radial-gradient(circle,rgba(0,102,255,.10) 0%,transparent 65%);animation:splashOrb1 6s ease-in-out infinite;pointer-events:none}
+#splash::after{content:'';position:absolute;bottom:-15%;right:-10%;width:55%;height:55%;background:radial-gradient(circle,rgba(0,102,255,.07) 0%,transparent 65%);animation:splashOrb2 7s ease-in-out infinite;pointer-events:none}
 @keyframes splashOrb1{0%,100%{transform:translate(0,0) scale(1);opacity:.6}50%{transform:translate(6%,8%) scale(1.12);opacity:1}}
 @keyframes splashOrb2{0%,100%{transform:translate(0,0) scale(1);opacity:.5}50%{transform:translate(-5%,-6%) scale(1.08);opacity:.9}}
 .splash-corner{position:absolute;width:48px;height:48px;opacity:0;animation:splashCornerIn .8s ease forwards}
@@ -409,7 +408,7 @@ button,input,textarea,select{font-family:var(--fb)}
 @keyframes logoPulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.2),0 8px 40px rgba(0,0,0,.7),inset 0 1px 0 rgba(201,168,76,.12);transform:scale(1)}50%{box-shadow:0 0 0 18px rgba(201,168,76,.04),0 12px 50px rgba(0,0,0,.8),inset 0 1px 0 rgba(201,168,76,.18);transform:scale(1.025)}}
 .splash-text{margin-top:36px;text-align:center;opacity:0;transform:translateY(10px);animation:textIn .9s ease .55s forwards}
 @keyframes textIn{to{opacity:1;transform:translateY(0)}}
-.splash-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.85rem;font-weight:300;color:#E8D9BC;letter-spacing:.14em;line-height:1;margin-bottom:7px}
+.splash-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.85rem;font-weight:300;color:#e8f0ff;letter-spacing:.14em;line-height:1;margin-bottom:7px}
 .splash-name em{font-style:italic;color:var(--warm)}
 .splash-divider{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 8px;opacity:0;animation:textIn .7s ease .8s forwards}
 .splash-sub{font-size:.48rem;letter-spacing:.38em;text-transform:uppercase;color:rgba(201,168,76,.55);font-family:'Jost',sans-serif}
@@ -438,7 +437,7 @@ body:has(#splash:not(.gone)) .fab-wa{opacity:0;pointer-events:none}
 #topbar{position:fixed;top:0;width:100%;max-width:430px;height:var(--top);z-index:var(--zi);background:var(--bg);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;padding:0 14px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transition:background .3s,border-color .3s}
 [data-theme="light"] #topbar{background:rgba(245,239,230,.96)}
 .brand{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none}
-.brand-name{font-family:var(--fd);font-size:1.05rem;font-weight:600;color:var(--gold);letter-spacing:.04em;display:block}
+.brand-name{font-family:var(--fd);font-size:1.05rem;font-weight:600;color:#4d9eff;letter-spacing:.04em;display:block}
 .brand-sub{font-size:.46rem;letter-spacing:.24em;text-transform:uppercase;color:var(--t3);display:block;margin-top:1px}
 .top-acts{display:flex;align-items:center;gap:2px}
 .tact{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;color:var(--t2);font-size:.85rem;cursor:pointer;border-radius:var(--r);transition:all .2s;position:relative}
@@ -446,7 +445,7 @@ body:has(#splash:not(.gone)) .fab-wa{opacity:0;pointer-events:none}
 .tact-badge{position:absolute;top:4px;right:3px;min-width:15px;height:15px;background:var(--gold);color:#000;font-size:.46rem;font-weight:700;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1}
 
 /* ── BOTTOM NAV ─────────────────────────────────────────────────── */
-#botnav{position:fixed;bottom:0;width:100%;max-width:430px;height:var(--nav);z-index:var(--zi);background:var(--bg2);border-top:1px solid var(--bd);display:flex;align-items:stretch;padding-bottom:env(safe-area-inset-bottom,0);transition:background .3s}
+#botnav{position:fixed;bottom:0;width:100%;max-width:430px;height:var(--nav);z-index:var(--zi);background:var(--bg2);border-top:1px solid var(--bd);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:stretch;padding-bottom:env(safe-area-inset-bottom,0);transition:background .3s}
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:transparent;color:var(--t3);font-size:.48rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:color .2s;position:relative;padding-bottom:2px}
 .ni i{font-size:1rem;transition:transform .2s var(--ease)}
 .ni.on{color:var(--gold)}.ni.on i{transform:translateY(-1px)}
@@ -488,7 +487,7 @@ body:has(#splash:not(.gone)) .fab-wa{opacity:0;pointer-events:none}
 
 /* ── BUTTONS ────────────────────────────────────────────────────── */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 22px;font-family:var(--fb);font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;border:none;border-radius:var(--r);cursor:pointer;transition:all .2s var(--ease);white-space:nowrap;-webkit-tap-highlight-color:transparent}
-.btn-gold{background:var(--gold);color:#fff}.btn-gold:hover{background:var(--gold-l);box-shadow:0 4px 20px rgba(75,0,130,.4);transform:translateY(-1px)}
+.btn-gold{background:var(--gold);color:#fff}.btn-gold:hover{background:var(--gold-l);box-shadow:0 4px 20px rgba(0,102,255,.4);transform:translateY(-1px)}
 .btn-outline{background:transparent;color:var(--gold);border:1px solid var(--gold-a45)}.btn-outline:hover{background:var(--gold-a8);border-color:var(--gold)}
 .btn-ghost{background:var(--bg4);color:var(--t2);border:1px solid var(--bd)}.btn-ghost:hover{color:var(--t1);border-color:var(--bd2)}
 .btn-full{width:100%}.btn-sm{padding:8px 16px;font-size:.68rem}.btn-xs{padding:6px 12px;font-size:.64rem}
@@ -526,7 +525,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 .scr-sub{font-size:.7rem;color:var(--t3);margin-top:2px}
 
 /* ── NOTIF BAR ──────────────────────────────────────────────────── */
-#notif{position:relative;background:linear-gradient(90deg,var(--gold-d),var(--gold),var(--gold-d));color:#0A0A0A;font-size:.6rem;letter-spacing:.12em;text-align:center;padding:8px 36px 8px 16px;font-weight:600;text-transform:uppercase;max-width:430px;margin:0 auto;display:block}
+#notif{position:relative;background:linear-gradient(90deg,#0044cc,#0066ff,#0044cc);color:#ffffff;font-size:.6rem;letter-spacing:.12em;text-align:center;padding:8px 36px 8px 16px;font-weight:600;text-transform:uppercase;max-width:430px;margin:0 auto;display:block}
 #notif-close{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:.72rem;color:#0A0A0A;padding:4px 6px;opacity:.7}
 
 /* ── HOME SCREEN ────────────────────────────────────────────────── */
@@ -630,7 +629,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 .svc-list-det-btn{width:100%;padding:5px 6px;font-size:.58rem;letter-spacing:.06em}
 
 /* ── SVC PILL ── */
-.svc-pill.on{background:var(--gold);color:#fff;border-color:var(--gold)}
+.svc-pill.on{background:var(--gold);color:#ffffff;border-color:var(--gold)}
 
 /* ── NOTES SCREEN ───────────────────────────────────────────────── */
 .notes-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 16px 80px}
@@ -683,18 +682,18 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 .acct-item-val{font-size:.7rem;color:var(--t3);margin-right:4px}
 
 /* ── LOYALTY POINTS ─────────────────────────────────────────────── */
-.loyalty-card{margin:0 16px 16px;background:linear-gradient(135deg,#1a0040,#2d0060,#1a0040);border:1px solid var(--gold-a45);border-radius:var(--rl);padding:16px;position:relative;overflow:hidden}
+.loyalty-card{margin:0 16px 16px;background:linear-gradient(135deg,#001440,#002280,#001440);border:1px solid var(--gold-a45);border-radius:var(--rl);padding:16px;position:relative;overflow:hidden}
 .loyalty-card::before{content:'';position:absolute;top:-30%;right:-10%;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(167,139,250,.15) 0%,transparent 70%);pointer-events:none}
 .loyalty-pts-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.loyalty-pts-val{font-family:var(--fd);font-size:2.2rem;color:#a78bfa;line-height:1}
-.loyalty-pts-lbl{font-size:.58rem;color:rgba(167,139,250,.7);text-transform:uppercase;letter-spacing:.14em;margin-top:2px}
+.loyalty-pts-val{font-family:var(--fd);font-size:2.2rem;color:#4d9eff;line-height:1}
+.loyalty-pts-lbl{font-size:.58rem;color:rgba(77,158,255,.7);text-transform:uppercase;letter-spacing:.14em;margin-top:2px}
 .loyalty-tier{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 .loyalty-tier.bronze{background:rgba(205,127,50,.12);color:#cd7f32;border:1px solid rgba(205,127,50,.25)}
 .loyalty-tier.silver{background:rgba(192,192,192,.12);color:#c0c0c0;border:1px solid rgba(192,192,192,.25)}
 .loyalty-tier.gold{background:rgba(255,200,30,.12);color:#ffc81e;border:1px solid rgba(255,200,30,.3)}
 .loyalty-tier.platinum{background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.3)}
-.loyalty-prog-bar{height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin-bottom:6px}
-.loyalty-prog-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:3px;transition:width .6s var(--ease)}
+.loyalty-prog-bar{height:5px;background:rgba(0,102,255,.15);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.loyalty-prog-fill{height:100%;background:linear-gradient(90deg,#0055cc,#0088ff);border-radius:3px;transition:width .6s var(--ease)}
 .loyalty-prog-lbl{font-size:.58rem;color:rgba(167,139,250,.6)}
 
 /* ── DIVIDER ────────────────────────────────────────────────────── */
@@ -830,7 +829,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 /* ── ADMIN PANEL ────────────────────────────────────────────────── */
 #admin-panel{position:fixed;inset:0;max-width:430px;margin:0 auto;background:var(--bg);z-index:calc(var(--zm)+100);transform:translateX(100%);transition:transform .32s var(--ease);overflow-y:auto}
 #admin-panel.on{transform:translateX(0)}
-.admin-hdr{background:linear-gradient(135deg,#0F0E06,#1A1600);border-bottom:1px solid var(--gold-a25);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.admin-hdr{background:linear-gradient(135deg,#070d1e,#0d1830);border-bottom:1px solid var(--gold-a25);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
 .admin-nav-tabs{display:flex;border-bottom:1px solid var(--bd);overflow-x:auto;scrollbar-width:none;background:var(--bg2)}
 .admin-nav-tabs::-webkit-scrollbar{display:none}
 .admin-tab{padding:12px 16px;font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;transition:all .2s}
@@ -958,7 +957,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 .more-item-text strong{display:block;font-size:.82rem;font-weight:500;color:var(--t1)}
 .more-item-text span{font-size:.64rem;color:var(--t3)}
 .more-item-arr{color:var(--t4);font-size:.7rem}
-.more-info-box{background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(201,168,76,.02));border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:16px}
+.more-info-box{background:linear-gradient(135deg,rgba(0,102,255,.06),rgba(0,102,255,.02));border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:16px}
 .more-info-row{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:.74rem}
 .more-info-row i{color:var(--gold);width:16px;text-align:center;flex-shrink:0}
 .more-info-row span{color:var(--t2)}
@@ -999,7 +998,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 /* ── WARM ACCENT usages ── */
 .splash-divider{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--warm),transparent);margin:0 auto 8px;opacity:0;animation:txIn .7s ease .8s forwards}
 .advert-promo-strip strong{color:#000}
-.pop-card-badge{background:rgba(75,0,130,.1);color:var(--gold);border:1px solid var(--gold-a25)}
+.pop-card-badge{background:rgba(0,102,255,.1);color:var(--gold);border:1px solid var(--gold-a25)}
 
 /* Fix: inputs visible in dark mode */
 [data-theme="dark"] .fi,[data-theme="dark"] .fsel{background:var(--inp);color:var(--t1);border-color:var(--bd)}
@@ -1019,16 +1018,27 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
     <div class="splash-ring-outer"></div>
     <div class="splash-ring-inner"></div>
     <div class="splash-logo-wrap">
-      <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="8" y="14" width="48" height="30" rx="4" stroke="#b59a6b" stroke-width="1.8"/>
-        <rect x="22" y="44" width="20" height="3.5" fill="#b59a6b" opacity=".6"/>
-        <rect x="16" y="47.5" width="32" height="2" rx="1" fill="#b59a6b" opacity=".35"/>
-        <line x1="14" y1="21" x2="40" y2="21" stroke="#b59a6b" stroke-width="1.2" opacity=".7"/>
-        <line x1="14" y1="26.5" x2="50" y2="26.5" stroke="#b59a6b" stroke-width="1.2" opacity=".5"/>
-        <line x1="14" y1="32" x2="46" y2="32" stroke="#b59a6b" stroke-width="1.2" opacity=".5"/>
-        <circle cx="47" cy="21" r="4" fill="#b59a6b"/>
-        <path d="M45.5 21 L47 22.5 L50 19" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M32 4 L54 12 L54 34 C54 46 44 56 32 60 C20 56 10 46 10 34 L10 12 Z" fill="url(#shieldGrad)" opacity=".9"/>
+  <path d="M32 4 L54 12 L54 34 C54 46 44 56 32 60 C20 56 10 46 10 34 L10 12 Z" fill="none" stroke="#4d9eff" stroke-width="1.2" opacity=".7"/>
+  <circle cx="28" cy="32" r="11" fill="none" stroke="#0099cc" stroke-width="1" opacity=".8"/>
+  <line x1="17" y1="32" x2="39" y2="32" stroke="#00c8ff" stroke-width=".8" opacity=".6"/>
+  <line x1="28" y1="21" x2="28" y2="43" stroke="#00c8ff" stroke-width=".8" opacity=".6"/>
+  <path d="M 20 25 Q 28 32 20 39" fill="none" stroke="#00c8ff" stroke-width=".8" opacity=".5"/>
+  <path d="M 36 25 Q 28 32 36 39" fill="none" stroke="#00c8ff" stroke-width=".8" opacity=".5"/>
+  <circle cx="28" cy="32" r="2" fill="#4d9eff"/>
+  <path d="M38 22 L38 26 M38 22 L42 22 M42 22 L42 26" stroke="#4d9eff" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M38 30 L44 30 M44 30 L44 34 M44 34 L46 34" stroke="#4d9eff" stroke-width="1" stroke-linecap="round"/>
+  <circle cx="46" cy="34" r="1.5" fill="#0066ff"/>
+  <circle cx="42" cy="22" r="1.5" fill="#0066ff"/>
+  <circle cx="38" cy="26" r="1" fill="#4d9eff"/>
+  <defs>
+    <linearGradient id="shieldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a1a3a"/>
+      <stop offset="100%" stop-color="#0033aa"/>
+    </linearGradient>
+  </defs>
+</svg>
     </div>
   </div>
   <div class="splash-text">
@@ -1060,9 +1070,9 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 <div id="toasts" aria-live="polite"></div>
 
 <!-- ══ PWA INSTALL BANNER ═════════════════════════════════════════ -->
-<div id="pwa-banner" style="display:none;position:fixed;bottom:calc(var(--nav)+12px);left:50%;transform:translateX(-50%) translateY(120%);width:calc(100% - 28px);max-width:400px;background:linear-gradient(135deg,#1a0a38,#2d1060);border:1px solid rgba(167,139,250,.4);border-radius:18px;padding:14px 16px;box-shadow:0 8px 32px rgba(0,0,0,.7),0 0 0 1px rgba(167,139,250,.12);z-index:calc(var(--zt)+1);transition:transform .42s cubic-bezier(.22,.82,.18,1),opacity .42s;opacity:0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)">
+<div id="pwa-banner" style="display:none;position:fixed;bottom:calc(var(--nav)+12px);left:50%;transform:translateX(-50%) translateY(120%);width:calc(100% - 28px);max-width:400px;background:linear-gradient(135deg,#001a4a,#002880);border:1px solid rgba(0,102,255,.5);border-radius:18px;padding:14px 16px;box-shadow:0 8px 32px rgba(0,0,0,.7),0 0 0 1px rgba(167,139,250,.12);z-index:calc(var(--zt)+1);transition:transform .42s cubic-bezier(.22,.82,.18,1),opacity .42s;opacity:0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)">
   <div style="display:flex;align-items:center;gap:12px">
-    <div style="width:44px;height:44px;border-radius:12px;background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+    <div style="width:44px;height:44px;border-radius:12px;background:rgba(0,102,255,.15);border:1px solid rgba(167,139,250,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0">
       <svg width="26" height="26" viewBox="0 0 64 64" fill="none"><rect x="8" y="14" width="48" height="30" rx="4" stroke="#a78bfa" stroke-width="2"/><circle cx="47" cy="21" r="4" fill="#a78bfa"/><line x1="14" y1="21" x2="38" y2="21" stroke="#a78bfa" stroke-width="1.4" opacity=".7"/></svg>
     </div>
     <div style="flex:1;min-width:0">
@@ -1072,7 +1082,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
     <button id="pwa-close" onclick="dismissPWABanner()" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:rgba(167,139,250,.7);font-size:.72rem;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><i class="fas fa-times"></i></button>
   </div>
   <div style="display:flex;gap:8px;margin-top:12px">
-    <button id="pwa-install-btn" onclick="triggerPWAInstall()" style="flex:1;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;border-radius:10px;padding:10px 16px;font-size:.74rem;font-weight:600;color:#fff;cursor:pointer;letter-spacing:.06em;transition:opacity .2s">
+    <button id="pwa-install-btn" onclick="triggerPWAInstall()" style="flex:1;background:linear-gradient(135deg,#0055cc,#0080ff);border:none;border-radius:10px;padding:10px 16px;font-size:.74rem;font-weight:600;color:#fff;cursor:pointer;letter-spacing:.06em;transition:opacity .2s">
       <i class="fas fa-download" style="margin-right:6px"></i>Install App
     </button>
     <button onclick="dismissPWABanner()" style="padding:10px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(167,139,250,.2);border-radius:10px;font-size:.72rem;color:rgba(167,139,250,.7);cursor:pointer">
@@ -1117,6 +1127,13 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
       </div>
       <div id="si-err" class="ferr" style="margin-bottom:12px"></div>
       <button class="btn btn-gold btn-full" id="si-btn" onclick="doSignIn()"><i class="fas fa-arrow-right-to-bracket"></i> Sign In</button>
+      <!-- Google option -->
+      <div style="margin:14px 0 2px">
+        <button type="button" onclick="doGoogleSignIn()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px;background:var(--bg4);border:1px solid var(--bd);border-radius:var(--r);cursor:pointer;font-size:.74rem;font-weight:500;color:var(--t1);transition:border-color .2s" onmouseover="this.style.borderColor='var(--bd2)'" onmouseout="this.style.borderColor='var(--bd)'">
+          <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.2l6.7-6.7C35.9 2.5 30.3 0 24 0 14.6 0 6.6 5.5 2.7 13.6l7.8 6.1C12.3 13.5 17.7 9.5 24 9.5z"/><path fill="#34A853" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.6-4.8 7.4l7.5 5.8c4.4-4 6.9-10 6.9-17.2z"/><path fill="#4A90D9" d="M10.5 28.3A14.5 14.5 0 0 1 9.5 24c0-1.5.3-2.9.7-4.3L2.4 13.6A24 24 0 0 0 0 24c0 3.8.9 7.5 2.5 10.7l8-6.4z"/><path fill="#FBBC05" d="M24 48c6.5 0 12-2.1 16-5.8l-7.5-5.8c-2.2 1.5-5 2.3-8.5 2.3-6.3 0-11.7-4.2-13.6-10l-8 6.2C6.7 42.5 14.7 48 24 48z"/></svg>
+          Sign in with Google
+        </button>
+      </div>
       <!-- Quick action links as styled rows -->
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
         <div onclick="authTab('resetpw')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg4);border:1px solid var(--bd);border-radius:var(--r);cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='var(--bd2)'" onmouseout="this.style.borderColor='var(--bd)'">
@@ -1151,7 +1168,23 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
         <span style="font-size:.58rem;padding:3px 9px;border-radius:12px;background:rgba(74,144,217,.08);color:var(--blue);border:1px solid rgba(74,144,217,.2)"><i class="fas fa-note-sticky" style="margin-right:3px"></i>Save Notes</span>
         <span style="font-size:.58rem;padding:3px 9px;border-radius:12px;background:rgba(167,139,250,.08);color:var(--gold);border:1px solid var(--gold-a25)"><i class="fas fa-file-pdf" style="margin-right:3px"></i>PDF Receipts</span>
       </div>
-      <!-- Form fields with icons -->
+      <!-- Google Sign-In -->
+      <div style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <div style="flex:1;height:1px;background:var(--bd)"></div>
+          <span style="font-size:.62rem;color:var(--t4);white-space:nowrap">Or continue with</span>
+          <div style="flex:1;height:1px;background:var(--bd)"></div>
+        </div>
+        <button type="button" onclick="doGoogleSignIn()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;background:var(--bg4);border:1px solid var(--bd);border-radius:var(--r);cursor:pointer;transition:all .2s;font-size:.78rem;font-weight:500;color:var(--t1)" onmouseover="this.style.borderColor='var(--bd2)'" onmouseout="this.style.borderColor='var(--bd)'">
+          <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.2l6.7-6.7C35.9 2.5 30.3 0 24 0 14.6 0 6.6 5.5 2.7 13.6l7.8 6.1C12.3 13.5 17.7 9.5 24 9.5z"/><path fill="#34A853" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.6-4.8 7.4l7.5 5.8c4.4-4 6.9-10 6.9-17.2z"/><path fill="#4A90D9" d="M10.5 28.3A14.5 14.5 0 0 1 9.5 24c0-1.5.3-2.9.7-4.3L2.4 13.6A24 24 0 0 0 0 24c0 3.8.9 7.5 2.5 10.7l8-6.4z"/><path fill="#FBBC05" d="M24 48c6.5 0 12-2.1 16-5.8l-7.5-5.8c-2.2 1.5-5 2.3-8.5 2.3-6.3 0-11.7-4.2-13.6-10l-8 6.2C6.7 42.5 14.7 48 24 48z"/></svg>
+          Continue with Google
+        </button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+        <div style="flex:1;height:1px;background:var(--bd)"></div>
+        <span style="font-size:.62rem;color:var(--t4);white-space:nowrap">Or fill in details below</span>
+        <div style="flex:1;height:1px;background:var(--bd)"></div>
+      </div>      <!-- Form fields with icons -->
       <div class="auth-field-row">
         <div class="auth-field-icon"><i class="fas fa-user"></i></div>
         <div class="fg" style="flex:1;margin:0">
@@ -1638,7 +1671,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
         <div class="svc-pill" onclick="filterServices('design',this)" data-cat="design"><i class="fas fa-palette" style="font-size:.6rem;margin-right:3px"></i>Design</div>
       </div>
       <!-- Service Examples Banner -->
-      <div style="margin:4px 16px 12px;background:linear-gradient(135deg,#350060 0%,#1a0040 100%);border:1px solid var(--gold-a25);border-radius:var(--rl);padding:12px 14px">
+      <div style="margin:4px 16px 12px;background:linear-gradient(135deg,#001a60 0%,#000d38 100%);border:1px solid var(--gold-a25);border-radius:var(--rl);padding:12px 14px">
         <div style="font-size:.62rem;color:rgba(181,154,107,.8);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px"><i class="fas fa-bolt" style="margin-right:4px"></i>Popular Today</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <span onclick="openSvcByName('Print Documents')" style="font-size:.64rem;padding:4px 10px;border-radius:16px;background:rgba(255,255,255,.08);color:#E5E4E2;cursor:pointer;border:1px solid rgba(255,255,255,.12)">📄 Print A4 — KES 5</span>
@@ -1722,7 +1755,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
       <!-- Logged in: Institution Dashboard -->
       <div id="inst-dashboard-view" style="display:none">
         <!-- Dashboard header -->
-        <div style="background:linear-gradient(135deg,#350060,#1a0040);padding:18px 16px 16px;border-bottom:1px solid var(--gold-a25)">
+        <div style="background:linear-gradient(135deg,#002060,#001040);padding:18px 16px 16px;border-bottom:1px solid var(--gold-a25)">
           <div style="display:flex;align-items:center;gap:12px">
             <div style="width:46px;height:46px;border-radius:12px;background:var(--gold-a15);border:1px solid var(--gold-a45);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--gold);flex-shrink:0"><i class="fas fa-building-columns"></i></div>
             <div style="flex:1;min-width:0">
@@ -1829,9 +1862,23 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
       <div class="more-hero">
         <div class="more-logo-box">
           <svg width="32" height="32" viewBox="0 0 64 64" fill="none">
-            <rect x="8" y="14" width="48" height="30" rx="4" stroke="#b59a6b" stroke-width="2"/>
-            <line x1="14" y1="22" x2="38" y2="22" stroke="#b59a6b" stroke-width="1.4" opacity=".7"/>
-            <circle cx="47" cy="22" r="4" fill="#b59a6b"/>
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M32 4 L54 12 L54 34 C54 46 44 56 32 60 C20 56 10 46 10 34 L10 12 Z" fill="url(#sg2)" opacity=".9"/>
+  <path d="M32 4 L54 12 L54 34 C54 46 44 56 32 60 C20 56 10 46 10 34 L10 12 Z" fill="none" stroke="#4d9eff" stroke-width="1.2" opacity=".7"/>
+  <circle cx="28" cy="32" r="11" fill="none" stroke="#0099cc" stroke-width="1" opacity=".8"/>
+  <line x1="17" y1="32" x2="39" y2="32" stroke="#00c8ff" stroke-width=".8" opacity=".6"/>
+  <line x1="28" y1="21" x2="28" y2="43" stroke="#00c8ff" stroke-width=".8" opacity=".6"/>
+  <circle cx="28" cy="32" r="2" fill="#4d9eff"/>
+  <path d="M38 22 L38 26 M38 22 L42 22 M42 22 L42 26 M38 30 L44 30 M44 30 L44 34 M44 34 L46 34" stroke="#4d9eff" stroke-width="1.2" stroke-linecap="round"/>
+  <circle cx="46" cy="34" r="1.5" fill="#0066ff"/>
+  <circle cx="42" cy="22" r="1.5" fill="#0066ff"/>
+  <defs>
+    <linearGradient id="sg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a1a3a"/>
+      <stop offset="100%" stop-color="#0033aa"/>
+    </linearGradient>
+  </defs>
+</svg>
           </svg>
         </div>
         <div class="more-brand">NovaDeskOnline</div>
@@ -2357,12 +2404,23 @@ function popup(title, msg, icon='nf', btns=[{label:'OK',fn:null,style:'btn-gold'
 function popupBtn(i) { $('popup-overlay').classList.remove('on'); window._popupBtns?.[i]?.fn?.(); }
 
 /* ── OVERLAY ───────────────────────────────────────────────────── */
+let _ovlLock=false, _ovlLockTimer=null;
 function showOvl(){ $('ovl').classList.add('on'); }
 function hideOvl(){ $('ovl').classList.remove('on'); }
 function handleOvlClick(){
+  if(_ovlLock) return;
   closeAllModals();
 }
-function openModal(id){ const el=$(id); el.classList.add('on'); showOvl(); }
+function openModal(id){
+  const el=$(id);
+  if(!el) return;
+  el.classList.add('on');
+  showOvl();
+  // Prevent ghost-click: lock overlay for 420ms after any modal opens
+  _ovlLock = true;
+  clearTimeout(_ovlLockTimer);
+  _ovlLockTimer = setTimeout(()=>{ _ovlLock=false; }, 420);
+}
 function closeModal(id){ const el=$(id); el?.classList.remove('on'); hideOvl(); }
 function closeAllModals(){
   ['contact-modal','about-modal','my-reqs-modal','notif-panel','profile-modal','svc-req-modal'].forEach(closeModal);
@@ -3775,7 +3833,7 @@ window.addEventListener('popstate', ()=>{
   <div class="modal-body" style="padding-bottom:24px">
     <!-- Hero -->
     <div style="background:linear-gradient(135deg,#1a0040,#2d0060);border:1px solid var(--gold-a45);border-radius:var(--rl);padding:18px;margin-bottom:18px;text-align:center;position:relative;overflow:hidden">
-      <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(167,139,250,.15),transparent 70%)"></div>
+      <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(0,102,255,.2),transparent 70%)"></div>
       <div style="width:56px;height:56px;background:var(--gold-a15);border:2px solid var(--gold-a45);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:1.3rem;color:var(--gold)"><i class="fas fa-hand-holding-dollar"></i></div>
       <div style="font-family:var(--fd);font-size:1.15rem;color:#E5E4E2;margin-bottom:4px">Earn with NovaDeskOnline</div>
       <p style="font-size:.7rem;color:rgba(200,190,255,.75);line-height:1.6;max-width:240px;margin:0 auto">Refer clients, earn commissions on every completed service. Work from anywhere in Nyamira and beyond.</p>
@@ -4048,11 +4106,31 @@ window.addEventListener('popstate', ()=>{
     </div>
     <div id="tr-err" class="ferr" style="margin-bottom:12px"></div>
     <button class="btn btn-gold btn-full" id="tr-btn" onclick="submitTechRequest()"><i class="fas fa-paper-plane"></i> Submit Request</button>
-    <p style="text-align:center;font-size:.66rem;color:var(--t3);margin-top:10px">We'll contact you within 24 hours to discuss your project.</p>
+    <div style="margin-top:10px;padding:8px 12px;background:rgba(0,102,255,.06);border:1px solid rgba(0,102,255,.2);border-radius:var(--r);display:flex;align-items:center;gap:8px">
+      <i class="fas fa-star" style="color:#4d9eff;font-size:.85rem"></i>
+      <span style="font-size:.66rem;color:var(--t2)"><strong style="color:#4d9eff">+10 Loyalty Points</strong> awarded when your request is completed</span>
+    </div>
+    <p style="text-align:center;font-size:.66rem;color:var(--t3);margin-top:8px">We'll contact you within 24 hours to discuss your project.</p>
   </div>
 </div>
 
 <script>
+
+/* ── GOOGLE OAUTH ──────────────────────────────────────────────── */
+async function doGoogleSignIn(){
+  try {
+    const { data, error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.href,
+        queryParams: { access_type: 'offline', prompt: 'consent' }
+      }
+    });
+    if (error) throw error;
+  } catch(e) {
+    toast(e.message || 'Google sign-in failed. Please try again.', 'er');
+  }
+}
 /* ════════════════════════════════════════════════════════════════════
    PDF RECEIPT — lazy-loads jsPDF, generates branded receipt
 ════════════════════════════════════════════════════════════════════ */
@@ -4092,11 +4170,11 @@ async function generateReceipt(reqId, svcName, clientName) {
     const receiptNo = 'ND-' + Date.now().toString(36).toUpperCase().slice(-8);
 
     // ── Background ──
-    doc.setFillColor(13,0,24);
+    doc.setFillColor(6,12,28);
     doc.rect(0,0,W,210,'F');
 
     // ── Header bar ──
-    doc.setFillColor(124,58,237);
+    doc.setFillColor(0,102,255);
     doc.rect(0,0,W,22,'F');
 
     // ── Brand name ──
@@ -4114,11 +4192,11 @@ async function generateReceipt(reqId, svcName, clientName) {
     // ── Receipt title ──
     doc.setFont('helvetica','bold');
     doc.setFontSize(11);
-    doc.setTextColor(167,139,250);
+    doc.setTextColor(77,158,255);
     doc.text('SERVICE REQUEST RECEIPT', W/2, 32, {align:'center'});
 
     // ── Divider ──
-    doc.setDrawColor(124,58,237);
+    doc.setDrawColor(0,102,255);
     doc.setLineWidth(0.4);
     doc.line(12,35,W-12,35);
 
@@ -4140,7 +4218,7 @@ async function generateReceipt(reqId, svcName, clientName) {
       doc.roundedRect(12,y-4,W-24,9,1.5,1.5,'F');
       doc.setFont('helvetica','bold');
       doc.setFontSize(7.5);
-      doc.setTextColor(167,139,250);
+      doc.setTextColor(77,158,255);
       doc.text(label, 16, y+1.5);
       doc.setFont('helvetica','normal');
       doc.setTextColor(240,237,255);
@@ -4150,24 +4228,24 @@ async function generateReceipt(reqId, svcName, clientName) {
 
     // ── Note ──
     y += 4;
-    doc.setFillColor(30,20,55);
+    doc.setFillColor(8,16,40);
     doc.roundedRect(12,y,W-24,18,2,2,'F');
-    doc.setDrawColor(124,58,237);
+    doc.setDrawColor(0,102,255);
     doc.setLineWidth(0.3);
     doc.roundedRect(12,y,W-24,18,2,2,'S');
     doc.setFont('helvetica','italic');
     doc.setFontSize(7);
-    doc.setTextColor(181,154,107);
+    doc.setTextColor(0,200,255);
     doc.text('Thank you for choosing NovaDeskOnline. Our team will contact', W/2, y+6, {align:'center'});
     doc.text('you via WhatsApp to confirm and complete your request.', W/2, y+11, {align:'center'});
     doc.setFont('helvetica','normal');
     doc.setFontSize(6);
-    doc.setTextColor(100,80,140);
+    doc.setTextColor(60,120,180);
     doc.text('This is a digital receipt. Not a tax invoice.', W/2, y+16, {align:'center'});
 
     // ── Footer ──
     y += 26;
-    doc.setDrawColor(60,40,90);
+    doc.setDrawColor(0,60,160);
     doc.line(12,y,W-12,y);
     doc.setFontSize(6);
     doc.setTextColor(90,70,120);
@@ -4552,8 +4630,13 @@ window.dismissPWABanner   = dismissPWABanner;
 // Already installed? Don't show banner
 window.addEventListener('appinstalled', ()=>{
   localStorage.setItem('nd-pwa-installed','1');
-  toast('App installed successfully! 🎉','ok');
+  toast('NovaDeskOnline installed! Open from your home screen 🚀','ok',4000);
   dismissPWABanner(false);
+  // Hide all install buttons
+  ['home-install-cta','more-install-item'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display='none';
+  });
 });
 </script>
 let _techReqType = '';
