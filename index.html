@@ -344,14 +344,14 @@
   --zi:50;--zs:200;--zm:400;--zt:600;
 }
 :root,[data-theme="dark"]{
-  --bg:#080d18;--bg2:#0d1424;--bg3:#111d32;--bg4:#162340;--bg5:#1c2c4e;
-  --t1:#e8f0ff;--t2:#a8c0e8;--t3:#6080a8;--t4:#3a506c;
-  --bd:rgba(0,102,255,.22);--bd2:rgba(0,102,255,.45);
+  --bg:#0a0f1e;--bg2:#0f1628;--bg3:#152035;--bg4:#1b2a44;--bg5:#213354;
+  --t1:#e8f2ff;--t2:#b8cce8;--t3:#7898bc;--t4:#4a6080;
+  --bd:rgba(77,158,255,.25);--bd2:rgba(77,158,255,.5);
   --sh:0 2px 16px rgba(0,0,0,.7);--shg:0 4px 28px rgba(0,102,255,.4);
-  --inp:#060c18;--scrim:rgba(0,0,0,.88);
-  --gold:#4d9eff;--gold-l:#80b8ff;--gold-d:#0066ff;
-  --gold-a8:rgba(77,158,255,.10);--gold-a15:rgba(77,158,255,.18);
-  --gold-a25:rgba(77,158,255,.28);--gold-a45:rgba(77,158,255,.48);
+  --inp:#08101e;--scrim:rgba(0,0,0,.88);
+  --gold:#5aaeff;--gold-l:#80c4ff;--gold-d:#0066ff;
+  --gold-a8:rgba(90,174,255,.12);--gold-a15:rgba(90,174,255,.20);
+  --gold-a25:rgba(90,174,255,.32);--gold-a45:rgba(90,174,255,.52);
 }
 [data-theme="light"]{
   --bg:#f0f4ff;--bg2:#e0eaff;--bg3:#ffffff;--bg4:#c8d8f8;--bg5:#b0c8f0;
@@ -365,7 +365,7 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
-body{font-family:var(--fb);background:#060c18;color:var(--t1);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body{font-family:var(--fb);background:#0a0f1e;color:var(--t1);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
 [data-theme="light"] body{background:var(--bg)}
 [data-theme="light"] #topbar{background:rgba(244,242,251,.96)}
 [data-theme="light"] #botnav{background:var(--bg2)}
@@ -437,7 +437,7 @@ body:has(#splash:not(.gone)) .fab-wa{opacity:0;pointer-events:none}
 #topbar{position:fixed;top:0;width:100%;max-width:430px;height:var(--top);z-index:var(--zi);background:var(--bg);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;padding:0 14px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transition:background .3s,border-color .3s}
 [data-theme="light"] #topbar{background:rgba(245,239,230,.96)}
 .brand{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none}
-.brand-name{font-family:var(--fd);font-size:1.05rem;font-weight:600;color:#4d9eff;letter-spacing:.04em;display:block}
+.brand-name{font-family:var(--fd);font-size:1.05rem;font-weight:700;color:#5aaeff;letter-spacing:.04em;display:block}
 .brand-sub{font-size:.46rem;letter-spacing:.24em;text-transform:uppercase;color:var(--t3);display:block;margin-top:1px}
 .top-acts{display:flex;align-items:center;gap:2px}
 .tact{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;color:var(--t2);font-size:.85rem;cursor:pointer;border-radius:var(--r);transition:all .2s;position:relative}
@@ -446,9 +446,9 @@ body:has(#splash:not(.gone)) .fab-wa{opacity:0;pointer-events:none}
 
 /* ── BOTTOM NAV ─────────────────────────────────────────────────── */
 #botnav{position:fixed;bottom:0;width:100%;max-width:430px;height:var(--nav);z-index:var(--zi);background:var(--bg2);border-top:1px solid var(--bd);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:stretch;padding-bottom:env(safe-area-inset-bottom,0);transition:background .3s}
-.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:transparent;color:var(--t3);font-size:.48rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:color .2s;position:relative;padding-bottom:2px}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:transparent;color:var(--t3);font-size:.48rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:color .2s;position:relative;padding-bottom:2px;-webkit-tap-highlight-color:transparent}
 .ni i{font-size:1rem;transition:transform .2s var(--ease)}
-.ni.on{color:var(--gold)}.ni.on i{transform:translateY(-1px)}
+.ni.on{color:var(--gold);font-weight:600}.ni.on i{transform:translateY(-1px)}
 .ni-badge{position:absolute;top:8px;right:calc(50% - 14px);min-width:14px;height:14px;background:var(--gold);color:#000;font-size:.44rem;font-weight:700;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 2px}
 
 /* ── OVERLAY ────────────────────────────────────────────────────── */
@@ -659,8 +659,49 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 .file-del{width:32px;height:32px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.2);border-radius:8px;color:var(--red);font-size:.72rem;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
 .file-del:hover{background:rgba(224,80,80,.15)}
 
-/* ── ACCOUNT SCREEN ─────────────────────────────────────────────── */
-.acct-avatar-wrap{display:flex;flex-direction:column;align-items:center;padding:24px 16px 16px}
+/* ── ACCOUNT TABS ───────────────────────────────────────────────── */
+.acct-tabs{display:flex;border-bottom:2px solid var(--bd);overflow-x:auto;scrollbar-width:none;background:var(--bg2);position:sticky;top:var(--top);z-index:10}
+.acct-tabs::-webkit-scrollbar{display:none}
+.acct-tab{flex:1;min-width:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:11px 4px 9px;font-size:.5rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--t3);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .18s;white-space:nowrap;-webkit-tap-highlight-color:transparent;user-select:none}
+.acct-tab i{font-size:.9rem;margin-bottom:1px}
+.acct-tab span{display:block;line-height:1}
+.acct-tab.on{color:var(--gold);border-bottom-color:var(--gold);background:var(--gold-a8)}
+.acct-tab.on i{color:var(--gold)}
+.acct-tab:active{background:var(--gold-a8)}
+.acct-tab-body{display:none;padding:14px 16px 0;animation:scrIn .2s var(--ease)}
+.acct-tab-body.on{display:block}
+/* Info card in profile tab */
+.acct-info-card{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);overflow:hidden;margin-bottom:14px}
+.acct-info-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--bd)}
+.acct-info-row:last-child{border-bottom:none}
+.acct-info-lbl{font-size:.66rem;color:var(--t3);display:flex;align-items:center;gap:6px;min-width:100px}
+.acct-info-lbl i{width:14px;text-align:center;color:var(--gold)}
+.acct-info-val{font-size:.72rem;font-weight:500;color:var(--t1);text-align:right;word-break:break-word;max-width:180px}
+/* Request items in requests tab */
+.my-req-item{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:12px 14px;transition:border-color .2s}
+.my-req-item:hover{border-color:var(--bd2)}
+.my-req-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.my-req-name{font-size:.8rem;font-weight:600;color:var(--t1)}
+.my-req-status{font-size:.58rem;font-weight:700;padding:3px 9px;border-radius:12px;text-transform:uppercase;letter-spacing:.06em}
+.my-req-status.pending{background:rgba(255,165,0,.1);color:#ffa500;border:1px solid rgba(255,165,0,.25)}
+.my-req-status.in_progress{background:rgba(0,102,255,.1);color:var(--gold);border:1px solid var(--gold-a25)}
+.my-req-status.completed{background:rgba(50,180,100,.1);color:var(--green);border:1px solid rgba(50,180,100,.25)}
+.my-req-status.cancelled{background:rgba(224,80,80,.1);color:var(--red);border:1px solid rgba(224,80,80,.25)}
+.my-req-meta{font-size:.62rem;color:var(--t3);margin-bottom:8px}
+.my-req-btns{display:flex;gap:6px;flex-wrap:wrap}
+/* Filter pills */
+.req-filter-pill{padding:5px 12px;border-radius:20px;font-size:.62rem;font-weight:500;border:1px solid var(--bd);color:var(--t3);background:transparent;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.req-filter-pill.on{background:var(--gold);color:#fff;border-color:var(--gold)}
+/* Notification items */
+.notif-item{display:flex;align-items:flex-start;gap:10px;padding:12px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);transition:border-color .2s}
+.notif-item.unread{border-left:3px solid var(--gold);background:var(--gold-a8)}
+.notif-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.notif-icon.request{background:rgba(0,102,255,.1);color:var(--gold)}
+.notif-icon.system{background:rgba(50,180,100,.1);color:var(--green)}
+.notif-icon.promotion{background:rgba(255,165,0,.1);color:#ffa500}
+.notif-icon.general{background:var(--bg4);color:var(--t3)}
+/* ── ACCOUNT AVATAR WRAP ────────────────────────────────────────── */
+.acct-avatar-wrap{display:flex;flex-direction:column;align-items:center;padding:24px 16px 16px;background:var(--bg2);border-bottom:1px solid var(--bd)}
 .acct-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:2rem;color:#000;margin-bottom:12px;position:relative;overflow:hidden;cursor:pointer;border:2px solid var(--gold-a45)}
 .acct-avatar img{width:100%;height:100%;object-fit:cover}
 .acct-avatar-edit{position:absolute;bottom:0;left:0;right:0;height:28px;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#fff;opacity:0;transition:opacity .2s}
@@ -869,7 +910,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 .footer-links a{font-size:.65rem;color:var(--t3);transition:color .2s;cursor:pointer}
 .footer-links a:hover{color:var(--gold)}
 .footer-copy{font-size:.6rem;color:var(--t4)}
-#admin-trigger{cursor:pointer;opacity:0;transition:opacity .5s}
+#admin-trigger{display:none}
 #admin-trigger:hover{opacity:.3}
 
 /* ── THEME TOGGLE ───────────────────────────────────────────────── */
@@ -1000,9 +1041,39 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 .advert-promo-strip strong{color:#000}
 .pop-card-badge{background:rgba(0,102,255,.1);color:var(--gold);border:1px solid var(--gold-a25)}
 
-/* Fix: inputs visible in dark mode */
-[data-theme="dark"] .fi,[data-theme="dark"] .fsel{background:var(--inp);color:var(--t1);border-color:var(--bd)}
-[data-theme="dark"] .fi::placeholder{color:var(--t4)}
+/* Inputs dark mode */
+[data-theme="dark"] .fi,[data-theme="dark"] .fsel{background:#0c1525;color:#e8f2ff;border-color:rgba(77,158,255,.35)}
+[data-theme="dark"] .fi::placeholder{color:#4a6080}
+[data-theme="dark"] .fi:focus{border-color:rgba(77,158,255,.7);box-shadow:0 0 0 3px rgba(77,158,255,.1)}
+/* Card backgrounds dark */
+[data-theme="dark"] .svc-list-card,[data-theme="dark"] .op-cat-tile,[data-theme="dark"] .op-sub-card{background:#152035;border-color:rgba(77,158,255,.2)}
+[data-theme="dark"] .more-item,[data-theme="dark"] .acct-item,[data-theme="dark"] .my-req-item{background:#152035;border-color:rgba(77,158,255,.2)}
+[data-theme="dark"] .acct-info-card,[data-theme="dark"] .acct-info-row{background:#152035;border-color:rgba(77,158,255,.2)}
+[data-theme="dark"] .notif-item{background:#152035;border-color:rgba(77,158,255,.2)}
+
+
+/* ── DARK MODE GLOBAL FIXES ─────────────────────────────────────── */
+[data-theme="dark"] .scr-hdr{background:var(--bg2)}
+[data-theme="dark"] .modal,.modal{background:var(--bg2)}
+[data-theme="dark"] .auth-sheet{background:var(--bg2)}
+[data-theme="dark"] .more-quick-title,[data-theme="dark"] .more-sect-ttl{color:var(--t3)}
+[data-theme="dark"] .more-item-text strong{color:var(--t1)}
+[data-theme="dark"] .more-item-text span{color:var(--t3)}
+[data-theme="dark"] .acct-section-ttl{color:var(--t4)}
+[data-theme="dark"] .acct-info-lbl{color:var(--t3)}
+[data-theme="dark"] .acct-info-val{color:var(--t1)}
+[data-theme="dark"] .loyalty-card{border-color:var(--gold-a45)}
+[data-theme="dark"] .my-req-name{color:var(--t1)}
+[data-theme="dark"] .my-req-meta{color:var(--t3)}
+[data-theme="dark"] .notif-item .notif-title{color:var(--t1)}
+[data-theme="dark"] .acct-tab{color:#7898bc !important}
+[data-theme="dark"] .acct-tab.on{color:var(--gold) !important;background:var(--gold-a8)}
+[data-theme="light"] .acct-tab{color:#5a4e80}
+[data-theme="light"] .acct-tab.on{color:var(--gold)}
+[data-theme="dark"] .req-filter-pill{color:var(--t2);border-color:var(--bd)}
+[data-theme="dark"] .req-filter-pill.on{color:#fff;background:var(--gold);border-color:var(--gold)}
+[data-theme="dark"] .svc-list-name{color:var(--t1)}
+[data-theme="dark"] .svc-list-price{color:var(--gold)}
 
 </style>
 </head>
@@ -1018,27 +1089,16 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
     <div class="splash-ring-outer"></div>
     <div class="splash-ring-inner"></div>
     <div class="splash-logo-wrap">
-      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M32 4 L54 12 L54 34 C54 46 44 56 32 60 C20 56 10 46 10 34 L10 12 Z" fill="url(#shieldGrad)" opacity=".9"/>
-  <path d="M32 4 L54 12 L54 34 C54 46 44 56 32 60 C20 56 10 46 10 34 L10 12 Z" fill="none" stroke="#4d9eff" stroke-width="1.2" opacity=".7"/>
-  <circle cx="28" cy="32" r="11" fill="none" stroke="#0099cc" stroke-width="1" opacity=".8"/>
-  <line x1="17" y1="32" x2="39" y2="32" stroke="#00c8ff" stroke-width=".8" opacity=".6"/>
-  <line x1="28" y1="21" x2="28" y2="43" stroke="#00c8ff" stroke-width=".8" opacity=".6"/>
-  <path d="M 20 25 Q 28 32 20 39" fill="none" stroke="#00c8ff" stroke-width=".8" opacity=".5"/>
-  <path d="M 36 25 Q 28 32 36 39" fill="none" stroke="#00c8ff" stroke-width=".8" opacity=".5"/>
-  <circle cx="28" cy="32" r="2" fill="#4d9eff"/>
-  <path d="M38 22 L38 26 M38 22 L42 22 M42 22 L42 26" stroke="#4d9eff" stroke-width="1.2" stroke-linecap="round"/>
-  <path d="M38 30 L44 30 M44 30 L44 34 M44 34 L46 34" stroke="#4d9eff" stroke-width="1" stroke-linecap="round"/>
-  <circle cx="46" cy="34" r="1.5" fill="#0066ff"/>
-  <circle cx="42" cy="22" r="1.5" fill="#0066ff"/>
-  <circle cx="38" cy="26" r="1" fill="#4d9eff"/>
-  <defs>
-    <linearGradient id="shieldGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0a1a3a"/>
-      <stop offset="100%" stop-color="#0033aa"/>
-    </linearGradient>
-  </defs>
-</svg>
+<svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="14" width="48" height="30" rx="4" stroke="#4d9eff" stroke-width="1.8"/>
+        <rect x="22" y="44" width="20" height="3.5" fill="#4d9eff" opacity=".6"/>
+        <rect x="16" y="47.5" width="32" height="2" rx="1" fill="#4d9eff" opacity=".35"/>
+        <line x1="14" y1="21" x2="40" y2="21" stroke="#4d9eff" stroke-width="1.2" opacity=".7"/>
+        <line x1="14" y1="26.5" x2="50" y2="26.5" stroke="#4d9eff" stroke-width="1.2" opacity=".5"/>
+        <line x1="14" y1="32" x2="46" y2="32" stroke="#4d9eff" stroke-width="1.2" opacity=".5"/>
+        <circle cx="47" cy="21" r="4" fill="#4d9eff"/>
+        <path d="M45.5 21 L47 22.5 L50 19" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </div>
   </div>
   <div class="splash-text">
@@ -1098,12 +1158,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
     <!-- Close button -->
     <button onclick="closeAuth()" aria-label="Close" style="position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);font-size:.78rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;transition:all .2s" onmouseover="this.style.background='var(--bg5)'" onmouseout="this.style.background='var(--bg4)'"><i class="fas fa-times"></i></button>
     <div class="auth-logo">
-      <div class="auth-logo-icon">
-        <svg width="28" height="28" viewBox="0 0 64 64" fill="none">
-          <rect x="8" y="14" width="48" height="30" rx="4" stroke="#a78bfa" stroke-width="2"/>
-          <circle cx="47" cy="21" r="4" fill="#a78bfa"/>
-        </svg>
-      </div>
+      <div class="auth-logo-icon"><i class="fas fa-circle-user" style="font-size:2rem;color:var(--gold)"></i></div>
       <div style="font-family:var(--fd);font-size:1.2rem;color:var(--gold)">NovaDeskOnline</div>
       <div style="font-size:.64rem;color:var(--t3);margin-top:2px">Cyber Services Portal</div>
     </div>
@@ -1133,6 +1188,10 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
           <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.2l6.7-6.7C35.9 2.5 30.3 0 24 0 14.6 0 6.6 5.5 2.7 13.6l7.8 6.1C12.3 13.5 17.7 9.5 24 9.5z"/><path fill="#34A853" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.6-4.8 7.4l7.5 5.8c4.4-4 6.9-10 6.9-17.2z"/><path fill="#4A90D9" d="M10.5 28.3A14.5 14.5 0 0 1 9.5 24c0-1.5.3-2.9.7-4.3L2.4 13.6A24 24 0 0 0 0 24c0 3.8.9 7.5 2.5 10.7l8-6.4z"/><path fill="#FBBC05" d="M24 48c6.5 0 12-2.1 16-5.8l-7.5-5.8c-2.2 1.5-5 2.3-8.5 2.3-6.3 0-11.7-4.2-13.6-10l-8 6.2C6.7 42.5 14.7 48 24 48z"/></svg>
           Sign in with Google
         </button>
+        <button type="button" onclick="signInAsGuest()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;background:transparent;border:1px dashed var(--bd);border-radius:var(--r);cursor:pointer;font-size:.72rem;color:var(--t3);margin-top:8px;transition:border-color .2s" onmouseover="this.style.borderColor='var(--bd2)'" onmouseout="this.style.borderColor='var(--bd)'">
+          <i class="fas fa-user-secret" style="font-size:.8rem"></i>
+          Continue as Guest <span style="font-size:.6rem;opacity:.7;margin-left:2px">— limited access</span>
+        </button>
       </div>
       <!-- Quick action links as styled rows -->
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
@@ -1151,6 +1210,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
           <div style="flex:1"><div style="font-size:.76rem;font-weight:500;color:var(--t1)">Apply as Agent</div><div style="font-size:.62rem;color:var(--t3)">Earn commissions by referring clients</div></div>
           <i class="fas fa-chevron-right" style="color:var(--t4);font-size:.68rem"></i>
         </div>
+
       </div>
     </div>
 
@@ -1641,7 +1701,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
           <a onclick="openAboutModal()">About</a>
         </div>
         <div class="footer-copy">© <span id="cr-year"></span> NovaDeskOnline. All rights reserved.</div>
-        <div style="margin-top:10px"><span id="admin-trigger-footer" onclick="maybeOpenAdmin()" title="">·</span></div>
+
       </div>
     </section>
 
@@ -1860,27 +1920,18 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
     <!-- ── MORE SCREEN ──────────────────────────────────── -->
     <section class="scr" id="scr-more">
       <div class="more-hero">
-        <div class="more-logo-box">
-          <svg width="32" height="32" viewBox="0 0 64 64" fill="none">
-            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M32 4 L54 12 L54 34 C54 46 44 56 32 60 C20 56 10 46 10 34 L10 12 Z" fill="url(#sg2)" opacity=".9"/>
-  <path d="M32 4 L54 12 L54 34 C54 46 44 56 32 60 C20 56 10 46 10 34 L10 12 Z" fill="none" stroke="#4d9eff" stroke-width="1.2" opacity=".7"/>
-  <circle cx="28" cy="32" r="11" fill="none" stroke="#0099cc" stroke-width="1" opacity=".8"/>
-  <line x1="17" y1="32" x2="39" y2="32" stroke="#00c8ff" stroke-width=".8" opacity=".6"/>
-  <line x1="28" y1="21" x2="28" y2="43" stroke="#00c8ff" stroke-width=".8" opacity=".6"/>
-  <circle cx="28" cy="32" r="2" fill="#4d9eff"/>
-  <path d="M38 22 L38 26 M38 22 L42 22 M42 22 L42 26 M38 30 L44 30 M44 30 L44 34 M44 34 L46 34" stroke="#4d9eff" stroke-width="1.2" stroke-linecap="round"/>
-  <circle cx="46" cy="34" r="1.5" fill="#0066ff"/>
-  <circle cx="42" cy="22" r="1.5" fill="#0066ff"/>
-  <defs>
-    <linearGradient id="sg2" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0a1a3a"/>
-      <stop offset="100%" stop-color="#0033aa"/>
-    </linearGradient>
-  </defs>
-</svg>
-          </svg>
-        </div>
+        <div class="more-logo-box" style="width:56px;height:56px;margin:0 auto 10px"><svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <defs><linearGradient id="sg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a1f4e"/><stop offset="100%" stop-color="#0044bb"/></linearGradient></defs>
+  <path d="M32 3 L56 11 L56 34 C56 47 45 57 32 62 C19 57 8 47 8 34 L8 11 Z" fill="url(#sg2)"/>
+  <path d="M32 3 L56 11 L56 34 C56 47 45 57 32 62 C19 57 8 47 8 34 L8 11 Z" fill="none" stroke="#4d9eff" stroke-width="1.5" opacity=".8"/>
+  <circle cx="28" cy="33" r="10" fill="none" stroke="#00c8ff" stroke-width="1.2" opacity=".9"/>
+  <line x1="18" y1="33" x2="38" y2="33" stroke="#00c8ff" stroke-width="1" opacity=".7"/>
+  <line x1="28" y1="23" x2="28" y2="43" stroke="#00c8ff" stroke-width="1" opacity=".7"/>
+  <circle cx="28" cy="33" r="2.5" fill="#4d9eff"/>
+  <line x1="39" y1="21" x2="44" y2="21" stroke="#4d9eff" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="44" y1="21" x2="44" y2="26" stroke="#4d9eff" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="44" cy="26" r="2" fill="#0066ff"/>
+</svg></div>
         <div class="more-brand">NovaDeskOnline</div>
         <div class="more-brand-sub">Cyber Services · Kemera, Nyamira</div>
         <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;font-size:.66rem;color:var(--t3)">
@@ -2014,146 +2065,210 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
         <div style="text-align:center;padding:20px 0 4px;font-size:.6rem;color:var(--t4)">
           NovaDeskOnline v2.0 · © <span class="cr-year2"></span>
         </div>
-        <div style="text-align:center;padding-bottom:4px">
-          <span id="admin-trigger" onclick="maybeOpenAdmin()" style="cursor:pointer;opacity:0;transition:opacity .5s;font-size:.6rem;color:var(--t4)">·</span>
-        </div>
+
       </div>
     </section>
 
     <!-- ── ACCOUNT ───────────────────────────────────────── -->
     <section class="scr" id="scr-account">
-      <!-- Guest state -->
+      <!-- ── GUEST STATE ── -->
       <div id="acct-guest" style="display:none;padding:60px 16px;text-align:center">
-        <i class="fas fa-circle-user" style="font-size:4rem;color:var(--t4);margin-bottom:16px;display:block"></i>
+        <div style="width:80px;height:80px;background:var(--gold-a8);border:2px solid var(--gold-a25);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:2rem;color:var(--gold)"><i class="fas fa-circle-user"></i></div>
         <div style="font-family:var(--fd);font-size:1.4rem;color:var(--t1);margin-bottom:6px">Welcome!</div>
-        <div style="font-size:.76rem;color:var(--t3);line-height:1.6;margin-bottom:20px">Sign in or create an account to track your requests, save notes, and manage your files.</div>
+        <div style="font-size:.76rem;color:var(--t3);line-height:1.6;margin-bottom:20px">Sign in or create an account to track your requests, earn loyalty points and manage your profile.</div>
         <button class="btn btn-gold" onclick="openAuth()"><i class="fas fa-arrow-right-to-bracket"></i> Sign In / Register</button>
       </div>
-      <!-- Logged in state -->
-      <div id="acct-loggedin" style="display:none">
+
+      <!-- ── LOGGED IN STATE ── -->
+      <div id="acct-loggedin" style="display:none;min-height:100%">
+        <!-- Avatar header -->
         <div class="acct-avatar-wrap">
-          <div class="acct-avatar" onclick="changeAvatar()" id="acct-ava" title="Change avatar">
+          <div class="acct-avatar" onclick="acctTab('settings')" id="acct-ava" title="Edit profile">
             <span id="acct-initials">ND</span>
             <div class="acct-avatar-edit"><i class="fas fa-camera" style="margin-right:4px"></i> Edit</div>
           </div>
           <input type="file" id="ava-file" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
           <div class="acct-name" id="acct-name-el">User</div>
           <div class="acct-id" id="acct-id-el">ID: —</div>
-          <div style="display:flex;gap:8px;margin-top:10px">
+          <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;justify-content:center">
             <span class="chip chip-gold" id="acct-role-chip"><i class="fas fa-star"></i> Member</span>
+            <span class="chip" style="background:rgba(0,200,255,.1);color:var(--warm);border:1px solid rgba(0,200,255,.25)" id="acct-pts-chip"><i class="fas fa-star"></i> 0 pts</span>
           </div>
         </div>
 
-        <!-- ── LOYALTY POINTS CARD ── -->
-        <div class="loyalty-card" id="loyalty-card">
-          <div class="loyalty-pts-row">
-            <div>
-              <div class="loyalty-pts-val" id="loyalty-pts-val">0</div>
-              <div class="loyalty-pts-lbl">Loyalty Points</div>
+        <!-- Tab nav -->
+        <div class="acct-tabs" id="acct-tabs">
+          <div class="acct-tab on" id="atab-profile"   onclick="acctTab('profile')">   <i class="fas fa-user"></i>      <span>Profile</span>  </div>
+          <div class="acct-tab"    id="atab-requests"  onclick="acctTab('requests')">  <i class="fas fa-inbox"></i>     <span>Requests</span> </div>
+          <div class="acct-tab"    id="atab-notes"     onclick="acctTab('notes')">     <i class="fas fa-note-sticky"></i><span>Notes</span>    </div>
+          <div class="acct-tab"    id="atab-loyalty"   onclick="acctTab('loyalty')">   <i class="fas fa-star"></i>      <span>Loyalty</span>  </div>
+          <div class="acct-tab"    id="atab-notifs"    onclick="acctTab('notifs')">    <i class="fas fa-bell"></i>      <span>Alerts</span>   </div>
+          <div class="acct-tab"    id="atab-settings"  onclick="acctTab('settings')">  <i class="fas fa-gear"></i>      <span>Settings</span> </div>
+        </div>
+
+        <!-- ═══ PROFILE TAB ═══ -->
+        <div class="acct-tab-body on" id="apanel-profile">
+          <div class="acct-info-card">
+            <div class="acct-info-row"><div class="acct-info-lbl"><i class="fas fa-user"></i> Full Name</div><div class="acct-info-val" id="pi-name">—</div></div>
+            <div class="acct-info-row"><div class="acct-info-lbl"><i class="fas fa-envelope"></i> Email</div><div class="acct-info-val" id="pi-email">—</div></div>
+            <div class="acct-info-row"><div class="acct-info-lbl"><i class="fas fa-id-card"></i> ID Number</div><div class="acct-info-val" id="pi-idnum">—</div></div>
+            <div class="acct-info-row"><div class="acct-info-lbl"><i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp</div><div class="acct-info-val" id="pi-wa">—</div></div>
+            <div class="acct-info-row"><div class="acct-info-lbl"><i class="fas fa-calendar-plus"></i> Joined</div><div class="acct-info-val" id="pi-joined">—</div></div>
+            <div class="acct-info-row"><div class="acct-info-lbl"><i class="fas fa-clock"></i> Last Visit</div><div class="acct-info-val" id="pi-lastvisit">—</div></div>
+            <div class="acct-info-row" id="pi-ref-row" style="display:none"><div class="acct-info-lbl"><i class="fas fa-user-group"></i> Referred by</div><div class="acct-info-val" id="pi-refby">—</div></div>
+          </div>
+          <div style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin:16px 0 8px">Most Requested Services</div>
+          <div id="pi-top-services" style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+            <div style="text-align:center;padding:14px;color:var(--t3);font-size:.74rem">Loading…</div>
+          </div>
+          <!-- Quick stats row -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
+            <div onclick="acctTab('requests')" style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:10px;text-align:center;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='var(--gold-a45)'" onmouseout="this.style.borderColor='var(--bd)'">
+              <div id="pi-req-count" style="font-family:var(--fd);font-size:1.4rem;color:var(--gold)">0</div>
+              <div style="font-size:.54rem;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px">Requests</div>
             </div>
-            <div style="text-align:right">
-              <div class="loyalty-tier bronze" id="loyalty-tier-badge"><i class="fas fa-medal" style="margin-right:4px"></i>Bronze</div>
-              <div style="font-size:.58rem;color:rgba(167,139,250,.55);margin-top:5px">10 pts per request</div>
+            <div onclick="acctTab('notes')" style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:10px;text-align:center;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='var(--gold-a45)'" onmouseout="this.style.borderColor='var(--bd)'">
+              <div id="pi-notes-count" style="font-family:var(--fd);font-size:1.4rem;color:var(--warm)">0</div>
+              <div style="font-size:.54rem;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px">Notes</div>
+            </div>
+            <div onclick="acctTab('loyalty')" style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:10px;text-align:center;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='var(--gold-a45)'" onmouseout="this.style.borderColor='var(--bd)'">
+              <div id="pi-pts-count" style="font-family:var(--fd);font-size:1.4rem;color:#ffc81e">0</div>
+              <div style="font-size:.54rem;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px">Points</div>
             </div>
           </div>
-          <div class="loyalty-prog-bar"><div class="loyalty-prog-fill" id="loyalty-prog-fill" style="width:0%"></div></div>
-          <div class="loyalty-prog-lbl" id="loyalty-prog-lbl">0 / 100 pts to Silver</div>
-          <!-- Redeem hint -->
-          <div style="margin-top:10px;padding:8px 10px;background:rgba(255,255,255,.05);border-radius:8px;font-size:.62rem;color:rgba(167,139,250,.75);display:flex;align-items:center;gap:6px">
-            <i class="fas fa-gift" style="color:#a78bfa"></i>
-            Earn 10 points per completed request. Redeem for free services &amp; discounts.
+          <button class="btn btn-ghost btn-full btn-sm" onclick="doSignOut()" style="margin-bottom:80px"><i class="fas fa-arrow-right-from-bracket" style="color:var(--red)"></i> Sign Out</button>
+        </div>
+
+        <!-- ═══ REQUESTS TAB ═══ -->
+        <div class="acct-tab-body" id="apanel-requests">
+          <div style="display:flex;gap:6px;padding:0 0 12px;overflow-x:auto;scrollbar-width:none">
+            <div class="req-filter-pill on" onclick="filterMyReqs('all',this)">All</div>
+            <div class="req-filter-pill" onclick="filterMyReqs('pending',this)">⏳ Pending</div>
+            <div class="req-filter-pill" onclick="filterMyReqs('in_progress',this)">🔧 In Progress</div>
+            <div class="req-filter-pill" onclick="filterMyReqs('completed',this)">✅ Completed</div>
+            <div class="req-filter-pill" onclick="filterMyReqs('cancelled',this)">❌ Cancelled</div>
+          </div>
+          <div id="my-reqs-list" style="display:flex;flex-direction:column;gap:8px;padding-bottom:80px">
+            <div style="text-align:center;padding:40px;color:var(--t3)"><span class="spin"></span></div>
           </div>
         </div>
 
-        <div class="acct-menu">
-          <!-- Contacts -->
-          <div class="acct-section">
-            <div class="acct-section-ttl">Contact Info</div>
-            <div class="acct-item" onclick="openProfileModal()">
-              <div class="acct-item-icon"><i class="fab fa-whatsapp"></i></div>
-              <div class="acct-item-text">
-                <strong>WhatsApp</strong>
-                <span id="acct-wa-el">Not set</span>
+        <!-- ═══ NOTES TAB ═══ -->
+        <div class="acct-tab-body" id="apanel-notes">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4)">My Notes</div>
+            <button class="btn btn-gold btn-xs" onclick="openNoteEditorFromAcct()"><i class="fas fa-plus"></i> New Note</button>
+          </div>
+          <div id="acct-notes-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-bottom:80px">
+            <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--t3)"><span class="spin"></span></div>
+          </div>
+        </div>
+
+        <!-- ═══ LOYALTY TAB ═══ -->
+        <div class="acct-tab-body" id="apanel-loyalty">
+          <!-- Points card -->
+          <div class="loyalty-card" style="margin:0 0 14px">
+            <div class="loyalty-pts-row">
+              <div>
+                <div class="loyalty-pts-val" id="loyalty-pts-val">0</div>
+                <div class="loyalty-pts-lbl">Total Loyalty Points</div>
               </div>
-              <i class="fas fa-chevron-right acct-item-arr"></i>
-            </div>
-            <div class="acct-item" onclick="openProfileModal()">
-              <div class="acct-item-icon"><i class="fas fa-phone"></i></div>
-              <div class="acct-item-text">
-                <strong>Alt Phone</strong>
-                <span id="acct-alt-el">Not set</span>
+              <div style="text-align:right">
+                <div class="loyalty-tier bronze" id="loyalty-tier-badge"><i class="fas fa-medal" style="margin-right:4px"></i>Bronze</div>
+                <div style="font-size:.58rem;color:rgba(77,158,255,.6);margin-top:5px">10 pts per request</div>
               </div>
-              <i class="fas fa-chevron-right acct-item-arr"></i>
             </div>
+            <div class="loyalty-prog-bar"><div class="loyalty-prog-fill" id="loyalty-prog-fill" style="width:0%"></div></div>
+            <div class="loyalty-prog-lbl" id="loyalty-prog-lbl">0 / 100 pts to Silver</div>
           </div>
-
-          <!-- My Activity -->
-          <div class="acct-section">
-            <div class="acct-section-ttl">My Activity</div>
-            <div class="acct-item" onclick="goNav('services')">
-              <div class="acct-item-icon"><i class="fas fa-concierge-bell"></i></div>
-              <div class="acct-item-text"><strong>Request a Service</strong><span>Browse all 41 cyber services</span></div>
-              <i class="fas fa-chevron-right acct-item-arr"></i>
-            </div>
-            <div class="acct-item" onclick="goNav('institution')">
-              <div class="acct-item-icon" style="background:rgba(181,154,107,.08);border-color:rgba(181,154,107,.25);color:var(--warm)"><i class="fas fa-building-columns"></i></div>
-              <div class="acct-item-text"><strong>Institution Portal</strong><span>Bulk requests, dashboard &amp; tracking</span></div>
-              <i class="fas fa-chevron-right acct-item-arr"></i>
-            </div>
-            <div class="acct-item" onclick="openMyRequestsModal()">
-              <div class="acct-item-icon"><i class="fas fa-list-check"></i></div>
-              <div class="acct-item-text"><strong>My Requests</strong><span id="acct-req-count">— requests</span></div>
-              <i class="fas fa-chevron-right acct-item-arr"></i>
-            </div>
-            <div class="acct-item" onclick="openNotesSheet()">
-              <div class="acct-item-icon" style="background:rgba(75,0,130,.08);border-color:rgba(75,0,130,.2);color:var(--gold)"><i class="fas fa-note-sticky"></i></div>
-              <div class="acct-item-text"><strong>My Notes</strong><span id="acct-notes-count">— notes saved</span></div>
-              <i class="fas fa-chevron-right acct-item-arr"></i>
-            </div>
-            <div class="acct-item" onclick="openMyFilesModal()">
-              <div class="acct-item-icon" style="background:rgba(74,144,217,.08);border-color:rgba(74,144,217,.2);color:var(--blue)"><i class="fas fa-folder-open"></i></div>
-              <div class="acct-item-text"><strong>My Files</strong><span id="acct-files-count">Uploaded files</span></div>
-              <i class="fas fa-chevron-right acct-item-arr"></i>
-            </div>
-            <div class="acct-item" onclick="openUploadModal()">
-              <div class="acct-item-icon" style="background:rgba(50,180,100,.08);border-color:rgba(50,180,100,.2);color:var(--green)"><i class="fas fa-cloud-upload-alt"></i></div>
-              <div class="acct-item-text"><strong>Upload Files</strong><span>Add files to your account</span></div>
-              <i class="fas fa-chevron-right acct-item-arr"></i>
-            </div>
+          <!-- Tiers -->
+          <div style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin-bottom:8px">Tier Benefits</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px">
+            <div style="padding:10px;background:var(--bg3);border:1px solid rgba(205,127,50,.3);border-radius:var(--r);text-align:center"><div style="color:#cd7f32;font-weight:700;font-size:.8rem">🥉 Bronze</div><div style="font-size:.6rem;color:var(--t3)">0–99 pts · Base tier</div></div>
+            <div style="padding:10px;background:var(--bg3);border:1px solid rgba(192,192,192,.3);border-radius:var(--r);text-align:center"><div style="color:#c0c0c0;font-weight:700;font-size:.8rem">🥈 Silver</div><div style="font-size:.6rem;color:var(--t3)">100–199 pts · 5% off</div></div>
+            <div style="padding:10px;background:var(--bg3);border:1px solid rgba(255,200,30,.3);border-radius:var(--r);text-align:center"><div style="color:#ffc81e;font-weight:700;font-size:.8rem">🥇 Gold</div><div style="font-size:.6rem;color:var(--t3)">200–499 pts · 10% off</div></div>
+            <div style="padding:10px;background:var(--bg3);border:1px solid var(--gold-a45);border-radius:var(--r);text-align:center"><div style="color:var(--gold);font-weight:700;font-size:.8rem">💎 Platinum</div><div style="font-size:.6rem;color:var(--t3)">500+ pts · 15% off</div></div>
           </div>
-
-          <!-- Settings -->
-          <div class="acct-section">
-            <div class="acct-section-ttl">Settings</div>
-            <div class="acct-item" onclick="openProfileModal()">
-              <div class="acct-item-icon"><i class="fas fa-user-pen"></i></div>
-              <div class="acct-item-text"><strong>Edit Profile</strong><span>Update your details</span></div>
-              <i class="fas fa-chevron-right acct-item-arr"></i>
+          <!-- Referral -->
+          <div style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin-bottom:8px">Your Referral Link</div>
+          <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px;margin-bottom:12px">
+            <div style="font-size:.7rem;color:var(--t3);margin-bottom:8px">Share your link. Each friend who signs up earns you <strong style="color:var(--gold)">+20 bonus points</strong>!</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <div id="ref-link-display" style="flex:1;font-size:.66rem;color:var(--gold);background:var(--bg4);padding:8px 10px;border-radius:6px;border:1px solid var(--bd);word-break:break-all;font-family:monospace">Loading…</div>
+              <button class="btn btn-gold btn-sm" onclick="copyRefLink()" style="flex-shrink:0;padding:8px 12px"><i class="fas fa-copy"></i></button>
             </div>
-            <div class="acct-item">
-              <div class="acct-item-icon"><i class="fas fa-moon"></i></div>
-              <div class="acct-item-text"><strong>Dark Mode</strong><span>Toggle app theme</span></div>
-              <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme"></div>
-            </div>
-            <div class="acct-item" onclick="openContactModal()">
-              <div class="acct-item-icon"><i class="fas fa-headset"></i></div>
-              <div class="acct-item-text"><strong>Contact Support</strong><span>Get help or send feedback</span></div>
-              <i class="fas fa-chevron-right acct-item-arr"></i>
-            </div>
+            <button class="btn btn-outline btn-full btn-sm" style="margin-top:8px" onclick="shareRefLink()"><i class="fas fa-share-nodes"></i> Share Referral Link</button>
           </div>
-
-          <!-- Danger zone -->
-          <div class="acct-section">
-            <div class="acct-section-ttl">Account</div>
-            <div class="acct-item" onclick="doSignOut()">
-              <div class="acct-item-icon red"><i class="fas fa-arrow-right-from-bracket"></i></div>
-              <div class="acct-item-text"><strong style="color:var(--red)">Sign Out</strong><span>Sign out of this device</span></div>
-            </div>
+          <!-- Referrals list -->
+          <div style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin-bottom:8px">People You Referred</div>
+          <div id="referrals-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:80px">
+            <div style="text-align:center;padding:20px;color:var(--t3);font-size:.74rem"><i class="fas fa-user-group" style="display:block;font-size:1.8rem;color:var(--t4);margin-bottom:8px"></i>No referrals yet</div>
           </div>
         </div>
-      </div>
+
+        <!-- ═══ NOTIFICATIONS TAB ═══ -->
+        <div class="acct-tab-body" id="apanel-notifs">
+          <div style="display:flex;gap:6px;padding:0 0 12px;overflow-x:auto;scrollbar-width:none">
+            <div class="req-filter-pill on" onclick="filterNotifs('all',this)">All</div>
+            <div class="req-filter-pill" onclick="filterNotifs('request',this)">📋 Requests</div>
+            <div class="req-filter-pill" onclick="filterNotifs('promotion',this)">🎉 Promos</div>
+            <div class="req-filter-pill" onclick="filterNotifs('system',this)">⚙️ System</div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+            <button class="btn btn-ghost btn-xs" onclick="markAllNotifsRead()"><i class="fas fa-check-double"></i> Mark all read</button>
+          </div>
+          <div id="notifs-tab-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
+            <div style="text-align:center;padding:40px;color:var(--t3)"><span class="spin"></span></div>
+          </div>
+        </div>
+
+        <!-- ═══ SETTINGS TAB ═══ -->
+        <div class="acct-tab-body" id="apanel-settings">
+          <!-- Profile photo section -->
+          <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px">
+            <div style="font-size:.7rem;font-weight:600;color:var(--t2);margin-bottom:12px"><i class="fas fa-camera" style="color:var(--gold);margin-right:6px"></i>Profile Photo</div>
+            <div style="display:flex;align-items:center;gap:14px">
+              <div class="acct-avatar" onclick="document.getElementById('ava-file2').click()" id="settings-ava" style="width:60px;height:60px;font-size:1.4rem;cursor:pointer;flex-shrink:0"><span id="settings-initials">ND</span></div>
+              <input type="file" id="ava-file2" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
+              <div>
+                <div style="font-size:.76rem;font-weight:500;color:var(--t1)" id="settings-name-display">User</div>
+                <div style="font-size:.64rem;color:var(--t3);margin-top:2px">Tap photo to change</div>
+                <button class="btn btn-outline btn-xs" style="margin-top:8px" onclick="document.getElementById('ava-file2').click()"><i class="fas fa-camera"></i> Change Photo</button>
+              </div>
+            </div>
+          </div>
+          <!-- Edit profile form -->
+          <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px">
+            <div style="font-size:.7rem;font-weight:600;color:var(--t2);margin-bottom:12px"><i class="fas fa-user-pen" style="color:var(--gold);margin-right:6px"></i>Edit Profile</div>
+            <div class="fg"><label class="flbl">Full Name</label><input class="fi" id="set-name" type="text" placeholder="Your full name"></div>
+            <div class="fg"><label class="flbl">WhatsApp <span class="req">*</span></label><input class="fi" id="set-wa" type="tel" placeholder="0712345678"></div>
+            <div class="fg"><label class="flbl">Alt Phone</label><input class="fi" id="set-alt" type="tel" placeholder="Backup number (optional)"></div>
+            <div class="fg"><label class="flbl">ID Number</label><input class="fi" id="set-idnum" type="text" readonly style="opacity:.4;cursor:not-allowed"><div class="form-hint"><i class="fas fa-lock" style="font-size:.55rem"></i> Cannot be changed</div></div>
+            <div id="set-profile-err" class="ferr" style="margin-bottom:10px"></div>
+            <button class="btn btn-gold btn-full" id="set-profile-btn" onclick="saveSettingsProfile()"><i class="fas fa-check"></i> Save Profile</button>
+          </div>
+          <!-- Change password -->
+          <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px">
+            <div style="font-size:.7rem;font-weight:600;color:var(--t2);margin-bottom:12px"><i class="fas fa-lock" style="color:var(--gold);margin-right:6px"></i>Change Password</div>
+            <div class="fg" style="position:relative"><label class="flbl">New Password</label><input class="fi" id="set-pw" type="password" placeholder="Min. 8 characters" style="padding-right:42px"><button type="button" onclick="togglePw('set-pw','set-pw-eye')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="set-pw-eye"><i class="fas fa-eye"></i></button></div>
+            <div class="fg" style="position:relative"><label class="flbl">Confirm Password</label><input class="fi" id="set-pw2" type="password" placeholder="Repeat password" style="padding-right:42px"><button type="button" onclick="togglePw('set-pw2','set-pw2-eye')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="set-pw2-eye"><i class="fas fa-eye"></i></button></div>
+            <div id="set-pw-err" class="ferr" style="margin-bottom:10px"></div>
+            <div id="set-pw-ok" style="display:none;font-size:.72rem;color:var(--green);padding:9px;background:rgba(50,180,100,.07);border:1px solid rgba(50,180,100,.2);border-radius:6px;margin-bottom:10px"><i class="fas fa-check-circle"></i> Password changed successfully!</div>
+            <button class="btn btn-gold btn-full" id="set-pw-btn" onclick="saveSettingsPassword()"><i class="fas fa-key"></i> Update Password</button>
+          </div>
+          <!-- Theme + sign out -->
+          <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px">
+            <div style="font-size:.7rem;font-weight:600;color:var(--t2);margin-bottom:12px"><i class="fas fa-paint-roller" style="color:var(--gold);margin-right:6px"></i>Appearance</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
+              <div style="display:flex;align-items:center;gap:10px"><i class="fas fa-moon" style="color:var(--gold);width:16px"></i><div><div style="font-size:.78rem;font-weight:500;color:var(--t1)">Dark Mode</div><div style="font-size:.62rem;color:var(--t3)">Toggle app theme</div></div></div>
+              <div class="theme-toggle" onclick="toggleTheme()"></div>
+            </div>
+          </div>
+          <button class="btn btn-full" style="background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.2);color:var(--red);margin-bottom:80px" onclick="doSignOut()"><i class="fas fa-arrow-right-from-bracket"></i> Sign Out</button>
+        </div>
+
+      </div><!-- /acct-loggedin -->
     </section>
-
   </main><!-- /screens -->
 
   <!-- BOTTOM NAV -->
@@ -2271,9 +2386,18 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
   </div>
   <div class="modal-body">
     <div style="text-align:center;padding:16px 0 20px">
-      <div style="width:64px;height:64px;background:linear-gradient(135deg,#18130A,#0F0C06);border:1.5px solid var(--gold-a45);border-radius:18px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center">
-        <svg width="34" height="34" viewBox="0 0 64 64" fill="none"><rect x="8" y="14" width="48" height="30" rx="4" stroke="#C9A84C" stroke-width="2"/><line x1="14" y1="22" x2="40" y2="22" stroke="#C9A84C" stroke-width="1.5" opacity=".7"/><line x1="14" y1="28" x2="50" y2="28" stroke="#C9A84C" stroke-width="1.3" opacity=".5"/><circle cx="47" cy="22" r="4" fill="#b59a6b"/></svg>
-      </div>
+      <div style="width:56px;height:56px;margin:0 auto 12px"><svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <defs><linearGradient id="sg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a1f4e"/><stop offset="100%" stop-color="#0044bb"/></linearGradient></defs>
+  <path d="M32 3 L56 11 L56 34 C56 47 45 57 32 62 C19 57 8 47 8 34 L8 11 Z" fill="url(#sg2)"/>
+  <path d="M32 3 L56 11 L56 34 C56 47 45 57 32 62 C19 57 8 47 8 34 L8 11 Z" fill="none" stroke="#4d9eff" stroke-width="1.5" opacity=".8"/>
+  <circle cx="28" cy="33" r="10" fill="none" stroke="#00c8ff" stroke-width="1.2" opacity=".9"/>
+  <line x1="18" y1="33" x2="38" y2="33" stroke="#00c8ff" stroke-width="1" opacity=".7"/>
+  <line x1="28" y1="23" x2="28" y2="43" stroke="#00c8ff" stroke-width="1" opacity=".7"/>
+  <circle cx="28" cy="33" r="2.5" fill="#4d9eff"/>
+  <line x1="39" y1="21" x2="44" y2="21" stroke="#4d9eff" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="44" y1="21" x2="44" y2="26" stroke="#4d9eff" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="44" cy="26" r="2" fill="#0066ff"/>
+</svg></div>
       <div style="font-family:var(--fd);font-size:1.4rem;color:var(--gold)">NovaDeskOnline</div>
       <div style="font-size:.62rem;letter-spacing:.2em;color:var(--t3);text-transform:uppercase;margin-top:3px">Cyber Services · v1.0</div>
     </div>
@@ -2412,14 +2536,19 @@ function handleOvlClick(){
   closeAllModals();
 }
 function openModal(id){
-  const el=$(id);
-  if(!el) return;
-  el.classList.add('on');
-  showOvl();
-  // Prevent ghost-click: lock overlay for 420ms after any modal opens
-  _ovlLock = true;
-  clearTimeout(_ovlLockTimer);
-  _ovlLockTimer = setTimeout(()=>{ _ovlLock=false; }, 420);
+  // Use double rAF to ensure we escape the current event bubble chain
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      const el=$(id);
+      if(!el) return;
+      // Show overlay FIRST but locked
+      showOvl();
+      el.classList.add('on');
+      _ovlLock = true;
+      clearTimeout(_ovlLockTimer);
+      _ovlLockTimer = setTimeout(()=>{ _ovlLock=false; }, 500);
+    });
+  });
 }
 function closeModal(id){ const el=$(id); el?.classList.remove('on'); hideOvl(); }
 function closeAllModals(){
@@ -2430,8 +2559,16 @@ function closeAllModals(){
 /* ── NAVIGATION ────────────────────────────────────────────────── */
 const NAV_ITEMS = ['home','services','techservices','institution','account','more'];
 function goNav(name) {
-  // If account tab pressed and not logged in → open auth sheet directly
-  if (name === 'account' && !_user) { openAuth(); return; }
+  // If account tab pressed
+  if (name === 'account' && !_user) {
+    if (window._guestMode) {
+      // Show guest account screen
+      renderGuestAccount();
+    } else {
+      openAuth();
+    }
+    // Still navigate
+  }
   NAV_ITEMS.forEach(n => {
     $(`scr-${n}`)?.classList.toggle('on', n===name);
     $(`ni-${n}`)?.classList.toggle('on', n===name);
@@ -2506,14 +2643,26 @@ async function doRegister(){
     const { data: existing } = await sb.from('profiles').select('id').eq('id_number', idNum).maybeSingle();
     if (existing) { throw new Error('This ID number is already registered.'); }
 
+    // Check for referral code in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref') || localStorage.getItem('nd-ref') || '';
+    
     const { data, error } = await sb.auth.signUp({
       email, password: pw,
-      options: { data: { full_name: name, id_number: idNum, whatsapp_number: wa, alt_phone: alt || null } }
+      options: { data: { full_name: name, id_number: idNum, whatsapp_number: wa, alt_phone: alt || null, referred_by_code: refCode || null } }
     });
     if (error) throw error;
+    
+    // Clear referral from storage
+    localStorage.removeItem('nd-ref');
 
-    toast('Account created! Welcome to NovaDeskOnline.', 'ok');
+    // Generate the referral/user code to show them
+    const newUserId = data?.user?.id || '';
+    const userShortId = newUserId ? 'ND' + newUserId.replace(/-/g,'').substring(0,8).toUpperCase() : '';
+
+    // Close auth and show success modal
     closeAuth();
+    setTimeout(() => showRegisterSuccess(name || userShortId, email, userShortId), 400);
   } catch(e) {
     err.textContent = e.message || 'Registration failed. Please try again.';
     err.style.display='block';
@@ -2549,6 +2698,7 @@ async function doSignIn(){
 
     toast('Welcome back!', 'ok');
     closeAuth();
+    setTimeout(() => { goNav('account'); acctTab('profile'); }, 350);
   } catch(e) {
     err.textContent = e.message || 'Sign in failed. Check your credentials.';
     err.style.display='block';
@@ -2576,18 +2726,33 @@ function onAuthStateChange(){
   if (!sb) return;
   sb.auth.onAuthStateChange(async (event, session) => {
     _user = session?.user || null;
+    
+    // Password recovery — show new password modal immediately
+    if (event === 'PASSWORD_RECOVERY') {
+      showNewPasswordModal();
+      return;
+    }
+    
     if (_user) {
       await loadProfile();
       await Promise.all([loadNotes(), loadFiles(), loadMyReqs(), loadNotifs()]);
       renderAccount();
       refreshHomeCounts();
       subscribeRealtime();
+      // Auto-open admin panel if user is admin
+      if (_profile?.role === 'admin' && event === 'SIGNED_IN') {
+        setTimeout(() => openAdmin(), 800);
+      } else if (event === 'SIGNED_IN') {
+        // Go straight to account profile tab on login
+        setTimeout(() => { goNav('account'); acctTab('profile'); }, 200);
+        return;
+      }
     } else {
       _profile=null; _notes=[]; _files=[]; _reqs=[]; _notifs=[];
       renderAccount();
       refreshHomeCounts();
     }
-    goNav(window._currentScreen || 'home');
+    if (event !== 'PASSWORD_RECOVERY') goNav(window._currentScreen || 'home');
   });
 }
 
@@ -2596,7 +2761,29 @@ async function loadProfile(){
   if (!_user) return;
   try {
     const { data } = await sb.from('profiles').select('*').eq('id', _user.id).single();
-    if (data) _profile = data;
+    if (data) {
+      _profile = data;
+      // Auto-generate referral code if missing
+      if (!_profile.referral_code) {
+        const code = 'ND' + _user.id.replace(/-/g,'').substring(0,8).toUpperCase();
+        try {
+          await sb.from('profiles').update({referral_code: code}).eq('id', _user.id);
+          _profile.referral_code = code;
+        } catch(e) {}
+      }
+      // Credit referrer if this is first login and was referred
+      if (_profile.referred_by_code && !_profile.referral_credited) {
+        try {
+          const {data:refUser} = await sb.from('profiles').select('id').eq('referral_code',_profile.referred_by_code).single();
+          if (refUser) {
+            await sb.rpc('increment_loyalty',{p_user_id:refUser.id,p_points:20});
+            await sb.from('profiles').update({referral_credited:true}).eq('id',_user.id);
+          }
+        } catch(e) {}
+      }
+      // Update last visit
+      sb.from('profiles').update({last_visit:new Date().toISOString()}).eq('id',_user.id).then(()=>{}).catch(()=>{});
+    }
   } catch(e) {}
 }
 async function saveProfile(){
@@ -2662,25 +2849,35 @@ async function uploadAvatar(inp){
 function renderAccount(){
   const loggedIn = !!_user;
   $('acct-guest').style.display = loggedIn ? 'none' : 'block';
-  $('acct-loggedin').style.display = loggedIn ? 'block' : 'none';
-  $('auth-btn').innerHTML = loggedIn ? '<i class="fas fa-circle-user"></i>' : '<i class="fas fa-circle-user"></i>';
+  $('acct-loggedin').style.display = loggedIn ? 'flex' : 'none';
+  if (loggedIn) $('acct-loggedin').style.flexDirection = 'column';
   $('fab-notes')?.classList.toggle('show', loggedIn && window._currentScreen==='notes');
 
   if (!loggedIn || !_profile) return;
-  const initials = (_profile.full_name||'ND').split(' ').map(w=>w[0]?.toUpperCase()||'').join('').substring(0,2);
+  // If no full_name, show their referral code / user ID as display name
+  const displayName = _profile.full_name || _profile.referral_code || ('ND-' + (_user?.id||'').replace(/-/g,'').substring(0,8).toUpperCase());
+  const initials = displayName.split(' ').map(w=>w[0]?.toUpperCase()||'').join('').substring(0,2) || 'ND';
   $('acct-initials').textContent = initials;
-  $('acct-name-el').textContent = _profile.full_name || 'User';
-  $('acct-id-el').textContent = `ID: ${_profile.id_number || '—'}`;
-  $('acct-wa-el').textContent = _profile.whatsapp_number || 'Not set';
-  $('acct-alt-el').textContent = _profile.alt_phone || 'Not set';
+  $('acct-name-el').textContent = displayName;
+  $('acct-id-el').textContent = `ID: ${_profile.id_number || _profile.referral_code || '—'}`;
   $('acct-role-chip').innerHTML = `<i class="fas fa-${_profile.role==='admin'?'shield-halved':'star'}"></i> ${_profile.role==='admin'?'Admin':'Member'}`;
-  $('acct-req-count').textContent = `${_reqs.length} request${_reqs.length!==1?'s':''}`;
-  $('acct-notes-count').textContent = `${_notes.length} note${_notes.length!==1?'s':''}`;
-  if (_profile.avatar_url) {
-    $('acct-ava').innerHTML = `<img src="${esc(_profile.avatar_url)}" alt="Avatar"><div class="acct-avatar-edit"><i class="fas fa-camera" style="margin-right:4px"></i> Edit</div>`;
+  const pts = _profile?.loyalty_points || (_reqs.filter(r=>r.status==='completed').length * 10);
+  const ptChip = $('acct-pts-chip');
+  if (ptChip) ptChip.innerHTML = `<i class="fas fa-star"></i> ${pts} pts`;
+  // Update notes badge
+  const notesTab = $('atab-notes');
+  if (notesTab && _notes.length > 0) {
+    notesTab.querySelector('span').textContent = `Notes (${_notes.length})`;
   }
-  // Render loyalty points
+  if (_profile.avatar_url) {
+    const ava = $('acct-ava');
+    if (ava) ava.innerHTML = `<img src="${esc(_profile.avatar_url)}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%"><div class="acct-avatar-edit"><i class="fas fa-camera" style="margin-right:4px"></i> Edit</div>`;
+  }
+  // Render active tab
+  renderProfileTab();
   renderLoyaltyPoints();
+  // If notes tab is active, refresh it
+  if ($('atab-notes')?.classList.contains('on')) renderAcctNotes();
 }
 
 /* ── LOYALTY POINTS ────────────────────────────────────────────── */
@@ -2833,7 +3030,7 @@ function openSvcDetail(svcId){
   $('svc-detail-desc').textContent  = s.description || '';
   $('svc-detail-cat').textContent   = (s.category||'general').toUpperCase();
   $('svc-detail-req-btn').onclick   = ()=>{ closeModal('svc-detail-modal'); openSvcReq(svcId); };
-  openModal('svc-detail-modal');
+  setTimeout(()=> openModal('svc-detail-modal'), 10);
 }
 
 /* ── SERVICE REQUEST ───────────────────────────────────────────── */
@@ -2960,6 +3157,7 @@ async function loadNotes(){
     if (data) _notes = data;
   } catch(e) {}
   renderNotes();
+  renderAcctNotes();
 }
 function renderNotes(){
   const grid = $('notes-grid');
@@ -3045,6 +3243,7 @@ async function saveNote(){
     await loadNotes();
     $('ne-ts').textContent = `Saved just now`;
     refreshHomeCounts();
+    renderAcctNotes();
     closeNoteEditor();
     toast('Note saved.', 'ok');
   } catch(e) { toast(e.message||'Save failed.','er'); }
@@ -3059,6 +3258,7 @@ async function deleteCurrentNote(){
         await sb.from('notes').delete().eq('id',_currentNote.id).eq('user_id',_user.id);
         _notes = _notes.filter(n=>n.id!==_currentNote.id);
         renderNotes();
+        renderAcctNotes();
         closeNoteEditor();
         refreshHomeCounts();
         toast('Note deleted.','nf');
@@ -3460,7 +3660,7 @@ async function doForgotPassword(){
   if(!email||!email.includes('@')){if(err){err.textContent='Enter a valid email.';err.style.display='block';}return;}
   btn.disabled=true;btn.innerHTML='<span class="spin"></span> Sending…';
   try{
-    const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:`${SITE}/reset`});
+    const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.href});
     if(error)throw error;
     if(ok)ok.style.display='block';$('fp-email').value='';
   }catch(e){if(err){err.textContent=e.message||'Could not send reset email.';err.style.display='block';}}
@@ -3646,10 +3846,13 @@ async function doInstRegister(){
   if(pw!==pw2){err.textContent='Passwords do not match.';err.style.display='block';return;}
   btn.disabled=true;btn.innerHTML='<span class="spin"></span> Registering…';
   try{
-    const{data,error}=await sb.auth.signUp({email,password:pw,options:{data:{full_name:contact,role:'institution',inst_name:name}}});
+    const{data,error}=await sb.auth.signUp({email,password:pw,options:{emailRedirectTo:null,data:{full_name:contact,role:'institution',inst_name:name}}});
     if(error)throw error;
+    // Skip email verification — sign in immediately
+    const{data:signInData,error:siErr}=await sb.auth.signInWithPassword({email,password:pw});
+    if(siErr) console.warn('Auto sign-in after institution register:', siErr);
     // Insert institution profile
-    const{error:pe}=await sb.from('institution_profiles').insert({email,inst_name:name,inst_type:type,location:loc,whatsapp:wa,contact_person:contact,user_id:data.user?.id});
+    const{error:pe}=await sb.from('institution_profiles').insert({email,inst_name:name,inst_type:type,location:loc,whatsapp:wa,contact_person:contact,user_id:(signInData?.user||data.user)?.id});
     if(pe)console.warn('Institution profile insert error:',pe);
     toast('Institution registered! Welcome aboard.','ok');
     _instUser=email;
@@ -3768,7 +3971,7 @@ function openTermsModal(){openModal('terms-modal');}
 
 /* ── CLOSE ALL MODALS UPDATE ── */
 function closeAllModals(){
-  ['contact-modal','about-modal','my-reqs-modal','my-files-modal','upload-modal','notif-panel','profile-modal','svc-req-modal','rating-modal','notes-sheet','agent-register-modal','dev-contact-modal','privacy-modal','terms-modal','inst-request-modal','inst-all-reqs-modal','tech-req-modal','svc-detail-modal','tech-detail-modal'].forEach(id=>{
+  ['contact-modal','about-modal','my-reqs-modal','my-files-modal','upload-modal','notif-panel','profile-modal','svc-req-modal','rating-modal','notes-sheet','agent-register-modal','dev-contact-modal','privacy-modal','terms-modal','inst-request-modal','inst-all-reqs-modal','tech-req-modal','svc-detail-modal','tech-detail-modal','reg-success-modal','new-pw-modal'].forEach(id=>{
     const el=$(id);el?.classList.remove('on');
   });
   hideOvl();
@@ -3777,6 +3980,12 @@ function closeAllModals(){
 
 /* ── BOOT ──────────────────────────────────────────────────────── */
 async function init(){
+  // Capture referral code from URL before anything
+  (function(){
+    const p = new URLSearchParams(window.location.search);
+    const r = p.get('ref');
+    if (r) localStorage.setItem('nd-ref', r);
+  })();
   loadTheme();
   if ($('cr-year')) $('cr-year').textContent = new Date().getFullYear();
   initOfflineDetect();
@@ -4068,6 +4277,75 @@ window.addEventListener('popstate', ()=>{
 </div>
 
 <!-- ══ TECH PRODUCT DETAIL MODAL ══════════════════════════════════════ -->
+<!-- ══ REGISTRATION SUCCESS MODAL ═══════════════════════════════════ -->
+<div id="reg-success-modal" class="modal" role="dialog" aria-modal="true">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span class="sheet-title"><i class="fas fa-party-horn" style="margin-right:8px;color:var(--gold)"></i>Welcome to NovaDeskOnline!</span>
+    <button class="sheet-cls" onclick="closeModal('reg-success-modal')"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body" style="padding-bottom:28px">
+    <!-- Confetti banner -->
+    <div style="background:linear-gradient(135deg,#001a60,#002a90,#001a60);border:1px solid var(--gold-a45);border-radius:var(--rl);padding:20px;text-align:center;margin-bottom:18px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:4rem;opacity:.08">🎉</div>
+      <div style="font-size:2.2rem;margin-bottom:8px">🎉</div>
+      <div style="font-family:var(--fd);font-size:1.3rem;color:#e8f2ff;margin-bottom:4px" id="rs-welcome-name">Welcome!</div>
+      <div style="font-size:.72rem;color:rgba(168,192,232,.8)">Your account has been created successfully</div>
+    </div>
+
+    <!-- User ID card -->
+    <div style="background:var(--bg3);border:2px solid var(--gold-a45);border-radius:var(--rl);padding:16px;margin-bottom:14px">
+      <div style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin-bottom:10px">Your Account ID</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="flex:1">
+          <div id="rs-user-id" style="font-family:monospace;font-size:1.3rem;font-weight:700;color:var(--gold);letter-spacing:.1em">ND·········</div>
+          <div style="font-size:.64rem;color:var(--t3);margin-top:3px">Save this — it's your unique NovaDeskOnline ID</div>
+        </div>
+        <button onclick="copyUserId()" style="width:38px;height:38px;border-radius:10px;background:var(--gold-a8);border:1px solid var(--gold-a25);color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;flex-shrink:0"><i class="fas fa-copy"></i></button>
+      </div>
+    </div>
+
+    <!-- Email row -->
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:12px">
+      <div style="width:34px;height:34px;border-radius:9px;background:rgba(50,180,100,.1);border:1px solid rgba(50,180,100,.25);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:.8rem;flex-shrink:0"><i class="fas fa-envelope-circle-check"></i></div>
+      <div style="flex:1"><div style="font-size:.74rem;font-weight:500;color:var(--t1)">Registered email</div><div id="rs-email" style="font-size:.64rem;color:var(--t3)">—</div></div>
+    </div>
+
+    <!-- Perks earned -->
+    <div style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin-bottom:8px">What you get</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:18px">
+      <div style="padding:10px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);text-align:center">
+        <div style="font-size:1.2rem;margin-bottom:4px">⭐</div>
+        <div style="font-size:.68rem;font-weight:600;color:var(--t1)">Loyalty Points</div>
+        <div style="font-size:.58rem;color:var(--t3)">10 pts per request</div>
+      </div>
+      <div style="padding:10px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);text-align:center">
+        <div style="font-size:1.2rem;margin-bottom:4px">🔗</div>
+        <div style="font-size:.68rem;font-weight:600;color:var(--t1)">Referral Link</div>
+        <div style="font-size:.58rem;color:var(--t3)">+20 pts per sign-up</div>
+      </div>
+      <div style="padding:10px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);text-align:center">
+        <div style="font-size:1.2rem;margin-bottom:4px">📋</div>
+        <div style="font-size:.68rem;font-weight:600;color:var(--t1)">Track Requests</div>
+        <div style="font-size:.58rem;color:var(--t3)">Real-time status</div>
+      </div>
+      <div style="padding:10px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);text-align:center">
+        <div style="font-size:1.2rem;margin-bottom:4px">📄</div>
+        <div style="font-size:.68rem;font-weight:600;color:var(--t1)">PDF Receipts</div>
+        <div style="font-size:.58rem;color:var(--t3)">Download anytime</div>
+      </div>
+    </div>
+
+    <button class="btn btn-gold btn-full" onclick="closeModal('reg-success-modal');goNav('services')" style="padding:13px;font-size:.76rem;margin-bottom:10px">
+      <i class="fas fa-concierge-bell"></i> Browse Services
+    </button>
+    <button class="btn btn-ghost btn-full btn-sm" onclick="closeModal('reg-success-modal');goNav('account');acctTab('profile')">
+      <i class="fas fa-circle-user"></i> View My Profile
+    </button>
+  </div>
+</div>
+
+<!-- ══ TECH DETAIL MODAL ══════════════════════════════════════════ -->
 <div id="tech-detail-modal" class="modal" role="dialog" aria-modal="true">
   <div class="sheet-pull"></div>
   <div class="sheet-hdr">
@@ -4077,7 +4355,38 @@ window.addEventListener('popstate', ()=>{
   <div class="modal-body" id="tdet-body" style="padding-bottom:24px"></div>
 </div>
 
-<!-- ══ TECH SERVICE REQUEST MODAL ════════════════════════════════════ -->
+<!-- ══ NEW PASSWORD MODAL (shown after password reset link) ══════════ -->
+<div id="new-pw-modal" class="modal" role="dialog" aria-modal="true" style="z-index:9999">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span class="sheet-title"><i class="fas fa-lock-open" style="margin-right:8px;color:var(--gold)"></i>Create New Password</span>
+  </div>
+  <div class="modal-body" style="padding-bottom:24px">
+    <div style="background:linear-gradient(135deg,rgba(0,102,255,.1),rgba(0,102,255,.04));border:1px solid var(--gold-a25);border-radius:var(--rl);padding:14px;margin-bottom:18px;text-align:center">
+      <div style="font-size:2rem;margin-bottom:8px">🔐</div>
+      <div style="font-size:.85rem;font-weight:600;color:var(--t1);margin-bottom:4px">Set Your New Password</div>
+      <div style="font-size:.7rem;color:var(--t3)">Choose a strong password for your NovaDeskOnline account.</div>
+    </div>
+    <div class="auth-field-row">
+      <div class="auth-field-icon"><i class="fas fa-lock"></i></div>
+      <div class="fg" style="flex:1;margin:0;position:relative">
+        <label class="flbl">New Password <span class="req">*</span></label>
+        <input class="fi" id="new-pw-inp" type="password" placeholder="Min. 8 characters" style="padding-right:42px">
+        <button type="button" onclick="togglePw('new-pw-inp','new-pw-eye')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="new-pw-eye"><i class="fas fa-eye"></i></button>
+      </div>
+    </div>
+    <div class="auth-field-row">
+      <div class="auth-field-icon"><i class="fas fa-shield-check"></i></div>
+      <div class="fg" style="flex:1;margin:0;position:relative">
+        <label class="flbl">Confirm Password <span class="req">*</span></label>
+        <input class="fi" id="new-pw2-inp" type="password" placeholder="Repeat password" style="padding-right:42px">
+        <button type="button" onclick="togglePw('new-pw2-inp','new-pw2-eye')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="new-pw2-eye"><i class="fas fa-eye"></i></button>
+      </div>
+    </div>
+    <div id="new-pw-err" class="ferr" style="margin-bottom:12px"></div>
+    <button class="btn btn-gold btn-full" id="new-pw-btn" onclick="doSetNewPassword()" style="padding:13px;font-size:.76rem"><i class="fas fa-check"></i> Set New Password</button>
+  </div>
+</div>
 <div id="tech-req-modal" class="modal" role="dialog" aria-modal="true">
   <div class="sheet-pull"></div>
   <div class="sheet-hdr">
@@ -4122,7 +4431,7 @@ async function doGoogleSignIn(){
     const { data, error } = await sb.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.href,
+        redirectTo: window.location.origin + window.location.pathname,
         queryParams: { access_type: 'offline', prompt: 'consent' }
       }
     });
@@ -4260,8 +4569,473 @@ async function generateReceipt(reqId, svcName, clientName) {
     toast('Could not generate PDF. Please try again.','er');
   }
 }
+
+/* ── GUEST MODE ────────────────────────────────────────────────── */
+function signInAsGuest() {
+  // Generate or retrieve a persistent guest ID stored in localStorage
+  let guestId = localStorage.getItem('nd-guest-id');
+  if (!guestId) {
+    guestId = 'GS' + Math.random().toString(36).substring(2,10).toUpperCase();
+    localStorage.setItem('nd-guest-id', guestId);
+  }
+  window._guestMode = true;
+  window._guestId   = guestId;
+  closeAuth();
+  goNav('account');  // go to account screen to show guest view
+
+  // Save guest session to DB (fire and forget)
+  try {
+    sb.from('guest_sessions').upsert({
+      guest_id: guestId,
+      last_seen: new Date().toISOString(),
+      device_hint: navigator.userAgent.substring(0,120)
+    }, {onConflict:'guest_id'}).then(()=>{}).catch(()=>{});
+  } catch(e) {}
+
+  // Show welcome popup with ID
+  setTimeout(() => showGuestWelcome(guestId), 400);
+}
+
+function showGuestWelcome(guestId) {
+  const html = `
+    <div style="text-align:center;padding:4px 0 8px">
+      <div style="font-size:2.2rem;margin-bottom:12px">👤</div>
+      <div style="font-family:var(--fd);font-size:1.2rem;color:var(--t1);margin-bottom:4px">Welcome, Guest!</div>
+      <div style="font-size:.7rem;color:var(--t3);margin-bottom:18px;line-height:1.6">You have a temporary session. Your guest ID is shown below.</div>
+
+      <div style="background:var(--bg4);border:1px solid var(--gold-a45);border-radius:var(--rl);padding:14px;margin-bottom:16px">
+        <div style="font-size:.56rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--t4);margin-bottom:5px">Your Guest ID</div>
+        <div style="font-family:monospace;font-size:1.3rem;font-weight:800;color:var(--gold);letter-spacing:.1em">${esc(guestId)}</div>
+        <div style="font-size:.62rem;color:var(--t3);margin-top:5px">This ID is saved on this device only</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:6px;text-align:left;margin-bottom:18px">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border:1px solid rgba(50,180,100,.2);border-radius:var(--r)">
+          <i class="fas fa-check" style="color:var(--green);width:14px"></i>
+          <span style="font-size:.7rem;color:var(--t2)">Browse all services</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border:1px solid rgba(50,180,100,.2);border-radius:var(--r)">
+          <i class="fas fa-check" style="color:var(--green);width:14px"></i>
+          <span style="font-size:.7rem;color:var(--t2)">Submit service requests</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border:1px solid rgba(224,80,80,.15);border-radius:var(--r)">
+          <i class="fas fa-times" style="color:var(--red);width:14px"></i>
+          <span style="font-size:.7rem;color:var(--t3)">Save notes (account required)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border:1px solid rgba(224,80,80,.15);border-radius:var(--r)">
+          <i class="fas fa-times" style="color:var(--red);width:14px"></i>
+          <span style="font-size:.7rem;color:var(--t3)">Request history not saved</span>
+        </div>
+      </div>
+
+      <button class="btn btn-gold btn-full" onclick="closeModal('reg-success-modal')" style="padding:12px;margin-bottom:8px">
+        <i class="fas fa-arrow-right"></i> Start Browsing
+      </button>
+      <button class="btn btn-ghost btn-full btn-sm" onclick="closeModal('reg-success-modal');openAuth()">
+        <i class="fas fa-user-plus"></i> Create Full Account Instead
+      </button>
+    </div>`;
+
+  const modal = $('reg-success-modal');
+  if (modal) {
+    modal.querySelector('#reg-success-body').innerHTML = html;
+    setTimeout(() => openModal('reg-success-modal'), 100);
+  }
+}
+
+window.signInAsGuest = signInAsGuest;
+
+/* ── GUEST ACCOUNT SCREEN ──────────────────────────────────────── */
+function renderGuestAccount() {
+  // Show the guest view inside acct-guest (which is already visible when not logged in)
+  const guestEl = $('acct-guest');
+  if (!guestEl) return;
+  const gid = window._guestId || localStorage.getItem('nd-guest-id') || 'GS??????';
+  guestEl.style.display = 'block';
+  $('acct-loggedin').style.display = 'none';
+  guestEl.innerHTML = `
+    <div style="padding:32px 16px 16px;text-align:center">
+      <div style="width:72px;height:72px;background:var(--bg3);border:2px solid var(--gold-a25);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:1.8rem"><i class="fas fa-user-secret" style="color:var(--gold)"></i></div>
+      <div style="font-family:var(--fd);font-size:1.3rem;color:var(--t1);margin-bottom:4px">Guest Session</div>
+      <div style="font-size:.68rem;color:var(--t3);margin-bottom:18px">You're browsing without an account</div>
+
+      <div style="background:var(--bg3);border:1px solid var(--gold-a45);border-radius:var(--rl);padding:14px;margin-bottom:14px">
+        <div style="font-size:.56rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin-bottom:4px">Your Guest ID</div>
+        <div style="font-family:monospace;font-size:1.3rem;font-weight:800;color:var(--gold);letter-spacing:.06em">${esc(gid)}</div>
+        <div style="font-size:.6rem;color:var(--t4);margin-top:4px">Saved on this device</div>
+        <button onclick="navigator.clipboard?.writeText('${esc(gid)}').then(()=>toast('Copied!','ok'))" style="margin-top:8px;padding:5px 14px;background:var(--gold-a8);border:1px solid var(--gold-a25);border-radius:8px;color:var(--gold);font-size:.64rem;cursor:pointer"><i class="fas fa-copy"></i> Copy ID</button>
+      </div>
+
+      <div style="background:rgba(255,165,0,.06);border:1px solid rgba(255,165,0,.22);border-radius:var(--r);padding:10px 14px;margin-bottom:16px;font-size:.68rem;color:#ffa500;text-align:left;line-height:1.6">
+        <i class="fas fa-triangle-exclamation" style="margin-right:6px"></i>
+        <strong>Limited access:</strong> Your requests are not saved to your profile. Create a free account to track history, earn points and save notes.
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:6px;text-align:left;margin-bottom:18px">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border:1px solid rgba(50,180,100,.2);border-radius:var(--r)">
+          <i class="fas fa-check" style="color:var(--green);width:14px;flex-shrink:0"></i><span style="font-size:.7rem;color:var(--t2)">Browse all services</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border:1px solid rgba(50,180,100,.2);border-radius:var(--r)">
+          <i class="fas fa-check" style="color:var(--green);width:14px;flex-shrink:0"></i><span style="font-size:.7rem;color:var(--t2)">Submit service requests</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border:1px solid rgba(224,80,80,.15);border-radius:var(--r)">
+          <i class="fas fa-times" style="color:var(--red);width:14px;flex-shrink:0"></i><span style="font-size:.7rem;color:var(--t3)">Notes (account required)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border:1px solid rgba(224,80,80,.15);border-radius:var(--r)">
+          <i class="fas fa-times" style="color:var(--red);width:14px;flex-shrink:0"></i><span style="font-size:.7rem;color:var(--t3)">Request history not saved</span>
+        </div>
+      </div>
+
+      <button class="btn btn-gold btn-full" style="margin-bottom:10px;padding:13px" onclick="window._guestMode=false;openAuth();authTab('register')">
+        <i class="fas fa-user-plus"></i> Create Free Account
+      </button>
+      <button class="btn btn-ghost btn-full btn-sm" onclick="window._guestMode=false;openAuth();authTab('signin')">
+        <i class="fas fa-arrow-right-to-bracket"></i> Sign In to Existing Account
+      </button>
+    </div>`;
+}
+window.renderGuestAccount = renderGuestAccount;
+
+window.showGuestWelcome = showGuestWelcome;
 window.generateReceipt = generateReceipt;
 
+/* ══════════════════════════════════════════════════════════════════
+   ACCOUNT TABS
+══════════════════════════════════════════════════════════════════ */
+function acctTab(name) {
+  ['profile','requests','notes','loyalty','notifs','settings'].forEach(t => {
+    $(`atab-${t}`)?.classList.toggle('on', t===name);
+    $(`apanel-${t}`)?.classList.toggle('on', t===name);
+  });
+  if (name==='requests')  renderMyReqsList('all');
+  if (name==='loyalty')   renderLoyaltyTab();
+  if (name==='notifs')    renderNotifsTab('all');
+  if (name==='settings')  populateSettingsTab();
+  if (name==='profile')   renderProfileTab();
+  if (name==='notes')     renderAcctNotes();
+}
+window.acctTab = acctTab;
+
+function renderProfileTab() {
+  if (!_profile) return;
+  const dispName = _profile.full_name || _profile.referral_code || ('ND-' + (_user?.id||'').replace(/-/g,'').substring(0,8).toUpperCase());
+  $('pi-name').textContent    = dispName;
+  $('pi-email').textContent   = _user?.email || '—';
+  $('pi-idnum').textContent   = _profile.id_number || '—';
+  $('pi-wa').textContent      = _profile.whatsapp_number || '—';
+  $('pi-joined').textContent  = fmt(_profile.created_at);
+  $('pi-lastvisit').textContent = fmt(_profile.last_visit || _profile.created_at);
+  // Quick stats
+  const piReq = $('pi-req-count'); if (piReq) piReq.textContent = _reqs.length;
+  const piNts = $('pi-notes-count'); if (piNts) piNts.textContent = _notes.length;
+  const piPts = $('pi-pts-count'); if (piPts) piPts.textContent = _profile?.loyalty_points || 0;
+  if (_profile.referred_by_code) {
+    const row = $('pi-ref-row');
+    if (row) row.style.display = 'flex';
+    const el = $('pi-refby');
+    if (el) el.textContent = `Code: ${_profile.referred_by_code}`;
+  }
+  // Top services
+  const topEl = $('pi-top-services');
+  if (topEl) {
+    const counts = {};
+    _reqs.forEach(r => { counts[r.service_name] = (counts[r.service_name]||0)+1; });
+    const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    if (sorted.length) {
+      topEl.innerHTML = sorted.map(([name,cnt])=>`
+        <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r)">
+          <div style="width:28px;height:28px;border-radius:8px;background:var(--gold-a8);border:1px solid var(--gold-a15);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.7rem;flex-shrink:0"><i class="fas fa-concierge-bell"></i></div>
+          <div style="flex:1;font-size:.74rem;font-weight:500;color:var(--t1)">${esc(name)}</div>
+          <div style="font-size:.64rem;color:var(--gold);font-weight:600">${cnt}x</div>
+        </div>`).join('');
+    } else {
+      topEl.innerHTML = '<div style="text-align:center;padding:12px;font-size:.72rem;color:var(--t3)">No requests yet</div>';
+    }
+  }
+}
+
+/* ── MY REQUESTS LIST (in account tab) ─────────────────────────── */
+let _reqFilter = 'all';
+function filterMyReqs(f, el) {
+  _reqFilter = f;
+  document.querySelectorAll('.req-filter-pill').forEach(p=>p.classList.remove('on'));
+  el?.classList.add('on');
+  renderMyReqsList(f);
+}
+window.filterMyReqs = filterMyReqs;
+
+function renderMyReqsList(filter) {
+  const el = $('my-reqs-list');
+  if (!el) return;
+  const list = filter==='all' ? _reqs : _reqs.filter(r=>r.status===filter);
+  if (!list.length) {
+    el.innerHTML=`<div class="empty-state"><i class="fas fa-inbox"></i><h3>No ${filter==='all'?'':''+filter+' '}requests</h3><p>Submit a service request to see it here.</p></div>`;
+    return;
+  }
+  el.innerHTML = list.map(r=>`
+    <div class="my-req-item">
+      <div class="my-req-top">
+        <div class="my-req-name">${esc(r.service_name)}</div>
+        <div class="my-req-status ${r.status}">${r.status.replace('_',' ')}</div>
+      </div>
+      <div class="my-req-meta"><i class="fas fa-clock" style="margin-right:4px"></i>${fmt(r.created_at)}${r.price?` · <strong style="color:var(--green)">KES ${r.price}</strong>`:''}</div>
+      ${r.description?`<div style="font-size:.68rem;color:var(--t3);margin-bottom:8px;line-height:1.5">${esc(r.description.substring(0,100))}${r.description.length>100?'…':''}</div>`:''}
+      ${r.admin_notes?`<div style="font-size:.66rem;padding:7px 10px;background:rgba(50,180,100,.06);border:1px solid rgba(50,180,100,.15);border-radius:6px;color:var(--green);margin-bottom:8px"><i class="fas fa-message" style="margin-right:4px"></i>${esc(r.admin_notes)}</div>`:''}
+      <div class="my-req-btns">
+        ${r.status==='completed'?`<button class="btn btn-gold btn-xs" onclick="generateReceipt('${r.id}','${esc(r.service_name)}','${esc(_profile?.full_name||'Customer')}')"><i class="fas fa-file-pdf"></i> Receipt</button>`:''}
+        ${(r.file_urls && JSON.parse(r.file_urls||'[]').length)?`<button class="btn btn-ghost btn-xs" onclick="viewReqFiles('${r.id}')"><i class="fas fa-paperclip"></i> Files</button>`:''}
+        <button class="btn btn-ghost btn-xs" onclick="openSvcByName('${esc(r.service_name)}')"><i class="fas fa-redo"></i> Reorder</button>
+      </div>
+    </div>`).join('');
+}
+function viewReqFiles(reqId) {
+  const req = _reqs.find(r=>r.id===reqId);
+  if (!req) return;
+  const files = JSON.parse(req.file_urls||'[]');
+  if (!files.length) { toast('No files attached','nf'); return; }
+  const links = files.map(f=>`<a href="${esc(f.url)}" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg4);border-radius:6px;color:var(--t1);font-size:.72rem;text-decoration:none"><i class="fas fa-file" style="color:var(--gold)"></i>${esc(f.name)}</a>`).join('');
+  showPopup('nf','fa-paperclip','Attached Files',links,[{label:'Close',cls:'btn-ghost',fn:'closePopup()'}]);
+}
+window.viewReqFiles = viewReqFiles;
+
+/* ── LOYALTY TAB ────────────────────────────────────────────────── */
+function renderLoyaltyTab() {
+  renderLoyaltyPoints();
+  // Referral link
+  const code = _profile?.referral_code || generateRefCode(_user?.id||'');
+  const link = `${window.location.href.split('?')[0]}?ref=${code}`;
+  const el = $('ref-link-display');
+  if (el) el.textContent = link;
+  window._myRefLink = link;
+  window._myRefCode = code;
+  // Referrals list
+  loadReferrals();
+}
+function generateRefCode(uid) {
+  return 'ND' + uid.replace(/-/g,'').substring(0,8).toUpperCase();
+}
+async function loadReferrals() {
+  const el = $('referrals-list');
+  if (!el || !_user) return;
+  try {
+    const code = _profile?.referral_code || generateRefCode(_user.id);
+    const { data } = await sb.from('profiles')
+      .select('full_name, created_at')
+      .eq('referred_by_code', code)
+      .order('created_at', {ascending:false});
+    if (data && data.length) {
+      el.innerHTML = data.map(r=>`
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r)">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--gold-a15);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:var(--gold);flex-shrink:0">${esc(r.full_name[0]?.toUpperCase()||'?')}</div>
+          <div style="flex:1"><div style="font-size:.76rem;font-weight:500;color:var(--t1)">${esc(r.full_name)}</div><div style="font-size:.6rem;color:var(--t3)">Joined ${new Date(r.created_at).toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'})}</div></div>
+          <span style="font-size:.6rem;padding:2px 8px;border-radius:10px;background:rgba(50,180,100,.1);color:var(--green);border:1px solid rgba(50,180,100,.2)">+20 pts</span>
+        </div>`).join('');
+    } else {
+      el.innerHTML = `<div style="text-align:center;padding:24px;color:var(--t3);font-size:.74rem"><i class="fas fa-user-group" style="display:block;font-size:2rem;color:var(--t4);margin-bottom:10px"></i>No referrals yet<br><span style="font-size:.66rem">Share your link to earn <strong style="color:var(--gold)">+20 pts</strong> per sign-up!</span></div>`;
+    }
+  } catch(e) {}
+}
+function copyRefLink() {
+  if (!window._myRefLink) return;
+  navigator.clipboard?.writeText(window._myRefLink).then(()=>toast('Referral link copied! 🔗','ok')).catch(()=>toast(window._myRefLink,'nf',6000));
+}
+function shareRefLink() {
+  if (!window._myRefLink) return;
+  const txt = `Sign up for NovaDeskOnline — Kemera's best cyber services! Use my link to get started: ${window._myRefLink}`;
+  if (navigator.share) navigator.share({title:'Join NovaDeskOnline',text:txt,url:window._myRefLink}).catch(()=>{});
+  else copyRefLink();
+}
+window.copyRefLink = copyRefLink;
+window.shareRefLink = shareRefLink;
+
+/* ── NOTIFICATIONS TAB ──────────────────────────────────────────── */
+let _notifFilter = 'all';
+function filterNotifs(f, el) {
+  _notifFilter = f;
+  document.querySelectorAll('#apanel-notifs .req-filter-pill').forEach(p=>p.classList.remove('on'));
+  el?.classList.add('on');
+  renderNotifsTab(f);
+}
+window.filterNotifs = filterNotifs;
+function renderNotifsTab(filter) {
+  const el = $('notifs-tab-list');
+  if (!el) return;
+  const list = filter==='all' ? _notifs : _notifs.filter(n=>n.type===filter);
+  if (!list.length) {
+    el.innerHTML=`<div class="empty-state"><i class="fas fa-bell-slash"></i><h3>No notifications</h3><p>${filter==='all'?'You\'re all caught up!':'No '+filter+' notifications'}</p></div>`;
+    return;
+  }
+  const icons = {request:'fa-list-check',system:'fa-gear',promotion:'fa-tag',general:'fa-bell'};
+  el.innerHTML = list.map(n=>`
+    <div class="notif-item ${n.read?'':'unread'}" onclick="markNotifRead('${n.id}',this)">
+      <div class="notif-icon ${n.type}"><i class="fas ${icons[n.type]||'fa-bell'}"></i></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.76rem;font-weight:${n.read?'500':'700'};color:var(--t1);margin-bottom:2px">${esc(n.title)}</div>
+        <div style="font-size:.66rem;color:var(--t3);line-height:1.5">${esc(n.body)}</div>
+        <div style="font-size:.58rem;color:var(--t4);margin-top:4px">${fmtRel(n.created_at)}</div>
+      </div>
+      ${!n.read?`<div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:4px"></div>`:''}
+    </div>`).join('');
+}
+async function markNotifRead(id, el) {
+  const n = _notifs.find(x=>x.id===id);
+  if (!n || n.read) return;
+  n.read = true;
+  el?.classList.remove('unread');
+  try { await sb.from('notifications').update({read:true}).eq('id',id); } catch(e){}
+}
+window.markNotifRead = markNotifRead;
+
+/* ── SETTINGS TAB ───────────────────────────────────────────────── */
+function populateSettingsTab() {
+  if (!_profile) return;
+  $('set-name').value  = _profile.full_name || '';
+  $('set-wa').value    = _profile.whatsapp_number || '';
+  $('set-alt').value   = _profile.alt_phone || '';
+  $('set-idnum').value = _profile.id_number || '';
+  // Update avatar in settings
+  const sAva = $('settings-ava');
+  if (sAva) {
+    if (_profile.avatar_url) sAva.innerHTML = `<img src="${esc(_profile.avatar_url)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    else { const ini = (_profile.full_name||'ND').split(' ').map(w=>w[0]?.toUpperCase()||'').join('').substring(0,2); sAva.innerHTML = `<span style="font-size:1.2rem">${ini}</span>`; }
+  }
+  $('settings-name-display').textContent = _profile.full_name || _profile.referral_code || 'Member';
+  $('settings-initials').textContent = (_profile.full_name||'ND').split(' ').map(w=>w[0]?.toUpperCase()||'').join('').substring(0,2);
+}
+async function saveSettingsProfile() {
+  if (!_user) return;
+  const name = sanitizeShort($('set-name')?.value||'');
+  const wa   = ($('set-wa')?.value||'').replace(/\s/g,'');
+  const alt  = ($('set-alt')?.value||'').replace(/\s/g,'');
+  const err  = $('set-profile-err');
+  const btn  = $('set-profile-btn');
+  err.style.display='none';
+  if (!name) { err.textContent='Name is required.'; err.style.display='block'; return; }
+  if (!isValidPhone(wa)) { err.textContent='Enter a valid WhatsApp number.'; err.style.display='block'; return; }
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Saving…';
+  try {
+    const { error } = await sb.from('profiles').update({ full_name:name, whatsapp_number:wa, alt_phone:alt||null, updated_at:new Date().toISOString() }).eq('id', _user.id);
+    if (error) throw error;
+    _profile = { ..._profile, full_name:name, whatsapp_number:wa, alt_phone:alt||null };
+    renderAccount();
+    populateSettingsTab();
+    toast('Profile saved! ✅','ok');
+  } catch(e) { err.textContent=e.message||'Save failed.'; err.style.display='block'; }
+  finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Save Profile'; }
+}
+window.saveSettingsProfile = saveSettingsProfile;
+async function saveSettingsPassword() {
+  const pw  = $('set-pw')?.value||'';
+  const pw2 = $('set-pw2')?.value||'';
+  const err = $('set-pw-err');
+  const ok  = $('set-pw-ok');
+  const btn = $('set-pw-btn');
+  err.style.display='none'; ok.style.display='none';
+  if (pw.length<8) { err.textContent='Password must be at least 8 characters.'; err.style.display='block'; return; }
+  if (pw!==pw2) { err.textContent='Passwords do not match.'; err.style.display='block'; return; }
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Updating…';
+  try {
+    const { error } = await sb.auth.updateUser({ password: pw });
+    if (error) throw error;
+    ok.style.display='block';
+    $('set-pw').value=''; $('set-pw2').value='';
+    toast('Password updated! 🔐','ok');
+  } catch(e) { err.textContent=e.message||'Update failed.'; err.style.display='block'; }
+  finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-key"></i> Update Password'; }
+}
+window.saveSettingsPassword = saveSettingsPassword;
+
+/* ── NEW PASSWORD (from reset email link) ───────────────────────── */
+function showNewPasswordModal() {
+  // Close any open modals first, then show the password reset modal
+  setTimeout(()=>{
+    const modal = $('new-pw-modal');
+    if (modal) { modal.classList.add('on'); showOvl(); }
+  }, 600);
+}
+async function doSetNewPassword() {
+  const pw  = $('new-pw-inp')?.value||'';
+  const pw2 = $('new-pw2-inp')?.value||'';
+  const err = $('new-pw-err');
+  const btn = $('new-pw-btn');
+  err.style.display='none';
+  if (pw.length<8) { err.textContent='Password must be at least 8 characters.'; err.style.display='block'; return; }
+  if (pw!==pw2) { err.textContent='Passwords do not match.'; err.style.display='block'; return; }
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Setting password…';
+  try {
+    const { error } = await sb.auth.updateUser({ password: pw });
+    if (error) throw error;
+    closeModal('new-pw-modal');
+    toast('Password updated successfully! You are now logged in. ✅','ok',4000);
+    goNav('account');
+  } catch(e) { err.textContent=e.message||'Failed to update password.'; err.style.display='block'; }
+  finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Set New Password'; }
+}
+window.doSetNewPassword = doSetNewPassword;
+window.showNewPasswordModal = showNewPasswordModal;
+
+
+/* ── REGISTRATION SUCCESS ──────────────────────────────────────── */
+function showRegisterSuccess(displayName, email, refCode) {
+  // Store the ref code globally so copyUserId can access it
+  window._lastRegUserId = refCode;
+  const nameEl = $('rs-welcome-name');
+  const idEl   = $('rs-user-id');
+  const emEl   = $('rs-email');
+  if (nameEl) nameEl.textContent = `Welcome, ${displayName}!`;
+  if (idEl)   idEl.textContent   = refCode || 'Generating…';
+  if (emEl)   emEl.textContent   = email || '—';
+  window._rsUserId = refCode;
+  // Add to closeAllModals list
+  setTimeout(()=> openModal('reg-success-modal'), 50);
+}
+function copyUserId() {
+  const id = window._rsUserId || $('rs-user-id')?.textContent;
+  if (!id) return;
+  navigator.clipboard?.writeText(id).then(()=> toast('Account ID copied! 📋', 'ok')).catch(()=> toast(id, 'nf', 5000));
+}
+window.showRegisterSuccess = showRegisterSuccess;
+window.copyUserId = copyUserId;
+function renderAcctNotes() {
+  const grid = $('acct-notes-grid');
+  if (!grid) return;
+  if (!_user) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--t3)"><i class="fas fa-lock" style="font-size:2rem;color:var(--t4);display:block;margin-bottom:12px"></i><div style="font-size:.8rem;font-weight:500;color:var(--t2);margin-bottom:8px">Sign in to access notes</div><button class="btn btn-gold btn-sm" onclick="openAuth()"><i class="fas fa-arrow-right-to-bracket"></i> Sign In</button></div>`;
+    return;
+  }
+  if (!_notes.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--t3)"><i class="fas fa-note-sticky" style="font-size:2rem;color:var(--t4);display:block;margin-bottom:12px"></i><div style="font-size:.8rem;font-weight:500;color:var(--t2);margin-bottom:4px">No notes yet</div><div style="font-size:.68rem;margin-bottom:14px">Tap + New Note to save your first note</div><button class="btn btn-gold btn-sm" onclick="openNoteEditorFromAcct()"><i class="fas fa-plus"></i> New Note</button></div>`;
+    return;
+  }
+  const colStyle = {
+    yellow: 'border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.04)',
+    green:  'border-color:rgba(50,180,100,.4);background:rgba(50,180,100,.03)',
+    blue:   'border-color:rgba(77,158,255,.4);background:rgba(77,158,255,.04)',
+    red:    'border-color:rgba(224,80,80,.4);background:rgba(224,80,80,.03)',
+    default:''
+  };
+  const sorted = [..._notes].sort((a,b) => (b.pinned - a.pinned) || new Date(b.updated_at) - new Date(a.updated_at));
+  grid.innerHTML = sorted.map(n => `
+    <div onclick="openNoteEditorFromAcctEdit('${esc(n.id)}')"
+         style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:12px 10px;cursor:pointer;position:relative;overflow:hidden;transition:transform .15s;${colStyle[n.color||'default']||''}"
+         onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+      ${n.pinned ? `<div style="font-size:.52rem;color:var(--gold);margin-bottom:4px;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:3px"><i class="fas fa-thumbtack"></i> Pinned</div>` : ''}
+      <div style="font-size:.78rem;font-weight:600;color:var(--t1);line-height:1.3;margin-bottom:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${esc(n.title)}</div>
+      <div style="font-size:.62rem;color:var(--t3);line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;margin-bottom:7px">${esc(n.content||'No content')}</div>
+      <div style="font-size:.55rem;color:var(--t4);display:flex;align-items:center;gap:4px"><i class="fas fa-clock"></i>${fmtRel(n.updated_at)}</div>
+    </div>`).join('');
+}
+function openNoteEditorFromAcct() {
+  if (!_user) { openAuth(); return; }
+  openNoteEditor(null);
+}
+function openNoteEditorFromAcctEdit(noteId) {
+  if (!_user) { openAuth(); return; }
+  openNoteEditor(noteId);
+}
+window.openNoteEditorFromAcct = openNoteEditorFromAcct;
+window.openNoteEditorFromAcctEdit = openNoteEditorFromAcctEdit;
+window.renderAcctNotes = renderAcctNotes;
 /* ── OTHER PRODUCTS GRID NAVIGATION ────────────────────────────── */
 const OP_CATEGORIES = {
   elec: {
@@ -4508,7 +5282,7 @@ function openTechDetail(key) {
       <button class="btn btn-ghost btn-sm" onclick="openWhatsApp()" style="white-space:nowrap"><i class="fab fa-whatsapp"></i></button>
     </div>
   `;
-  openModal('tech-detail-modal');
+  setTimeout(()=> openModal('tech-detail-modal'), 10);
 }
 window.openTechDetail = openTechDetail;
 </script>
@@ -4690,3 +5464,10 @@ async function submitTechRequest() {
 
 </body>
 </html>
+function copyUserId(){
+  const id = window._lastRegUserId || (_profile?.referral_code) || '';
+  if (!id) return;
+  navigator.clipboard?.writeText(id).then(()=>toast('Account ID copied!','ok'))
+    .catch(()=>toast('Your ID: ' + id, 'nf', 6000));
+}
+window.copyUserId = copyUserId;
