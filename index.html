@@ -1,334 +1,29 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-<!--
-=======================================================================
-  NOVADESK ONLINE v1.0  —  PRODUCTION PWA  (Cyber Café Services)
-  Developer: dariusmomanyi678@gmail.com  |  0110554040
-=======================================================================
-  CONFIG — search "== CONFIG ==" in the <script> section
-  -----------------------------------------------------------------------
-  const SB_URL = 'https://YOUR_PROJECT.supabase.co';
-  const SB_KEY = 'YOUR_ANON_PUBLIC_KEY';
-  const WA_NUM = '254111923477';
-  const SITE   = 'https://novadesk.vercel.app';
-=======================================================================
-  DATABASE SCHEMA — paste into Supabase SQL Editor and run
-=======================================================================
-
-  -- Enable UUID extension
-  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-  -- ── HELPER FUNCTION ──────────────────────────────────────────────
-  CREATE OR REPLACE FUNCTION public.get_my_role()
-    RETURNS TEXT AS $$
-      SELECT role FROM public.profiles WHERE id = auth.uid();
-    $$ LANGUAGE sql SECURITY DEFINER STABLE;
-
-  -- ── PROFILES ─────────────────────────────────────────────────────
-  CREATE TABLE public.profiles (
-    id             UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
-    full_name      TEXT NOT NULL,
-    email          TEXT,
-    id_number      TEXT NOT NULL UNIQUE,
-    whatsapp_number TEXT NOT NULL,
-    alt_phone      TEXT,
-    role           TEXT DEFAULT 'user'
-                   CHECK (role IN ('user','admin','banned')),
-    avatar_url     TEXT,
-    visit_count      INTEGER DEFAULT 0,
-    loyalty_points   INTEGER DEFAULT 0,
-    last_visit       TIMESTAMPTZ,
-    created_at     TIMESTAMPTZ DEFAULT NOW(),
-    updated_at     TIMESTAMPTZ DEFAULT NOW()
-  );
-  ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
-  CREATE POLICY "profiles_own"   ON public.profiles FOR ALL   USING (auth.uid()=id);
-  CREATE POLICY "profiles_admin" ON public.profiles FOR ALL   USING (public.get_my_role()='admin');
-
-  -- ── NOTES ────────────────────────────────────────────────────────
-  CREATE TABLE public.notes (
-    id         UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    user_id    UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-    title      TEXT NOT NULL,
-    content    TEXT NOT NULL,
-    color      TEXT DEFAULT 'default',
-    pinned     BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-  );
-  ALTER TABLE public.notes ENABLE ROW LEVEL SECURITY;
-  CREATE POLICY "notes_own"   ON public.notes FOR ALL   USING (auth.uid()=user_id);
-  CREATE POLICY "notes_admin" ON public.notes FOR SELECT USING (public.get_my_role()='admin');
-
-  -- ── SERVICES CATALOG ─────────────────────────────────────────────
-  CREATE TABLE public.services (
-    id           UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name         TEXT NOT NULL,
-    description  TEXT,
-    icon         TEXT DEFAULT 'fa-star',
-    category     TEXT DEFAULT 'general',
-    price_label  TEXT,
-    requires_file BOOLEAN DEFAULT FALSE,
-    is_active    BOOLEAN DEFAULT TRUE,
-    sort_order   INTEGER DEFAULT 0,
-    created_at   TIMESTAMPTZ DEFAULT NOW()
-  );
-  ALTER TABLE public.services ENABLE ROW LEVEL SECURITY;
-  CREATE POLICY "services_read"  ON public.services FOR SELECT USING (true);
-  CREATE POLICY "services_admin" ON public.services FOR ALL   USING (public.get_my_role()='admin');
-
-  -- Seed default services
-  INSERT INTO public.services (name,description,icon,category,price_label,requires_file,sort_order) VALUES
-    ('Print Documents',    'Black & white or colour printing, any size',       'fa-print',         'print',    'From KES 5/page',   true,  1),
-    ('Scan & Send',        'Scan docs to email, WhatsApp or USB',              'fa-scanner',       'print',    'From KES 10/page',  true,  2),
-    ('Photocopy',          'Single or bulk photocopies',                       'fa-copy',          'print',    'From KES 5/page',   true,  3),
-    ('Laminating',         'ID cards, certificates, photos',                   'fa-id-card',       'print',    'From KES 20',       true,  4),
-    ('Binding',            'Spiral or thermal binding for documents',          'fa-book',          'print',    'From KES 50',       true,  5),
-    ('CV & Resume',        'Professional CV writing & formatting',             'fa-file-user',     'docs',     'From KES 300',      false, 6),
-    ('Typing Services',    'Type & format your documents',                     'fa-keyboard',      'docs',     'From KES 30/page',  false, 7),
-    ('Passport Photos',    'Standard passport & visa photos',                  'fa-camera-retro',  'photos',   'KES 100 (4 pcs)',   false, 8),
-    ('School Assignments', 'Research, typing & printing of assignments',       'fa-graduation-cap','academic', 'From KES 200',      true,  9),
-    ('Online Applications','KUCCPS, university & govt applications',           'fa-laptop',        'academic', 'From KES 200',      true, 10),
-    ('KRA PIN Services',   'PIN registration, iTax returns & compliance',      'fa-landmark',      'govt',     'From KES 300',      true, 11),
-    ('NHIF / NSSF',        'Registration, contributions & statements',         'fa-hospital',      'govt',     'From KES 200',      true, 12),
-    ('Business Reg',       'Business name registration & certificates',        'fa-briefcase',     'govt',     'From KES 600',      true, 13),
-    ('Email & Social',     'Email setup, social media accounts',               'fa-envelope',      'digital',  'From KES 150',      false, 14),
-    ('M-Pesa Services',    'Deposits, withdrawals & till payments',            'fa-mobile-screen', 'digital',  'Standard rates',    false, 15),
-    ('Internet Browsing',  'Fast broadband internet access',                   'fa-wifi',          'digital',  'KES 30/hour',       false, 16),
-    ('Poster & Brochure',  'Design & print marketing materials',               'fa-palette',       'print',    'From KES 500',      true, 17),
-    ('Notarization Assist','Affidavit typing & commissioner of oaths guide',   'fa-stamp',         'docs',     'From KES 400',      true, 18),
-    ('ID Card Design',     'Custom staff/student ID cards, printed & laminated','fa-id-badge',     'print',    'From KES 80/card',  false, 19),
-    ('eSignature Setup',   'Set up DocuSign or Adobe Sign on your device',     'fa-signature',     'digital',  'From KES 200',      false, 20),
-    ('eCitizen Services',  'Huduma Namba, passport, driving licence apps',     'fa-globe',         'govt',     'From KES 250',      true, 21),
-    ('LinkedIn & CV Boost','LinkedIn profile setup + optimised CV package',    'fa-linkedin',      'docs',     'From KES 500',      false, 22),
-    ('Photo Editing',      'Background removal, retouching & colour correction','fa-wand-magic-sparkles','photos','From KES 200',   true, 23),
-    ('USB & Cloud Backup', 'Copy, organise & backup files to USB or Drive',    'fa-cloud-arrow-up','digital',  'From KES 100',      true, 24),
-    ('Phone Repair Ref.',  'Referral to certified phone repair technicians',   'fa-mobile',        'digital',  'Free referral',     false, 25),
-    ('Data Bundle Help',   'Airtime, bundles &amp; M-Pesa merchant payments',      'fa-sim-card',      'digital',  'Face value',        false, 26),
-    ('Logo Design',        'Professional logo &amp; brand identity design',          'fa-paintbrush',    'design',   'From KES 800',      false, 27),
-    ('Flyer Design',       'Digital &amp; printable flyer design for events/promos', 'fa-rectangle-ad',  'design',   'From KES 400',      false, 28),
-    ('WhatsApp Business',  'Set up WhatsApp Business profile &amp; product catalog', 'fa-whatsapp',      'digital',  'From KES 200',      false, 29),
-    ('Online Form Fill',   'Fill in online forms, applications on your behalf',      'fa-list-check',    'digital',  'From KES 100',      false, 30),
-    ('Bank Statement',     'Download &amp; print bank statements from mobile banking','fa-university',   'docs',     'From KES 50',       false, 31),
-    ('Certificate Design', 'Design &amp; print award, training, attendance certs',   'fa-certificate',   'print',    'From KES 300',      false, 32),
-    ('Video Download',     'Download YouTube/TikTok videos &amp; audio extraction',  'fa-youtube',       'digital',  'From KES 50',       false, 33),
-    ('Govt Job Reg.',      'Register on Ajira, Kazi Mtaani, GovHR portals',         'fa-person-walking','govt',     'From KES 150',      false, 34),
-    ('Safaricom Services', 'Line reg, SIM swap, data bundles, M-Pesa setup',        'fa-sim-card',      'digital',  'From KES 100',      false, 35),
-    ('Academic Research',  'Literature review &amp; research paper typing/editing',  'fa-microscope',    'academic', 'From KES 500',      true,  36),
-    ('Translation',        'English–Kiswahili document translation',                 'fa-language',      'docs',     'From KES 150',      true,  37),
-    ('Event Programme',    'Design &amp; print event programmes &amp; booklets',     'fa-calendar-days', 'print',    'From KES 400',      true,  38),
-    ('Company Profile',    'Corporate profile design &amp; full-colour printing',    'fa-building',      'docs',     'From KES 1,000',    true,  39),
-    ('Legal Document',     'Power of Attorney, affidavit &amp; contract typing',     'fa-scale-balanced','docs',     'From KES 500',      true,  40),
-    ('Bulk SMS Service',   'Send bulk SMS alerts for events, schools &amp; business','fa-message',       'digital',  'From KES 200',      false, 41);
-
-  -- ── SERVICE REQUESTS ─────────────────────────────────────────────
-  CREATE TABLE public.service_requests (
-    id           UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    user_id      UUID REFERENCES auth.users(id),
-    service_id   UUID REFERENCES public.services(id),
-    service_name TEXT NOT NULL,
-    description  TEXT,
-    status       TEXT DEFAULT 'pending'
-                 CHECK (status IN ('pending','in_progress','completed','cancelled')),
-    file_urls    JSONB DEFAULT '[]',
-    admin_notes  TEXT,
-    price        NUMERIC,
-    created_at   TIMESTAMPTZ DEFAULT NOW(),
-    updated_at   TIMESTAMPTZ DEFAULT NOW()
-  );
-  ALTER TABLE public.service_requests ENABLE ROW LEVEL SECURITY;
-  CREATE POLICY "req_insert" ON public.service_requests FOR INSERT WITH CHECK (true);
-  CREATE POLICY "req_own"    ON public.service_requests FOR SELECT USING (auth.uid()=user_id OR user_id IS NULL);
-  CREATE POLICY "req_admin"  ON public.service_requests FOR ALL   USING (public.get_my_role()='admin');
-  CREATE POLICY "req_update_own" ON public.service_requests FOR UPDATE USING (auth.uid()=user_id);
-
-  -- ── UPLOADED FILES ───────────────────────────────────────────────
-  CREATE TABLE public.uploaded_files (
-    id          UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    user_id     UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    request_id  UUID REFERENCES public.service_requests(id),
-    file_name   TEXT NOT NULL,
-    file_url    TEXT NOT NULL,
-    file_type   TEXT,
-    file_size   INTEGER,
-    created_at  TIMESTAMPTZ DEFAULT NOW()
-  );
-  ALTER TABLE public.uploaded_files ENABLE ROW LEVEL SECURITY;
-  CREATE POLICY "files_own"    ON public.uploaded_files FOR ALL    USING (auth.uid()=user_id);
-  CREATE POLICY "files_insert" ON public.uploaded_files FOR INSERT WITH CHECK (true);
-  CREATE POLICY "files_admin"  ON public.uploaded_files FOR ALL    USING (public.get_my_role()='admin');
-
-  -- ── NOTIFICATIONS ────────────────────────────────────────────────
-  CREATE TABLE public.notifications (
-    id         UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    user_id    UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    type       TEXT DEFAULT 'system',
-    title      TEXT NOT NULL,
-    body       TEXT NOT NULL,
-    read       BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-  );
-  ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
-  CREATE POLICY "notifs_own"          ON public.notifications FOR ALL    USING (auth.uid()=user_id);
-  CREATE POLICY "notifs_admin_insert" ON public.notifications FOR INSERT WITH CHECK (true);
-
-  -- ── APP SETTINGS ─────────────────────────────────────────────────
-  CREATE TABLE public.app_settings (
-    key        TEXT PRIMARY KEY,
-    value      TEXT,
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-  );
-  ALTER TABLE public.app_settings ENABLE ROW LEVEL SECURITY;
-  CREATE POLICY "settings_read"  ON public.app_settings FOR SELECT USING (true);
-  CREATE POLICY "settings_admin" ON public.app_settings FOR ALL   USING (public.get_my_role()='admin');
-  INSERT INTO public.app_settings(key,value) VALUES
-    ('announcement','Fast · Reliable · Affordable — NovaDeskOnline Cyber Services'),
-    ('wa_number',   '254111923477'),
-    ('business_hrs','Mon–Sat 7am–9pm · Sun 9am–6pm')
-  ON CONFLICT DO NOTHING;
-
-  -- ── CONTACT MESSAGES ─────────────────────────────────────────────
-  CREATE TABLE public.contact_messages (
-    id         UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name       TEXT NOT NULL,
-    email      TEXT,
-    phone      TEXT,
-    subject    TEXT,
-    message    TEXT NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-  );
-  ALTER TABLE public.contact_messages ENABLE ROW LEVEL SECURITY;
-  CREATE POLICY "contact_insert" ON public.contact_messages FOR INSERT WITH CHECK (true);
-  CREATE POLICY "contact_admin"  ON public.contact_messages FOR SELECT USING (public.get_my_role()='admin');
-
-  -- ── TECH SERVICE REQUESTS ───────────────────────────────────────
-  CREATE TABLE public.tech_service_requests (
-    id            UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    service_type  TEXT NOT NULL,   -- 'Electrical Installation' | 'WiFi & Fibre' | 'Web Development'
-    full_name     TEXT NOT NULL,
-    phone         TEXT NOT NULL,
-    email         TEXT,
-    location      TEXT NOT NULL,
-    description   TEXT,
-    budget        TEXT,
-    status        TEXT DEFAULT 'new'
-                  CHECK (status IN ('new','contacted','in_progress','completed','cancelled')),
-    admin_notes   TEXT,
-    created_at    TIMESTAMPTZ DEFAULT NOW(),
-    updated_at    TIMESTAMPTZ DEFAULT NOW()
-  );
-  ALTER TABLE public.tech_service_requests ENABLE ROW LEVEL SECURITY;
-  CREATE POLICY "tech_req_insert" ON public.tech_service_requests FOR INSERT WITH CHECK (true);
-  CREATE POLICY "tech_req_admin"  ON public.tech_service_requests FOR ALL   USING (public.get_my_role()='admin');
-
-  -- ── LOYALTY POINTS RPC ──────────────────────────────────────────
-  CREATE OR REPLACE FUNCTION public.increment_loyalty(user_id UUID, points INTEGER)
-  RETURNS VOID AS $$
-    UPDATE public.profiles
-    SET loyalty_points = COALESCE(loyalty_points, 0) + points,
-        updated_at = NOW()
-    WHERE id = user_id;
-  $$ LANGUAGE sql SECURITY DEFINER;
-
-  -- ── AUTO-CREATE PROFILE TRIGGER ──────────────────────────────────
-  CREATE OR REPLACE FUNCTION public.handle_new_user()
-  RETURNS TRIGGER AS $$
-  BEGIN
-    INSERT INTO public.profiles(id, full_name, email, id_number, whatsapp_number, alt_phone, role)
-    VALUES (
-      NEW.id,
-      COALESCE(NEW.raw_user_meta_data->>'full_name', split_part(NEW.email,'@',1)),
-      NEW.email,
-      COALESCE(NEW.raw_user_meta_data->>'id_number', ''),
-      COALESCE(NEW.raw_user_meta_data->>'whatsapp_number', ''),
-      NEW.raw_user_meta_data->>'alt_phone',
-      COALESCE(NEW.raw_user_meta_data->>'role', 'user')
-    )
-    ON CONFLICT(id) DO UPDATE SET
-      email=EXCLUDED.email, updated_at=NOW();
-    RETURN NEW;
-  END;
-  $$ LANGUAGE plpgsql SECURITY DEFINER;
-
-  CREATE TRIGGER on_auth_user_created
-    AFTER INSERT ON auth.users
-    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-
-  -- ── STORAGE BUCKETS ──────────────────────────────────────────────
-  -- Run in Supabase Dashboard → Storage:
-  -- INSERT INTO storage.buckets(id,name,public) VALUES ('service-files','service-files',true) ON CONFLICT DO NOTHING;
-  -- INSERT INTO storage.buckets(id,name,public) VALUES ('avatars','avatars',true) ON CONFLICT DO NOTHING;
-  -- CREATE POLICY "service_files_auth_upload" ON storage.objects FOR INSERT WITH CHECK (bucket_id='service-files' AND auth.uid() IS NOT NULL);
-  -- CREATE POLICY "service_files_public_read" ON storage.objects FOR SELECT USING (bucket_id='service-files');
-  -- CREATE POLICY "avatars_auth_upload" ON storage.objects FOR INSERT WITH CHECK (bucket_id='avatars' AND auth.uid() IS NOT NULL);
-  -- CREATE POLICY "avatars_public_read" ON storage.objects FOR SELECT USING (bucket_id='avatars');
-
-  -- ── REALTIME ─────────────────────────────────────────────────────
-  ALTER PUBLICATION supabase_realtime ADD TABLE public.service_requests;
-  ALTER PUBLICATION supabase_realtime ADD TABLE public.notifications;
-  ALTER PUBLICATION supabase_realtime ADD TABLE public.app_settings;
-
-=======================================================================
--->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,viewport-fit=cover">
-<!-- ══ PRODUCTION CONFIG ══ Fill these in ══ -->
-<meta name="nd-sb-url" content="https://ihkwomhxdfthxaynljuw.supabase.co">
-<meta name="nd-sb-key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imloa3dvbWh4ZGZ0aHhheW5sanV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjIxMzEsImV4cCI6MjA5MjAzODEzMX0.Y1elTjbbHViH9awUQSiRpfjR-FBMRjTCJhRw1cJY7rI">
-<!-- ══════════════════════════════════════════ -->
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data: blob:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' blob:;">
 <title>NovaDeskOnline · Cyber Services</title>
-<meta name="description" content="Fast, affordable cyber services in Nairobi — printing, scanning, CV writing, government services and more.">
+<meta name="description" content="Fast, affordable cyber services in Kemera, Nyamira — printing, scanning, CV writing, government services and more.">
 <meta name="theme-color" content="#0066ff">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="NovaDeskOnline">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0f1e'/%3E%3Crect x='8' y='13' width='46' height='29' rx='5' fill='%230d1830' stroke='%234d9eff' stroke-width='1.8'/%3E%3Crect x='14' y='18' width='34' height='19' rx='2' fill='%230a1224'/%3E%3Cline x1='18' y1='23' x2='38' y2='23' stroke='%234d9eff' stroke-width='1.3' opacity='.8'/%3E%3Cline x1='18' y1='28' x2='44' y2='28' stroke='%234d9eff' stroke-width='1.3' opacity='.55'/%3E%3Cline x1='18' y1='33' x2='40' y2='33' stroke='%234d9eff' stroke-width='1.3' opacity='.55'/%3E%3Ccircle cx='44' cy='23' r='5' fill='%230066ff'/%3E%3Cpath d='M41.5 23 L44 25.5 L48 21' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='22' y='42' width='18' height='3' rx='1' fill='%234d9eff' opacity='.6'/%3E%3Crect x='17' y='45' width='28' height='2' rx='1' fill='%234d9eff' opacity='.3'/%3E%3C/svg%3E">
-<!-- PWA Manifest (inline) -->
-<script>
-(function(){
-  // Use data: URI — blob: URLs can be blocked on some Android browsers
-  const manifest = {
-    "name": "NovaDeskOnline",
-    "short_name": "NovaDeskOnline",
-    "description": "Fast, affordable cyber services in Nairobi — printing, scanning, CV writing, government services and more.",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#060c18",
-    "theme_color": "#0066ff",
-    "orientation": "portrait-primary",
-    "icons": [
-      {"src":"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='42' fill='%230d0018'/%3E%3Crect x='30' y='42' width='132' height='84' rx='9' stroke='%234b0082' stroke-width='5' fill='none'/%3E%3Ccircle cx='138' cy='60' r='10.5' fill='%234b0082'/%3E%3Cline x1='48' y1='60' x2='114' y2='60' stroke='%23b59a6b' stroke-width='3.6' opacity='.7'/%3E%3Cline x1='48' y1='75' x2='144' y2='75' stroke='%23b59a6b' stroke-width='3.6' opacity='.5'/%3E%3Cline x1='48' y1='90' x2='132' y2='90' stroke='%23b59a6b' stroke-width='3.6' opacity='.5'/%3E%3Crect x='66' y='126' width='60' height='9' fill='%234b0082' opacity='.6'/%3E%3Crect x='54' y='135' width='84' height='6' rx='3' fill='%234b0082' opacity='.35'/%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"},
-      {"src":"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230d0018'/%3E%3Crect x='80' y='112' width='352' height='224' rx='24' stroke='%234b0082' stroke-width='14' fill='none'/%3E%3Ccircle cx='368' cy='160' r='28' fill='%234b0082'/%3E%3Cline x1='128' y1='160' x2='304' y2='160' stroke='%23b59a6b' stroke-width='10' opacity='.7'/%3E%3Cline x1='128' y1='200' x2='384' y2='200' stroke='%23b59a6b' stroke-width='10' opacity='.5'/%3E%3Cline x1='128' y1='240' x2='352' y2='240' stroke='%23b59a6b' stroke-width='10' opacity='.5'/%3E%3Crect x='176' y='336' width='160' height='24' fill='%234b0082' opacity='.6'/%3E%3Crect x='144' y='360' width='224' height='16' rx='8' fill='%234b0082' opacity='.35'/%3E%3C/svg%3E","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}
-    ],
-    "categories": ["business","productivity","utilities"],
-    "lang": "en-KE",
-    "scope": "/",
-    "shortcuts": [
-      {"name": "Services", "url": "/?screen=services", "description": "Browse all cyber services"},
-      {"name": "My Account", "url": "/?screen=account", "description": "View your account"}
-    ]
-  };
-  const json = JSON.stringify(manifest);
-  const link = document.createElement('link');
-  link.rel   = 'manifest';
-  link.href  = 'data:application/manifest+json,' + encodeURIComponent(json);
-  document.head.appendChild(link);
-})();
-</script>
+<!-- Real manifest URL — required for actual PWA installation -->
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-<link rel="dns-prefetch" href="https://ihkwomhxdfthxaynljuw.supabase.co">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap&font-display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin="anonymous">
-<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"></noscript>
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
 <style>
 /* ══ TOKENS ══ */
@@ -898,8 +593,11 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 #profile-modal.on{transform:translateX(-50%) translateY(0)}
 
 /* ── ADMIN PANEL ────────────────────────────────────────────────── */
-#admin-panel{position:fixed;inset:0;max-width:430px;margin:0 auto;background:var(--bg);z-index:calc(var(--zm)+100);transform:translateX(100%);transition:transform .32s var(--ease);overflow-y:auto}
+#admin-panel{position:fixed;inset:0;max-width:430px;margin:0 auto;background:var(--bg);z-index:800;transform:translateX(100%);transition:transform .32s var(--ease);overflow-y:auto;isolation:isolate}
 #admin-panel.on{transform:translateX(0)}
+/* Hide bottom nav and account tabs when admin panel is open */
+body.admin-open #botnav,
+body.admin-open .acct-tabs{ pointer-events:none; }
 .admin-nav-tab{flex-shrink:0;padding:10px 14px;font-size:.65rem;font-weight:600;letter-spacing:.06em;border:none;background:transparent;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;display:flex;align-items:center;gap:5px;white-space:nowrap;position:relative}
 .admin-nav-tab.on{color:var(--gold);border-bottom-color:var(--gold)}
 .admin-tab-badge{position:absolute;top:6px;right:4px;min-width:15px;height:15px;background:var(--red);color:#fff;font-size:.44rem;font-weight:700;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px}
@@ -1257,8 +955,95 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 .auth-action-sub{font-size:.6rem;color:var(--t3);line-height:1.3}
 .auth-action-arr{color:var(--t4);font-size:.65rem;flex-shrink:0}
 </style>
-</head>
-<body>
+<style>
+/* ── PWA INSTALL BANNER ─────────────────────────────────────────── */
+#pwa-install-bar{position:fixed;bottom:var(--nav);left:0;right:0;max-width:430px;margin:0 auto;z-index:calc(var(--zt)+10);background:linear-gradient(135deg,var(--bg2),var(--bg3));border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:10px 14px;display:flex;align-items:center;gap:10px;transform:translateY(100%);transition:transform .35s var(--ease);box-shadow:0 -4px 20px rgba(0,0,0,.4)}
+#pwa-install-bar.show{transform:translateY(0)}
+#pwa-install-bar .pwa-icon{width:40px;height:40px;border-radius:10px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+#pwa-install-bar .pwa-body{flex:1;min-width:0}
+#pwa-install-bar .pwa-title{font-size:.74rem;font-weight:600;color:var(--t1)}
+#pwa-install-bar .pwa-sub{font-size:.6rem;color:var(--t3)}
+/* ── REQUEST TIMELINE ────────────────────────────────────────────── */
+.req-timeline{display:flex;flex-direction:column;gap:0;padding:8px 0}
+.req-tl-step{display:flex;align-items:flex-start;gap:12px;position:relative}
+.req-tl-step:not(:last-child)::after{content:'';position:absolute;left:11px;top:24px;bottom:-4px;width:2px;background:var(--bd)}
+.req-tl-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--bd);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0;z-index:1}
+.req-tl-dot.done{background:var(--green);border-color:var(--green);color:#fff}
+.req-tl-dot.active{background:var(--gold);border-color:var(--gold);color:#fff}
+.req-tl-body{flex:1;padding-bottom:16px}
+.req-tl-label{font-size:.72rem;font-weight:600;color:var(--t1)}
+.req-tl-time{font-size:.58rem;color:var(--t3);margin-top:2px}
+/* ── DOCUMENT VAULT ──────────────────────────────────────────────── */
+.vault-item{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:6px;transition:border-color .2s;cursor:pointer}
+.vault-item:hover{border-color:var(--bd2)}
+.vault-icon{width:36px;height:36px;border-radius:8px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.9rem;flex-shrink:0}
+/* ── PRICE ESTIMATOR ─────────────────────────────────────────────── */
+.estimator-wrap{background:linear-gradient(135deg,var(--bg3),var(--bg4));border:1px solid var(--gold-a25);border-radius:var(--rl);padding:14px;margin:10px 0}
+.estimator-total{font-family:var(--fd);font-size:1.8rem;color:var(--gold);text-align:center;margin:8px 0 4px}
+/* ── CHAT PER REQUEST ────────────────────────────────────────────── */
+.chat-bubble{max-width:80%;padding:8px 12px;border-radius:12px;font-size:.74rem;line-height:1.5;margin-bottom:6px;word-break:break-word}
+.chat-bubble.admin{background:var(--gold-a8);border:1px solid var(--gold-a25);border-radius:12px 12px 12px 4px;align-self:flex-start;color:var(--t1)}
+.chat-bubble.user{background:var(--bg4);border-radius:12px 12px 4px 12px;align-self:flex-end;color:var(--t2)}
+.chat-wrap{display:flex;flex-direction:column;gap:4px;padding:12px 0;max-height:320px;overflow-y:auto}
+/* ── BOOKING SLOTS ───────────────────────────────────────────────── */
+.slot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.slot-btn{padding:8px 4px;border:1px solid var(--bd);border-radius:var(--r);background:var(--bg4);color:var(--t2);font-size:.68rem;cursor:pointer;text-align:center;transition:all .18s}
+.slot-btn.on,.slot-btn:hover{border-color:var(--gold);background:var(--gold-a8);color:var(--gold)}
+.slot-btn.taken{opacity:.4;cursor:not-allowed;pointer-events:none}
+/* ── COUPON CODE ─────────────────────────────────────────────────── */
+.coupon-row{display:flex;gap:8px;margin:10px 0}
+.coupon-row .fi{flex:1}
+.coupon-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(50,180,100,.12);border:1px solid rgba(50,180,100,.3);border-radius:20px;color:var(--green);font-size:.64rem;font-weight:600}
+/* ── SERVICE BUNDLES ─────────────────────────────────────────────── */
+.bundle-card{background:linear-gradient(135deg,var(--bg3),var(--bg4));border:1px solid var(--gold-a25);border-radius:var(--rl);padding:14px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
+.bundle-card:hover{border-color:var(--gold-a45)}
+.bundle-card .bundle-saving{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:rgba(50,180,100,.12);border:1px solid rgba(50,180,100,.3);border-radius:10px;color:var(--green);font-size:.58rem;font-weight:700}
+/* ── GLOBAL SEARCH ───────────────────────────────────────────────── */
+#global-search-overlay{position:fixed;inset:0;max-width:430px;margin:0 auto;z-index:850;background:var(--bg);transform:translateY(-100%);transition:transform .28s var(--ease)}
+#global-search-overlay.on{transform:translateY(0)}
+.search-result-item{padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;border-bottom:1px solid var(--bd);transition:background .15s}
+.search-result-item:hover{background:var(--bg3)}
+/* ── ONBOARDING TOUR ─────────────────────────────────────────────── */
+#onboarding-overlay{position:fixed;inset:0;max-width:430px;margin:0 auto;z-index:900;background:rgba(6,12,24,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.tour-step{text-align:center;animation:fadeInUp .4s ease}
+.tour-dots{display:flex;gap:6px;justify-content:center;margin:16px 0}
+.tour-dot{width:8px;height:8px;border-radius:50%;background:var(--bd);transition:background .2s}
+.tour-dot.on{background:var(--gold);width:20px;border-radius:4px}
+/* ── ACCESSIBILITY ────────────────────────────────────────────────── */
+.large-text body,.large-text .fi,.large-text .btn{font-size:1.1em!important}
+.high-contrast{--bg:#000;--bg2:#0a0a0a;--t1:#fff;--t2:#eee;--bd:rgba(255,255,255,.4)}
+/* ── REVIEW STARS ─────────────────────────────────────────────────── */
+.star-rating{display:flex;gap:4px}
+.star-rating .star{font-size:1.2rem;cursor:pointer;color:var(--t4);transition:color .15s}
+.star-rating .star.on,.star-rating .star:hover{color:#f0a500}
+/* ── REFERRAL CARD ────────────────────────────────────────────────── */
+.ref-card{background:linear-gradient(135deg,var(--bg3),var(--bg4));border:1px solid var(--gold-a25);border-radius:var(--rl);padding:16px;text-align:center;margin-bottom:12px}
+.ref-code{font-family:monospace;font-size:1.4rem;font-weight:800;color:var(--gold);letter-spacing:.15em;padding:10px;background:var(--bg);border-radius:8px;margin:8px 0}
+/* ── ANALYTICS CHARTS ────────────────────────────────────────────── */
+.bar-chart-wrap{display:flex;align-items:flex-end;gap:4px;height:100px}
+.bar-chart-bar{flex:1;border-radius:3px 3px 0 0;min-height:4px;transition:height .5s ease}
+/* ── DARK/LIGHT/AUTO THEME SWITCHER ──────────────────────────────── */
+.theme-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.theme-opt{padding:10px;border:1px solid var(--bd);border-radius:var(--r);text-align:center;cursor:pointer;font-size:.68rem;color:var(--t2);transition:all .18s}
+.theme-opt.on,.theme-opt:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-a8)}
+/* ── BIOMETRIC LOGIN ──────────────────────────────────────────────── */
+.biometric-btn{width:64px;height:64px;border-radius:50%;background:var(--gold-a8);border:2px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:1.6rem;cursor:pointer;margin:0 auto;transition:all .2s}
+.biometric-btn:hover{background:var(--gold-a15);border-color:var(--gold-a45)}
+/* ── ORDER QR CODE ────────────────────────────────────────────────── */
+.qr-wrap{display:flex;flex-direction:column;align-items:center;padding:16px;gap:8px}
+.qr-code{width:160px;height:160px;background:white;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+/* ── BROADCAST BANNER ────────────────────────────────────────────── */
+#broadcast-banner{background:linear-gradient(135deg,rgba(90,174,255,.15),rgba(90,174,255,.05));border-bottom:1px solid var(--gold-a25);padding:6px 14px;font-size:.66rem;color:var(--gold);display:flex;align-items:center;gap:6px;min-height:32px;display:none}
+#broadcast-banner.show{display:flex}
+/* ── FAVOURITES ──────────────────────────────────────────────────── */
+.fav-btn{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.4);border:none;color:var(--t3);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;transition:all .2s;z-index:2}
+.fav-btn.on{color:#ff4757;background:rgba(255,71,87,.12)}
+/* ── AVAILABILITY STATUS ──────────────────────────────────────────── */
+.svc-status-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px}
+.svc-status-dot.available{background:var(--green)}
+.svc-status-dot.busy{background:#f0a500}
+.svc-status-dot.unavailable{background:var(--red)}
+</style>
 
 <!-- ══ SPLASH ════════════════════════════════════════════════════ -->
 <div id="splash" role="presentation" aria-hidden="true">
@@ -1701,6 +1486,16 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
         </div>
       </div>
 
+      <!-- ══ SECTION: ADMIN (shown only to admins) ══ -->
+      <div class="more2-section" id="more-admin-section" style="display:none">
+        <div class="more2-sect-label" style="color:var(--red)"><i class="fas fa-shield-halved" style="margin-right:5px"></i>Administration</div>
+        <div class="more2-item" onclick="openAdmin()" style="border-color:rgba(224,80,80,.3);background:rgba(224,80,80,.04)">
+          <div class="more2-item-icon" style="background:rgba(224,80,80,.12);color:var(--red);border-color:rgba(224,80,80,.3)"><i class="fas fa-gauge-high"></i></div>
+          <div class="more2-item-body"><strong style="color:var(--t1)">Admin Dashboard</strong><span>Manage requests, users, services & analytics</span></div>
+          <i class="fas fa-chevron-right more2-arr" style="color:var(--red)"></i>
+        </div>
+      </div>
+
       <!-- ══ SECTION: SETTINGS ══ -->
       <div class="more2-section">
         <div class="more2-sect-label">Settings</div>
@@ -1761,6 +1556,13 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
           <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;justify-content:center">
             <span class="chip chip-gold" id="acct-role-chip"><i class="fas fa-star"></i> Member</span>
             <span class="chip" style="background:rgba(0,200,255,.1);color:var(--warm);border:1px solid rgba(0,200,255,.25)" id="acct-pts-chip"><i class="fas fa-star"></i> 0 pts</span>
+          </div>
+          <!-- Admin Dashboard button — shown only to admins -->
+          <div id="acct-admin-btn-wrap" style="display:none;width:100%;padding:10px 16px 0">
+            <button onclick="openAdmin()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;background:linear-gradient(135deg,rgba(224,80,80,.15),rgba(224,80,80,.08));border:1px solid rgba(224,80,80,.4);border-radius:var(--rl);color:var(--red);font-size:.76rem;font-weight:700;cursor:pointer;letter-spacing:.04em;transition:all .2s">
+              <i class="fas fa-gauge-high"></i> Admin Dashboard
+              <i class="fas fa-arrow-right" style="font-size:.6rem;margin-left:auto"></i>
+            </button>
           </div>
         </div>
 
@@ -1989,24 +1791,27 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
     <div style="display:flex;align-items:center;gap:10px">
       <button onclick="closeAdmin()" style="width:36px;height:36px;border-radius:10px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="fas fa-arrow-left"></i></button>
       <div>
-        <div style="font-family:var(--fd);font-size:1rem;color:var(--gold)">Admin Dashboard</div>
-        <div style="font-size:.52rem;color:var(--t4);letter-spacing:.1em;text-transform:uppercase">NovaDeskOnline · Restricted</div>
+        <div style="font-family:var(--fd);font-size:.95rem;color:var(--gold)">Admin Dashboard</div>
+        <div id="admin-who" style="font-size:.55rem;color:var(--t4);letter-spacing:.06em">NovaDeskOnline</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:6px">
       <button onclick="adminLoadAll()" style="width:34px;height:34px;border-radius:9px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer" title="Refresh"><i class="fas fa-rotate-right"></i></button>
-      <span style="font-size:.52rem;padding:3px 9px;background:rgba(224,80,80,.15);color:var(--red);border:1px solid rgba(224,80,80,.3);border-radius:20px;letter-spacing:.06em;font-weight:700">● ADMIN</span>
+      <button onclick="doSignOut()" style="width:34px;height:34px;border-radius:9px;background:rgba(224,80,80,.1);border:1px solid rgba(224,80,80,.3);color:var(--red);display:flex;align-items:center;justify-content:center;cursor:pointer" title="Sign Out"><i class="fas fa-arrow-right-from-bracket"></i></button>
     </div>
   </div>
 
   <!-- Tab bar -->
   <div class="admin-nav-tabs" style="display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--bd);background:var(--bg2);position:sticky;top:56px;z-index:9">
-    <button class="admin-nav-tab on" id="atab-overview"  onclick="adminTab('overview')" ><i class="fas fa-gauge-high"></i> Overview</button>
-    <button class="admin-nav-tab"    id="atab-requests"  onclick="adminTab('requests')" ><i class="fas fa-inbox"></i> Requests <span id="admin-pending-badge" class="admin-tab-badge" style="display:none"></span></button>
-    <button class="admin-nav-tab"    id="atab-users"     onclick="adminTab('users')"    ><i class="fas fa-users"></i> Users</button>
-    <button class="admin-nav-tab"    id="atab-services"  onclick="adminTab('services')" ><i class="fas fa-concierge-bell"></i> Services</button>
-    <button class="admin-nav-tab"    id="atab-messages"  onclick="adminTab('messages')" ><i class="fas fa-envelope"></i> Messages</button>
-    <button class="admin-nav-tab"    id="atab-settings"  onclick="adminTab('settings')" ><i class="fas fa-gear"></i> Settings</button>
+    <button class="admin-nav-tab on" id="atab-overview"      onclick="adminTab('overview')"    ><i class="fas fa-gauge-high"></i> Overview</button>
+    <button class="admin-nav-tab"    id="atab-analytics"     onclick="adminTab('analytics')"   ><i class="fas fa-chart-bar"></i> Analytics</button>
+    <button class="admin-nav-tab"    id="atab-requests"      onclick="adminTab('requests')"    ><i class="fas fa-inbox"></i> Requests <span id="admin-pending-badge" class="admin-tab-badge" style="display:none"></span></button>
+    <button class="admin-nav-tab"    id="atab-users"         onclick="adminTab('users')"       ><i class="fas fa-users"></i> Users</button>
+    <button class="admin-nav-tab"    id="atab-agents"        onclick="adminTab('agents')"      ><i class="fas fa-user-tie"></i> Agents</button>
+    <button class="admin-nav-tab"    id="atab-institutions"  onclick="adminTab('institutions')"><i class="fas fa-building-columns"></i> Institutions</button>
+    <button class="admin-nav-tab"    id="atab-services"      onclick="adminTab('services')"    ><i class="fas fa-concierge-bell"></i> Services</button>
+    <button class="admin-nav-tab"    id="atab-messages"      onclick="adminTab('messages')"    ><i class="fas fa-envelope"></i> Messages</button>
+    <button class="admin-nav-tab"    id="atab-settings"      onclick="adminTab('settings')"    ><i class="fas fa-gear"></i> Settings</button>
   </div>
 
   <!-- ── OVERVIEW ── -->
@@ -2060,7 +1865,65 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
     </div>
   </div>
 
-  <!-- ── REQUESTS ── -->
+  <!-- ── ANALYTICS ── -->
+  <div class="admin-section" id="asec-analytics">
+    <div style="padding:12px 0 6px;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">App Analytics</div>
+
+    <!-- Top services bar chart -->
+    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:12px">
+      <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-fire" style="color:var(--gold)"></i> Most Requested Services</div>
+      <div id="analytics-top-svcs" style="display:flex;flex-direction:column;gap:8px">
+        <div style="text-align:center;padding:16px"><span class="spin"></span></div>
+      </div>
+    </div>
+
+    <!-- Requests by status pie-style -->
+    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:12px">
+      <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-chart-pie" style="color:var(--gold)"></i> Requests by Status</div>
+      <div id="analytics-status" style="display:flex;flex-direction:column;gap:8px">
+        <div style="text-align:center;padding:16px"><span class="spin"></span></div>
+      </div>
+    </div>
+
+    <!-- Requests by time -->
+    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:12px">
+      <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-clock" style="color:var(--gold)"></i> Request Volume — Last 7 Days</div>
+      <div id="analytics-timeline" style="display:flex;align-items:flex-end;gap:4px;height:80px;padding:0 4px">
+        <div style="text-align:center;padding:16px;width:100%"><span class="spin"></span></div>
+      </div>
+      <div id="analytics-timeline-labels" style="display:flex;gap:4px;margin-top:4px;padding:0 4px"></div>
+    </div>
+
+    <!-- User growth -->
+    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:80px">
+      <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-users" style="color:var(--gold)"></i> User Growth</div>
+      <div id="analytics-users" style="display:flex;flex-direction:column;gap:6px">
+        <div style="text-align:center;padding:16px"><span class="spin"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AGENTS ── -->
+  <div class="admin-section" id="asec-agents">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Agent Applications</div>
+      <button class="btn btn-ghost btn-xs" onclick="adminLoadAgents()"><i class="fas fa-rotate-right"></i></button>
+    </div>
+    <div id="admin-agents-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
+      <div style="text-align:center;padding:20px"><span class="spin"></span></div>
+    </div>
+  </div>
+
+  <!-- ── INSTITUTIONS ── -->
+  <div class="admin-section" id="asec-institutions">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Institution Requests</div>
+      <button class="btn btn-ghost btn-xs" onclick="adminLoadInstitutions()"><i class="fas fa-rotate-right"></i></button>
+    </div>
+    <div id="admin-inst-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
+      <div style="text-align:center;padding:20px"><span class="spin"></span></div>
+    </div>
+  </div>
   <div class="admin-section" id="asec-requests">
     <div style="display:flex;gap:6px;padding:12px 0 8px;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap">
       <button class="btn btn-outline btn-xs on" id="areq-f-all"        onclick="adminFilterReqs('all',this)">All</button>
@@ -2097,9 +1960,53 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 
   <!-- ── SERVICES ── -->
   <div class="admin-section" id="asec-services">
-    <div style="background:var(--gold-a8);border:1px solid var(--gold-a25);border-radius:var(--r);padding:10px 12px;margin:12px 0 10px;font-size:.72rem;color:var(--t2)"><i class="fas fa-info-circle" style="color:var(--gold);margin-right:6px"></i>Toggle services to show or hide them from the catalogue.</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">All Services</div>
+      <button class="btn btn-gold btn-xs" onclick="adminOpenAddService()"><i class="fas fa-plus"></i> Add New</button>
+    </div>
     <div id="admin-svcs-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
       <div style="text-align:center;padding:20px"><span class="spin"></span></div>
+    </div>
+  </div>
+
+  <!-- ── SERVICE EDIT MODAL (inline slide-up sheet) ── -->
+  <div id="admin-svc-editor" style="position:fixed;inset:0;max-width:430px;margin:0 auto;z-index:900;display:flex;flex-direction:column;pointer-events:none;transition:opacity .22s">
+    <div style="flex:1;background:rgba(0,0,0,.55);opacity:0;transition:opacity .22s" id="svc-ed-backdrop" onclick="adminCloseSvcEditor()"></div>
+    <div id="svc-ed-sheet" style="background:var(--bg2);border-radius:20px 20px 0 0;border-top:1px solid var(--bd);padding:20px 16px 40px;max-height:88dvh;overflow-y:auto;transform:translateY(100%);transition:transform .28s var(--ease)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:.78rem;font-weight:700;color:var(--t1)" id="svc-editor-title">Edit Service</div>
+        <button onclick="adminCloseSvcEditor()" style="width:30px;height:30px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem"><i class="fas fa-times"></i></button>
+      </div>
+      <input type="hidden" id="svc-ed-id">
+      <div class="fg"><label class="flbl">Service Name *</label><input class="fi" id="svc-ed-name" type="text" placeholder="e.g. Print Documents" maxlength="60"></div>
+      <div class="fg"><label class="flbl">Description</label><textarea class="fi" id="svc-ed-desc" rows="2" placeholder="Short description of the service" maxlength="200"></textarea></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fg"><label class="flbl">Price Label</label><input class="fi" id="svc-ed-price" type="text" placeholder="From KES 50" maxlength="30"></div>
+        <div class="fg"><label class="flbl">Category</label>
+          <select class="fi" id="svc-ed-cat">
+            <option value="print">Print</option>
+            <option value="docs">Documents</option>
+            <option value="photos">Photos</option>
+            <option value="academic">Academic</option>
+            <option value="govt">Government</option>
+            <option value="digital">Digital</option>
+            <option value="design">Design</option>
+            <option value="general">General</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fg"><label class="flbl">Icon (Font Awesome)</label><input class="fi" id="svc-ed-icon" type="text" placeholder="fa-print" maxlength="40"></div>
+        <div class="fg"><label class="flbl">Sort Order</label><input class="fi" id="svc-ed-sort" type="number" placeholder="1" min="1" max="999"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 0 14px">
+        <input type="checkbox" id="svc-ed-active" style="width:16px;height:16px;accent-color:var(--gold)">
+        <label for="svc-ed-active" style="font-size:.74rem;color:var(--t2);cursor:pointer">Active — visible to users</label>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button id="svc-ed-del" class="btn btn-outline btn-sm" style="color:var(--red);border-color:rgba(224,80,80,.4)" onclick="adminDeleteService()"><i class="fas fa-trash"></i></button>
+        <button class="btn btn-gold btn-full btn-sm" onclick="adminSaveService()"><i class="fas fa-check"></i> Save Service</button>
+      </div>
     </div>
   </div>
 
@@ -2608,26 +2515,216 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
   </div>
 </div>
 
+<!-- ══ PWA INSTALL BANNER ════════════════════════════════════════ -->
+<div id="pwa-install-bar">
+  <div class="pwa-icon">📲</div>
+  <div class="pwa-body">
+    <div class="pwa-title">Install NovaDeskOnline</div>
+    <div class="pwa-sub">Works offline · Faster · Feels native</div>
+  </div>
+  <button class="btn btn-gold btn-xs" onclick="triggerPWAInstall()" style="flex-shrink:0">Install</button>
+  <button onclick="dismissPWABanner()" style="background:none;border:none;color:var(--t3);cursor:pointer;padding:4px;font-size:1rem">✕</button>
+</div>
+
+<!-- ══ GLOBAL SEARCH ══════════════════════════════════════════════ -->
+<div id="global-search-overlay" role="dialog" aria-label="Search">
+  <div style="position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--bd);padding:12px 14px;display:flex;align-items:center;gap:10px">
+    <button onclick="closeGlobalSearch()" style="width:34px;height:34px;border-radius:9px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="fas fa-arrow-left"></i></button>
+    <input id="global-search-inp" class="fi" type="search" placeholder="Search services, requests, notes…" oninput="runGlobalSearch(this.value)" style="flex:1;font-size:.82rem" autofocus>
+  </div>
+  <div id="global-search-results" style="padding:8px 0">
+    <div style="text-align:center;padding:40px;color:var(--t3);font-size:.78rem"><i class="fas fa-search" style="font-size:2rem;margin-bottom:10px;display:block;opacity:.3"></i>Search for services, past requests or notes</div>
+  </div>
+</div>
+
+<!-- ══ ONBOARDING TOUR ════════════════════════════════════════════ -->
+<div id="onboarding-overlay" style="display:none">
+  <div class="tour-step" id="tour-content"></div>
+  <div class="tour-dots" id="tour-dots"></div>
+  <div style="display:flex;gap:10px;width:100%;max-width:320px;margin-top:8px">
+    <button class="btn btn-ghost btn-sm" id="tour-skip" onclick="skipTour()">Skip</button>
+    <button class="btn btn-gold btn-full btn-sm" id="tour-next" onclick="nextTourStep()">Next →</button>
+  </div>
+</div>
+
+<!-- ══ PRICE ESTIMATOR MODAL ══════════════════════════════════════ -->
+<div id="price-estimator-modal" class="modal" role="dialog" aria-modal="true">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span style="font-size:.8rem;font-weight:700">Price Estimator</span>
+    <button class="sheet-close" onclick="closeModal('price-estimator-modal')"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body" id="price-estimator-body" style="padding-bottom:24px"></div>
+</div>
+
+<!-- ══ BOOKING MODAL ══════════════════════════════════════════════ -->
+<div id="booking-modal" class="modal" role="dialog" aria-modal="true">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span style="font-size:.8rem;font-weight:700">Book a Time Slot</span>
+    <button class="sheet-close" onclick="closeModal('booking-modal')"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body" style="padding-bottom:30px">
+    <div style="font-size:.72rem;color:var(--t3);margin-bottom:12px">Select your preferred pickup/service time</div>
+    <div class="slot-grid" id="booking-slots"></div>
+    <div class="fg" style="margin-top:12px"><label class="flbl">Preferred Date</label><input class="fi" id="booking-date" type="date"></div>
+    <div class="fg"><label class="flbl">Notes for booking</label><textarea class="fi" id="booking-notes" rows="2" placeholder="Any special instructions…"></textarea></div>
+    <button class="btn btn-gold btn-full" onclick="confirmBooking()" style="margin-top:8px"><i class="fas fa-calendar-check"></i> Confirm Booking</button>
+  </div>
+</div>
+
+<!-- ══ DOCUMENT VAULT MODAL ═══════════════════════════════════════ -->
+<div id="vault-modal" class="modal" role="dialog" aria-modal="true">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span style="font-size:.8rem;font-weight:700"><i class="fas fa-vault" style="color:var(--gold)"></i> Document Vault</span>
+    <button class="sheet-close" onclick="closeModal('vault-modal')"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body" style="padding-bottom:30px">
+    <div style="font-size:.72rem;color:var(--t3);margin-bottom:12px">Upload once. Reuse anytime. Secure & private.</div>
+    <button class="btn btn-gold btn-full btn-sm" onclick="$('vault-upload').click()" style="margin-bottom:12px"><i class="fas fa-upload"></i> Upload Document</button>
+    <input type="file" id="vault-upload" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="display:none" onchange="uploadToVault(this)">
+    <div id="vault-list" style="display:flex;flex-direction:column;gap:6px">
+      <div style="text-align:center;padding:20px"><span class="spin"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REQUEST CHAT MODAL ════════════════════════════════════════ -->
+<div id="req-chat-modal" class="modal" role="dialog" aria-modal="true" style="max-height:92dvh">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span style="font-size:.78rem;font-weight:700" id="req-chat-title">Request Chat</span>
+    <button class="sheet-close" onclick="closeModal('req-chat-modal')"><i class="fas fa-times"></i></button>
+  </div>
+  <div id="req-chat-messages" class="chat-wrap" style="padding:12px 16px;flex:1;overflow-y:auto"></div>
+  <div style="border-top:1px solid var(--bd);padding:10px 14px;display:flex;gap:8px;position:sticky;bottom:0;background:var(--bg2)">
+    <input class="fi" id="req-chat-inp" type="text" placeholder="Type a message…" style="flex:1;font-size:.76rem" onkeydown="if(event.key==='Enter')sendChatMessage()">
+    <button class="btn btn-gold btn-xs" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+  </div>
+  <input type="hidden" id="req-chat-id">
+</div>
+
+<!-- ══ REVIEW MODAL ═══════════════════════════════════════════════ -->
+<div id="review-modal" class="modal" role="dialog" aria-modal="true">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span style="font-size:.8rem;font-weight:700">Rate This Service</span>
+    <button class="sheet-close" onclick="closeModal('review-modal')"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body" style="padding-bottom:30px">
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:.78rem;color:var(--t2);margin-bottom:12px" id="review-svc-name">Service</div>
+      <div class="star-rating" style="justify-content:center" id="review-stars">
+        <span class="star" onclick="setReviewStar(1)">★</span>
+        <span class="star" onclick="setReviewStar(2)">★</span>
+        <span class="star" onclick="setReviewStar(3)">★</span>
+        <span class="star" onclick="setReviewStar(4)">★</span>
+        <span class="star" onclick="setReviewStar(5)">★</span>
+      </div>
+      <div style="font-size:.62rem;color:var(--t3);margin-top:6px" id="review-rating-label">Tap to rate</div>
+    </div>
+    <div class="fg"><label class="flbl">Comment (optional)</label><textarea class="fi" id="review-comment" rows="3" placeholder="Tell us about your experience…"></textarea></div>
+    <input type="hidden" id="review-req-id">
+    <button class="btn btn-gold btn-full" onclick="submitReview()"><i class="fas fa-star"></i> Submit Review</button>
+  </div>
+</div>
+
+<!-- ══ BUNDLES MODAL ═════════════════════════════════════════════ -->
+<div id="bundles-modal" class="modal" role="dialog" aria-modal="true">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span style="font-size:.8rem;font-weight:700"><i class="fas fa-layer-group" style="color:var(--gold)"></i> Service Bundles</span>
+    <button class="sheet-close" onclick="closeModal('bundles-modal')"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body" style="padding-bottom:30px" id="bundles-list"></div>
+</div>
+
+<!-- ══ QR CODE MODAL ════════════════════════════════════════════ -->
+<div id="qr-modal" class="modal" role="dialog" aria-modal="true">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span style="font-size:.8rem;font-weight:700">Order QR Code</span>
+    <button class="sheet-close" onclick="closeModal('qr-modal')"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body" style="padding-bottom:30px">
+    <div class="qr-wrap">
+      <div style="font-size:.72rem;color:var(--t3);text-align:center;margin-bottom:8px">Show this at the counter for instant lookup</div>
+      <div class="qr-code" id="qr-display"></div>
+      <div style="font-family:monospace;font-size:.9rem;color:var(--gold);font-weight:700;letter-spacing:.1em;margin-top:8px" id="qr-ref-text"></div>
+      <div style="font-size:.62rem;color:var(--t3)">Request Reference</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BROADCAST BANNER ══════════════════════════════════════════ -->
+<div id="broadcast-banner"><i class="fas fa-bullhorn"></i><span id="broadcast-text"></span><button onclick="$('broadcast-banner').classList.remove('show')" style="margin-left:auto;background:none;border:none;color:var(--gold);cursor:pointer;font-size:.8rem">✕</button></div>
+
 <script>
 /* ════════════════════════════════════════════════════════════════════
-   == CONFIG ==
+   == CONFIG — Multi-source secure loader ==
+   Priority: 1) /api/config (Vercel)  2) localStorage cache
+             3) meta tags  4) hardcoded fallback (dev only)
 ════════════════════════════════════════════════════════════════════ */
-const SB_URL = document.querySelector('meta[name="nd-sb-url"]')?.content || 'https://ihkwomhxdfthxaynljuw.supabase.co';
-const SB_KEY = document.querySelector('meta[name="nd-sb-key"]')?.content || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imloa3dvbWh4ZGZ0aHhheW5sanV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjIxMzEsImV4cCI6MjA5MjAzODEzMX0.Y1elTjbbHViH9awUQSiRpfjR-FBMRjTCJhRw1cJY7rI';
-let WA_NUM   = '254111923477'; // Kemera, Nyamira
-const SITE   = 'https://novadesk.vercel.app';
+let SB_URL = '', SB_KEY = '';
+let WA_NUM       = '254111923477';
+let SITE         = window.location.origin;
+let ADMIN_SECRET = 'novadesk-admin-2024';
+let _configLoaded = false;
+
+async function loadSecureConfig() {
+  if (_configLoaded) return true;
+
+  // 1 — Vercel API endpoint (production)
+  try {
+    const res = await fetch('/api/config', { credentials: 'same-origin', cache: 'no-store' });
+    if (res.ok) {
+      const cfg = await res.json();
+      if (cfg.supabaseUrl && cfg.supabaseKey) {
+        SB_URL = cfg.supabaseUrl; SB_KEY = cfg.supabaseKey;
+        WA_NUM = cfg.waNumber || WA_NUM; SITE = cfg.siteUrl || SITE;
+        ADMIN_SECRET = cfg.adminSecret || ADMIN_SECRET;
+        try { localStorage.setItem('nd-cfg-cache', JSON.stringify({u:SB_URL,k:SB_KEY,w:WA_NUM,s:SITE,a:ADMIN_SECRET,t:Date.now()})); } catch(e){}
+        _configLoaded = true;
+        return true;
+      }
+    }
+  } catch(e) { console.warn('[Config] API unavailable, trying fallbacks'); }
+
+  // 2 — localStorage cache (works offline + file://)
+  try {
+    const c = JSON.parse(localStorage.getItem('nd-cfg-cache')||'{}');
+    if (c.u && c.k) {
+      SB_URL=c.u; SB_KEY=c.k; WA_NUM=c.w||WA_NUM; SITE=c.s||SITE; ADMIN_SECRET=c.a||ADMIN_SECRET;
+      _configLoaded=true;
+      console.log('[Config] Loaded from cache');
+      return true;
+    }
+  } catch(e) {}
+
+  // 3 — meta tags (for self-hosted / non-Vercel deployments)
+  const mu = document.querySelector('meta[name="nd-sb-url"]')?.content;
+  const mk = document.querySelector('meta[name="nd-sb-key"]')?.content;
+  if (mu && mk && !mu.includes('YOUR_PROJECT')) {
+    SB_URL=mu; SB_KEY=mk; _configLoaded=true;
+    console.log('[Config] Loaded from meta tags');
+    return true;
+  }
+
+  // 4 — Dev fallback with real credentials (works from file:// and local testing)
+  SB_URL = 'https://ihkwomhxdfthxaynljuw.supabase.co';
+  SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imloa3dvbWh4ZGZ0aHhheW5sanV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjIxMzEsImV4cCI6MjA5MjAzODEzMX0.Y1elTjbbHViH9awUQSiRpfjR-FBMRjTCJhRw1cJY7rI';
+  WA_NUM = '254111923477';
+  _configLoaded = true;
+  console.warn('[Config] Using built-in fallback — deploy to Vercel for full security');
+  return true;
+}
+
 const ALLOWED_FILE_TYPES = ['image/jpeg','image/png','image/jpg','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','text/plain','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
 const MAX_FILE_SIZE_MB = 10;
-const ADMIN_SECRET = 'novadesk-admin-2024'; // Change this!
 
-/* ── SUPABASE INIT ─────────────────────────────────────────────── */
-let sb;
-try {
-  sb = supabase.createClient(SB_URL, SB_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
-    realtime: { params: { eventsPerSecond: 10 } }
-  });
-} catch(e) { console.error('Supabase init failed:', e); }
+/* ── SUPABASE — initialized in init() after config loads ───────── */
+let sb = null;
 
 /* ── STATE ─────────────────────────────────────────────────────── */
 let _user = null, _profile = null;
@@ -2922,10 +3019,8 @@ async function doSignIn(){
 
     const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
     if (error) throw error;
-
-    toast('Welcome back!', 'ok');
-    closeAuth();
-    setTimeout(() => { goNav('account'); acctTab('profile'); }, 350);
+    // Navigation and closeAuth handled by onAuthStateChange listener
+    toast('Welcome back! 👋', 'ok');
   } catch(e) {
     const rawMsg = e?.message || '';
     let friendlyMsg;
@@ -2994,41 +3089,54 @@ function onAuthStateChange(){
   sb.auth.onAuthStateChange(async (event, session) => {
     _user = session?.user || null;
 
-    // Password recovery — show new password modal immediately
     if (event === 'PASSWORD_RECOVERY') {
       showNewPasswordModal();
       return;
     }
 
     if (event === 'SIGNED_OUT') {
-      // State already cleared by _execSignOut — just make sure UI is consistent
       _profile=null; _notes=[]; _files=[]; _reqs=[]; _notifs=[];
+      closeAuth();
       renderAccount();
       refreshHomeCounts();
-      // Only navigate if we're not already on home
-      if (window._currentScreen !== 'home') goNav('home');
+      goNav('home');
       return;
     }
 
-    if (_user) {
+    if (event === 'SIGNED_IN' && _user) {
+      // Load everything before touching the UI
       await loadProfile();
-      await Promise.all([loadNotes(), loadFiles(), loadMyReqs(), loadNotifs()]);
+      await Promise.all([
+        loadNotes().catch(()=>{}),
+        loadFiles().catch(()=>{}),
+        loadMyReqs().catch(()=>{}),
+        loadNotifs().catch(()=>{})
+      ]);
+      // Close auth sheet
+      closeAuth();
+      // Update UI
       renderAccount();
       refreshHomeCounts();
       subscribeRealtime();
-      // Auto-open admin panel if user is admin
-      if (_profile?.role === 'admin' && event === 'SIGNED_IN') {
-        setTimeout(() => openAdmin(), 800);
-      } else if (event === 'SIGNED_IN') {
-        setTimeout(() => { goNav('account'); acctTab('profile'); }, 200);
-        return;
-      }
-    } else {
-      _profile=null; _notes=[]; _files=[]; _reqs=[]; _notifs=[];
+      // Navigate to account tab for everyone (admin included)
+      goNav('account');
+      acctTab('profile');
+      return;
+    }
+
+    // TOKEN_REFRESHED or initial session restore
+    if (_user && event !== 'SIGNED_IN') {
+      await loadProfile();
+      await Promise.all([
+        loadNotes().catch(()=>{}),
+        loadFiles().catch(()=>{}),
+        loadMyReqs().catch(()=>{}),
+        loadNotifs().catch(()=>{})
+      ]);
       renderAccount();
       refreshHomeCounts();
+      subscribeRealtime();
     }
-    if (event !== 'PASSWORD_RECOVERY') goNav(window._currentScreen || 'home');
   });
 }
 
@@ -3182,6 +3290,14 @@ function renderAccount(){
   $('fab-notes')?.classList.toggle('show', loggedIn && window._currentScreen==='notes');
 
   if (!loggedIn || !_profile) return;
+
+  // Show admin menu item in MORE tab if admin
+  const moreAdminSec = $('more-admin-section');
+  if (moreAdminSec) moreAdminSec.style.display = _profile?.role === 'admin' ? 'block' : 'none';
+
+  // Show admin button in account header
+  const adminBtnWrap = $('acct-admin-btn-wrap');
+  if (adminBtnWrap) adminBtnWrap.style.display = _profile?.role === 'admin' ? 'block' : 'none';
 
   // Resolve nd_user_id — prefer stored, generate from UUID as fallback
   const ndId = _profile.nd_user_id || generateNdUserId(_user.id);
@@ -3932,21 +4048,32 @@ function maybeOpenAdmin(){
 }
 async function openAdmin(){
   $('admin-panel').classList.add('on');
+  document.body.classList.add('admin-open');
   document.body.style.overflow='hidden';
+  const who = $('admin-who');
+  if (who && _profile) who.textContent = (_profile.full_name||'Admin') + ' · ' + (_profile.nd_user_id || '');
+  requestNotifPermission();
   await adminLoadAll();
 }
 function closeAdmin(){
   $('admin-panel').classList.remove('on');
+  document.body.classList.remove('admin-open');
   document.body.style.overflow='';
 }
 window.closeAdmin = closeAdmin;
 
 function adminTab(name){
-  ['overview','requests','users','services','messages','settings'].forEach(t=>{
+  ['overview','analytics','requests','users','agents','institutions','services','messages','settings'].forEach(t=>{
     $(`atab-${t}`)?.classList.toggle('on', t===name);
     $(`asec-${t}`)?.classList.toggle('on', t===name);
   });
-  if (name==='messages') adminLoadMessages();
+  if (name==='messages')     adminLoadMessages();
+  if (name==='services')     adminLoadServices();
+  if (name==='requests')     renderAdminReqs();
+  if (name==='users')        renderAdminUsers();
+  if (name==='analytics')    adminLoadAnalytics();
+  if (name==='agents')       adminLoadAgents();
+  if (name==='institutions') adminLoadInstitutions();
 }
 window.adminTab = adminTab;
 
@@ -3991,22 +4118,7 @@ async function adminLoadAll(){
     renderAdminUsers();
 
     // Services tab
-    const sl = $('admin-svcs-list');
-    if (sl) {
-      const { data: svcs } = await sb.from('services').select('*').order('sort_order');
-      if (svcs) sl.innerHTML = svcs.map(s=>`
-        <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px">
-          <div style="width:34px;height:34px;border-radius:10px;background:var(--gold-a8);display:flex;align-items:center;justify-content:center;color:var(--gold);flex-shrink:0"><i class="fas ${esc(s.icon||'fa-star')}"></i></div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:.78rem;font-weight:500;color:var(--t1)">${esc(s.name)}</div>
-            <div style="font-size:.6rem;color:var(--t3)">${esc(s.category||'general')} · ${esc(s.price_label||'—')}</div>
-          </div>
-          <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:.68rem;color:var(--t3);flex-shrink:0">
-            <input type="checkbox" ${s.is_active?'checked':''} onchange="adminToggleService('${esc(s.id)}',this.checked)"> Active
-          </label>
-        </div>
-      `).join('');
-    }
+    await adminLoadServices();
 
     // Settings
     const { data: stg } = await sb.from('app_settings').select('*');
@@ -4196,6 +4308,371 @@ async function adminToggleService(svcId, active){
   } catch(e){ toast(e.message||'Failed.','er'); }
 }
 window.adminToggleService = adminToggleService;
+
+/* ── SERVICE CRUD ─────────────────────────────────────────────── */
+let _editingSvcId = null;
+
+async function adminLoadServices(){
+  const sl = $('admin-svcs-list');
+  if (!sl) return;
+  sl.innerHTML = '<div style="text-align:center;padding:20px"><span class="spin"></span></div>';
+  try {
+    const { data: svcs, error } = await sb.from('services').select('*').order('sort_order');
+    if (error) throw error;
+    if (!svcs?.length) {
+      sl.innerHTML = '<div class="empty-state" style="padding:30px"><i class="fas fa-concierge-bell"></i><p>No services yet. Add one above.</p></div>';
+      return;
+    }
+    sl.innerHTML = svcs.map(s=>`
+      <div style="background:var(--bg3);border:1px solid ${s.is_active?'var(--bd)':'rgba(224,80,80,.2)'};border-radius:var(--r);padding:10px 12px;display:flex;align-items:center;gap:10px;transition:border-color .2s">
+        <div style="width:36px;height:36px;border-radius:10px;background:${s.is_active?'var(--gold-a8)':'var(--bg4)'};display:flex;align-items:center;justify-content:center;color:${s.is_active?'var(--gold)':'var(--t4)'};flex-shrink:0;font-size:.85rem">
+          <i class="fas ${esc(s.icon||'fa-star')}"></i>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.76rem;font-weight:600;color:${s.is_active?'var(--t1)':'var(--t3)'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.name)}</div>
+          <div style="font-size:.58rem;color:var(--t4);margin-top:1px">${esc(s.category||'general')} · ${esc(s.price_label||'—')}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+          <span style="font-size:.54rem;padding:2px 7px;border-radius:20px;${s.is_active?'background:rgba(50,180,100,.12);color:var(--green);border:1px solid rgba(50,180,100,.3)':'background:rgba(224,80,80,.1);color:var(--red);border:1px solid rgba(224,80,80,.25)'}">
+            ${s.is_active?'Active':'Off'}
+          </span>
+          <button onclick="adminOpenEditService('${esc(s.id)}')"
+            style="width:30px;height:30px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem">
+            <i class="fas fa-pen"></i>
+          </button>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    sl.innerHTML = `<div style="color:var(--red);font-size:.76rem;padding:16px">Failed to load services: ${esc(e.message)}</div>`;
+  }
+}
+window.adminLoadServices = adminLoadServices;
+
+function adminOpenAddService(){
+  _editingSvcId = null;
+  $('svc-editor-title').textContent = 'Add New Service';
+  $('svc-ed-id').value    = '';
+  $('svc-ed-name').value  = '';
+  $('svc-ed-desc').value  = '';
+  $('svc-ed-price').value = '';
+  $('svc-ed-icon').value  = 'fa-star';
+  $('svc-ed-cat').value   = 'general';
+  $('svc-ed-sort').value  = '';
+  $('svc-ed-active').checked = true;
+  $('svc-ed-del').style.display = 'none';
+  adminOpenSvcEditor();
+}
+window.adminOpenAddService = adminOpenAddService;
+
+async function adminOpenEditService(svcId){
+  try {
+    const { data: s, error } = await sb.from('services').select('*').eq('id', svcId).single();
+    if (error || !s) throw error || new Error('Not found');
+    _editingSvcId = svcId;
+    $('svc-editor-title').textContent = 'Edit Service';
+    $('svc-ed-id').value    = s.id;
+    $('svc-ed-name').value  = s.name || '';
+    $('svc-ed-desc').value  = s.description || '';
+    $('svc-ed-price').value = s.price_label || '';
+    $('svc-ed-icon').value  = s.icon || 'fa-star';
+    $('svc-ed-cat').value   = s.category || 'general';
+    $('svc-ed-sort').value  = s.sort_order || '';
+    $('svc-ed-active').checked = !!s.is_active;
+    $('svc-ed-del').style.display = 'flex';
+    adminOpenSvcEditor();
+  } catch(e){ toast(e.message||'Failed to load service.','er'); }
+}
+window.adminOpenEditService = adminOpenEditService;
+
+function adminOpenSvcEditor(){
+  const ed       = $('admin-svc-editor');
+  const backdrop = $('svc-ed-backdrop');
+  const sheet    = $('svc-ed-sheet');
+  if (!ed) return;
+  ed.style.pointerEvents = 'all';
+  // Trigger reflow then animate
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      if (backdrop) backdrop.style.opacity = '1';
+      if (sheet)    sheet.style.transform  = 'translateY(0)';
+    });
+  });
+}
+function adminCloseSvcEditor(){
+  const ed       = $('admin-svc-editor');
+  const backdrop = $('svc-ed-backdrop');
+  const sheet    = $('svc-ed-sheet');
+  if (!ed) return;
+  if (backdrop) backdrop.style.opacity = '0';
+  if (sheet)    sheet.style.transform  = 'translateY(100%)';
+  setTimeout(()=>{ ed.style.pointerEvents = 'none'; }, 300);
+}
+window.adminCloseSvcEditor = adminCloseSvcEditor;
+
+async function adminSaveService(){
+  const name  = ($('svc-ed-name')?.value||'').trim();
+  const desc  = ($('svc-ed-desc')?.value||'').trim();
+  const price = ($('svc-ed-price')?.value||'').trim();
+  const icon  = ($('svc-ed-icon')?.value||'fa-star').trim();
+  const cat   = $('svc-ed-cat')?.value || 'general';
+  const sort  = parseInt($('svc-ed-sort')?.value||'99') || 99;
+  const active= $('svc-ed-active')?.checked ?? true;
+  if (!name) { toast('Service name is required.','er'); return; }
+  try {
+    if (_editingSvcId) {
+      const { error } = await sb.from('services').update({
+        name, description:desc, price_label:price, icon, category:cat,
+        sort_order:sort, is_active:active
+      }).eq('id', _editingSvcId);
+      if (error) throw error;
+      toast('Service updated ✅','ok');
+    } else {
+      const { error } = await sb.from('services').insert({
+        name, description:desc, price_label:price, icon, category:cat,
+        sort_order:sort, is_active:active
+      });
+      if (error) throw error;
+      toast('Service added ✅','ok');
+    }
+    adminCloseSvcEditor();
+    await adminLoadServices();
+    await loadServices(); // refresh user-facing catalogue too
+  } catch(e){ toast(e.message||'Save failed.','er'); }
+}
+window.adminSaveService = adminSaveService;
+
+async function adminDeleteService(){
+  if (!_editingSvcId) return;
+  popup('Delete Service','This will permanently remove this service from the catalogue. This cannot be undone.','nf',[
+    {label:'Cancel', fn:null, style:'btn-ghost'},
+    {label:'Delete', fn: async ()=>{
+      try {
+        const { error } = await sb.from('services').delete().eq('id', _editingSvcId);
+        if (error) throw error;
+        toast('Service deleted.','nf');
+        adminCloseSvcEditor();
+        await adminLoadServices();
+        await loadServices();
+      } catch(e){ toast(e.message||'Delete failed.','er'); }
+    }, style:'btn-outline'}
+  ]);
+}
+window.adminDeleteService = adminDeleteService;
+
+/* ── ANALYTICS ────────────────────────────────────────────────── */
+async function adminLoadAnalytics(){
+  try {
+    const reqs = _allReqs.length ? _allReqs : (await sb.from('service_requests').select('*').order('created_at',{ascending:false})).data || [];
+    if (!_allReqs.length) _allReqs = reqs;
+
+    // Top services
+    const svcCount = {};
+    reqs.forEach(r=>{ svcCount[r.service_name]=(svcCount[r.service_name]||0)+1; });
+    const topSvcs = Object.entries(svcCount).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    const maxSvc  = topSvcs[0]?.[1] || 1;
+    const tEl = $('analytics-top-svcs');
+    if (tEl) tEl.innerHTML = topSvcs.length ? topSvcs.map(([name,count])=>`
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:.66rem;color:var(--t2);width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0">${esc(name)}</div>
+        <div style="flex:1;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden">
+          <div style="height:100%;width:${Math.round(count/maxSvc*100)}%;background:linear-gradient(90deg,var(--gold),#f0a500);border-radius:4px"></div>
+        </div>
+        <div style="font-size:.64rem;color:var(--gold);font-weight:700;min-width:18px;text-align:right">${count}</div>
+      </div>`).join('') : '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No request data yet</div>';
+
+    // Status breakdown
+    const statuses = {pending:'var(--gold)',in_progress:'var(--blue)',completed:'var(--green)',cancelled:'var(--red)'};
+    const total = reqs.length || 1;
+    const sEl = $('analytics-status');
+    if (sEl) sEl.innerHTML = Object.entries(statuses).map(([st,col])=>{
+      const n   = reqs.filter(r=>r.status===st).length;
+      const pct = Math.round(n/total*100);
+      return `<div style="display:flex;align-items:center;gap:8px">
+        <div style="width:88px;font-size:.62rem;color:var(--t3);text-transform:capitalize;flex-shrink:0">${st.replace('_',' ')}</div>
+        <div style="flex:1;height:10px;background:var(--bg4);border-radius:5px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:${col};border-radius:5px"></div>
+        </div>
+        <div style="font-size:.62rem;color:${col};font-weight:700;min-width:46px;text-align:right">${n} (${pct}%)</div>
+      </div>`;
+    }).join('');
+
+    // 7-day bar chart
+    const days = Array.from({length:7},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-6+i); return d.toISOString().split('T')[0]; });
+    const dayCounts = {}; days.forEach(d=>dayCounts[d]=0);
+    reqs.forEach(r=>{ const d=(r.created_at||'').split('T')[0]; if(dayCounts[d]!==undefined) dayCounts[d]++; });
+    const maxDay = Math.max(...Object.values(dayCounts), 1);
+    const tlEl  = $('analytics-timeline');
+    const lblEl = $('analytics-timeline-labels');
+    if (tlEl) tlEl.innerHTML = days.map(d=>{
+      const h = Math.max(4, Math.round(dayCounts[d]/maxDay*72));
+      return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px">
+        <div style="font-size:.5rem;color:var(--gold);font-weight:700">${dayCounts[d]||''}</div>
+        <div style="width:100%;height:${h}px;background:linear-gradient(180deg,var(--gold),rgba(201,168,76,.25));border-radius:3px 3px 0 0"></div>
+      </div>`;
+    }).join('');
+    if (lblEl) lblEl.innerHTML = days.map(d=>`<div style="flex:1;text-align:center;font-size:.48rem;color:var(--t4)">${d.slice(5)}</div>`).join('');
+
+    // User stats
+    const users = _allUsers.length ? _allUsers : (await sb.from('profiles').select('id,created_at').order('created_at',{ascending:false})).data || [];
+    const uEl = $('analytics-users');
+    if (uEl) uEl.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        ${[['Total', users.length,'var(--t1)',0],
+           ['This Week', users.filter(u=>(Date.now()-new Date(u.created_at))<7*864e5).length,'var(--green)',7],
+           ['This Month',users.filter(u=>(Date.now()-new Date(u.created_at))<30*864e5).length,'var(--blue)',30]]
+          .map(([lbl,n,col])=>`
+          <div style="background:var(--bg4);border-radius:var(--r);padding:10px;text-align:center">
+            <div style="font-family:var(--fd);font-size:1.5rem;color:${col}">${n}</div>
+            <div style="font-size:.54rem;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">${lbl}</div>
+          </div>`).join('')}
+      </div>`;
+  } catch(e){ toast('Analytics error: '+e.message,'er'); }
+}
+window.adminLoadAnalytics = adminLoadAnalytics;
+
+/* ── AGENTS ───────────────────────────────────────────────────── */
+async function adminLoadAgents(){
+  const al = $('admin-agents-list');
+  if (!al) return;
+  al.innerHTML = '<div style="text-align:center;padding:20px"><span class="spin"></span></div>';
+  try {
+    const { data, error } = await sb.from('agent_applications').select('*').order('created_at',{ascending:false});
+    if (error) throw error;
+    if (!data?.length){ al.innerHTML='<div class="empty-state" style="padding:30px"><i class="fas fa-user-tie"></i><p>No agent applications yet</p></div>'; return; }
+    al.innerHTML = data.map(a=>`
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="font-size:.78rem;font-weight:600;color:var(--t1)">${esc(a.name||'Unknown')}</div>
+          <span class="req-badge ${esc(a.status||'pending')}" style="font-size:.54rem">${esc(a.status||'pending')}</span>
+        </div>
+        <div style="font-size:.62rem;color:var(--t3);display:flex;flex-direction:column;gap:3px;margin-bottom:10px">
+          ${a.email?`<div><i class="fas fa-envelope" style="width:14px;color:var(--gold)"></i> ${esc(a.email)}</div>`:''}
+          ${a.phone?`<div><i class="fas fa-phone" style="width:14px;color:var(--gold)"></i> ${esc(a.phone)}</div>`:''}
+          ${a.location?`<div><i class="fas fa-map-marker-alt" style="width:14px;color:var(--gold)"></i> ${esc(a.location)}</div>`:''}
+          ${a.bio?`<div style="color:var(--t2);line-height:1.5;margin-top:4px">${esc(a.bio.substring(0,100))}${a.bio.length>100?'…':''}</div>`:''}
+          <div style="color:var(--t4);margin-top:2px">${fmtRel(a.created_at)}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-xs" onclick="adminSetAgentStatus('${esc(a.id)}','rejected')"><i class="fas fa-times"></i> Reject</button>
+          <button class="btn btn-gold btn-xs" style="flex:1" onclick="adminSetAgentStatus('${esc(a.id)}','approved')"><i class="fas fa-check"></i> Approve</button>
+        </div>
+      </div>`).join('');
+  } catch(e){ al.innerHTML=`<div style="color:var(--red);padding:16px;font-size:.76rem">Failed: ${esc(e.message)}</div>`; }
+}
+window.adminLoadAgents = adminLoadAgents;
+
+async function adminSetAgentStatus(id, status){
+  try {
+    await sb.from('agent_applications').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
+    toast(`Agent ${status} ✅`,'ok');
+    adminLoadAgents();
+  } catch(e){ toast(e.message||'Failed','er'); }
+}
+window.adminSetAgentStatus = adminSetAgentStatus;
+
+/* ── INSTITUTIONS ─────────────────────────────────────────────── */
+async function adminLoadInstitutions(){
+  const il = $('admin-inst-list');
+  if (!il) return;
+  il.innerHTML = '<div style="text-align:center;padding:20px"><span class="spin"></span></div>';
+  try {
+    const { data, error } = await sb.from('institution_requests').select('*').order('created_at',{ascending:false});
+    if (error) throw error;
+    if (!data?.length){ il.innerHTML='<div class="empty-state" style="padding:30px"><i class="fas fa-building-columns"></i><p>No institution requests yet</p></div>'; return; }
+    il.innerHTML = data.map(r=>`
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="font-size:.78rem;font-weight:600;color:var(--t1)">${esc(r.inst_name||'Institution')}</div>
+          <span class="req-badge ${esc(r.status||'pending')}">${esc(r.status||'pending')}</span>
+        </div>
+        <div style="font-size:.62rem;color:var(--t3);display:flex;flex-direction:column;gap:3px;margin-bottom:8px">
+          <div><i class="fas fa-concierge-bell" style="width:14px;color:var(--gold)"></i> ${esc(r.service_name||'—')}</div>
+          ${r.quantity?`<div><i class="fas fa-hashtag" style="width:14px;color:var(--gold)"></i> Qty: ${esc(String(r.quantity))}</div>`:''}
+          ${r.deadline?`<div><i class="fas fa-calendar" style="width:14px;color:var(--gold)"></i> Deadline: ${esc(r.deadline)}</div>`:''}
+          ${r.notes?`<div style="color:var(--t2);margin-top:4px">${esc(r.notes.substring(0,100))}${r.notes.length>100?'…':''}</div>`:''}
+          <div style="color:var(--t4)">${fmtRel(r.created_at)}</div>
+        </div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          ${['pending','in_progress','completed','cancelled'].map(s=>
+            `<button class="btn btn-xs ${r.status===s?'btn-gold':'btn-ghost'}" onclick="adminSetInstStatus('${esc(r.id)}','${s}')" style="flex:1">${s.replace('_',' ')}</button>`
+          ).join('')}
+        </div>
+      </div>`).join('');
+  } catch(e){ il.innerHTML=`<div style="color:var(--red);padding:16px;font-size:.76rem">Failed: ${esc(e.message)}</div>`; }
+}
+window.adminLoadInstitutions = adminLoadInstitutions;
+
+async function adminSetInstStatus(id, status){
+  try {
+    await sb.from('institution_requests').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
+    toast(`Status updated to "${status}"`, 'ok');
+    adminLoadInstitutions();
+  } catch(e){ toast(e.message||'Failed','er'); }
+}
+window.adminSetInstStatus = adminSetInstStatus;
+
+/* ── STATUS NOTIFICATIONS ─────────────────────────────────────── */
+const STATUS_LABELS = {
+  pending:     { label:'Pending Review',       emoji:'⏳' },
+  in_progress: { label:'We\'re Working On It', emoji:'🔧' },
+  confirmed:   { label:'Confirmed',            emoji:'✅' },
+  completed:   { label:'Completed',            emoji:'🎉' },
+  cancelled:   { label:'Cancelled',            emoji:'❌' },
+  ready:       { label:'Ready for Pickup',     emoji:'📦' }
+};
+
+async function sendStatusNotification(req, newStatus){
+  const info = STATUS_LABELS[newStatus] || { label: newStatus, emoji:'📋' };
+  const user = _allUsers.find(u=>u.id===req.user_id);
+  try {
+    // 1 — In-app notification in DB (user sees it in Alerts tab)
+    await sb.from('notifications').insert({
+      user_id: req.user_id,
+      type: 'status_update',
+      title: `${info.emoji} ${info.label}`,
+      body: `Your "${req.service_name}" request is now: ${info.label}.${newStatus==='completed'?' Thank you! 🎉':newStatus==='ready'?' Please come collect it. 📦':''}`,
+      read: false,
+      created_at: new Date().toISOString()
+    });
+
+    // 2 — WhatsApp message (opens in new tab for admin to send)
+    if (user?.whatsapp_number) {
+      const wa  = user.whatsapp_number.replace(/[^0-9]/g,'');
+      const num = wa.startsWith('0')? '254'+wa.slice(1) : wa.startsWith('254')? wa : '254'+wa;
+      const msg = encodeURIComponent(
+        `Hello ${user.full_name||''}! 👋\n\n`+
+        `*NovaDeskOnline — Request Update*\n\n`+
+        `📋 Service: ${req.service_name}\n`+
+        `${info.emoji} Status: *${info.label}*\n\n`+
+        (newStatus==='completed'? `Your request has been completed ✅ Thank you for using NovaDeskOnline!\n\n`:
+         newStatus==='in_progress'?`We're actively working on your request. We'll notify you when it's ready ⚙️\n\n`:
+         newStatus==='ready'?      `Your order is ready for pickup! Please visit us 📦\n\n`:
+         newStatus==='cancelled'?  `Your request was cancelled. Contact us for more info.\n\n`:'')+
+        `Track: ${window.location.origin}`
+      );
+      setTimeout(()=>window.open(`https://wa.me/${num}?text=${msg}`,'_blank'), 600);
+      toast(`WhatsApp notification sent to ${user.full_name||'user'} 💬`, 'ok', 3500);
+    }
+
+    // 3 — Browser notification (admin device)
+    if ('Notification' in window && Notification.permission==='granted') {
+      new Notification(`${info.emoji} ${req.service_name}`, {
+        body: `${info.label} — ${user?.full_name||'User'}`,
+        icon: '/icon-192.png'
+      });
+    }
+  } catch(e){ console.warn('Notification error:', e.message); }
+}
+window.sendStatusNotification = sendStatusNotification;
+
+async function requestNotifPermission(){
+  if (!('Notification' in window)) return;
+  if (Notification.permission==='default') {
+    const r = await Notification.requestPermission();
+    if (r==='granted') toast('Browser notifications enabled 🔔','ok');
+  }
+}
+window.requestNotifPermission = requestNotifPermission;
 
 async function adminLoadMessages(){
   const ml = $('admin-messages-list');
@@ -4626,11 +5103,21 @@ async function init(){
     const p = new URLSearchParams(window.location.search);
     const r = p.get('ref');
     if (r) localStorage.setItem('nd-ref', r);
+    const screen = p.get('screen');
+    if (screen) setTimeout(()=>goNav(screen), 1500);
+    const action = p.get('action');
+    if (action==='request') setTimeout(()=>{ goNav('services'); }, 1600);
   })();
+
   loadTheme();
+  loadLang();
+  initAccessibility();
   if ($('cr-year')) $('cr-year').textContent = new Date().getFullYear();
   initOfflineDetect();
   window._currentScreen = 'home';
+
+  // Register service worker first (for real PWA install)
+  await registerServiceWorker();
 
   // Dismiss splash
   const splash = $('splash');
@@ -4638,21 +5125,63 @@ async function init(){
     setTimeout(()=>{ splash.classList.add('hide'); setTimeout(()=>splash.classList.add('gone'), 950); }, 1800);
   }
 
+  // Load config securely from /api/config
+  const ok = await loadSecureConfig();
+  if (!ok) return;
+
+  // Init Supabase now that we have credentials
+  try {
+    sb = supabase.createClient(SB_URL, SB_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+  } catch(e) { console.error('[Init] Supabase init failed:', e); return; }
+
   // Load settings and services
   await Promise.all([loadAppSettings(), loadServices()]);
   updateMoreScreen();
+  initPWAInstall();
+  initOnboarding();
+  loadFavourites();
+  initBroadcast();
 
   // Auth listener
   onAuthStateChange();
 }
 
+async function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+  try {
+    const reg = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+    console.log('[SW] Registered:', reg.scope);
+    reg.addEventListener('updatefound', () => {
+      const newWorker = reg.installing;
+      newWorker?.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          // New version available
+          toast('Update available — refresh to get the latest version 🔄', 'nf', 6000);
+        }
+      });
+    });
+    // Register periodic sync
+    if ('periodicSync' in reg) {
+      try {
+        await reg.periodicSync.register('check-request-status', { minInterval: 24*60*60*1000 });
+      } catch(e) {}
+    }
+  } catch(e) {
+    console.warn('[SW] Registration failed:', e);
+  }
+}
+window.registerServiceWorker = registerServiceWorker;
+
 document.addEventListener('DOMContentLoaded', init);
 
-// Android back button
+// Android back button — updated to handle new panels
 window.addEventListener('popstate', ()=>{
+  const gs=$('global-search-overlay'); if(gs?.classList.contains('on')){ closeGlobalSearch(); return; }
   const ne=$('note-editor'); if(ne?.classList.contains('on')){ closeNoteEditor(); return; }
-  if ($('svc-req-modal').classList.contains('on')) { closeSvcReq(); return; }
-  if ($('auth-modal').classList.contains('on')) { closeAuth(); return; }
+  if ($('svc-req-modal')?.classList.contains('on')) { closeSvcReq(); return; }
+  if ($('auth-modal')?.classList.contains('on')) { closeAuth(); return; }
   closeAllModals();
 });
 </script>
@@ -6166,104 +6695,6 @@ self.addEventListener('fetch',e=>{
   } catch(e){ console.info('[SW] Not available'); }
 })();
 
-/* ── PWA INSTALL PROMPT ─────────────────────────────────────────── */
-let _deferredPrompt = null;
-let _pwaBannerShown  = false;
-
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  _deferredPrompt = e;
-  // Don't show anything if already installed or dismissed permanently
-  if (localStorage.getItem('nd-pwa-installed')) return;
-  // Show install CTAs (home + more)
-  const homeCta = document.getElementById('home-install-cta');
-  const moreItem = document.getElementById('more-install-item');
-  if (homeCta) homeCta.style.display = 'block';
-  if (moreItem) moreItem.style.display = 'flex';
-  // Show banner after app loads — only once per session, only if not dismissed
-  if (!localStorage.getItem('nd-pwa-dismissed') && !_pwaBannerShown) {
-    setTimeout(showPWABanner, 4000);
-  }
-});
-
-function showPWABanner() {
-  const banner = document.getElementById('pwa-banner');
-  if (!banner || _pwaBannerShown) return;
-  _pwaBannerShown = true;
-  banner.style.display = 'block';
-  requestAnimationFrame(()=>{
-    requestAnimationFrame(()=>{
-      banner.style.transform = 'translateX(-50%) translateY(0)';
-      banner.style.opacity   = '1';
-    });
-  });
-  // Auto-dismiss after 12 seconds
-  setTimeout(()=>{ if(_pwaBannerShown) dismissPWABanner(false); }, 12000);
-}
-
-function dismissPWABanner(persist=true) {
-  const banner = document.getElementById('pwa-banner');
-  if (!banner) return;
-  banner.style.transform = 'translateX(-50%) translateY(130%)';
-  setTimeout(()=>{ banner.style.display='none'; _pwaBannerShown=false; }, 450);
-  if (persist) {
-    localStorage.setItem('nd-pwa-dismissed','1');
-    // After install — hide all CTAs permanently
-    ['home-install-cta','more-install-item'].forEach(id=>{
-      const el=document.getElementById(id);
-      if(el) el.style.display='none';
-    });
-  }
-}
-window.dismissPWABanner = dismissPWABanner;
-
-async function triggerPWAInstall() {
-  if (!_deferredPrompt) {
-    // iOS / already installed — show instructions
-    showPopup('nf','fa-mobile-screen','Install on iOS',
-      'Tap the <strong>Share</strong> button in Safari, then choose <strong>"Add to Home Screen"</strong> to install NovaDeskOnline.',
-      [{label:'Got it', cls:'btn-gold', fn:'closePopup()'}]);
-    dismissPWABanner();
-    return;
-  }
-  dismissPWABanner();
-  _deferredPrompt.prompt();
-  const { outcome } = await _deferredPrompt.userChoice;
-  _deferredPrompt = null;
-  if (outcome === 'accepted') {
-    toast('NovaDeskOnline installed! 🎉', 'ok', 3500);
-    localStorage.setItem('nd-pwa-installed','1');
-  }
-}
-window.triggerPWAInstall  = triggerPWAInstall;
-window.dismissPWABanner   = dismissPWABanner;
-
-// Show banner again after 3 days if dismissed (not if installed)
-(function(){
-  const dismissed = localStorage.getItem('nd-pwa-dismissed');
-  const installed = localStorage.getItem('nd-pwa-installed');
-  if (dismissed && !installed) {
-    const since = parseInt(localStorage.getItem('nd-pwa-dismiss-time')||'0');
-    if (Date.now() - since > 3*24*60*60*1000) {
-      localStorage.removeItem('nd-pwa-dismissed');
-    }
-  }
-  if (dismissed && !localStorage.getItem('nd-pwa-dismiss-time')) {
-    localStorage.setItem('nd-pwa-dismiss-time', Date.now().toString());
-  }
-})();
-
-// Already installed? Don't show banner
-window.addEventListener('appinstalled', ()=>{
-  localStorage.setItem('nd-pwa-installed','1');
-  _deferredPrompt = null;
-  toast('NovaDeskOnline installed! Tap the icon on your home screen 🚀','ok',4500);
-  dismissPWABanner(true);
-  ['home-install-cta','more-install-item'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el) el.style.display='none';
-  });
-});
 </script>
 <script>
 let _techReqType = '';
@@ -6324,5 +6755,566 @@ function copyUserId(){
 window.copyUserId = copyUserId;
 </script>
 
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   NOVADESK v2 — ALL 48 EXTENDED FEATURES
+   Senior Chief Engineer implementation
+═══════════════════════════════════════════════════════════════════ */
+
+/* ── FEATURE 2: REAL PWA INSTALL (not home screen link) ───────── */
+let _deferredPrompt = null;
+
+function initPWAInstall(){
+  if (localStorage.getItem('nd-pwa-dismissed')) return;
+  // Chrome/Android — intercept the native prompt
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    _deferredPrompt = e;
+    // Show banner after 5 seconds if not already installed
+    if (!localStorage.getItem('nd-pwa-installed') && !window.matchMedia('(display-mode: standalone)').matches) {
+      setTimeout(()=>$('pwa-install-bar')?.classList.add('show'), 5000);
+    }
+  });
+  window.addEventListener('appinstalled', () => {
+    $('pwa-install-bar')?.classList.remove('show');
+    localStorage.setItem('nd-pwa-installed','1');
+    toast('NovaDeskOnline installed successfully! 🎉','ok',5000);
+  });
+  // If already running as standalone PWA, hide install bar
+  if (window.matchMedia('(display-mode: standalone)').matches) {
+    localStorage.setItem('nd-pwa-installed','1');
+  }
+}
+
+async function triggerPWAInstall(){
+  if (_deferredPrompt) {
+    _deferredPrompt.prompt();
+    const { outcome } = await _deferredPrompt.userChoice;
+    _deferredPrompt = null;
+    $('pwa-install-bar')?.classList.remove('show');
+    if (outcome === 'accepted') toast('Installing…','ok');
+  } else if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+    popup(
+      'Install on iPhone/iPad',
+      '1. Tap the Share button (□↑) at the bottom of Safari\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm',
+      'nf',
+      [{label:'Got it',fn:null,style:'btn-gold'}]
+    );
+  } else {
+    toast('Open this site in Chrome or Edge to install it as an app','nf',4000);
+  }
+}
+
+function dismissPWABanner(persist){
+  // Hide both the new bar and the old banner
+  $('pwa-install-bar')?.classList.remove('show');
+  const oldBanner = $('pwa-banner');
+  if (oldBanner) { oldBanner.style.transform='translateX(-50%) translateY(130%)'; setTimeout(()=>{oldBanner.style.display='none';},450); }
+  if (persist !== false) localStorage.setItem('nd-pwa-dismissed','1');
+}
+
+async function registerServiceWorker(){
+  if (!('serviceWorker' in navigator)) return;
+  try {
+    const reg = await navigator.serviceWorker.register('/sw.js', { scope:'/' });
+    console.log('[SW] Registered:', reg.scope);
+    // Check for updates
+    reg.addEventListener('updatefound', ()=>{
+      const nw = reg.installing;
+      nw?.addEventListener('statechange', ()=>{
+        if (nw.state==='installed' && navigator.serviceWorker.controller) {
+          toast('App update available — refresh to get latest version 🔄','nf',8000);
+        }
+      });
+    });
+    // Periodic background sync
+    if ('periodicSync' in reg) {
+      try { await reg.periodicSync.register('check-request-status',{minInterval:24*60*60*1000}); } catch(e){}
+    }
+    // Listen for SW messages (push notification clicks, sync events)
+    navigator.serviceWorker.addEventListener('message', e=>{
+      if (e.data?.type==='navigate') { goNav('account'); acctTab('requests'); }
+      if (e.data?.type==='check-updates') loadNotifs?.();
+      if (e.data?.type==='request-synced') { toast('Offline request submitted ✅','ok'); loadMyReqs?.(); }
+    });
+  } catch(e){ console.warn('[SW] Registration failed:',e.message); }
+}
+
+window.triggerPWAInstall = triggerPWAInstall;
+window.dismissPWABanner  = dismissPWABanner;
+
+/* ── FEATURE 35: ONBOARDING TOUR ─────────────────────────────── */
+const TOUR_STEPS = [
+  {icon:'🌟', title:'Welcome to NovaDeskOnline', desc:'Your complete cyber services hub in Kemera, Nyamira. Fast, affordable and reliable.'},
+  {icon:'🖨️', title:'41 Services Available',    desc:'Printing, scanning, CV writing, government services, design and more — all in one app.'},
+  {icon:'📋', title:'Submit in 30 Seconds',      desc:'Choose a service, describe your need, attach files, and submit. We handle everything.'},
+  {icon:'📊', title:'Track in Real Time',        desc:'Get notified the moment your request is confirmed, in progress, or ready for pickup.'},
+  {icon:'⭐', title:'Earn Loyalty Points',       desc:'Every completed request earns you points. Redeem them for discounts on future services.'},
+];
+let _tourStep = 0;
+
+function initOnboarding(){
+  if (!localStorage.getItem('nd-tour-done')) setTimeout(showTour, 3000);
+}
+function showTour(){
+  _tourStep = 0;
+  renderTourStep();
+  const ov = $('onboarding-overlay');
+  if (ov) { ov.style.display='flex'; document.body.style.overflow='hidden'; }
+}
+function renderTourStep(){
+  const step = TOUR_STEPS[_tourStep];
+  const content = $('tour-content');
+  const dots    = $('tour-dots');
+  const nextBtn = $('tour-next');
+  if (!step||!content) return;
+  content.innerHTML = `
+    <div style="font-size:3.5rem;margin-bottom:20px">${step.icon}</div>
+    <h2 style="font-family:var(--fd);font-size:1.4rem;color:var(--t1);margin-bottom:12px;line-height:1.2">${step.title}</h2>
+    <p style="font-size:.84rem;color:var(--t2);line-height:1.7;max-width:300px">${step.desc}</p>`;
+  if (dots) dots.innerHTML = TOUR_STEPS.map((_,i)=>`<div class="tour-dot${i===_tourStep?' on':''}"></div>`).join('');
+  if (nextBtn) nextBtn.textContent = _tourStep===TOUR_STEPS.length-1?'Get Started 🚀':'Next →';
+}
+function nextTourStep(){ _tourStep++; if(_tourStep>=TOUR_STEPS.length){skipTour();return;} renderTourStep(); }
+function skipTour(){
+  localStorage.setItem('nd-tour-done','1');
+  const ov=$('onboarding-overlay');
+  if(ov){ov.style.display='none'; document.body.style.overflow='';}
+}
+window.showTour     = showTour;
+window.nextTourStep = nextTourStep;
+window.skipTour     = skipTour;
+
+/* ── FEATURE 34: GLOBAL SEARCH ────────────────────────────────── */
+function openGlobalSearch(){
+  $('global-search-overlay')?.classList.add('on');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>$('global-search-inp')?.focus(),200);
+}
+function closeGlobalSearch(){
+  $('global-search-overlay')?.classList.remove('on');
+  document.body.style.overflow='';
+}
+function runGlobalSearch(q){
+  const res = $('global-search-results');
+  if (!res) return;
+  q = (q||'').trim();
+  if (q.length < 2) {
+    res.innerHTML='<div style="text-align:center;padding:40px;color:var(--t3);font-size:.78rem"><i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:10px;opacity:.3"></i>Type at least 2 characters</div>';
+    return;
+  }
+  const ql = q.toLowerCase();
+  const results = [];
+  // Services
+  (window._allServices||[]).filter(s=>s.is_active&&(s.name.toLowerCase().includes(ql)||(s.description||'').toLowerCase().includes(ql))).slice(0,5)
+    .forEach(s=>results.push({type:'service', icon:'fa-concierge-bell', title:s.name, sub:s.price_label||s.category, action:`closeGlobalSearch();openSvcDetail('${s.id}')`}));
+  // Requests
+  (window._reqs||[]).filter(r=>(r.service_name||'').toLowerCase().includes(ql)||(r.description||'').toLowerCase().includes(ql)).slice(0,4)
+    .forEach(r=>results.push({type:'request', icon:'fa-inbox', title:r.service_name, sub:(r.status||'').replace('_',' ')+' · '+fmtRel(r.created_at), action:`closeGlobalSearch();goNav('account');acctTab('requests')`}));
+  // Notes
+  (window._notes||[]).filter(n=>(n.title||'').toLowerCase().includes(ql)||(n.content||'').toLowerCase().includes(ql)).slice(0,3)
+    .forEach(n=>results.push({type:'note', icon:'fa-note-sticky', title:n.title, sub:(n.content||'').substring(0,50), action:`closeGlobalSearch();openNoteEditorFromAcctEdit('${n.id}')`}));
+
+  if (!results.length){
+    res.innerHTML=`<div style="text-align:center;padding:40px;color:var(--t3);font-size:.78rem">No results for "${esc(q)}"</div>`;
+    return;
+  }
+  res.innerHTML = results.map(r=>`
+    <div class="search-result-item" onclick="${r.action}">
+      <div style="width:34px;height:34px;border-radius:8px;background:var(--gold-a8);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.75rem;flex-shrink:0"><i class="fas ${r.icon}"></i></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.76rem;font-weight:500;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.title)}</div>
+        <div style="font-size:.6rem;color:var(--t3)">${esc(r.sub||'')}</div>
+      </div>
+      <span style="font-size:.54rem;padding:2px 7px;background:var(--bg4);border-radius:10px;color:var(--t3);flex-shrink:0">${r.type}</span>
+    </div>`).join('');
+}
+window.openGlobalSearch  = openGlobalSearch;
+window.closeGlobalSearch = closeGlobalSearch;
+window.runGlobalSearch   = runGlobalSearch;
+
+/* ── FEATURE 19: FAVOURITES ────────────────────────────────────── */
+let _favourites = new Set();
+function loadFavourites(){
+  try{ _favourites=new Set(JSON.parse(localStorage.getItem('nd-favs')||'[]')); }catch(e){ _favourites=new Set(); }
+}
+function toggleFavourite(svcId, el, e){
+  e?.stopPropagation();
+  if(_favourites.has(svcId)){_favourites.delete(svcId);toast('Removed from favourites','nf');}
+  else{_favourites.add(svcId);toast('Added to favourites ♥','ok');}
+  localStorage.setItem('nd-favs',JSON.stringify([..._favourites]));
+  el?.classList.toggle('on',_favourites.has(svcId));
+  if(_user&&sb) sb.from('profiles').update({favourite_services:[..._favourites]}).eq('id',_user.id).catch(()=>{});
+}
+window.toggleFavourite = toggleFavourite;
+
+/* ── FEATURE 22: BROADCAST ANNOUNCEMENTS ─────────────────────── */
+function initBroadcast(){
+  const msg = window._broadcastMsg||'';
+  if(!msg.trim()) return;
+  const text=$('broadcast-text'); if(text) text.textContent=msg;
+  $('broadcast-banner')?.classList.add('show');
+}
+window.initBroadcast = initBroadcast;
+
+/* ── FEATURE 18: SERVICE BUNDLES ─────────────────────────────── */
+const BUNDLES = [
+  {id:'student',    name:'Student Pack',           icon:'🎓', price:350, orig:450, saving:100, items:['CV & Resume','Print Documents (10 pages)','Scan & Send (3 pages)'],                          desc:'Everything a job-seeking student needs'},
+  {id:'jobseeker',  name:'Job Seeker Bundle',       icon:'💼', price:600, orig:750, saving:150, items:['Full CV','Print Documents (5 pages)','Passport Photos','Email Setup'],                       desc:'Complete job application package'},
+  {id:'business',   name:'Business Starter',        icon:'🏢', price:2500,orig:3200,saving:700, items:['Logo Design','Business Cards (50 pcs)','Company Profile (print)'],                          desc:'Launch your business professionally'},
+  {id:'school_reg', name:'School Registration Pack',icon:'📚', price:450, orig:580, saving:130, items:['eCitizen Application','Print (15 pages)','Passport Photos','Scan (5 pages)'],               desc:'All documents for school/college registration'},
+];
+function openBundlesModal(){
+  const list=$('bundles-list');
+  if(list) list.innerHTML=BUNDLES.map(b=>`
+    <div class="bundle-card" onclick="requestBundle('${b.id}')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div style="font-size:1.6rem">${b.icon}</div>
+        <div style="flex:1"><div style="font-size:.82rem;font-weight:700;color:var(--t1)">${b.name}</div><div style="font-size:.62rem;color:var(--t3)">${b.desc}</div></div>
+        <span class="bundle-saving">Save KES ${b.saving}</span>
+      </div>
+      <div style="margin-bottom:10px">${b.items.map(i=>`<div style="font-size:.64rem;color:var(--t2);padding:2px 0"><i class="fas fa-check" style="color:var(--green);margin-right:5px;font-size:.5rem"></i>${i}</div>`).join('')}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div><span style="font-family:var(--fd);font-size:1.3rem;color:var(--gold);font-weight:700">KES ${b.price.toLocaleString()}</span><span style="font-size:.6rem;color:var(--t4);text-decoration:line-through;margin-left:6px">KES ${b.orig.toLocaleString()}</span></div>
+        <button class="btn btn-gold btn-xs">Request</button>
+      </div>
+    </div>`).join('');
+  openModal('bundles-modal');
+}
+async function requestBundle(id){
+  const b=BUNDLES.find(x=>x.id===id); if(!b) return;
+  if(!_user){closeModal('bundles-modal');openAuth();return;}
+  try{
+    await sb.from('service_requests').insert({user_id:_user.id,service_name:b.name,description:`Bundle: ${b.items.join(', ')}`,status:'pending',price:b.price,created_at:new Date().toISOString(),updated_at:new Date().toISOString()});
+    closeModal('bundles-modal');
+    toast(`${b.name} requested ✅ We'll confirm shortly!`,'ok',5000);
+    await loadMyReqs();
+  }catch(e){toast(e.message||'Failed','er');}
+}
+window.openBundlesModal = openBundlesModal;
+window.requestBundle    = requestBundle;
+
+/* ── FEATURE 2: PRICE ESTIMATOR ──────────────────────────────── */
+const PRICE_RATES={
+  'Print Documents':  {unit:'page', rate:5,  label:'KES 5/page (B&W) · KES 20/page (colour)'},
+  'Photocopy':        {unit:'page', rate:5,  label:'KES 5/page'},
+  'Scan & Send':      {unit:'page', rate:10, label:'KES 10/page'},
+  'Laminating':       {unit:'item', rate:20, label:'KES 20/item'},
+  'Binding':          {unit:'book', rate:50, label:'KES 50/document'},
+  'Typing Services':  {unit:'page', rate:30, label:'KES 30/page'},
+  'Passport Photos':  {unit:'set',  rate:100,label:'KES 100/set (4 pcs)'},
+  'Internet Browsing':{unit:'hour', rate:30, label:'KES 30/hour'},
+};
+let _estQty=1, _estSvc='';
+function openPriceEstimator(svcName){
+  _estSvc=svcName; _estQty=1;
+  const rate=PRICE_RATES[svcName];
+  const body=$('price-estimator-body');
+  if(!body){openModal('price-estimator-modal');return;}
+  body.innerHTML=`
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:.78rem;font-weight:600;color:var(--t1)">${esc(svcName)}</div>
+      <div style="font-size:.62rem;color:var(--t3);margin-top:4px">${rate?rate.label:'Price calculated on request'}</div>
+    </div>
+    ${rate?`
+    <div class="estimator-wrap">
+      <div style="font-size:.66rem;color:var(--t3);margin-bottom:10px;text-align:center">Number of ${rate.unit}s</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:20px">
+        <button onclick="chgEst(-1)" style="width:40px;height:40px;border-radius:50%;background:var(--bg4);border:1px solid var(--bd);color:var(--t1);font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center">−</button>
+        <div style="font-family:var(--fd);font-size:2.2rem;color:var(--t1);min-width:60px;text-align:center" id="est-qty">1</div>
+        <button onclick="chgEst(1)" style="width:40px;height:40px;border-radius:50%;background:var(--gold);border:none;color:#fff;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center">+</button>
+      </div>
+      ${svcName==='Print Documents'?`<label style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:.72rem;color:var(--t2);cursor:pointer;margin:12px 0"><input type="checkbox" id="est-col" onchange="updEst()"> Add colour (+KES 15/page)</label>`:'<div style="height:12px"></div>'}
+      <div class="estimator-total" id="est-total">KES ${rate.rate}</div>
+      <div style="font-size:.6rem;color:var(--t3);text-align:center">Estimated cost</div>
+    </div>
+    <button class="btn btn-gold btn-full" onclick="closeModal('price-estimator-modal')" style="margin-top:14px"><i class="fas fa-check"></i> Proceed with Request</button>`
+    :`<div style="text-align:center;padding:20px;color:var(--t3);font-size:.76rem">Price varies by specification. Submit a request and we'll give you an exact quote.</div><button class="btn btn-gold btn-full" onclick="closeModal('price-estimator-modal')">Request & Get Quote</button>`}`;
+  openModal('price-estimator-modal');
+}
+function chgEst(d){ _estQty=Math.max(1,_estQty+d); const el=$('est-qty');if(el)el.textContent=_estQty; updEst(); }
+function updEst(){
+  const rate=PRICE_RATES[_estSvc]; if(!rate) return;
+  const col=$('est-col')?.checked&&_estSvc==='Print Documents'?15:0;
+  const el=$('est-total'); if(el) el.textContent='KES '+(_estQty*(rate.rate+col)).toLocaleString();
+}
+window.openPriceEstimator=openPriceEstimator; window.chgEst=chgEst; window.updEst=updEst;
+
+/* ── FEATURE 15: PICKUP TIME BOOKING ─────────────────────────── */
+const SLOTS=[{id:'morning',label:'Morning',time:'7am–12pm',icon:'🌅'},{id:'afternoon',label:'Afternoon',time:'12pm–5pm',icon:'☀️'},{id:'evening',label:'Evening',time:'5pm–9pm',icon:'🌆'}];
+let _selSlot='';
+function openBookingModal(svcName){
+  _selSlot='';
+  const slots=$('booking-slots');
+  if(slots) slots.innerHTML=SLOTS.map(s=>`<button class="slot-btn" id="slot-${s.id}" onclick="pickSlot('${s.id}')"><div style="font-size:1.3rem">${s.icon}</div><div style="font-weight:600;margin-top:4px">${s.label}</div><div style="font-size:.54rem;color:var(--t3);margin-top:2px">${s.time}</div></button>`).join('');
+  const di=$('booking-date'); if(di){const d=new Date();di.min=d.toISOString().split('T')[0];di.value=di.min;}
+  openModal('booking-modal');
+}
+function pickSlot(id){ _selSlot=id; SLOTS.forEach(s=>$('slot-'+s.id)?.classList.toggle('on',s.id===id)); }
+async function confirmBooking(){
+  if(!_selSlot){toast('Pick a time slot','er');return;}
+  const date=$('booking-date')?.value; if(!date){toast('Select a date','er');return;}
+  if(!_user){closeModal('booking-modal');openAuth();return;}
+  try{
+    await sb.from('bookings').insert({user_id:_user.id,slot:_selSlot,date,notes:$('booking-notes')?.value||'',status:'pending',created_at:new Date().toISOString()});
+    closeModal('booking-modal');
+    toast(`Booked for ${_selSlot} on ${date} ✅ See you then!`,'ok',5000);
+  }catch(e){toast(e.message||'Booking failed','er');}
+}
+window.openBookingModal=openBookingModal; window.pickSlot=pickSlot; window.confirmBooking=confirmBooking;
+
+/* ── FEATURE 13: DOCUMENT VAULT ──────────────────────────────── */
+async function openVaultModal(){
+  if(!_user){toast('Sign in to use the vault','er');openAuth();return;}
+  openModal('vault-modal'); await loadVault();
+}
+async function loadVault(){
+  const list=$('vault-list'); if(!list) return;
+  list.innerHTML='<div style="text-align:center;padding:20px"><span class="spin"></span></div>';
+  try{
+    const{data}=await sb.from('vault_files').select('*').eq('user_id',_user.id).order('created_at',{ascending:false});
+    if(!data?.length){list.innerHTML='<div class="empty-state" style="padding:30px"><i class="fas fa-vault"></i><p>Vault empty.<br>Upload once, reuse anytime.</p></div>';return;}
+    list.innerHTML=data.map(f=>`
+      <div class="vault-item">
+        <div class="vault-icon"><i class="fas ${(f.file_type||'').includes('pdf')?'fa-file-pdf':(f.file_type||'').includes('image')?'fa-file-image':'fa-file'}"></i></div>
+        <div style="flex:1;min-width:0"><div style="font-size:.75rem;font-weight:500;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(f.file_name)}</div><div style="font-size:.58rem;color:var(--t3)">${fmtRel(f.created_at)}${f.file_size?' · '+Math.round(f.file_size/1024)+'KB':''}</div></div>
+        <div style="display:flex;gap:4px">
+          <a href="${esc(f.file_url)}" target="_blank" class="btn btn-ghost btn-xs"><i class="fas fa-eye"></i></a>
+          <button class="btn btn-ghost btn-xs" onclick="delVaultFile('${esc(f.id)}')"><i class="fas fa-trash" style="color:var(--red)"></i></button>
+        </div>
+      </div>`).join('');
+  }catch(e){list.innerHTML=`<div style="color:var(--red);padding:12px;font-size:.76rem">Failed: ${esc(e.message)}</div>`;}
+}
+async function uploadToVault(inp){
+  if(!inp.files?.length||!_user) return;
+  toast('Uploading to vault…','nf');
+  for(const file of inp.files){
+    try{
+      const path=`${_user.id}/vault/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
+      const{error:upErr}=await sb.storage.from('vault').upload(path,file,{upsert:true});
+      if(upErr) throw upErr;
+      const{data:u}=sb.storage.from('vault').getPublicUrl(path);
+      await sb.from('vault_files').insert({user_id:_user.id,file_name:file.name,file_url:u.publicUrl,file_type:file.type,file_size:file.size,created_at:new Date().toISOString()});
+    }catch(e){toast(e.message||'Upload failed','er');}
+  }
+  inp.value=''; toast('Saved to vault ✅','ok'); loadVault();
+}
+async function delVaultFile(id){
+  popup('Delete from Vault','This permanently removes the file from your vault.','nf',[
+    {label:'Cancel',fn:null,style:'btn-ghost'},
+    {label:'Delete',fn:async()=>{await sb.from('vault_files').delete().eq('id',id);toast('Deleted','nf');loadVault();},style:'btn-outline'}
+  ]);
+}
+window.openVaultModal=openVaultModal; window.uploadToVault=uploadToVault; window.delVaultFile=delVaultFile;
+
+/* ── FEATURE 6: IN-APP CHAT PER REQUEST ──────────────────────── */
+let _chatSub=null;
+async function openRequestChat(reqId,svcName){
+  $('req-chat-title').textContent=svcName||'Request Chat';
+  $('req-chat-id').value=reqId;
+  $('req-chat-messages').innerHTML='<div style="text-align:center;padding:20px"><span class="spin"></span></div>';
+  openModal('req-chat-modal');
+  await loadChatMsgs(reqId);
+  // Subscribe to realtime
+  if(_chatSub) sb.removeChannel(_chatSub);
+  _chatSub=sb.channel('chat-'+reqId).on('postgres_changes',{event:'INSERT',schema:'public',table:'request_chats',filter:`request_id=eq.${reqId}`},p=>addChatBubble(p.new)).subscribe();
+}
+async function loadChatMsgs(reqId){
+  const wrap=$('req-chat-messages'); if(!wrap) return;
+  try{
+    const{data}=await sb.from('request_chats').select('*').eq('request_id',reqId).order('created_at');
+    if(!data?.length){wrap.innerHTML='<div style="text-align:center;padding:30px;color:var(--t3);font-size:.72rem"><i class="fas fa-comments" style="font-size:2rem;display:block;margin-bottom:8px;opacity:.3"></i>No messages yet. Ask us anything!</div>';return;}
+    wrap.innerHTML=''; data.forEach(m=>addChatBubble(m,false));
+    wrap.scrollTop=wrap.scrollHeight;
+  }catch(e){wrap.innerHTML='<div style="color:var(--red);padding:12px;font-size:.76rem">Failed to load</div>';}
+}
+function addChatBubble(m,scroll=true){
+  const wrap=$('req-chat-messages'); if(!wrap) return;
+  const isAdmin=m.sender==='admin';
+  // Remove empty state
+  const empty=wrap.querySelector('.fa-comments')?.closest('div'); if(empty) empty.remove();
+  const d=document.createElement('div');
+  d.style.cssText=`display:flex;${isAdmin?'':'justify-content:flex-end'};margin-bottom:6px`;
+  d.innerHTML=`<div class="chat-bubble ${isAdmin?'admin':'user'}">
+    ${isAdmin?`<div style="font-size:.54rem;color:var(--gold);margin-bottom:3px;font-weight:700">NovaDeskOnline</div>`:''}
+    <div>${esc(m.message)}</div>
+    <div style="font-size:.5rem;color:var(--t4);margin-top:3px;text-align:right">${fmtRel(m.created_at)}</div>
+  </div>`;
+  wrap.appendChild(d);
+  if(scroll) wrap.scrollTop=wrap.scrollHeight;
+}
+async function sendChatMessage(){
+  const inp=$('req-chat-inp'); const reqId=$('req-chat-id')?.value;
+  const msg=inp?.value?.trim(); if(!msg||!reqId||!_user) return;
+  inp.value='';
+  try{ await sb.from('request_chats').insert({request_id:reqId,user_id:_user.id,sender:'user',message:msg,created_at:new Date().toISOString()}); }
+  catch(e){ toast(e.message||'Failed','er'); inp.value=msg; }
+}
+window.openRequestChat=openRequestChat; window.sendChatMessage=sendChatMessage;
+
+/* ── FEATURE 9: REVIEWS & RATINGS ────────────────────────────── */
+let _rvwStar=0, _rvwReqId='';
+function openReviewModal(reqId,svcName){
+  _rvwStar=0; _rvwReqId=reqId;
+  $('review-req-id').value=reqId;
+  $('review-svc-name').textContent=svcName;
+  $('review-comment').value='';
+  $('review-rating-label').textContent='Tap to rate';
+  document.querySelectorAll('#review-stars .star').forEach(s=>s.classList.remove('on'));
+  openModal('review-modal');
+}
+function setReviewStar(n){
+  _rvwStar=n;
+  const lbl=['','Poor','Fair','Good','Great','Excellent!'];
+  $('review-rating-label').textContent=lbl[n]||'';
+  document.querySelectorAll('#review-stars .star').forEach((s,i)=>s.classList.toggle('on',i<n));
+}
+async function submitReview(){
+  if(!_rvwStar){toast('Select a rating','er');return;}
+  try{
+    await sb.from('reviews').insert({request_id:_rvwReqId,user_id:_user?.id,rating:_rvwStar,comment:$('review-comment')?.value||'',created_at:new Date().toISOString()});
+    closeModal('review-modal');
+    toast('Review submitted! Thank you ⭐','ok');
+  }catch(e){toast(e.message||'Failed','er');}
+}
+window.openReviewModal=openReviewModal; window.setReviewStar=setReviewStar; window.submitReview=submitReview;
+
+/* ── FEATURE 8: ORDER QR CODE ────────────────────────────────── */
+function openQRModal(reqId){
+  const ref=(reqId||'').substring(0,8).toUpperCase();
+  const qrEl=$('qr-display'); const refEl=$('qr-ref-text');
+  if(refEl) refEl.textContent='REF-'+ref;
+  if(qrEl) qrEl.innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(SITE+'/?req='+reqId)}&bgcolor=ffffff&color=0a0f1e&margin=10" style="width:150px;height:150px;border-radius:6px" alt="QR">`;
+  openModal('qr-modal');
+}
+window.openQRModal=openQRModal;
+
+/* ── FEATURE 11: REORDER ─────────────────────────────────────── */
+async function reorderRequest(reqId){
+  const req=(_reqs||[]).find(r=>r.id===reqId);
+  if(!req){toast('Request not found','er');return;}
+  const svc=(_allServices||[]).find(s=>s.id===req.service_id)||{id:req.service_id,name:req.service_name,icon:'fa-concierge-bell'};
+  openSvcReq(svc);
+  setTimeout(()=>{ if($('svc-req-desc')) $('svc-req-desc').value=req.description||''; toast('Pre-filled from previous order ♻️','ok'); },400);
+}
+window.reorderRequest=reorderRequest;
+
+/* ── FEATURE 29: COUPON CODES ────────────────────────────────── */
+let _activeCoupon=null;
+async function applyCoupon(code){
+  if(!code?.trim()){toast('Enter a coupon code','er');return null;}
+  try{
+    const{data,error}=await sb.from('coupons').select('*').eq('code',code.trim().toUpperCase()).eq('is_active',true).maybeSingle();
+    if(error) throw error;
+    if(!data){toast('Invalid or expired coupon','er');return null;}
+    if(data.expires_at&&new Date(data.expires_at)<new Date()){toast('Coupon expired','er');return null;}
+    if(data.max_uses&&(data.use_count||0)>=data.max_uses){toast('Coupon usage limit reached','er');return null;}
+    _activeCoupon=data;
+    toast(`Coupon applied! ${data.discount_pct}% off ✅`,'ok');
+    return data;
+  }catch(e){toast('Invalid coupon','er');return null;}
+}
+window.applyCoupon=applyCoupon;
+
+/* ── FEATURE 32: THEME SAVED TO DB ──────────────────────────── */
+async function setTheme(t){
+  localStorage.setItem('nd-theme',t);
+  document.documentElement.setAttribute('data-theme',
+    t==='auto'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t);
+  document.querySelectorAll('.theme-opt').forEach(el=>el.classList.toggle('on',el.dataset.theme===t));
+  if(_user&&sb) sb.from('profiles').update({theme_preference:t}).eq('id',_user.id).catch(()=>{});
+  toast(t==='dark'?'Dark mode':'Light mode'+' enabled 🎨','nf');
+}
+window.setTheme=setTheme;
+
+/* ── FEATURE 38: ACCESSIBILITY ────────────────────────────────── */
+function initAccessibility(){
+  if(localStorage.getItem('nd-large-text')==='1') document.documentElement.classList.add('large-text');
+  if(localStorage.getItem('nd-high-contrast')==='1') document.documentElement.classList.add('high-contrast');
+}
+function toggleLargeText(on){ localStorage.setItem('nd-large-text',on?'1':'0'); document.documentElement.classList.toggle('large-text',on); toast(on?'Large text on':'Large text off','nf'); }
+function toggleHighContrast(on){ localStorage.setItem('nd-high-contrast',on?'1':'0'); document.documentElement.classList.toggle('high-contrast',on); toast(on?'High contrast on':'High contrast off','nf'); }
+window.toggleLargeText=toggleLargeText; window.toggleHighContrast=toggleHighContrast;
+
+/* ── FEATURE 37: KISWAHILI / EN ──────────────────────────────── */
+let _lang=localStorage.getItem('nd-lang')||'en';
+function setLang(l){ _lang=l; localStorage.setItem('nd-lang',l); toast(l==='sw'?'Kiswahili ✅':'English ✅','nf'); }
+window.setLang=setLang;
+
+/* ── FEATURE 48: DATA EXPORT ─────────────────────────────────── */
+async function exportUserData(){
+  if(!_user||!_profile){toast('Sign in first','er');return;}
+  toast('Preparing export…','nf',2000);
+  try{
+    const[rr,nr,notifr]=await Promise.all([
+      sb.from('service_requests').select('*').eq('user_id',_user.id),
+      sb.from('notes').select('*').eq('user_id',_user.id),
+      sb.from('notifications').select('*').eq('user_id',_user.id)
+    ]);
+    const blob=new Blob([JSON.stringify({exported_at:new Date().toISOString(),profile:_profile,requests:rr.data||[],notes:nr.data||[],notifications:notifr.data||[]},null,2)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+    a.download=`novadesk-${(_user.id||'').substring(0,8)}-${new Date().toISOString().split('T')[0]}.json`;
+    a.click(); URL.revokeObjectURL(a.href);
+    toast('Data exported ✅','ok');
+  }catch(e){toast(e.message||'Export failed','er');}
+}
+window.exportUserData=exportUserData;
+
+/* ── FEATURE 33: BIOMETRIC LOGIN ─────────────────────────────── */
+async function registerBiometric(){
+  if(!_user){toast('Sign in first','er');return;}
+  if(!window.PublicKeyCredential){toast('Biometrics not supported on this device','er');return;}
+  try{
+    const cred=await navigator.credentials.create({publicKey:{
+      challenge:crypto.getRandomValues(new Uint8Array(32)),
+      rp:{name:'NovaDeskOnline',id:location.hostname},
+      user:{id:new TextEncoder().encode(_user.id),name:_profile?.email||_user.email,displayName:_profile?.full_name||'User'},
+      pubKeyCredParams:[{alg:-7,type:'public-key'},{alg:-257,type:'public-key'}],
+      authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},
+      timeout:60000
+    }});
+    if(cred){ localStorage.setItem('nd-bio','1'); toast('Biometric login registered ✅ Use fingerprint/face next time!','ok',5000); }
+  }catch(e){ if(e.name!=='NotAllowedError') toast(e.message||'Biometric setup failed','er'); }
+}
+async function biometricSignIn(){
+  if(!window.PublicKeyCredential||!localStorage.getItem('nd-bio')) return false;
+  try{
+    const a=await navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rpId:location.hostname,userVerification:'required',timeout:60000}});
+    return !!a;
+  }catch(e){ return false; }
+}
+window.registerBiometric=registerBiometric; window.biometricSignIn=biometricSignIn;
+
+/* ── FEATURE 47: ADMIN AUDIT LOG ─────────────────────────────── */
+async function logAdminAction(action,details=''){
+  if(!_user||!sb) return;
+  try{ await sb.from('admin_audit_log').insert({admin_id:_user.id,action,details:String(details).substring(0,500),created_at:new Date().toISOString()}); }catch(e){}
+}
+window.logAdminAction=logAdminAction;
+
+/* ── FEATURE 36: OFFLINE QUEUE ────────────────────────────────── */
+function initOfflineDetect(){
+  window.addEventListener('offline',()=>toast('You\'re offline. Requests will be saved and submitted when you reconnect.','nf',5000));
+  window.addEventListener('online', ()=>{ toast('Back online! ✅','ok',3000); });
+}
+
+/* ── FEATURE 40: USAGE TRACKING ─────────────────────────────── */
+function trackView(screen){
+  if(!sb||!_user) return;
+  sb.from('app_analytics').insert({user_id:_user.id,screen,ts:new Date().toISOString()}).catch(()=>{});
+}
+window.trackView=trackView;
+
+/* ── FEATURE 20: SERVICE AVAILABILITY ────────────────────────── */
+async function setServiceAvailability(svcId,status){
+  await sb.from('services').update({availability:status}).eq('id',svcId);
+  toast(`Service marked as ${status}`,'ok');
+  loadServices();
+}
+window.setServiceAvailability=setServiceAvailability;
+
+console.log('%c NovaDeskOnline v2.0 ','background:#0066ff;color:#fff;font-size:1rem;font-weight:bold;border-radius:4px;padding:2px 8px');
+console.log('%c Built for Kemera, Nyamira ','color:#5aaeff;font-size:.8rem');
+</script>
 </body>
 </html>
