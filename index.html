@@ -129,6 +129,8 @@ body:has(#splash:not(.gone)) .fab-wa{opacity:0;pointer-events:none}
 /* ── SHELL ──────────────────────────────────────────────────────── */
 #shell{max-width:430px;min-height:100dvh;margin:0 auto;position:relative;background:var(--bg)}
 #screens{padding-top:var(--top);padding-bottom:var(--nav)}
+/* When PWA banner is showing, push content up a little */
+body.pwa-showing #screens{padding-bottom:calc(var(--nav) + 80px)}
 .scr{display:none}.scr.on{display:block;animation:scrIn .22s var(--ease)}
 @keyframes scrIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
@@ -150,7 +152,7 @@ body:has(#splash:not(.gone)) .fab-wa{opacity:0;pointer-events:none}
 .tact-badge{position:absolute;top:4px;right:3px;min-width:15px;height:15px;background:var(--gold);color:#000;font-size:.46rem;font-weight:700;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1}
 
 /* ── BOTTOM NAV ─────────────────────────────────────────────────── */
-#botnav{position:fixed;bottom:0;width:100%;max-width:430px;height:var(--nav);z-index:var(--zi);background:var(--bg2);border-top:1px solid var(--bd);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:stretch;padding-bottom:env(safe-area-inset-bottom,0);transition:background .3s}
+#botnav{position:fixed;bottom:0;width:100%;max-width:430px;height:var(--nav);z-index:500;background:var(--bg2);border-top:1px solid var(--bd);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:stretch;padding-bottom:env(safe-area-inset-bottom,0);transition:background .3s}
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:transparent;color:var(--t3);font-size:.48rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:color .2s;position:relative;padding-bottom:2px;-webkit-tap-highlight-color:transparent;outline:none}
 .ni i{font-size:1rem;transition:transform .2s var(--ease)}
 .ni.on{color:var(--gold)}.ni.on i{transform:translateY(-2px);color:var(--gold)}
@@ -598,6 +600,8 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 /* Hide bottom nav and account tabs when admin panel is open */
 body.admin-open #botnav,
 body.admin-open .acct-tabs{ pointer-events:none; }
+/* Botnav always on top of banners/toasts */
+#botnav{ z-index:500 !important; }
 .admin-nav-tab{flex-shrink:0;padding:10px 14px;font-size:.65rem;font-weight:600;letter-spacing:.06em;border:none;background:transparent;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;display:flex;align-items:center;gap:5px;white-space:nowrap;position:relative}
 .admin-nav-tab.on{color:var(--gold);border-bottom-color:var(--gold)}
 .admin-tab-badge{position:absolute;top:6px;right:4px;min-width:15px;height:15px;background:var(--red);color:#fff;font-size:.44rem;font-weight:700;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px}
@@ -942,7 +946,7 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 [data-theme="dark"] .svc-list-name{color:var(--t1)}
 [data-theme="dark"] .svc-list-price{color:var(--gold)}
 
-.pwa-banner{position:fixed;bottom:calc(var(--nav) + 10px);left:50%;transform:translateX(-50%) translateY(120%);width:calc(100% - 24px);max-width:406px;background:linear-gradient(135deg,#0f1e3a,#162a50);border:1px solid rgba(77,158,255,.45);border-radius:20px;z-index:var(--zs);transition:transform .42s cubic-bezier(.34,1.56,.64,1);box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.pwa-banner{position:fixed;bottom:calc(var(--nav) + 10px);left:50%;transform:translateX(-50%) translateY(200px);width:calc(100% - 24px);max-width:406px;background:linear-gradient(135deg,#0f1e3a,#162a50);border:1px solid rgba(77,158,255,.45);border-radius:20px;z-index:400;transition:transform .42s cubic-bezier(.34,1.56,.64,1);box-shadow:0 12px 40px rgba(0,0,0,.6)}
 .pwa-banner.show{transform:translateX(-50%) translateY(0)}
 
 /* ── AUTH ACTION CARDS ─────────────────────────────────────────── */
@@ -957,7 +961,7 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 </style>
 <style>
 /* ── PWA INSTALL BANNER ─────────────────────────────────────────── */
-#pwa-install-bar{position:fixed;bottom:var(--nav);left:0;right:0;max-width:430px;margin:0 auto;z-index:calc(var(--zt)+10);background:linear-gradient(135deg,var(--bg2),var(--bg3));border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:10px 14px;display:flex;align-items:center;gap:10px;transform:translateY(100%);transition:transform .35s var(--ease);box-shadow:0 -4px 20px rgba(0,0,0,.4)}
+#pwa-install-bar{position:fixed;bottom:calc(var(--nav) + 10px);left:10px;right:10px;max-width:410px;margin:0 auto;z-index:400;background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--gold-a25);border-radius:16px;padding:10px 12px;display:flex;align-items:center;gap:10px;transform:translateY(200px);transition:transform .42s cubic-bezier(.34,1.2,.64,1);box-shadow:0 4px 24px rgba(0,0,0,.5)}
 #pwa-install-bar.show{transform:translateY(0)}
 #pwa-install-bar .pwa-icon{width:40px;height:40px;border-radius:10px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
 #pwa-install-bar .pwa-body{flex:1;min-width:0}
@@ -2522,8 +2526,8 @@ body.admin-open .acct-tabs{ pointer-events:none; }
     <div class="pwa-title">Install NovaDeskOnline</div>
     <div class="pwa-sub">Works offline · Faster · Feels native</div>
   </div>
-  <button class="btn btn-gold btn-xs" onclick="triggerPWAInstall()" style="flex-shrink:0">Install</button>
-  <button onclick="dismissPWABanner()" style="background:none;border:none;color:var(--t3);cursor:pointer;padding:4px;font-size:1rem">✕</button>
+  <button class="btn btn-gold btn-xs" onclick="triggerPWAInstall()" style="flex-shrink:0;padding:8px 14px">Install</button>
+  <button onclick="(function(){var b=document.getElementById('pwa-install-bar');if(b)b.classList.remove('show');document.body.classList.remove('pwa-showing');localStorage.setItem('nd-pwa-dismissed','1');})()" style="background:none;border:none;color:var(--t3);cursor:pointer;padding:6px 8px;font-size:1.1rem;line-height:1;flex-shrink:0" title="Dismiss">✕</button>
 </div>
 
 <!-- ══ GLOBAL SEARCH ══════════════════════════════════════════════ -->
@@ -2844,24 +2848,22 @@ document.addEventListener('keydown', function(e){
 /* ── NAVIGATION ────────────────────────────────────────────────── */
 const NAV_ITEMS = ['home','services','techservices','institution','account','more'];
 function goNav(name) {
-  // If account tab pressed
   if (name === 'account' && !_user) {
-    if (window._guestMode) {
-      // Show guest account screen
-      renderGuestAccount();
-    } else {
-      openAuth();
-    }
-    // Still navigate
+    if (window._guestMode) { renderGuestAccount(); } else { openAuth(); }
   }
   NAV_ITEMS.forEach(n => {
     $(`scr-${n}`)?.classList.toggle('on', n===name);
     $(`ni-${n}`)?.classList.toggle('on', n===name);
   });
   window._currentScreen = name;
-  if (name==='account') renderAccount();
-  if (name==='home') refreshHomeCounts();
+  if (name==='account')     renderAccount();
+  if (name==='home')        refreshHomeCounts();
   if (name==='institution') renderInstitutionScreen();
+  // Always re-render services when navigating to services tab
+  if (name==='services') {
+    if (!_services.length) _services = [...STATIC_SERVICES];
+    renderServices(_svcFilter||'all');
+  }
 }
 function goHome(){ goNav('home'); }
 window.goNav = goNav;
@@ -3412,22 +3414,41 @@ const STATIC_SERVICES = [
   {id:'s28',name:'Flyer Design',       description:'Digital and printable flyer design for events and promos.', icon:'fa-rectangle-ad',    category:'design',   price_label:'From KES 400',      requires_file:false, sort_order:28},
   {id:'s29',name:'Certificate Design', description:'Design and print award and training certificates.',         icon:'fa-certificate',     category:'design',   price_label:'From KES 300',      requires_file:false, sort_order:29},
   {id:'s30',name:'Event Programme',    description:'Design and print event programmes and booklets.',            icon:'fa-calendar-days',   category:'design',   price_label:'From KES 400',      requires_file:true,  sort_order:30},
+  {id:'s31',name:'Company Profile',    description:'Corporate profile design and full-colour printing.',          icon:'fa-building',        category:'docs',     price_label:'From KES 1,000',    requires_file:true,  sort_order:31},
+  {id:'s32',name:'Notarization Assist',description:'Affidavit typing and commissioner of oaths guidance.',        icon:'fa-stamp',           category:'docs',     price_label:'From KES 400',      requires_file:true,  sort_order:32},
+  {id:'s33',name:'ID Card Design',     description:'Custom staff or student ID cards, printed and laminated.',    icon:'fa-id-badge',        category:'print',    price_label:'From KES 80/card',  requires_file:false, sort_order:33},
+  {id:'s34',name:'eSignature Setup',   description:'Set up DocuSign or Adobe Sign on your device.',              icon:'fa-signature',       category:'digital',  price_label:'From KES 200',      requires_file:false, sort_order:34},
+  {id:'s35',name:'Govt Job Reg.',      description:'Register on Ajira, Kazi Mtaani and GovHR portals.',           icon:'fa-person-walking',  category:'govt',     price_label:'From KES 150',      requires_file:false, sort_order:35},
+  {id:'s36',name:'Safaricom Services', description:'Line registration, SIM swap, data bundles, M-Pesa setup.',    icon:'fa-sim-card',        category:'digital',  price_label:'From KES 100',      requires_file:false, sort_order:36},
+  {id:'s37',name:'Bank Statement',     description:'Download and print bank statements from mobile banking.',     icon:'fa-university',      category:'docs',     price_label:'From KES 50',       requires_file:false, sort_order:37},
+  {id:'s38',name:'Bulk SMS Service',   description:'Send bulk SMS alerts for events, schools and businesses.',    icon:'fa-message',         category:'digital',  price_label:'From KES 200',      requires_file:false, sort_order:38},
+  {id:'s39',name:'Online Form Fill',   description:'Fill in online forms and applications on your behalf.',       icon:'fa-list-check',      category:'digital',  price_label:'From KES 100',      requires_file:false, sort_order:39},
+  {id:'s40',name:'Data Bundle Help',   description:'Airtime, bundles and M-Pesa merchant payments.',             icon:'fa-sim-card',        category:'digital',  price_label:'Face value',        requires_file:false, sort_order:40},
+  {id:'s41',name:'Phone Repair Ref.',  description:'Referral to certified phone repair technicians nearby.',      icon:'fa-mobile',          category:'digital',  price_label:'Free referral',     requires_file:false, sort_order:41},
 ];
 
 async function loadServices(){
-  // Always start with static services so page works without Supabase
-  _services = [...STATIC_SERVICES];
-  renderServices('all');
-  renderQuickServices();
-  // Then try to load from DB and refresh
+  // Render static services immediately — works with no internet/Supabase
+  if (!_services.length) {
+    _services = [...STATIC_SERVICES];
+    renderServices('all');
+    renderQuickServices();
+  }
+  // Try to load live services from DB
+  if (!sb) return;
   try {
     const { data } = await sb.from('services').select('*').eq('is_active', true).order('sort_order');
-    if (data && data.length > 0) {
+    if (data?.length) {
       _services = data;
+      window._allServices = data;
       renderServices(_svcFilter || 'all');
       renderQuickServices();
     }
-  } catch(e) { /* DB not configured — static services stay */ }
+  } catch(e) {
+    console.warn('[Services] DB load failed, using static fallback:', e.message);
+  }
+  // Always expose to global for search
+  if (!window._allServices) window._allServices = _services;
 }
 function renderQuickServices(){
   const grid = $('quick-svcs');
@@ -3452,9 +3473,14 @@ function filterServices(cat, el){
 function renderServices(cat){
   const grid = $('svc-grid');
   if (!grid) return;
+  // Guaranteed fallback — never show empty
+  if (!_services || !_services.length) {
+    _services = [...STATIC_SERVICES];
+    window._allServices = _services;
+  }
   const q = (_svcSearchTerm||'').toLowerCase();
-  let list = cat==='all' ? [..._services] : _services.filter(s=>s.category===cat);
-  if (q) list = list.filter(s=>(s.name+' '+s.description+' '+s.category).toLowerCase().includes(q));
+  let list = (!cat || cat==='all') ? [..._services] : _services.filter(s=>s.category===cat);
+  if (q) list = list.filter(s=>(s.name+' '+(s.description||'')+' '+s.category).toLowerCase().includes(q));
   if (!list.length) {
     grid.innerHTML='<div style="grid-column:1/-1" class="empty-state"><i class="fas fa-layer-group"></i><h3>No services found</h3><p>Try a different search or category.</p></div>';
     return;
@@ -5098,7 +5124,11 @@ function closeAllModals(){
 
 /* ── BOOT ──────────────────────────────────────────────────────── */
 async function init(){
-  // Capture referral code from URL before anything
+  // Pre-render static services immediately so screen is never blank
+  _services = [...STATIC_SERVICES];
+  window._allServices = _services;
+  renderServices('all');
+  renderQuickServices();
   (function(){
     const p = new URLSearchParams(window.location.search);
     const r = p.get('ref');
@@ -6765,52 +6795,74 @@ window.copyUserId = copyUserId;
 let _deferredPrompt = null;
 
 function initPWAInstall(){
-  if (localStorage.getItem('nd-pwa-dismissed')) return;
-  // Chrome/Android — intercept the native prompt
-  window.addEventListener('beforeinstallprompt', e => {
+  if(window.matchMedia('(display-mode: standalone)').matches){
+    localStorage.setItem('nd-pwa-installed','1'); return;
+  }
+  if(localStorage.getItem('nd-pwa-installed')) return;
+  // Show after 4s if not dismissed
+  setTimeout(showPWAInstallBar, 4000);
+  // Chrome/Android native prompt
+  window.addEventListener('beforeinstallprompt', e=>{
     e.preventDefault();
     _deferredPrompt = e;
-    // Show banner after 5 seconds if not already installed
-    if (!localStorage.getItem('nd-pwa-installed') && !window.matchMedia('(display-mode: standalone)').matches) {
-      setTimeout(()=>$('pwa-install-bar')?.classList.add('show'), 5000);
-    }
+    showPWAInstallBar();
   });
-  window.addEventListener('appinstalled', () => {
-    $('pwa-install-bar')?.classList.remove('show');
+  window.addEventListener('appinstalled', ()=>{
+    dismissPWABanner(true);
     localStorage.setItem('nd-pwa-installed','1');
-    toast('NovaDeskOnline installed successfully! 🎉','ok',5000);
+    toast('NovaDeskOnline installed! Open from your home screen 🎉','ok',5000);
   });
-  // If already running as standalone PWA, hide install bar
-  if (window.matchMedia('(display-mode: standalone)').matches) {
-    localStorage.setItem('nd-pwa-installed','1');
+}
+
+function dismissPWABanner(permanent){
+  $('pwa-install-bar')?.classList.remove('show');
+  document.body.classList.remove('pwa-showing');
+  const ob=$('pwa-banner');
+  if(ob){ ob.style.transform='translateX(-50%) translateY(200px)'; setTimeout(()=>{ob.style.display='none';},400); }
+  if(permanent!==false){
+    localStorage.setItem('nd-pwa-dismissed','1');
+    localStorage.setItem('nd-pwa-dismiss-ts', Date.now().toString());
   }
 }
+function showPWAInstallBar(){
+  if(localStorage.getItem('nd-pwa-dismissed')) return;
+  if(localStorage.getItem('nd-pwa-installed')) return;
+  if(window.matchMedia('(display-mode: standalone)').matches) return;
+  $('pwa-install-bar')?.classList.add('show');
+  document.body.classList.add('pwa-showing');
+}
+window.showPWAInstallBar = showPWAInstallBar;
 
 async function triggerPWAInstall(){
   if (_deferredPrompt) {
+    // Native Android/Chrome install
+    dismissPWABanner(false);
     _deferredPrompt.prompt();
     const { outcome } = await _deferredPrompt.userChoice;
     _deferredPrompt = null;
-    $('pwa-install-bar')?.classList.remove('show');
-    if (outcome === 'accepted') toast('Installing…','ok');
+    if (outcome==='accepted') {
+      toast('Installing NovaDeskOnline… 📲','ok',3000);
+    } else {
+      // They cancelled — show again next time
+      localStorage.removeItem('nd-pwa-dismissed');
+    }
   } else if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+    dismissPWABanner(false);
     popup(
-      'Install on iPhone/iPad',
-      '1. Tap the Share button (□↑) at the bottom of Safari\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm',
+      'Install on iPhone',
+      '1. Tap the Share button (□↑) at the bottom of Safari\n2. Scroll down and tap "Add to Home Screen"\n3. Tap Add — done!',
       'nf',
-      [{label:'Got it',fn:null,style:'btn-gold'}]
+      [{label:'Got it ✓', fn:null, style:'btn-gold'}]
     );
   } else {
-    toast('Open this site in Chrome or Edge to install it as an app','nf',4000);
+    // Running from file:// or unsupported browser
+    popup(
+      'How to Install',
+      '1. Upload these files to Vercel (free)\n2. Open your Vercel URL in Chrome\n3. Tap INSTALL when the banner appears\n\nThis installs it as a real app with no browser bar.',
+      'nf',
+      [{label:'OK', fn:null, style:'btn-gold'}]
+    );
   }
-}
-
-function dismissPWABanner(persist){
-  // Hide both the new bar and the old banner
-  $('pwa-install-bar')?.classList.remove('show');
-  const oldBanner = $('pwa-banner');
-  if (oldBanner) { oldBanner.style.transform='translateX(-50%) translateY(130%)'; setTimeout(()=>{oldBanner.style.display='none';},450); }
-  if (persist !== false) localStorage.setItem('nd-pwa-dismissed','1');
 }
 
 async function registerServiceWorker(){
