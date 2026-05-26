@@ -6,6 +6,8 @@
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.supabase.co https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com https://api.qrserver.com https://wa.me; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.supabase.co https://api.qrserver.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;">
+<meta http-equiv="Permissions-Policy" content="camera=(self), microphone=(), geolocation=(self)">
 <title>NovaDeskOnline · Cyber Services</title>
 <meta name="description" content="Fast, affordable cyber services in Kemera, Nyamira — printing, scanning, CV writing, government services and more.">
 <meta name="theme-color" content="#0066ff">
@@ -119,18 +121,23 @@ button,input,textarea,select{font-family:var(--fb)}
 #splash.hide{animation:splashExit .9s cubic-bezier(.4,0,.2,1) forwards;pointer-events:none}
 @keyframes splashExit{0%{opacity:1;transform:translateY(0) scale(1)}40%{opacity:1;transform:translateY(-8px) scale(1.01)}100%{opacity:0;transform:translateY(-24px) scale(1.03)}}
 #splash.gone{display:none}
-@keyframes splashAutoDismiss{0%,85%{opacity:1;pointer-events:all}95%{opacity:0;pointer-events:none}100%{opacity:0;pointer-events:none}}
+/* Safety net: force splash gone after 3.5s no matter what */
+#splash{animation:splashAutoDismiss 3s ease forwards}
+@keyframes splashAutoDismiss{0%,85%{opacity:1;pointer-events:all}100%{opacity:0;pointer-events:none}}
 #splash:not(.gone){animation:splashAutoDismiss 3s ease forwards}
 #splash.hide:not(.gone){animation:splashExit .9s cubic-bezier(.4,0,.2,1) forwards}
 body:has(#splash:not(.gone)) #topbar,
 body:has(#splash:not(.gone)) #botnav,
-body:has(#splash:not(.gone)) .fab-wa{opacity:0;pointer-events:none}
+body:has(#splash:not(.gone)) .fab-wa{opacity:0;pointer-events:none;transition:opacity .4s}
+/* Botnav always clickable after 3.5s no matter what */
+#topbar,#botnav,.fab-wa{animation:showAfterSplash 0s 3.5s forwards}
+@keyframes showAfterSplash{to{opacity:1!important;pointer-events:all!important}}
 
 /* ── SHELL ──────────────────────────────────────────────────────── */
 #shell{max-width:430px;min-height:100dvh;margin:0 auto;position:relative;background:var(--bg)}
 #screens{padding-top:var(--top);padding-bottom:var(--nav)}
-/* When PWA banner is showing, push content up a little */
-body.pwa-showing #screens{padding-bottom:calc(var(--nav) + 80px)}
+/* When PWA banner shows at top, push content down slightly */
+body.pwa-showing #screens{padding-top:calc(var(--top) + 68px)}
 .scr{display:none}.scr.on{display:block;animation:scrIn .22s var(--ease)}
 @keyframes scrIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
@@ -946,7 +953,7 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 [data-theme="dark"] .svc-list-name{color:var(--t1)}
 [data-theme="dark"] .svc-list-price{color:var(--gold)}
 
-.pwa-banner{position:fixed;bottom:calc(var(--nav) + 10px);left:50%;transform:translateX(-50%) translateY(200px);width:calc(100% - 24px);max-width:406px;background:linear-gradient(135deg,#0f1e3a,#162a50);border:1px solid rgba(77,158,255,.45);border-radius:20px;z-index:400;transition:transform .42s cubic-bezier(.34,1.56,.64,1);box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.pwa-banner{position:fixed;top:calc(var(--top) + 8px);left:50%;transform:translateX(-50%) translateY(calc(-100% - var(--top) - 20px));width:calc(100% - 24px);max-width:406px;background:linear-gradient(135deg,#0f1e3a,#162a50);border:1px solid rgba(77,158,255,.45);border-radius:20px;z-index:450;transition:transform .42s cubic-bezier(.34,1.56,.64,1);box-shadow:0 12px 40px rgba(0,0,0,.6)}
 .pwa-banner.show{transform:translateX(-50%) translateY(0)}
 
 /* ── AUTH ACTION CARDS ─────────────────────────────────────────── */
@@ -961,7 +968,7 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 </style>
 <style>
 /* ── PWA INSTALL BANNER ─────────────────────────────────────────── */
-#pwa-install-bar{position:fixed;bottom:calc(var(--nav) + 10px);left:10px;right:10px;max-width:410px;margin:0 auto;z-index:400;background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--gold-a25);border-radius:16px;padding:10px 12px;display:flex;align-items:center;gap:10px;transform:translateY(200px);transition:transform .42s cubic-bezier(.34,1.2,.64,1);box-shadow:0 4px 24px rgba(0,0,0,.5)}
+#pwa-install-bar{position:fixed;top:calc(var(--top) + 8px);left:10px;right:10px;max-width:410px;margin:0 auto;z-index:450;background:linear-gradient(135deg,#0d1e3a,#162a50);border:1px solid rgba(90,174,255,.35);border-radius:16px;padding:10px 12px;display:flex;align-items:center;gap:10px;transform:translateY(calc(-100% - var(--top) - 20px));transition:transform .42s cubic-bezier(.34,1.2,.64,1);box-shadow:0 4px 24px rgba(0,0,0,.6)}
 #pwa-install-bar.show{transform:translateY(0)}
 #pwa-install-bar .pwa-icon{width:40px;height:40px;border-radius:10px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
 #pwa-install-bar .pwa-body{flex:1;min-width:0}
@@ -2151,7 +2158,17 @@ body.admin-open .acct-tabs{ pointer-events:none; }
       <div class="auth-field-row"><div class="auth-field-icon"><i class="fas fa-id-card"></i></div><div class="fg" style="flex:1;margin:0"><label class="flbl">National ID Number <span class="req">*</span></label><input class="fi" id="reg-id" type="text" placeholder="e.g. 12345678" maxlength="16" autocomplete="off"><div class="form-hint"><i class="fas fa-lock" style="font-size:.5rem"></i> Cannot be changed later</div></div></div>
       <div class="auth-field-row"><div class="auth-field-icon"><i class="fas fa-envelope"></i></div><div class="fg" style="flex:1;margin:0"><label class="flbl">Email Address <span class="req">*</span></label><input class="fi" id="reg-email" type="email" placeholder="you@example.com" autocomplete="email"></div></div>
       <div class="auth-field-row"><div class="auth-field-icon" style="color:#25D366"><i class="fab fa-whatsapp"></i></div><div class="fg" style="flex:1;margin:0"><label class="flbl">WhatsApp Number <span class="req">*</span></label><input class="fi" id="reg-wa" type="tel" placeholder="e.g. 0712345678" autocomplete="tel"></div></div>
-      <div class="auth-field-row"><div class="auth-field-icon"><i class="fas fa-lock"></i></div><div class="fg" style="flex:1;margin:0;position:relative"><label class="flbl">Password <span class="req">*</span></label><input class="fi" id="reg-pw" type="password" placeholder="Min. 8 characters" autocomplete="new-password" style="padding-right:42px"><button type="button" onclick="togglePw('reg-pw','reg-eye')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="reg-eye"><i class="fas fa-eye"></i></button></div></div>
+      <div class="auth-field-row"><div class="auth-field-icon"><i class="fas fa-lock"></i></div><div class="fg" style="flex:1;margin:0;position:relative"><label class="flbl">Password <span class="req">*</span></label><input class="fi" id="reg-pw" type="password" placeholder="Min. 8 characters" autocomplete="new-password" oninput="updatePwStrength(this.value)" style="padding-right:42px"><button type="button" onclick="togglePw('reg-pw','reg-eye')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="reg-eye"><i class="fas fa-eye"></i></button></div></div>
+      <!-- Password strength meter -->
+      <div id="pw-strength-wrap" style="margin:-8px 0 6px;padding:0 4px;display:none">
+        <div style="display:flex;gap:3px;margin-bottom:3px">
+          <div id="ps-1" style="flex:1;height:3px;border-radius:2px;background:var(--bg4);transition:background .3s"></div>
+          <div id="ps-2" style="flex:1;height:3px;border-radius:2px;background:var(--bg4);transition:background .3s"></div>
+          <div id="ps-3" style="flex:1;height:3px;border-radius:2px;background:var(--bg4);transition:background .3s"></div>
+          <div id="ps-4" style="flex:1;height:3px;border-radius:2px;background:var(--bg4);transition:background .3s"></div>
+        </div>
+        <div id="pw-strength-lbl" style="font-size:.58rem;color:var(--t3)"></div>
+      </div>
       <div class="auth-field-row"><div class="auth-field-icon"><i class="fas fa-shield-check"></i></div><div class="fg" style="flex:1;margin:0;position:relative"><label class="flbl">Confirm Password <span class="req">*</span></label><input class="fi" id="reg-pw2" type="password" placeholder="Repeat password" autocomplete="new-password" style="padding-right:42px"><button type="button" onclick="togglePw('reg-pw2','reg-eye2')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="reg-eye2"><i class="fas fa-eye"></i></button></div></div>
       <div id="reg-err" class="ferr" style="margin-bottom:12px"></div>
       <button class="btn btn-gold btn-full" id="reg-btn" onclick="doRegister()" style="padding:13px;font-size:.76rem"><i class="fas fa-user-plus"></i> Create Account — Free</button>
@@ -2666,6 +2683,28 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 
 <script>
 /* ════════════════════════════════════════════════════════════════════
+   NOVADESK ONLINE v2.0 — Production Build
+   © NovaDeskOnline, Kemera Nyamira. All rights reserved.
+════════════════════════════════════════════════════════════════════ */
+
+/* ── PRODUCTION LOGGER — silent in prod, active in dev ─────────── */
+const isDev = window.location.hostname === 'localhost' || window.location.protocol === 'content:';
+const log = {
+  info:  (...a) => isDev && console.info('[ND]', ...a),
+  warn:  (...a) => isDev && console.warn('[ND]', ...a),
+  error: (...a) => console.error('[ND Error]', ...a),
+};
+
+/* ── GLOBAL ERROR HANDLER ──────────────────────────────────────── */
+window.onerror = function(msg, src, line, col, err) {
+  log.error('Uncaught:', msg, 'at', src, line+':'+col);
+  return false; // Let browser handle too
+};
+window.addEventListener('unhandledrejection', e => {
+  log.error('Unhandled Promise rejection:', e.reason);
+});
+
+/* ════════════════════════════════════════════════════════════════════
    == CONFIG — Multi-source secure loader ==
    Priority: 1) /api/config (Vercel)  2) localStorage cache
              3) meta tags  4) hardcoded fallback (dev only)
@@ -2693,7 +2732,7 @@ async function loadSecureConfig() {
         return true;
       }
     }
-  } catch(e) { console.warn('[Config] API unavailable, trying fallbacks'); }
+  } catch(e) { log.warn('Config API unavailable, trying fallbacks'); }
 
   // 2 — localStorage cache (works offline + file://)
   try {
@@ -2701,7 +2740,7 @@ async function loadSecureConfig() {
     if (c.u && c.k) {
       SB_URL=c.u; SB_KEY=c.k; WA_NUM=c.w||WA_NUM; SITE=c.s||SITE; ADMIN_SECRET=c.a||ADMIN_SECRET;
       _configLoaded=true;
-      console.log('[Config] Loaded from cache');
+      log.info('Config loaded from cache');
       return true;
     }
   } catch(e) {}
@@ -2711,7 +2750,7 @@ async function loadSecureConfig() {
   const mk = document.querySelector('meta[name="nd-sb-key"]')?.content;
   if (mu && mk && !mu.includes('YOUR_PROJECT')) {
     SB_URL=mu; SB_KEY=mk; _configLoaded=true;
-    console.log('[Config] Loaded from meta tags');
+    log.info('Config loaded from meta tags');
     return true;
   }
 
@@ -2758,7 +2797,8 @@ const fmtRel = d => {
 const sanitize = s => (s||'').trim().replace(/<[^>]*>/g,'').substring(0,5000);
 const sanitizeShort = (s,n=200) => sanitize(s).substring(0,n);
 const isValidPhone = p => /^0[0-9]{9}$|^\+254[0-9]{9}$|^254[0-9]{9}$/.test((p||'').replace(/\s/g,''));
-const isValidId = id => /^[0-9]{6,16}$/.test((id||'').replace(/\s/g,''));
+const isValidId    = id => /^[0-9]{6,16}$/.test((id||'').replace(/\s/g,''));
+const isValidEmail = e => /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test((e||'').trim());
 const formatFileSize = bytes => {
   if (!bytes) return '';
   if (bytes < 1024) return bytes+'B';
@@ -2903,6 +2943,29 @@ function togglePw(inputId, btnId){
   if (btn) btn.innerHTML = inp.type==='password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
 }
 
+function updatePwStrength(pw){
+  const wrap = $('pw-strength-wrap');
+  const lbl  = $('pw-strength-lbl');
+  if (!wrap) return;
+  wrap.style.display = pw.length ? 'block' : 'none';
+  // Score password
+  let score = 0;
+  if (pw.length >= 8)  score++;
+  if (pw.length >= 12) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  const lvl = score <= 1 ? 1 : score <= 2 ? 2 : score <= 3 ? 3 : 4;
+  const colors = ['','#e05050','#f0a500','#0066ff','#32B464'];
+  const labels = ['','Weak — add numbers or symbols','Fair — try a longer password','Good','Strong ✓'];
+  for (let i=1;i<=4;i++) {
+    const el = $('ps-'+i);
+    if (el) el.style.background = i<=lvl ? colors[lvl] : 'var(--bg4)';
+  }
+  if (lbl) { lbl.textContent = labels[lvl]||''; lbl.style.color = colors[lvl]||'var(--t3)'; }
+}
+window.updatePwStrength = updatePwStrength;
+
 /* ── REGISTER ──────────────────────────────────────────────────── */
 async function doRegister(){
   const name   = sanitizeShort($('reg-name')?.value || '');
@@ -2916,13 +2979,17 @@ async function doRegister(){
   const btn    = $('reg-btn');
 
   err.style.display='none';
-  if (!name) { err.textContent='Please enter your full name.'; err.style.display='block'; return; }
+  if (!name || name.length < 2) { err.textContent='Please enter your full name (at least 2 characters).'; err.style.display='block'; return; }
   if (!isValidId(idNum)) { err.textContent='Enter a valid ID number (6–16 digits).'; err.style.display='block'; return; }
-  if (!email || !email.includes('@')) { err.textContent='Enter a valid email address.'; err.style.display='block'; return; }
+  if (!isValidEmail(email)) { err.textContent='Enter a valid email address (e.g. name@gmail.com).'; err.style.display='block'; return; }
   if (!isValidPhone(wa)) { err.textContent='Enter a valid WhatsApp number (e.g. 0712345678).'; err.style.display='block'; return; }
   if (alt && !isValidPhone(alt)) { err.textContent='Enter a valid alternative phone number or leave it blank.'; err.style.display='block'; return; }
-  if (pw.length < 8) { err.textContent='Password must be at least 8 characters.'; err.style.display='block'; return; }
+  if (pw.length < 8) { err.textContent='Password must be at least 8 characters long.'; err.style.display='block'; return; }
+  if (!/[A-Z]/.test(pw) && !/[0-9]/.test(pw)) { err.textContent='Password must contain at least one number or uppercase letter.'; err.style.display='block'; return; }
   if (pw !== pw2) { err.textContent='Passwords do not match. Please check and try again.'; err.style.display='block'; return; }
+  // Prevent trivially weak passwords
+  const trivial = ['12345678','password','00000000','11111111','qwertyui','abcdefgh'];
+  if (trivial.includes(pw.toLowerCase())) { err.textContent='Password is too common. Please choose a stronger password.'; err.style.display='block'; return; }
 
   btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Creating account…';
   try {
@@ -2975,6 +3042,37 @@ async function doRegister(){
 }
 
 /* ── SIGN IN ───────────────────────────────────────────────────── */
+/* ── LOGIN RATE LIMITING (brute-force protection) ──────────────── */
+const _loginLimiter = {
+  key:      'nd-login-attempts',
+  lockKey:  'nd-login-lockout',
+  maxTries:  3,
+  lockMs:    5 * 60 * 1000, // 5 minutes
+  get attempts(){ try{ return JSON.parse(localStorage.getItem(this.key)||'{"n":0,"t":0}'); }catch(e){return{n:0,t:0};} },
+  set attempts(v){ localStorage.setItem(this.key, JSON.stringify(v)); },
+  get isLocked(){
+    const lock = parseInt(localStorage.getItem(this.lockKey)||'0');
+    if (!lock) return false;
+    if (Date.now() < lock) return lock;
+    this.reset(); return false;
+  },
+  record(){ const a=this.attempts; a.n++; a.t=Date.now(); this.attempts=a; if(a.n>=this.maxTries){ localStorage.setItem(this.lockKey, Date.now()+this.lockMs); } },
+  reset(){ localStorage.removeItem(this.key); localStorage.removeItem(this.lockKey); },
+  remaining(){ const lock=this.isLocked; if(!lock) return 0; return Math.ceil((lock-Date.now())/1000); }
+};
+
+function _startLockoutTimer(errEl, btnEl){
+  const tick = ()=>{
+    const secs = _loginLimiter.remaining();
+    if (!secs) { if(errEl) errEl.textContent='You can try again now.'; if(btnEl){btnEl.disabled=false;btnEl.innerHTML='<i class="fas fa-arrow-right-to-bracket"></i> Sign In';} return; }
+    const m=Math.floor(secs/60), s=secs%60;
+    if(errEl) errEl.textContent = `Too many failed attempts. Please wait ${m}:${s.toString().padStart(2,'0')} before trying again.`;
+    if(btnEl) btnEl.disabled=true;
+    setTimeout(tick, 1000);
+  };
+  tick();
+}
+
 async function doSignIn(){
   const idOrEmail = ($('si-id')?.value || '').trim();
   const pw        = $('si-pw')?.value || '';
@@ -2985,35 +3083,35 @@ async function doSignIn(){
   if (!idOrEmail) { err.textContent='Enter your ID, phone number or email.'; err.style.display='block'; return; }
   if (!pw) { err.textContent='Enter your password.'; err.style.display='block'; return; }
 
+  // ── Brute-force check ──
+  const lockUntil = _loginLimiter.isLocked;
+  if (lockUntil) {
+    err.style.display='block';
+    _startLockoutTimer(err, btn);
+    return;
+  }
+
   btn.disabled=true; btn.innerHTML='<span class="spin"></span> Signing in…';
 
   try {
     let email = idOrEmail;
 
     if (idOrEmail.includes('@')) {
-      // It's an email — use directly
       email = idOrEmail;
     } else if (/^[0-9]{6,}$/.test(idOrEmail.replace(/[+\s-]/g,''))) {
-      // Pure digits — could be ID number or phone number — try both
       const cleanPhone = idOrEmail.replace(/[+\s-]/g,'');
-      // Try ID number first
       const { data: profById } = await sb.from('profiles').select('email').eq('id_number', idOrEmail).maybeSingle();
       if (profById?.email) {
         email = profById.email;
       } else {
-        // Try WhatsApp number (store with or without country code)
         const { data: profByWa } = await sb.from('profiles')
           .select('email')
           .or(`whatsapp_number.eq.${idOrEmail},whatsapp_number.eq.${cleanPhone},whatsapp_number.eq.+${cleanPhone}`)
           .maybeSingle();
-        if (profByWa?.email) {
-          email = profByWa.email;
-        } else {
-          throw new Error('No account found with that ID or phone number.');
-        }
+        if (profByWa?.email) { email = profByWa.email; }
+        else { throw new Error('No account found with that ID or phone number.'); }
       }
     } else {
-      // Treat as ID number string
       const { data: prof } = await sb.from('profiles').select('email').eq('id_number', idOrEmail).maybeSingle();
       if (!prof?.email) throw new Error('No account found with that ID number.');
       email = prof.email;
@@ -3021,24 +3119,44 @@ async function doSignIn(){
 
     const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
     if (error) throw error;
-    // Navigation and closeAuth handled by onAuthStateChange listener
+
+    // Success — reset limiter
+    _loginLimiter.reset();
     toast('Welcome back! 👋', 'ok');
+
   } catch(e) {
+    // Record failed attempt
+    _loginLimiter.record();
+    const remaining = _loginLimiter.remaining();
+    const attemptsLeft = _loginLimiter.maxTries - _loginLimiter.attempts.n;
+
     const rawMsg = e?.message || '';
     let friendlyMsg;
-    if (rawMsg.toLowerCase().includes('fetch') || rawMsg.toLowerCase().includes('network') || rawMsg.toLowerCase().includes('failed')) {
-      friendlyMsg = 'Cannot connect to server. Please check your internet connection and try again.';
+    if (rawMsg.toLowerCase().includes('fetch') || rawMsg.toLowerCase().includes('network')) {
+      friendlyMsg = 'Cannot connect to server. Check your internet connection.';
     } else if (rawMsg.toLowerCase().includes('invalid') || rawMsg.toLowerCase().includes('credentials') || rawMsg.toLowerCase().includes('password')) {
-      friendlyMsg = 'Incorrect email or password. Please try again.';
+      friendlyMsg = `Incorrect password.${attemptsLeft > 0 && !remaining ? ` ${attemptsLeft} attempt${attemptsLeft===1?'':'s'} remaining.` : ''}`;
     } else if (rawMsg.toLowerCase().includes('no account') || rawMsg.toLowerCase().includes('not found')) {
       friendlyMsg = rawMsg;
+    } else if (rawMsg.toLowerCase().includes('email not confirmed')) {
+      friendlyMsg = 'Please confirm your email address first. Check your inbox for a verification link.';
     } else {
       friendlyMsg = rawMsg || 'Sign in failed. Please try again.';
     }
+
+    if (remaining) {
+      err.style.display='block';
+      _startLockoutTimer(err, btn);
+      return;
+    }
+
     err.textContent = friendlyMsg;
     err.style.display='block';
   } finally {
-    btn.disabled=false; btn.innerHTML='<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
+    if (!_loginLimiter.isLocked) {
+      btn.disabled=false;
+      btn.innerHTML='<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
+    }
   }
 }
 
@@ -3445,7 +3563,7 @@ async function loadServices(){
       renderQuickServices();
     }
   } catch(e) {
-    console.warn('[Services] DB load failed, using static fallback:', e.message);
+    log.warn('Services DB unavailable, using static:', e.message);
   }
   // Always expose to global for search
   if (!window._allServices) window._allServices = _services;
@@ -4073,6 +4191,18 @@ function maybeOpenAdmin(){
   }
 }
 async function openAdmin(){
+  // Double-check role server-side — never trust client _profile alone
+  if (!_user) { toast('Sign in required.','er'); return; }
+  try {
+    const { data: prof, error } = await sb.from('profiles').select('role').eq('id', _user.id).single();
+    if (error || prof?.role !== 'admin') {
+      toast('Access denied. Admin privileges required.','er');
+      log.warn('Unauthorized admin access attempt by', _user.id);
+      return;
+    }
+  } catch(e) {
+    toast('Could not verify permissions.','er'); return;
+  }
   $('admin-panel').classList.add('on');
   document.body.classList.add('admin-open');
   document.body.style.overflow='hidden';
@@ -4202,20 +4332,30 @@ function adminReqRow(r){
 function adminUserRow(u){
   const init = (u.full_name||'?').split(' ').map(w=>w[0]?.toUpperCase()||'').join('').substring(0,2)||'ND';
   const ndId = u.nd_user_id || generateNdUserId(u.id||'');
-  return `<div class="admin-user-row">
-    <div class="admin-user-ava">${u.avatar_url?`<img src="${esc(u.avatar_url)}" alt="">`:init}</div>
+  const isBanned = u.role==='banned';
+  const isAdmin  = u.role==='admin';
+  const statusColor = isBanned ? 'rgba(224,80,80,.12)' : isAdmin ? 'rgba(201,168,76,.12)' : 'rgba(90,174,255,.08)';
+  const statusBorder= isBanned ? 'rgba(224,80,80,.3)' : isAdmin ? 'rgba(201,168,76,.3)' : 'rgba(90,174,255,.2)';
+  const statusTxt   = isBanned ? 'var(--red)' : isAdmin ? 'var(--gold)' : 'var(--blue)';
+  return `<div class="admin-user-row" style="${isBanned?'opacity:.7':''}">
+    <div class="admin-user-ava" style="${isBanned?'background:rgba(224,80,80,.1);border-color:rgba(224,80,80,.3)':''}">${u.avatar_url?`<img src="${esc(u.avatar_url)}" alt="" style="width:100%;height:100%;object-fit:cover">`:init}</div>
     <div class="admin-user-info">
-      <div class="admin-user-name">${esc(u.full_name||'Unknown')}</div>
-      <div class="admin-user-sub" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <div class="admin-user-name" style="display:flex;align-items:center;gap:6px">
+        ${esc(u.full_name||'Unknown')}
+        ${isAdmin?'<i class="fas fa-shield-halved" style="color:var(--gold);font-size:.6rem" title="Admin"></i>':''}
+        ${isBanned?'<i class="fas fa-ban" style="color:var(--red);font-size:.6rem" title="Banned"></i>':''}
+      </div>
+      <div class="admin-user-sub" style="display:flex;flex-direction:column;gap:2px;margin-top:2px">
         <span style="font-family:monospace;color:var(--gold);font-size:.58rem;font-weight:700">${esc(ndId)}</span>
-        <span style="color:var(--t4)">·</span>
-        <span><i class="fab fa-whatsapp" style="color:#25D366"></i> ${esc(u.whatsapp_number||'—')}</span>
+        <span style="color:var(--t4);font-size:.58rem"><i class="fas fa-phone" style="width:11px;color:var(--t4)"></i>${esc(u.whatsapp_number||'—')}</span>
+        <span style="color:var(--t4);font-size:.56rem"><i class="fas fa-calendar" style="width:11px;color:var(--t4)"></i>Joined ${fmt(u.created_at)}</span>
+        ${u.email?`<span style="color:var(--t4);font-size:.56rem"><i class="fas fa-envelope" style="width:11px;color:var(--t4)"></i>${esc(u.email)}</span>`:''}
       </div>
     </div>
     <div class="admin-user-actions">
-      <span class="chip ${u.role==='admin'?'chip-gold':''}" style="font-size:.52rem;${u.role==='banned'?'background:rgba(224,80,80,.12);color:var(--red);border-color:rgba(224,80,80,.3)':''}">${esc(u.role||'user')}</span>
+      <span style="font-size:.52rem;padding:3px 8px;border-radius:20px;background:${statusColor};color:${statusTxt};border:1px solid ${statusBorder};white-space:nowrap">${esc(u.role||'user')}</span>
       <button onclick="event.stopPropagation();adminUserActions('${esc(u.id)}','${esc(u.full_name||'User')}','${esc(u.role||'user')}')"
-        style="width:28px;height:28px;border-radius:7px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.68rem;flex-shrink:0">
+        style="width:30px;height:30px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem;flex-shrink:0;margin-left:4px">
         <i class="fas fa-ellipsis-v"></i>
       </button>
     </div>
@@ -4266,16 +4406,26 @@ function adminOpenReq(reqId){
 }
 window.adminOpenReq = adminOpenReq;
 
+/* ── ADMIN GUARD — called before every mutation ─────────────────── */
+async function _requireAdmin(){
+  if (!_user) throw new Error('Not authenticated');
+  if (_profile?.role !== 'admin') throw new Error('Admin privileges required');
+  return true;
+}
+
 async function adminSetStatus(reqId, newStatus){
+  try { await _requireAdmin(); } catch(e){ toast(e.message,'er'); return; }
   try {
     const { error } = await sb.from('service_requests')
       .update({ status: newStatus, updated_at: new Date().toISOString() })
       .eq('id', reqId);
     if (error) throw error;
     _allReqs = _allReqs.map(r=>r.id===reqId ? {...r, status:newStatus} : r);
-    toast(`Request marked as "${newStatus.replace('_',' ')}".`, 'ok');
+    const req = _allReqs.find(r=>r.id===reqId);
+    if (req?.user_id) await sendStatusNotification(req, newStatus);
+    logAdminAction(`set_status:${newStatus}`, `req:${reqId}`);
+    toast(`Marked as "${newStatus.replace('_',' ')}" ✅`, 'ok');
     renderAdminReqs();
-    // refresh overview too
     $('as-pending').textContent = _allReqs.filter(r=>r.status==='pending').length;
     $('as-done').textContent    = _allReqs.filter(r=>r.status==='completed').length;
     const pending = _allReqs.filter(r=>r.status==='pending').length;
@@ -4315,13 +4465,16 @@ function adminUserActions(userId, userName, currentRole){
 window.adminUserActions = adminUserActions;
 
 async function adminSetUserRole(userId, role){
+  try { await _requireAdmin(); } catch(e){ toast(e.message,'er'); return; }
+  if (userId === _user?.id && role !== 'admin') { toast('You cannot demote your own admin role.','er'); return; }
   try {
     const { error } = await sb.from('profiles').update({ role, updated_at:new Date().toISOString() }).eq('id', userId);
     if (error) throw error;
     _allUsers = _allUsers.map(u=>u.id===userId ? {...u, role} : u);
     renderAdminUsers();
     $('as-users').textContent = _allUsers.length;
-    toast(`User role updated to "${role}".`, 'ok');
+    logAdminAction(`set_role:${role}`, `user:${userId}`);
+    toast(`User role updated to "${role}" ✅`, 'ok');
   } catch(e){ toast(e.message||'Update failed.','er'); }
 }
 window.adminSetUserRole = adminSetUserRole;
@@ -4725,6 +4878,7 @@ async function adminLoadMessages(){
 window.adminLoadMessages = adminLoadMessages;
 
 async function saveAdminSettings(){
+  try { await _requireAdmin(); } catch(e){ toast(e.message,'er'); return; }
   const ann  = $('adm-announcement')?.value||'';
   const hrs  = $('adm-biz-hrs')?.value||'';
   const wa   = $('adm-wa-num')?.value||'';
@@ -5124,19 +5278,24 @@ function closeAllModals(){
 
 /* ── BOOT ──────────────────────────────────────────────────────── */
 async function init(){
-  // Pre-render static services immediately so screen is never blank
+  // ① Dismiss splash IMMEDIATELY — botnav must never be blocked
+  const splash = $('splash');
+  if (splash) {
+    setTimeout(()=>{ splash.classList.add('hide'); setTimeout(()=>splash.classList.add('gone'), 900); }, 1200);
+  }
+
+  // ② Pre-render static services so screen is never blank
   _services = [...STATIC_SERVICES];
   window._allServices = _services;
   renderServices('all');
   renderQuickServices();
+
+  // ③ URL param handling
   (function(){
     const p = new URLSearchParams(window.location.search);
-    const r = p.get('ref');
-    if (r) localStorage.setItem('nd-ref', r);
-    const screen = p.get('screen');
-    if (screen) setTimeout(()=>goNav(screen), 1500);
-    const action = p.get('action');
-    if (action==='request') setTimeout(()=>{ goNav('services'); }, 1600);
+    const r = p.get('ref'); if(r) localStorage.setItem('nd-ref', r);
+    const screen = p.get('screen'); if(screen) setTimeout(()=>goNav(screen), 1500);
+    const action = p.get('action'); if(action==='request') setTimeout(()=>goNav('services'), 1600);
   })();
 
   loadTheme();
@@ -5146,27 +5305,21 @@ async function init(){
   initOfflineDetect();
   window._currentScreen = 'home';
 
-  // Register service worker first (for real PWA install)
-  await registerServiceWorker();
+  // ④ Register SW in background — don't await, don't block UI
+  registerServiceWorker().catch(()=>{});
 
-  // Dismiss splash
-  const splash = $('splash');
-  if (splash) {
-    setTimeout(()=>{ splash.classList.add('hide'); setTimeout(()=>splash.classList.add('gone'), 950); }, 1800);
-  }
-
-  // Load config securely from /api/config
+  // ⑤ Load config (with fast fallback to hardcoded credentials)
   const ok = await loadSecureConfig();
   if (!ok) return;
 
-  // Init Supabase now that we have credentials
+  // ⑥ Init Supabase
   try {
     sb = supabase.createClient(SB_URL, SB_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+      auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true }
     });
-  } catch(e) { console.error('[Init] Supabase init failed:', e); return; }
+  } catch(e) { log.error('Supabase init failed:', e); return; }
 
-  // Load settings and services
+  // ⑦ Load live data in background
   await Promise.all([loadAppSettings(), loadServices()]);
   updateMoreScreen();
   initPWAInstall();
@@ -5174,7 +5327,7 @@ async function init(){
   loadFavourites();
   initBroadcast();
 
-  // Auth listener
+  // ⑧ Start auth listener
   onAuthStateChange();
 }
 
@@ -5182,7 +5335,7 @@ async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   try {
     const reg = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
-    console.log('[SW] Registered:', reg.scope);
+    log.info('[SW] Registered:', reg.scope);
     reg.addEventListener('updatefound', () => {
       const newWorker = reg.installing;
       newWorker?.addEventListener('statechange', () => {
@@ -5199,7 +5352,7 @@ async function registerServiceWorker() {
       } catch(e) {}
     }
   } catch(e) {
-    console.warn('[SW] Registration failed:', e);
+    log.warn('[SW] Registration failed:', e);
   }
 }
 window.registerServiceWorker = registerServiceWorker;
@@ -6720,7 +6873,7 @@ self.addEventListener('fetch',e=>{
     const blob = new Blob([swCode], {type:'text/javascript'});
     const swUrl = URL.createObjectURL(blob);
     navigator.serviceWorker.register(swUrl, {scope:'/'})
-      .then(r=>console.log('[SW] OK scope:', r.scope))
+      .then(r=>log.info('[SW] scope:', r.scope))
       .catch(err=>console.info('[SW] Skipped:', err.message));
   } catch(e){ console.info('[SW] Not available'); }
 })();
@@ -6818,7 +6971,7 @@ function dismissPWABanner(permanent){
   $('pwa-install-bar')?.classList.remove('show');
   document.body.classList.remove('pwa-showing');
   const ob=$('pwa-banner');
-  if(ob){ ob.style.transform='translateX(-50%) translateY(200px)'; setTimeout(()=>{ob.style.display='none';},400); }
+  if(ob){ ob.style.transform='translateX(-50%) translateY(calc(-100% - 80px))'; setTimeout(()=>{ob.style.display='none';},400); }
   if(permanent!==false){
     localStorage.setItem('nd-pwa-dismissed','1');
     localStorage.setItem('nd-pwa-dismiss-ts', Date.now().toString());
@@ -6869,7 +7022,7 @@ async function registerServiceWorker(){
   if (!('serviceWorker' in navigator)) return;
   try {
     const reg = await navigator.serviceWorker.register('/sw.js', { scope:'/' });
-    console.log('[SW] Registered:', reg.scope);
+    log.info('[SW] Registered:', reg.scope);
     // Check for updates
     reg.addEventListener('updatefound', ()=>{
       const nw = reg.installing;
@@ -6889,7 +7042,7 @@ async function registerServiceWorker(){
       if (e.data?.type==='check-updates') loadNotifs?.();
       if (e.data?.type==='request-synced') { toast('Offline request submitted ✅','ok'); loadMyReqs?.(); }
     });
-  } catch(e){ console.warn('[SW] Registration failed:',e.message); }
+  } catch(e){ log.warn('[SW] Registration failed:',e.message); }
 }
 
 window.triggerPWAInstall = triggerPWAInstall;

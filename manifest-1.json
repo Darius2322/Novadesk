@@ -1,0 +1,26 @@
+{
+  "name": "NovaDeskOnline",
+  "short_name": "NovaDeskOnline",
+  "description": "Fast, affordable cyber services — printing, scanning, CV writing, government services and more. Kemera, Nyamira.",
+  "start_url": "/?utm_source=pwa",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#0a0f1e",
+  "theme_color": "#0066ff",
+  "orientation": "portrait-primary",
+  "lang": "en-KE",
+  "scope": "/",
+  "id": "novadesk-online-v2",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Services",   "url": "/?screen=services", "description": "Browse all cyber services"      },
+    { "name": "My Account", "url": "/?screen=account",  "description": "View your account and requests" },
+    { "name": "New Request","url": "/?action=request",  "description": "Submit a new service request"   }
+  ],
+  "prefer_related_applications": false
+}
