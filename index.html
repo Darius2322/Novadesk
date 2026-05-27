@@ -2076,6 +2076,10 @@ body.admin-open .acct-tabs{ pointer-events:none; }
       </div>
       <div style="font-family:var(--fd);font-size:1.1rem;color:var(--gold);margin-bottom:2px">NovaDeskOnline</div>
       <div style="font-size:.62rem;color:var(--t3);letter-spacing:.1em;text-transform:uppercase">Cyber Services Portal</div>
+      <!-- Connection status -->
+      <div id="auth-conn-status" style="display:none;font-size:.6rem;padding:3px 10px;border-radius:20px;margin-top:6px;display:inline-flex;align-items:center;gap:5px;background:rgba(255,165,0,.1);color:#ffa500;border:1px solid rgba(255,165,0,.3)">
+        <span class="spin" style="width:8px;height:8px;border-width:1.5px"></span> Connecting to server…
+      </div>
     </div>
     <!-- Tabs -->
     <div class="auth-tabs">
@@ -2799,6 +2803,25 @@ const sanitizeShort = (s,n=200) => sanitize(s).substring(0,n);
 const isValidPhone = p => /^0[0-9]{9}$|^\+254[0-9]{9}$|^254[0-9]{9}$/.test((p||'').replace(/\s/g,''));
 const isValidId    = id => /^[0-9]{6,16}$/.test((id||'').replace(/\s/g,''));
 const isValidEmail = e => /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test((e||'').trim());
+
+/* ── SHOW ERROR HELPER ─────────────────────────────────────────── */
+function showErr(elId, msg){ const el=$(elId); if(!el) return; el.textContent=msg; el.style.display='block'; }
+function hideErr(elId){ const el=$(elId); if(!el) return; el.style.display='none'; }
+
+/* ── WAIT FOR SUPABASE WITH TIMEOUT ───────────────────────────── */
+function waitForSb(timeoutMs=8000){
+  return new Promise((resolve, reject)=>{
+    if (sb) { resolve(sb); return; }
+    const start = Date.now();
+    const poll  = setInterval(()=>{
+      if (sb) { clearInterval(poll); resolve(sb); return; }
+      if (Date.now()-start > timeoutMs) {
+        clearInterval(poll);
+        reject(new Error('Connection timeout. Please refresh the page and try again.'));
+      }
+    }, 100);
+  });
+}
 const formatFileSize = bytes => {
   if (!bytes) return '';
   if (bytes < 1024) return bytes+'B';
@@ -2925,6 +2948,18 @@ function openAuth(){
   if (_user) { goNav('account'); return; }
   $('auth-modal').classList.add('on');
   showOvl();
+  // Show connection status if Supabase not ready yet
+  const status = $('auth-conn-status');
+  if (status) {
+    if (!sb) {
+      status.style.display = 'inline-flex';
+      // Hide once sb is ready
+      const poll = setInterval(()=>{ if(sb){ status.style.display='none'; clearInterval(poll); } }, 200);
+      setTimeout(()=>{ clearInterval(poll); status.style.display='none'; }, 10000);
+    } else {
+      status.style.display = 'none';
+    }
+  }
 }
 function closeAuth(){ const am=$('auth-modal'); if(am) am.classList.remove('on'); hideOvl(); _ovlLock=false; }
 function authTab(t){
@@ -2968,6 +3003,13 @@ window.updatePwStrength = updatePwStrength;
 
 /* ── REGISTER ──────────────────────────────────────────────────── */
 async function doRegister(){
+  const btn = $('reg-btn');
+  if (!sb) {
+    if(btn){ btn.disabled=true; btn.innerHTML='<span class="spin"></span> Connecting…'; }
+    try { await waitForSb(8000); }
+    catch(e){ if(btn){ btn.disabled=false; btn.innerHTML='<i class="fas fa-user-plus"></i> Create Account'; } showErr('reg-err',e.message); return; }
+    finally { if(btn&&!btn.disabled){ btn.innerHTML='<i class="fas fa-user-plus"></i> Create Account'; } }
+  }
   const name   = sanitizeShort($('reg-name')?.value || '');
   const idNum  = ($('reg-id')?.value || '').replace(/\s/g,'');
   const email  = ($('reg-email')?.value || '').trim().toLowerCase();
@@ -2976,7 +3018,6 @@ async function doRegister(){
   const pw     = $('reg-pw')?.value || '';
   const pw2    = $('reg-pw2')?.value || '';
   const err    = $('reg-err');
-  const btn    = $('reg-btn');
 
   err.style.display='none';
   if (!name || name.length < 2) { err.textContent='Please enter your full name (at least 2 characters).'; err.style.display='block'; return; }
@@ -3074,10 +3115,17 @@ function _startLockoutTimer(errEl, btnEl){
 }
 
 async function doSignIn(){
+  const err = $('si-err');
+  const btn = $('si-btn');
+  // Show loading state while waiting for connection
+  if (!sb) {
+    btn.disabled=true; btn.innerHTML='<span class="spin"></span> Connecting…';
+    try { await waitForSb(8000); }
+    catch(e){ btn.disabled=false; btn.innerHTML='<i class="fas fa-arrow-right-to-bracket"></i> Sign In'; showErr('si-err',e.message); return; }
+    finally { if(!_loginLimiter.isLocked){ btn.disabled=false; btn.innerHTML='<i class="fas fa-arrow-right-to-bracket"></i> Sign In'; } }
+  }
   const idOrEmail = ($('si-id')?.value || '').trim();
   const pw        = $('si-pw')?.value || '';
-  const err       = $('si-err');
-  const btn       = $('si-btn');
 
   err.style.display='none';
   if (!idOrEmail) { err.textContent='Enter your ID, phone number or email.'; err.style.display='block'; return; }
@@ -6948,23 +6996,42 @@ window.copyUserId = copyUserId;
 let _deferredPrompt = null;
 
 function initPWAInstall(){
+  // Already installed — nothing to do
   if(window.matchMedia('(display-mode: standalone)').matches){
     localStorage.setItem('nd-pwa-installed','1'); return;
   }
   if(localStorage.getItem('nd-pwa-installed')) return;
-  // Show after 4s if not dismissed
-  setTimeout(showPWAInstallBar, 4000);
-  // Chrome/Android native prompt
+
+  // Reset dismissed state if we're now on a real HTTPS domain
+  // (user may have dismissed from file:// before, should see banner on Vercel)
+  const dismissedOn = localStorage.getItem('nd-pwa-dismiss-origin');
+  if (dismissedOn && dismissedOn !== window.location.origin) {
+    localStorage.removeItem('nd-pwa-dismissed');
+    localStorage.removeItem('nd-pwa-dismiss-ts');
+    localStorage.removeItem('nd-pwa-dismiss-origin');
+  }
+
+  // ALWAYS capture beforeinstallprompt — even if dismissed before
+  // Chrome fires this once per page load; we must intercept it immediately
   window.addEventListener('beforeinstallprompt', e=>{
     e.preventDefault();
     _deferredPrompt = e;
-    showPWAInstallBar();
+    log.info('PWA: install prompt captured');
+    // Show banner (even if previously dismissed — user is now on real domain)
+    if (!localStorage.getItem('nd-pwa-installed')) showPWAInstallBar();
   });
+
   window.addEventListener('appinstalled', ()=>{
     dismissPWABanner(true);
     localStorage.setItem('nd-pwa-installed','1');
-    toast('NovaDeskOnline installed! Open from your home screen 🎉','ok',5000);
+    _deferredPrompt = null;
+    toast('NovaDeskOnline installed! 🎉 Open it from your home screen.','ok',5000);
   });
+
+  // Show banner after delay if not dismissed
+  if (!localStorage.getItem('nd-pwa-dismissed')) {
+    setTimeout(showPWAInstallBar, 3000);
+  }
 }
 
 function dismissPWABanner(permanent){
@@ -6975,6 +7042,7 @@ function dismissPWABanner(permanent){
   if(permanent!==false){
     localStorage.setItem('nd-pwa-dismissed','1');
     localStorage.setItem('nd-pwa-dismiss-ts', Date.now().toString());
+    localStorage.setItem('nd-pwa-dismiss-origin', window.location.origin);
   }
 }
 function showPWAInstallBar(){
