@@ -1054,6 +1054,95 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 .svc-status-dot.available{background:var(--green)}
 .svc-status-dot.busy{background:#f0a500}
 .svc-status-dot.unavailable{background:var(--red)}
+
+/* ═══════════════════════════════════════════════════════════════
+   DESKTOP / TABLET RESPONSIVE LAYOUT (≥ 600px)
+   ─────────────────────────────────────────────────────────────
+   The app is mobile-first (max-width:430px shell).
+   On desktop, center the shell and give it a floating card look.
+═══════════════════════════════════════════════════════════════ */
+@media (min-width:600px){
+  body{background:#060c18}
+  #shell{width:430px;min-height:100vh;position:relative;margin:0 auto;box-shadow:0 0 60px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06)}
+  /* Center fixed elements within the shell column */
+  #topbar,#botnav{
+    left:calc(50% - 215px) !important;
+    right:auto !important;
+    width:430px !important;
+  }
+  #ovl{
+    left:calc(50% - 215px) !important;
+    right:auto !important;
+    width:430px !important;
+    max-width:430px !important;
+  }
+  /* Auth modal */
+  #auth-modal{
+    left:calc(50% - 215px) !important;
+    right:auto !important;
+    width:430px !important;
+    max-width:430px !important;
+  }
+  /* Admin panel - slides in from right within the shell */
+  #admin-panel{
+    left:calc(50% - 215px) !important;
+    right:auto !important;
+    width:430px !important;
+    max-width:430px !important;
+    transform:translateX(430px) !important;
+  }
+  #admin-panel.on{
+    transform:translateX(0) !important;
+  }
+  /* Note editor */
+  #note-editor{
+    left:calc(50% - 215px) !important;
+    right:auto !important;
+    width:430px !important;
+    max-width:430px !important;
+    transform:translateX(430px) !important;
+  }
+  #note-editor.on{
+    transform:translateX(0) !important;
+  }
+  /* Global search */
+  #global-search-overlay{
+    left:calc(50% - 215px) !important;
+    right:auto !important;
+    width:430px !important;
+    max-width:430px !important;
+    transform:translateY(-100%) !important;
+  }
+  #global-search-overlay.on{
+    transform:translateY(0) !important;
+  }
+  /* PWA banner */
+  #pwa-install-bar{
+    left:calc(50% - 205px) !important;
+    right:auto !important;
+    width:410px !important;
+    max-width:410px !important;
+    transform:translateY(200px) !important;
+  }
+  #pwa-install-bar.show{
+    transform:translateY(0) !important;
+  }
+  /* Onboarding */
+  #onboarding-overlay{
+    left:calc(50% - 215px) !important;
+    right:auto !important;
+    width:430px !important;
+  }
+  /* Modals stay within shell */
+  .modal,.modal-full{
+    left:calc(50% - 215px) !important;
+    right:auto !important;
+    width:430px !important;
+    max-width:430px !important;
+  }
+  /* Screens scroll within shell */
+  #screens{overflow-y:auto;height:calc(100vh - var(--nav))}
+}
 </style>
 
 <!-- ══ SPLASH ════════════════════════════════════════════════════ -->
@@ -1207,6 +1296,49 @@ body.admin-open .acct-tabs{ pointer-events:none; }
           No requests yet · <span style="color:var(--gold);cursor:pointer" onclick="goNav('services')">Request a service</span>
         </div>
       </div>
+
+      <!-- ══ CUSTOMER FEEDBACK CAROUSEL ══════════════════════════ -->
+      <div class="h-sect-head" style="margin-top:16px">
+        <span class="h-sect-ttl"><i class="fas fa-star" style="color:#f0a500;margin-right:5px"></i>What Customers Say</span>
+        <span class="h-sect-link" onclick="openFeedbackModal()">Leave a review</span>
+      </div>
+      <div id="home-reviews-carousel" style="padding:0 16px 4px;overflow-x:auto;scrollbar-width:none;display:flex;gap:10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch">
+        <div style="flex-shrink:0;width:100%;text-align:center;padding:20px;color:var(--t4);font-size:.74rem">
+          <span class="spin"></span>
+        </div>
+      </div>
+      <!-- Leave feedback CTA -->
+      <div style="padding:10px 16px 4px">
+        <button onclick="openFeedbackModal()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.06));border:1px solid var(--gold-a25);border-radius:var(--rl);color:var(--gold);font-size:.74rem;font-weight:600;cursor:pointer;transition:all .2s">
+          <i class="fas fa-pen-to-square"></i> Share Your Experience
+        </button>
+      </div>
+
+      <!-- ══ ABOUT / INTRODUCTION ══════════════════════════════════ -->
+      <div style="margin:20px 16px 0;background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--gold-a25);border-radius:var(--rl);padding:18px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(201,168,76,.15),transparent 70%);pointer-events:none"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="width:40px;height:40px;border-radius:12px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">🏪</div>
+          <div>
+            <div style="font-family:var(--fd);font-size:.95rem;color:var(--gold)">NovaDeskOnline</div>
+            <div style="font-size:.58rem;color:var(--t4);letter-spacing:.08em;text-transform:uppercase">Cyber Services · Kemera, Nyamira</div>
+          </div>
+        </div>
+        <p style="font-size:.74rem;color:var(--t2);line-height:1.7;margin-bottom:10px">
+          Your trusted digital hub in the heart of Kemera, Nyamira. We make everyday government, academic, and business services fast, affordable, and accessible to everyone.
+        </p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="font-size:.62rem;padding:3px 9px;background:rgba(90,174,255,.1);color:var(--blue);border:1px solid rgba(90,174,255,.25);border-radius:20px">🖨️ Printing</span>
+          <span style="font-size:.62rem;padding:3px 9px;background:rgba(50,180,100,.1);color:var(--green);border:1px solid rgba(50,180,100,.25);border-radius:20px">📄 CV Writing</span>
+          <span style="font-size:.62rem;padding:3px 9px;background:rgba(255,165,0,.1);color:#ffa500;border:1px solid rgba(255,165,0,.25);border-radius:20px">🏛️ Govt Services</span>
+          <span style="font-size:.62rem;padding:3px 9px;background:rgba(201,168,76,.1);color:var(--gold);border:1px solid var(--gold-a25);border-radius:20px">📸 Photos</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button onclick="goNav('services')" class="btn btn-gold btn-sm" style="flex:1;padding:9px;font-size:.7rem"><i class="fas fa-grid-2"></i> Explore Services</button>
+          <button onclick="openAboutModal()" class="btn btn-ghost btn-sm" style="padding:9px 14px;font-size:.7rem"><i class="fas fa-circle-info"></i> About</button>
+        </div>
+      </div>
+
       <!-- FOOTER -->
       <div class="home-footer">
         <div class="home-footer-brand">NovaDeskOnline</div>
@@ -1504,6 +1636,36 @@ body.admin-open .acct-tabs{ pointer-events:none; }
           <div class="more2-item-icon" style="background:rgba(224,80,80,.12);color:var(--red);border-color:rgba(224,80,80,.3)"><i class="fas fa-gauge-high"></i></div>
           <div class="more2-item-body"><strong style="color:var(--t1)">Admin Dashboard</strong><span>Manage requests, users, services & analytics</span></div>
           <i class="fas fa-chevron-right more2-arr" style="color:var(--red)"></i>
+        </div>
+      </div>
+
+      <!-- ══ SECTION: BUILT BY ══ -->
+      <div class="more2-section">
+        <div class="more2-sect-label">The Team Behind NovaDeskOnline</div>
+        <!-- Founder -->
+        <div class="more2-item" style="align-items:flex-start;cursor:default">
+          <div class="more2-item-icon" style="background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.05));color:var(--gold);border-color:var(--gold-a25);flex-shrink:0">
+            <i class="fas fa-crown"></i>
+          </div>
+          <div class="more2-item-body" style="flex:1">
+            <strong style="color:var(--gold)">Darius Momanyi</strong>
+            <span style="color:var(--t3)">Founder & CEO — NovaDeskOnline</span>
+            <div style="font-size:.6rem;color:var(--t4);margin-top:3px;line-height:1.5">Visionary behind NovaDeskOnline, dedicated to bringing affordable digital services to Kemera, Nyamira and beyond.</div>
+          </div>
+          <span style="font-size:.5rem;padding:2px 7px;background:var(--gold-a8);color:var(--gold);border:1px solid var(--gold-a25);border-radius:10px;flex-shrink:0;margin-top:2px">Founder</span>
+        </div>
+        <!-- Developer -->
+        <div class="more2-item" style="align-items:flex-start;cursor:default">
+          <div class="more2-item-icon" style="background:rgba(90,174,255,.1);color:var(--blue);border-color:rgba(90,174,255,.3);flex-shrink:0">
+            <i class="fas fa-code"></i>
+          </div>
+          <div class="more2-item-body" style="flex:1">
+            <strong>DMN Solutions</strong>
+            <span style="color:var(--t3)">Technology Partner & Developer</span>
+            <div style="font-size:.6rem;color:var(--t4);margin-top:3px;line-height:1.5">Designed and built the NovaDeskOnline platform — a full-stack PWA built for speed, security, and real community impact.</div>
+            <a href="https://dmn-solution.vercel.app/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;font-size:.6rem;color:var(--blue);text-decoration:none;margin-top:4px"><i class="fas fa-arrow-up-right-from-square" style="font-size:.5rem"></i> Visit DMN Solutions</a>
+          </div>
+          <span style="font-size:.5rem;padding:2px 7px;background:rgba(90,174,255,.1);color:var(--blue);border:1px solid rgba(90,174,255,.3);border-radius:10px;flex-shrink:0;margin-top:2px">Dev</span>
         </div>
       </div>
 
@@ -2631,6 +2793,48 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 </div>
 
 <!-- ══ REVIEW MODAL ═══════════════════════════════════════════════ -->
+<!-- ══ PUBLIC FEEDBACK MODAL ══════════════════════════════════ -->
+<div id="feedback-modal" class="modal" role="dialog" aria-modal="true">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span style="font-size:.82rem;font-weight:700"><i class="fas fa-star" style="color:#f0a500;margin-right:6px"></i>Share Your Experience</span>
+    <button class="sheet-close" onclick="closeModal('feedback-modal')"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body" style="padding-bottom:30px">
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:.76rem;color:var(--t2);margin-bottom:14px">How was your experience with NovaDeskOnline?</div>
+      <!-- Star rating -->
+      <div style="display:flex;justify-content:center;gap:6px;margin-bottom:6px" id="fb-stars">
+        <span onclick="setFbStar(1)" style="font-size:2rem;cursor:pointer;transition:transform .15s;color:#ccc" id="fb-s1">★</span>
+        <span onclick="setFbStar(2)" style="font-size:2rem;cursor:pointer;transition:transform .15s;color:#ccc" id="fb-s2">★</span>
+        <span onclick="setFbStar(3)" style="font-size:2rem;cursor:pointer;transition:transform .15s;color:#ccc" id="fb-s3">★</span>
+        <span onclick="setFbStar(4)" style="font-size:2rem;cursor:pointer;transition:transform .15s;color:#ccc" id="fb-s4">★</span>
+        <span onclick="setFbStar(5)" style="font-size:2rem;cursor:pointer;transition:transform .15s;color:#ccc" id="fb-s5">★</span>
+      </div>
+      <div id="fb-star-label" style="font-size:.66rem;color:var(--t3);min-height:16px">Tap to rate</div>
+    </div>
+    <div class="fg"><label class="flbl">Your Name (optional)</label><input class="fi" id="fb-name" type="text" placeholder="e.g. John K." maxlength="50"></div>
+    <div class="fg"><label class="flbl">Comment <span class="req">*</span></label><textarea class="fi" id="fb-comment" rows="3" placeholder="Tell us about your experience…" maxlength="400"></textarea></div>
+    <div class="fg"><label class="flbl">Service Used (optional)</label><input class="fi" id="fb-service" type="text" placeholder="e.g. CV Writing, Printing…" maxlength="60"></div>
+    <button class="btn btn-gold btn-full" id="fb-submit-btn" onclick="submitPublicFeedback()" style="margin-top:4px;padding:13px;font-size:.8rem">
+      <i class="fas fa-paper-plane"></i> Submit Review
+    </button>
+    <div id="fb-err" style="display:none;color:var(--red);font-size:.72rem;margin-top:8px;text-align:center"></div>
+  </div>
+</div>
+
+<!-- ══ FEEDBACK SUCCESS OVERLAY ═══════════════════════════════ -->
+<div id="feedback-success" style="position:fixed;inset:0;max-width:430px;margin:0 auto;z-index:950;background:rgba(6,12,24,.96);display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center">
+  <div id="fb-success-anim" style="font-size:4rem;margin-bottom:16px;animation:none">🎉</div>
+  <div style="font-family:var(--fd);font-size:1.6rem;color:var(--gold);margin-bottom:8px">Thank You!</div>
+  <div style="font-size:.84rem;color:var(--t2);line-height:1.7;max-width:280px;margin-bottom:24px">Your feedback means the world to us. We're constantly working to make NovaDeskOnline better for you.</div>
+  <div style="display:flex;gap:8px;width:100%;max-width:300px">
+    <button class="btn btn-gold btn-full" onclick="closeFeedbackSuccess()" style="padding:12px">
+      <i class="fas fa-check"></i> Done
+    </button>
+  </div>
+</div>
+
 <div id="review-modal" class="modal" role="dialog" aria-modal="true">
   <div class="sheet-pull"></div>
   <div class="sheet-hdr">
@@ -2722,56 +2926,89 @@ let _configLoaded = false;
 async function loadSecureConfig() {
   if (_configLoaded) return true;
 
-  // 1 — Vercel API endpoint (production)
-  try {
-    const res = await fetch('/api/config', { credentials: 'same-origin', cache: 'no-store' });
-    if (res.ok) {
-      const cfg = await res.json();
-      if (cfg.supabaseUrl && cfg.supabaseKey) {
-        SB_URL = cfg.supabaseUrl; SB_KEY = cfg.supabaseKey;
-        WA_NUM = cfg.waNumber || WA_NUM; SITE = cfg.siteUrl || SITE;
-        ADMIN_SECRET = cfg.adminSecret || ADMIN_SECRET;
-        try { localStorage.setItem('nd-cfg-cache', JSON.stringify({u:SB_URL,k:SB_KEY,w:WA_NUM,s:SITE,a:ADMIN_SECRET,t:Date.now()})); } catch(e){}
-        _configLoaded = true;
-        return true;
+  const isLocal = window.location.protocol === 'content:' ||
+                  window.location.protocol === 'file:' ||
+                  window.location.hostname === 'localhost' ||
+                  window.location.hostname === '127.0.0.1';
+
+  // On Vercel/production — fetch from secure API
+  if (!isLocal) {
+    try {
+      const controller = new AbortController();
+      const timeout    = setTimeout(()=>controller.abort(), 4000); // 4s max
+      const res = await fetch('/api/config', {
+        credentials: 'same-origin',
+        cache:       'no-store',
+        signal:      controller.signal
+      });
+      clearTimeout(timeout);
+      if (res.ok) {
+        const cfg = await res.json();
+        if (cfg.supabaseUrl && cfg.supabaseKey) {
+          SB_URL = cfg.supabaseUrl; SB_KEY = cfg.supabaseKey;
+          WA_NUM = cfg.waNumber || WA_NUM; SITE = cfg.siteUrl || SITE;
+          ADMIN_SECRET = cfg.adminSecret || ADMIN_SECRET;
+          try { localStorage.setItem('nd-cfg-cache', JSON.stringify({u:SB_URL,k:SB_KEY,w:WA_NUM,s:SITE,a:ADMIN_SECRET,t:Date.now()})); } catch(e){}
+          _configLoaded = true;
+          return true;
+        }
       }
-    }
-  } catch(e) { log.warn('Config API unavailable, trying fallbacks'); }
+    } catch(e) { log.warn('Config API unavailable, trying fallbacks'); }
 
-  // 2 — localStorage cache (works offline + file://)
-  try {
-    const c = JSON.parse(localStorage.getItem('nd-cfg-cache')||'{}');
-    if (c.u && c.k) {
-      SB_URL=c.u; SB_KEY=c.k; WA_NUM=c.w||WA_NUM; SITE=c.s||SITE; ADMIN_SECRET=c.a||ADMIN_SECRET;
-      _configLoaded=true;
-      log.info('Config loaded from cache');
-      return true;
-    }
-  } catch(e) {}
-
-  // 3 — meta tags (for self-hosted / non-Vercel deployments)
-  const mu = document.querySelector('meta[name="nd-sb-url"]')?.content;
-  const mk = document.querySelector('meta[name="nd-sb-key"]')?.content;
-  if (mu && mk && !mu.includes('YOUR_PROJECT')) {
-    SB_URL=mu; SB_KEY=mk; _configLoaded=true;
-    log.info('Config loaded from meta tags');
-    return true;
+    // Try cached config (offline)
+    try {
+      const c = JSON.parse(localStorage.getItem('nd-cfg-cache')||'{}');
+      if (c.u && c.k && (Date.now()-c.t) < 7*24*3600*1000) {
+        SB_URL=c.u; SB_KEY=c.k; WA_NUM=c.w||WA_NUM; SITE=c.s||SITE; ADMIN_SECRET=c.a||ADMIN_SECRET;
+        _configLoaded=true; return true;
+      }
+    } catch(e) {}
   }
 
-  // 4 — Dev fallback with real credentials (works from file:// and local testing)
-  SB_URL = 'https://ihkwomhxdfthxaynljuw.supabase.co';
-  SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imloa3dvbWh4ZGZ0aHhheW5sanV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjIxMzEsImV4cCI6MjA5MjAzODEzMX0.Y1elTjbbHViH9awUQSiRpfjR-FBMRjTCJhRw1cJY7rI';
-  WA_NUM = '254111923477';
+  // Local / file:// / content:// — use built-in credentials directly (no fetch needed)
+  SB_URL        = 'https://ihkwomhxdfthxaynljuw.supabase.co';
+  SB_KEY        = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imloa3dvbWh4ZGZ0aHhheW5sanV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjIxMzEsImV4cCI6MjA5MjAzODEzMX0.Y1elTjbbHViH9awUQSiRpfjR-FBMRjTCJhRw1cJY7rI';
+  WA_NUM        = '254111923477';
+  ADMIN_SECRET  = 'novadesk-admin-2024';
   _configLoaded = true;
-  console.warn('[Config] Using built-in fallback — deploy to Vercel for full security');
   return true;
 }
 
 const ALLOWED_FILE_TYPES = ['image/jpeg','image/png','image/jpg','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','text/plain','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
 const MAX_FILE_SIZE_MB = 10;
 
-/* ── SUPABASE — initialized in init() after config loads ───────── */
+/* ── SUPABASE — initialized immediately when local, or after config on Vercel ── */
 let sb = null;
+
+// When running from file:// or content:// (file manager / local test),
+// initialize Supabase immediately with hardcoded credentials.
+// On Vercel, sb is initialized in init() after /api/config responds.
+(function initLocalSb(){
+  const proto = window.location.protocol;
+  const isLocal = proto === 'content:' || proto === 'file:' ||
+                  window.location.hostname === 'localhost' ||
+                  window.location.hostname === '127.0.0.1';
+  if (!isLocal) return;
+  // Wait for supabase library if it hasn't loaded yet (CDN might be slow)
+  function tryInit(attempts){
+    if (typeof supabase === 'undefined') {
+      if (attempts > 0) setTimeout(()=>tryInit(attempts-1), 200);
+      return;
+    }
+    try {
+      sb = supabase.createClient(
+        'https://ihkwomhxdfthxaynljuw.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imloa3dvbWh4ZGZ0aHhheW5sanV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjIxMzEsImV4cCI6MjA5MjAzODEzMX0.Y1elTjbbHViH9awUQSiRpfjR-FBMRjTCJhRw1cJY7rI',
+        { auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true } }
+      );
+      SB_URL        = 'https://ihkwomhxdfthxaynljuw.supabase.co';
+      SB_KEY        = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imloa3dvbWh4ZGZ0aHhheW5sanV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjIxMzEsImV4cCI6MjA5MjAzODEzMX0.Y1elTjbbHViH9awUQSiRpfjR-FBMRjTCJhRw1cJY7rI';
+      WA_NUM        = '254111923477';
+      _configLoaded = true;
+    } catch(e) { log.error('Local Supabase init failed:', e); }
+  }
+  tryInit(20); // retry up to 20×200ms = 4 seconds
+})();
 
 /* ── STATE ─────────────────────────────────────────────────────── */
 let _user = null, _profile = null;
@@ -2809,7 +3046,7 @@ function showErr(elId, msg){ const el=$(elId); if(!el) return; el.textContent=ms
 function hideErr(elId){ const el=$(elId); if(!el) return; el.style.display='none'; }
 
 /* ── WAIT FOR SUPABASE WITH TIMEOUT ───────────────────────────── */
-function waitForSb(timeoutMs=8000){
+function waitForSb(timeoutMs=5000){
   return new Promise((resolve, reject)=>{
     if (sb) { resolve(sb); return; }
     const start = Date.now();
@@ -2817,7 +3054,7 @@ function waitForSb(timeoutMs=8000){
       if (sb) { clearInterval(poll); resolve(sb); return; }
       if (Date.now()-start > timeoutMs) {
         clearInterval(poll);
-        reject(new Error('Connection timeout. Please refresh the page and try again.'));
+        reject(new Error('Could not connect to server. Please check your internet connection and try again.'));
       }
     }, 100);
   });
@@ -2942,6 +3179,10 @@ function loadTheme(){
   const saved = localStorage.getItem('nd-theme') || 'dark';
   document.documentElement.setAttribute('data-theme', saved);
 }
+// i18n — must exist before init() calls it
+function loadLang(){
+  if (typeof _lang !== 'undefined') _lang = localStorage.getItem('nd-lang') || 'en';
+}
 
 /* ── AUTH UI ───────────────────────────────────────────────────── */
 function openAuth(){
@@ -2961,7 +3202,18 @@ function openAuth(){
     }
   }
 }
-function closeAuth(){ const am=$('auth-modal'); if(am) am.classList.remove('on'); hideOvl(); _ovlLock=false; }
+function closeAuth(){
+  const am = $('auth-modal');
+  if (am) {
+    am.classList.remove('on');
+    // Force close even if CSS transition is slow
+    am.style.opacity = '0';
+    am.style.pointerEvents = 'none';
+    setTimeout(()=>{ am.style.opacity=''; am.style.pointerEvents=''; }, 400);
+  }
+  hideOvl();
+  _ovlLock = false;
+}
 function authTab(t){
   ['signin','register','institution','resetpw'].forEach(tab=>{
     const te=$('tab-'+tab), pe=$('panel-'+tab);
@@ -3071,8 +3323,20 @@ async function doRegister(){
       } catch(e) {}
     }
 
-    // Close auth and show success modal
+    // Close auth and attempt immediate sign-in (works when email confirmation is disabled)
     closeAuth();
+
+    // Try to sign in immediately after registration
+    try {
+      const { data: signInData, error: signInErr } = await sb.auth.signInWithPassword({ email, password: pw });
+      if (!signInErr && signInData?.user) {
+        // Signed in automatically — onAuthStateChange will handle navigation
+        toast(`Welcome, ${name}! 🎉 Account created successfully.`, 'ok', 4000);
+        return;
+      }
+    } catch(e) {}
+
+    // If immediate sign-in failed (email confirmation required), show the verify modal
     setTimeout(() => showRegVerifyModal(email, name || ndUserId, ndUserId), 350);
   } catch(e) {
     err.textContent = e.message || 'Registration failed. Please try again.';
@@ -3252,58 +3516,78 @@ window.doSignOut   = doSignOut;
 window._execSignOut = _execSignOut;
 
 /* ── AUTH STATE CHANGE ─────────────────────────────────────────── */
+let _sessionHandled = false; // Prevent double navigation
+
 function onAuthStateChange(){
   if (!sb) return;
   sb.auth.onAuthStateChange(async (event, session) => {
     _user = session?.user || null;
 
+    // ── Password recovery ──────────────────────────────────────
     if (event === 'PASSWORD_RECOVERY') {
       showNewPasswordModal();
       return;
     }
 
+    // ── Signed out ─────────────────────────────────────────────
     if (event === 'SIGNED_OUT') {
+      _sessionHandled = false;
       _profile=null; _notes=[]; _files=[]; _reqs=[]; _notifs=[];
+      // Close admin if open
+      closeAdmin();
       closeAuth();
-      renderAccount();
-      refreshHomeCounts();
       goNav('home');
+      renderAccount();
+      refreshHomeCounts();
       return;
     }
 
-    if (event === 'SIGNED_IN' && _user) {
-      // Load everything before touching the UI
-      await loadProfile();
+    // ── No user ────────────────────────────────────────────────
+    if (!_user) return;
+
+    // ── Load profile and data (background) ────────────────────
+    const loadData = async () => {
+      try { await Promise.race([loadProfile(), new Promise(r=>setTimeout(r,6000))]); } catch(e){}
       await Promise.all([
         loadNotes().catch(()=>{}),
         loadFiles().catch(()=>{}),
         loadMyReqs().catch(()=>{}),
         loadNotifs().catch(()=>{})
       ]);
-      // Close auth sheet
+      renderAccount();
+      refreshHomeCounts();
+      subscribeRealtime();
+    };
+
+    // ── Fresh sign-in ──────────────────────────────────────────
+    if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+      _sessionHandled = true;
+      // Ensure _user is set before any navigation
+      _user = session.user;
+      // Close auth immediately
       closeAuth();
-      // Update UI
-      renderAccount();
-      refreshHomeCounts();
-      subscribeRealtime();
-      // Navigate to account tab for everyone (admin included)
-      goNav('account');
-      acctTab('profile');
+      // Small delay to let auth sheet animate out before showing account
+      setTimeout(async () => {
+        // Navigate to account — _user is now definitely set
+        goNav('account');
+        acctTab('profile');
+        // Load data after navigation
+        await loadData();
+      }, 50);
       return;
     }
 
-    // TOKEN_REFRESHED or initial session restore
-    if (_user && event !== 'SIGNED_IN') {
-      await loadProfile();
-      await Promise.all([
-        loadNotes().catch(()=>{}),
-        loadFiles().catch(()=>{}),
-        loadMyReqs().catch(()=>{}),
-        loadNotifs().catch(()=>{})
-      ]);
-      renderAccount();
-      refreshHomeCounts();
-      subscribeRealtime();
+    // ── Session restore on page reload (INITIAL_SESSION / TOKEN_REFRESHED) ──
+    // Only restore once, don't re-navigate if user is already browsing
+    if (!_sessionHandled) {
+      _sessionHandled = true;
+      await loadData();
+      // Don't force navigation — user may be on any screen
+      // Just close auth if it's open for some reason
+      if ($('auth-modal')?.classList.contains('on')) {
+        closeAuth();
+        goNav('account');
+      }
     }
   });
 }
@@ -5326,6 +5610,13 @@ function closeAllModals(){
 
 /* ── BOOT ──────────────────────────────────────────────────────── */
 async function init(){
+  // ① SECURITY: Hard-close admin panel on every load — never persist open state
+  document.body.classList.remove('admin-open');
+  const _ap = $('admin-panel');
+  if (_ap) { _ap.classList.remove('on'); _ap.style.transform = ''; }
+  document.body.style.overflow = '';
+  // Reset session handled flag
+  _sessionHandled = false;
   // ① Dismiss splash IMMEDIATELY — botnav must never be blocked
   const splash = $('splash');
   if (splash) {
@@ -6208,6 +6499,9 @@ function showRegVerifyModal(email, displayName, userId) {
       </div>
       <button class="btn btn-gold btn-full" onclick="closeModal('reg-success-modal')" style="padding:12px;margin-bottom:8px">
         <i class="fas fa-envelope-open"></i> Got it — Check Email
+      </button>
+      <button class="btn btn-outline btn-full btn-sm" onclick="closeModal('reg-success-modal');authTab('signin');openAuth()" style="margin-bottom:6px">
+        <i class="fas fa-arrow-right-to-bracket"></i> Already confirmed? Sign In
       </button>
       <button class="btn btn-ghost btn-full btn-sm" onclick="doResendVerification('${esc(email)}')">
         <i class="fas fa-redo"></i> Resend Verification Email
@@ -7588,6 +7882,185 @@ window.setServiceAvailability=setServiceAvailability;
 
 console.log('%c NovaDeskOnline v2.0 ','background:#0066ff;color:#fff;font-size:1rem;font-weight:bold;border-radius:4px;padding:2px 8px');
 console.log('%c Built for Kemera, Nyamira ','color:#5aaeff;font-size:.8rem');
+</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   PUBLIC FEEDBACK, RATINGS CAROUSEL & HOME ADDITIONS
+═══════════════════════════════════════════════════════════════════ */
+
+/* ── FEEDBACK STAR RATING ─────────────────────────────────────── */
+let _fbStar = 0;
+const FB_STAR_LABELS = ['','Poor 😕','Fair 😐','Good 😊','Great 😄','Excellent! 🤩'];
+
+function setFbStar(n){
+  _fbStar = n;
+  for(let i=1;i<=5;i++){
+    const el=$('fb-s'+i);
+    if(!el) continue;
+    el.style.color = i<=n ? '#f0a500' : '#4a6a8a';
+    el.style.transform = i<=n ? 'scale(1.15)' : 'scale(1)';
+  }
+  const lbl=$('fb-star-label');
+  if(lbl){ lbl.textContent=FB_STAR_LABELS[n]||''; lbl.style.color='#f0a500'; }
+}
+window.setFbStar = setFbStar;
+
+/* ── OPEN FEEDBACK MODAL ──────────────────────────────────────── */
+function openFeedbackModal(){
+  // Reset form
+  _fbStar = 0;
+  for(let i=1;i<=5;i++){ const el=$('fb-s'+i); if(el){el.style.color='#4a6a8a';el.style.transform='scale(1)';} }
+  const lbl=$('fb-star-label'); if(lbl){lbl.textContent='Tap to rate';lbl.style.color='var(--t3)';}
+  const fields=['fb-name','fb-comment','fb-service'];
+  fields.forEach(id=>{ const el=$(id); if(el) el.value=''; });
+  const err=$('fb-err'); if(err) err.style.display='none';
+  const btn=$('fb-submit-btn'); if(btn){ btn.disabled=false; btn.innerHTML='<i class="fas fa-paper-plane"></i> Submit Review'; }
+  openModal('feedback-modal');
+}
+window.openFeedbackModal = openFeedbackModal;
+
+/* ── SUBMIT PUBLIC FEEDBACK ───────────────────────────────────── */
+async function submitPublicFeedback(){
+  const comment = ($('fb-comment')?.value||'').trim();
+  const name    = sanitizeShort($('fb-name')?.value||'Anonymous');
+  const service = sanitizeShort($('fb-service')?.value||'');
+  const err     = $('fb-err');
+  const btn     = $('fb-submit-btn');
+
+  if(!_fbStar){ if(err){err.textContent='Please select a star rating.';err.style.display='block';} return; }
+  if(!comment||comment.length<5){ if(err){err.textContent='Please write at least a few words.';err.style.display='block';} return; }
+  if(err) err.style.display='none';
+  if(btn){ btn.disabled=true; btn.innerHTML='<span class="spin"></span> Submitting…'; }
+
+  try {
+    if(!sb) throw new Error('Not connected');
+    const { error } = await sb.from('public_feedback').insert({
+      rating:   _fbStar,
+      comment:  comment,
+      name:     name || 'Anonymous',
+      service:  service || null,
+      user_id:  _user?.id || null,
+      approved: false, // admin must approve before showing in carousel
+      created_at: new Date().toISOString()
+    });
+    if(error) throw error;
+    closeModal('feedback-modal');
+    showFeedbackSuccess();
+    // Reload carousel after a moment
+    setTimeout(loadReviewsCarousel, 2000);
+  } catch(e){
+    if(err){ err.textContent = e.message||'Submission failed. Please try again.'; err.style.display='block'; }
+    if(btn){ btn.disabled=false; btn.innerHTML='<i class="fas fa-paper-plane"></i> Submit Review'; }
+  }
+}
+window.submitPublicFeedback = submitPublicFeedback;
+
+/* ── FEEDBACK SUCCESS ANIMATION ───────────────────────────────── */
+function showFeedbackSuccess(){
+  const overlay = $('feedback-success');
+  if(!overlay) return;
+  overlay.style.display='flex';
+  document.body.style.overflow='hidden';
+  // Animate the emoji
+  const anim = $('fb-success-anim');
+  if(anim){
+    anim.style.animation='none';
+    anim.offsetHeight; // reflow
+    anim.style.animation='fbBounce .6s cubic-bezier(.34,1.56,.64,1)';
+  }
+}
+function closeFeedbackSuccess(){
+  const overlay=$('feedback-success');
+  if(overlay) overlay.style.display='none';
+  document.body.style.overflow='';
+}
+window.closeFeedbackSuccess = closeFeedbackSuccess;
+
+/* ── REVIEWS CAROUSEL ─────────────────────────────────────────── */
+async function loadReviewsCarousel(){
+  const container = $('home-reviews-carousel');
+  if(!container) return;
+
+  try {
+    if(!sb) throw new Error('offline');
+    const { data, error } = await sb
+      .from('public_feedback')
+      .select('*')
+      .eq('approved', true)
+      .order('created_at', { ascending:false })
+      .limit(10);
+    if(error) throw error;
+    if(!data?.length){
+      container.innerHTML=`
+        <div style="flex-shrink:0;width:calc(100% - 32px);text-align:center;padding:24px 16px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);margin:0 16px">
+          <div style="font-size:1.5rem;margin-bottom:6px">⭐</div>
+          <div style="font-size:.76rem;color:var(--t2);font-weight:500">Be the first to review!</div>
+          <div style="font-size:.66rem;color:var(--t3);margin-top:4px">Share your experience with NovaDeskOnline</div>
+          <button onclick="openFeedbackModal()" class="btn btn-gold btn-xs" style="margin-top:12px">Write a Review</button>
+        </div>`;
+      return;
+    }
+    container.innerHTML = data.map(r=>`
+      <div style="flex-shrink:0;width:calc(100vw - 60px);max-width:340px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;scroll-snap-align:start">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:34px;height:34px;border-radius:50%;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--gold)">
+              ${esc((r.name||'A').charAt(0).toUpperCase())}
+            </div>
+            <div>
+              <div style="font-size:.74rem;font-weight:600;color:var(--t1)">${esc(r.name||'Anonymous')}</div>
+              ${r.service?`<div style="font-size:.58rem;color:var(--t4)">${esc(r.service)}</div>`:''}
+            </div>
+          </div>
+          <div style="display:flex;gap:1px">
+            ${'★'.repeat(r.rating||0)}<span style="color:var(--bg4)">${'★'.repeat(5-(r.rating||0))}</span>
+          </div>
+        </div>
+        <div style="font-size:.74rem;color:var(--t2);line-height:1.6;font-style:italic">"${esc(r.comment||'')}"</div>
+        <div style="font-size:.56rem;color:var(--t4);margin-top:8px">${fmtRel(r.created_at)}</div>
+      </div>`).join('');
+  } catch(e){
+    // Offline or error — show placeholder cards
+    container.innerHTML=`
+      <div style="flex-shrink:0;width:calc(100% - 32px);background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin:0 16px;text-align:center">
+        <div style="color:var(--t4);font-size:.72rem">Reviews load when connected</div>
+      </div>`;
+  }
+}
+window.loadReviewsCarousel = loadReviewsCarousel;
+
+/* ── ABOUT MODAL OPENER ───────────────────────────────────────── */
+function openAboutModal(){
+  openModal('about-modal');
+}
+window.openAboutModal = openAboutModal;
+
+/* ── LOAD CAROUSEL ON HOME SCREEN ───────────────────────────────── */
+// Hook into goNav to load carousel when home is shown
+const _origGoNav = window.goNav;
+window.goNav = function(name){
+  _origGoNav(name);
+  if(name==='home') setTimeout(loadReviewsCarousel, 300);
+};
+
+/* ── ADD ANIMATION KEYFRAMES VIA JS ─────────────────────────────── */
+(function(){
+  const style = document.createElement('style');
+  style.textContent=`
+    @keyframes fbBounce{
+      0%{transform:scale(0.3) rotate(-10deg);opacity:0}
+      50%{transform:scale(1.2) rotate(5deg);opacity:1}
+      70%{transform:scale(0.95) rotate(-2deg)}
+      100%{transform:scale(1) rotate(0deg);opacity:1}
+    }
+    #fb-success-anim{animation:fbBounce .6s cubic-bezier(.34,1.56,.64,1)}
+  `;
+  document.head.appendChild(style);
+})();
+
+// Load carousel on first home render
+document.addEventListener('DOMContentLoaded', ()=>setTimeout(loadReviewsCarousel, 1500));
 </script>
 </body>
 </html>
