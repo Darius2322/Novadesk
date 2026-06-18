@@ -42,7 +42,7 @@
   --r:8px;--rl:14px;--rxl:20px;
   --ease:cubic-bezier(.4,0,.2,1);
   --top:56px;--nav:64px;
-  --zi:50;--zs:200;--zm:400;--zt:600;
+  --zi:50;--zs:200;--zm:550;--zt:600;
 }
 :root,[data-theme="dark"]{
   --bg:#0a0f1e;--bg2:#0f1628;--bg3:#152035;--bg4:#1b2a44;--bg5:#213354;
@@ -159,13 +159,42 @@ body.pwa-showing #screens{padding-top:calc(var(--top) + 68px)}
 .tact-badge{position:absolute;top:4px;right:3px;min-width:15px;height:15px;background:var(--gold);color:#000;font-size:.46rem;font-weight:700;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1}
 
 /* ── BOTTOM NAV ─────────────────────────────────────────────────── */
-#botnav{position:fixed;bottom:0;width:100%;max-width:430px;height:var(--nav);z-index:500;background:var(--bg2);border-top:1px solid var(--bd);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:stretch;padding-bottom:env(safe-area-inset-bottom,0);transition:background .3s}
+#botnav{position:fixed;bottom:0;width:100%;max-width:430px;height:var(--nav);z-index:140;background:var(--bg2);border-top:1px solid var(--bd);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:stretch;padding-bottom:env(safe-area-inset-bottom,0);transition:background .3s}
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:transparent;color:var(--t3);font-size:.48rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:color .2s;position:relative;padding-bottom:2px;-webkit-tap-highlight-color:transparent;outline:none}
 .ni i{font-size:1rem;transition:transform .2s var(--ease)}
 .ni.on{color:var(--gold)}.ni.on i{transform:translateY(-2px);color:var(--gold)}
 .ni-badge{position:absolute;top:8px;right:calc(50% - 14px);min-width:14px;height:14px;background:var(--gold);color:#000;font-size:.44rem;font-weight:700;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 2px}
 
-/* ── OVERLAY ────────────────────────────────────────────────────── */
+/* ── DESKTOP AUTH WALL ──────────────────────────────────────────── */
+#desktop-auth-wall{
+  display:none; /* hidden on mobile */
+  position:fixed;inset:0;max-width:430px;margin:0 auto;
+  z-index:950;
+  background:rgba(6,12,24,.92);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:32px;gap:16px;
+}
+#desktop-auth-wall .daw-logo{
+  width:64px;height:64px;border-radius:18px;
+  background:linear-gradient(145deg,#001840,#002a70);
+  border:1px solid rgba(77,158,255,.4);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 0 0 rgba(0,102,255,.25),0 8px 40px rgba(0,0,0,.7);
+  margin-bottom:4px;
+}
+#desktop-auth-wall h2{
+  font-family:var(--fd);font-size:1.5rem;font-weight:400;color:var(--t1);margin-bottom:4px;
+}
+#desktop-auth-wall p{
+  font-size:.74rem;color:var(--t3);line-height:1.6;max-width:280px;margin-bottom:8px;
+}
+#desktop-auth-wall .daw-btn{
+  background:var(--gold);color:#fff;border:none;border-radius:var(--rl);
+  padding:12px 32px;font-size:.82rem;font-weight:700;cursor:pointer;
+  letter-spacing:.04em;transition:all .2s;font-family:var(--fb);
+}
+#desktop-auth-wall .daw-btn:hover{opacity:.85;transform:translateY(-1px)}
 #ovl{position:fixed;inset:0;background:var(--scrim);z-index:350;opacity:0;pointer-events:none;transition:opacity .28s}
 #ovl.on{opacity:1;pointer-events:all}
 
@@ -188,16 +217,49 @@ body.pwa-showing #screens{padding-top:calc(var(--top) + 68px)}
 /* ── POPUP ALERTS ───────────────────────────────────────────────── */
 #popup-overlay{position:fixed;inset:0;z-index:800;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s var(--ease)}
 #popup-overlay.on{opacity:1;pointer-events:all}
-.popup-box{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rxl);max-width:340px;width:100%;padding:0;overflow:hidden;transform:scale(.94) translateY(8px);transition:transform .25s var(--ease);box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.popup-box{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rxl);max-width:380px;width:100%;padding:0;overflow:hidden;transform:scale(.94) translateY(8px);transition:transform .25s var(--ease);box-shadow:0 20px 60px rgba(0,0,0,.7);max-height:90vh;display:flex;flex-direction:column}
 #popup-overlay.on .popup-box{transform:scale(1) translateY(0)}
-.popup-head{padding:20px 20px 14px;display:flex;align-items:flex-start;gap:14px}
+.popup-head{padding:20px 40px 14px 20px;display:flex;align-items:flex-start;gap:14px}
 .popup-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
 .popup-icon.er{background:rgba(224,80,80,.12);color:var(--red);border:1px solid rgba(224,80,80,.25)}
 .popup-icon.ok{background:rgba(50,180,100,.12);color:var(--green);border:1px solid rgba(50,180,100,.25)}
 .popup-icon.nf{background:var(--gold-a8);color:var(--gold);border:1px solid var(--gold-a25)}
 .popup-ttl{font-family:var(--fd);font-size:1.1rem;color:var(--t1);margin-bottom:4px}
-.popup-msg{font-size:.78rem;color:var(--t3);line-height:1.65}
-.popup-acts{padding:0 16px 16px;display:flex;gap:8px;justify-content:flex-end}
+.popup-msg{font-size:.78rem;color:var(--t3);line-height:1.65;white-space:pre-line}
+
+/* ── REQUEST SUCCESS OVERLAY ──────────────────────────────────── */
+#req-success-overlay{
+  position:fixed;inset:0;z-index:850;background:var(--scrim);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  opacity:0;pointer-events:none;transition:opacity .25s var(--ease);
+}
+#req-success-overlay.on{opacity:1;pointer-events:all}
+.req-success-box{
+  background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rxl);
+  max-width:320px;width:100%;padding:32px 24px 26px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;
+  transform:scale(.9) translateY(10px);transition:transform .3s var(--ease);
+  box-shadow:0 20px 60px rgba(0,0,0,.7);
+}
+#req-success-overlay.on .req-success-box{transform:scale(1) translateY(0)}
+.req-success-check{width:72px;height:72px;margin-bottom:16px}
+.req-success-check svg{width:100%;height:100%}
+.rsc-circle{
+  stroke:var(--green);stroke-width:3;
+  stroke-dasharray:145;stroke-dashoffset:145;
+  animation:rscCircle .5s ease-out forwards;
+}
+.rsc-check{
+  stroke:var(--green);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:30;stroke-dashoffset:30;
+  animation:rscCheck .35s ease-out .4s forwards;
+}
+@keyframes rscCircle{ to{ stroke-dashoffset:0; } }
+@keyframes rscCheck{ to{ stroke-dashoffset:0; } }
+.req-success-title{font-family:var(--fd);font-size:1.25rem;color:var(--t1);margin-bottom:6px}
+.req-success-sub{font-size:.76rem;color:var(--t3);line-height:1.5}
+.popup-acts{padding:0 16px 16px;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.popup-acts .btn{flex:1 1 auto;min-width:0;white-space:nowrap;font-size:.7rem;padding:9px 12px}
 
 /* ── BUTTONS ────────────────────────────────────────────────────── */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 22px;font-family:var(--fb);font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;border:none;border-radius:var(--r);cursor:pointer;transition:all .2s var(--ease);white-space:nowrap;-webkit-tap-highlight-color:transparent}
@@ -607,8 +669,8 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 /* Hide bottom nav and account tabs when admin panel is open */
 body.admin-open #botnav,
 body.admin-open .acct-tabs{ pointer-events:none; }
-/* Botnav always on top of banners/toasts */
-#botnav{ z-index:500 !important; }
+/* Botnav sits below modals so sheet content/buttons are never covered */
+#botnav{ z-index:140; }
 .admin-nav-tab{flex-shrink:0;padding:10px 14px;font-size:.65rem;font-weight:600;letter-spacing:.06em;border:none;background:transparent;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;display:flex;align-items:center;gap:5px;white-space:nowrap;position:relative}
 .admin-nav-tab.on{color:var(--gold);border-bottom-color:var(--gold)}
 .admin-tab-badge{position:absolute;top:6px;right:4px;min-width:15px;height:15px;background:var(--red);color:#fff;font-size:.44rem;font-weight:700;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px}
@@ -976,6 +1038,25 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 #pwa-install-bar .pwa-sub{font-size:.6rem;color:var(--t3)}
 /* ── REQUEST TIMELINE ────────────────────────────────────────────── */
 .req-timeline{display:flex;flex-direction:column;gap:0;padding:8px 0}
+.rt-step{display:flex;gap:14px;position:relative;padding-bottom:26px}
+.rt-step:last-child{padding-bottom:0}
+.rt-dot{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:.7rem;
+  background:var(--bg4);color:var(--t4);border:2px solid var(--bd);z-index:1;
+}
+.rt-step.done .rt-dot{background:var(--gold-a8);color:var(--gold);border-color:var(--gold-a45)}
+.rt-step.current .rt-dot{background:var(--gold);color:#1a1305;border-color:var(--gold);box-shadow:0 0 0 4px var(--gold-a8)}
+.rt-step.cancelled .rt-dot{background:rgba(224,80,80,.12);color:var(--red);border-color:rgba(224,80,80,.4)}
+.rt-line{
+  position:absolute;left:14px;top:30px;bottom:0;width:2px;background:var(--bd);
+}
+.rt-step.done .rt-line{background:var(--gold-a45)}
+.rt-step:last-child .rt-line{display:none}
+.rt-content{flex:1;padding-top:3px}
+.rt-label{font-size:.78rem;font-weight:600;color:var(--t1)}
+.rt-step:not(.done):not(.current) .rt-label{color:var(--t4)}
+.rt-time{font-size:.62rem;color:var(--t4);margin-top:2px}
 .req-tl-step{display:flex;align-items:flex-start;gap:12px;position:relative}
 .req-tl-step:not(:last-child)::after{content:'';position:absolute;left:11px;top:24px;bottom:-4px;width:2px;background:var(--bd)}
 .req-tl-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--bd);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0;z-index:1}
@@ -1064,6 +1145,9 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 @media (min-width:600px){
   body{background:#060c18}
   #shell{width:430px;min-height:100vh;position:relative;margin:0 auto;box-shadow:0 0 60px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06)}
+  /* Desktop: app is browsable without login, same as mobile.
+     Account tab shows its own guest/sign-in prompt (see #acct-guest). */
+  #desktop-auth-wall{display:none !important}
   /* Center fixed elements within the shell column */
   #topbar,#botnav{
     left:calc(50% - 215px) !important;
@@ -1090,9 +1174,11 @@ body.admin-open .acct-tabs{ pointer-events:none; }
     width:430px !important;
     max-width:430px !important;
     transform:translateX(430px) !important;
+    visibility:hidden;
   }
   #admin-panel.on{
     transform:translateX(0) !important;
+    visibility:visible;
   }
   /* Note editor */
   #note-editor{
@@ -1101,9 +1187,11 @@ body.admin-open .acct-tabs{ pointer-events:none; }
     width:430px !important;
     max-width:430px !important;
     transform:translateX(430px) !important;
+    visibility:hidden;
   }
   #note-editor.on{
     transform:translateX(0) !important;
+    visibility:visible;
   }
   /* Global search */
   #global-search-overlay{
@@ -1140,8 +1228,22 @@ body.admin-open .acct-tabs{ pointer-events:none; }
     width:430px !important;
     max-width:430px !important;
   }
+  /* Service editor stays within shell */
+  #admin-svc-editor{
+    left:calc(50% - 215px) !important;
+    right:auto !important;
+    width:430px !important;
+    max-width:430px !important;
+  }
+  /* Quick-add editors stay within shell */
+  #admin-agent-editor,#admin-inst-editor{
+    left:calc(50% - 215px) !important;
+    right:auto !important;
+    width:430px !important;
+    max-width:430px !important;
+  }
   /* Screens scroll within shell */
-  #screens{overflow-y:auto;height:calc(100vh - var(--nav))}
+  #screens{overflow-y:auto;height:calc(100vh - var(--top) - var(--nav));padding-top:0;margin-top:var(--top)}
 }
 </style>
 
@@ -1180,6 +1282,25 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 
 <div id="shell">
 
+  <!-- ══ DESKTOP AUTH WALL (shown on desktop when not logged in) ══ -->
+  <div id="desktop-auth-wall">
+    <div class="daw-logo">
+      <svg width="36" height="36" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="12" width="50" height="32" rx="5" fill="#0d1830" stroke="#4d9eff" stroke-width="1.8"/>
+        <rect x="12" y="18" width="36" height="20" rx="2" fill="#0a1224"/>
+        <line x1="16" y1="23" x2="42" y2="23" stroke="#4d9eff" stroke-width="1.2" opacity=".7"/>
+        <line x1="16" y1="28" x2="48" y2="28" stroke="#4d9eff" stroke-width="1.2" opacity=".5"/>
+        <circle cx="47" cy="23" r="5" fill="#0066ff"/>
+        <path d="M44.5 23 L47 25.5 L51 21" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="24" y="44" width="16" height="4" rx="1" fill="#4d9eff" opacity=".6"/>
+      </svg>
+    </div>
+    <h2>NovaDeskOnline</h2>
+    <p>Sign in to access your cyber services dashboard, request services, and manage your account.</p>
+    <button class="daw-btn" onclick="openAuthModal()"><i class="fas fa-sign-in-alt" style="margin-right:7px"></i>Sign In to Continue</button>
+    <div style="font-size:.66rem;color:var(--t4);margin-top:8px">Don't have an account? <span style="color:var(--gold);cursor:pointer" onclick="openAuthModal()">Register free</span></div>
+  </div>
+
   <!-- TOP BAR -->
   <header id="topbar">
     <div class="brand">
@@ -1202,6 +1323,8 @@ body.admin-open .acct-tabs{ pointer-events:none; }
       </div>
     </div>
     <div class="topbar-actions">
+      <button class="icon-btn" id="topbar-admin-btn" onclick="openAdmin()" aria-label="Admin Dashboard" style="display:none;color:var(--red)"><i class="fas fa-shield-halved"></i></button>
+      <button class="icon-btn" id="topbar-signout-btn" onclick="doSignOut()" aria-label="Sign Out" style="display:none;color:var(--t3)"><i class="fas fa-arrow-right-from-bracket"></i></button>
       <button class="icon-btn" id="notif-btn" onclick="openNotifPanel()" aria-label="Notifications"><i class="fas fa-bell"></i><span class="notif-dot" id="notif-dot" style="display:none"></span></button>
       <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme"><i class="fas fa-circle-half-stroke"></i></button>
       <button class="icon-btn" id="auth-btn" onclick="openAuth()" aria-label="Account"><i class="fas fa-circle-user"></i></button>
@@ -1629,21 +1752,11 @@ body.admin-open .acct-tabs{ pointer-events:none; }
         </div>
       </div>
 
-      <!-- ══ SECTION: ADMIN (shown only to admins) ══ -->
-      <div class="more2-section" id="more-admin-section" style="display:none">
-        <div class="more2-sect-label" style="color:var(--red)"><i class="fas fa-shield-halved" style="margin-right:5px"></i>Administration</div>
-        <div class="more2-item" onclick="openAdmin()" style="border-color:rgba(224,80,80,.3);background:rgba(224,80,80,.04)">
-          <div class="more2-item-icon" style="background:rgba(224,80,80,.12);color:var(--red);border-color:rgba(224,80,80,.3)"><i class="fas fa-gauge-high"></i></div>
-          <div class="more2-item-body"><strong style="color:var(--t1)">Admin Dashboard</strong><span>Manage requests, users, services & analytics</span></div>
-          <i class="fas fa-chevron-right more2-arr" style="color:var(--red)"></i>
-        </div>
-      </div>
-
       <!-- ══ SECTION: BUILT BY ══ -->
       <div class="more2-section">
         <div class="more2-sect-label">The Team Behind NovaDeskOnline</div>
         <!-- Founder -->
-        <div class="more2-item" style="align-items:flex-start;cursor:default">
+        <div class="more2-item" style="align-items:flex-start;cursor:pointer" onclick="openFounderAbout()">
           <div class="more2-item-icon" style="background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.05));color:var(--gold);border-color:var(--gold-a25);flex-shrink:0">
             <i class="fas fa-crown"></i>
           </div>
@@ -1652,7 +1765,10 @@ body.admin-open .acct-tabs{ pointer-events:none; }
             <span style="color:var(--t3)">Founder & CEO — NovaDeskOnline</span>
             <div style="font-size:.6rem;color:var(--t4);margin-top:3px;line-height:1.5">Visionary behind NovaDeskOnline, dedicated to bringing affordable digital services to Kemera, Nyamira and beyond.</div>
           </div>
-          <span style="font-size:.5rem;padding:2px 7px;background:var(--gold-a8);color:var(--gold);border:1px solid var(--gold-a25);border-radius:10px;flex-shrink:0;margin-top:2px">Founder</span>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;margin-top:2px">
+            <span style="font-size:.5rem;padding:2px 7px;background:var(--gold-a8);color:var(--gold);border:1px solid var(--gold-a25);border-radius:10px">Founder</span>
+            <i class="fas fa-chevron-right more2-arr" style="margin-top:4px"></i>
+          </div>
         </div>
         <!-- Developer -->
         <div class="more2-item" style="align-items:flex-start;cursor:default">
@@ -1984,6 +2100,7 @@ body.admin-open .acct-tabs{ pointer-events:none; }
     <button class="admin-nav-tab"    id="atab-institutions"  onclick="adminTab('institutions')"><i class="fas fa-building-columns"></i> Institutions</button>
     <button class="admin-nav-tab"    id="atab-services"      onclick="adminTab('services')"    ><i class="fas fa-concierge-bell"></i> Services</button>
     <button class="admin-nav-tab"    id="atab-messages"      onclick="adminTab('messages')"    ><i class="fas fa-envelope"></i> Messages</button>
+    <button class="admin-nav-tab"    id="atab-feedback"      onclick="adminTab('feedback')"    ><i class="fas fa-star"></i> Reviews <span id="admin-feedback-badge" class="admin-tab-badge" style="display:none"></span></button>
     <button class="admin-nav-tab"    id="atab-settings"      onclick="adminTab('settings')"    ><i class="fas fa-gear"></i> Settings</button>
   </div>
 
@@ -2078,9 +2195,12 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 
   <!-- ── AGENTS ── -->
   <div class="admin-section" id="asec-agents">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px;gap:8px">
       <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Agent Applications</div>
-      <button class="btn btn-ghost btn-xs" onclick="adminLoadAgents()"><i class="fas fa-rotate-right"></i></button>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost btn-xs" onclick="adminLoadAgents()"><i class="fas fa-rotate-right"></i></button>
+        <button class="btn btn-gold btn-xs" onclick="adminOpenAddAgent()"><i class="fas fa-plus"></i> Add Agent</button>
+      </div>
     </div>
     <div id="admin-agents-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
       <div style="text-align:center;padding:20px"><span class="spin"></span></div>
@@ -2089,9 +2209,12 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 
   <!-- ── INSTITUTIONS ── -->
   <div class="admin-section" id="asec-institutions">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px;gap:8px">
       <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Institution Requests</div>
-      <button class="btn btn-ghost btn-xs" onclick="adminLoadInstitutions()"><i class="fas fa-rotate-right"></i></button>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost btn-xs" onclick="adminLoadInstitutions()"><i class="fas fa-rotate-right"></i></button>
+        <button class="btn btn-gold btn-xs" onclick="adminOpenAddInstitution()"><i class="fas fa-plus"></i> Add Institution</button>
+      </div>
     </div>
     <div id="admin-inst-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
       <div style="text-align:center;padding:20px"><span class="spin"></span></div>
@@ -2133,17 +2256,47 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 
   <!-- ── SERVICES ── -->
   <div class="admin-section" id="asec-services">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 10px;gap:8px;flex-wrap:wrap">
       <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">All Services</div>
-      <button class="btn btn-gold btn-xs" onclick="adminOpenAddService()"><i class="fas fa-plus"></i> Add New</button>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost btn-xs" onclick="adminSeedServices()" title="Import default services"><i class="fas fa-cloud-arrow-down"></i> Seed Defaults</button>
+        <button class="btn btn-gold btn-xs" onclick="adminOpenAddService()"><i class="fas fa-plus"></i> Add New</button>
+      </div>
     </div>
+
+    <!-- Stats strip -->
+    <div id="admin-svcs-stats" style="display:flex;gap:8px;margin-bottom:10px">
+      <div style="flex:1;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:8px 10px;text-align:center">
+        <div id="svcs-stat-total" style="font-family:var(--fd);font-size:1rem;color:var(--t1)">—</div>
+        <div style="font-size:.54rem;color:var(--t4);text-transform:uppercase;letter-spacing:.05em">Total</div>
+      </div>
+      <div style="flex:1;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:8px 10px;text-align:center">
+        <div id="svcs-stat-active" style="font-family:var(--fd);font-size:1rem;color:var(--green)">—</div>
+        <div style="font-size:.54rem;color:var(--t4);text-transform:uppercase;letter-spacing:.05em">Visible</div>
+      </div>
+      <div style="flex:1;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:8px 10px;text-align:center">
+        <div id="svcs-stat-hidden" style="font-family:var(--fd);font-size:1rem;color:var(--red)">—</div>
+        <div style="font-size:.54rem;color:var(--t4);text-transform:uppercase;letter-spacing:.05em">Hidden</div>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div style="position:relative;margin-bottom:10px">
+      <i class="fas fa-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--t4);font-size:.7rem"></i>
+      <input id="admin-svcs-search" type="text" placeholder="Search services…" oninput="adminFilterServicesList()"
+        style="width:100%;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:9px 12px 9px 32px;font-size:.74rem;color:var(--t1)">
+    </div>
+
+    <!-- Category filter chips -->
+    <div id="admin-svcs-cat-chips" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;-webkit-overflow-scrolling:touch"></div>
+
     <div id="admin-svcs-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
       <div style="text-align:center;padding:20px"><span class="spin"></span></div>
     </div>
   </div>
 
   <!-- ── SERVICE EDIT MODAL (inline slide-up sheet) ── -->
-  <div id="admin-svc-editor" style="position:fixed;inset:0;max-width:430px;margin:0 auto;z-index:900;display:flex;flex-direction:column;pointer-events:none;transition:opacity .22s">
+  <div id="admin-svc-editor" style="position:fixed;inset:0;max-width:430px;margin:0 auto;z-index:900;display:flex;flex-direction:column;pointer-events:none;transition:opacity .22s;visibility:hidden;opacity:0">
     <div style="flex:1;background:rgba(0,0,0,.55);opacity:0;transition:opacity .22s" id="svc-ed-backdrop" onclick="adminCloseSvcEditor()"></div>
     <div id="svc-ed-sheet" style="background:var(--bg2);border-radius:20px 20px 0 0;border-top:1px solid var(--bd);padding:20px 16px 40px;max-height:88dvh;overflow-y:auto;transform:translateY(100%);transition:transform .28s var(--ease)">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
@@ -2183,7 +2336,70 @@ body.admin-open .acct-tabs{ pointer-events:none; }
     </div>
   </div>
 
+  <!-- ── QUICK ADD AGENT MODAL ── -->
+  <div id="admin-agent-editor" style="position:fixed;inset:0;max-width:430px;margin:0 auto;z-index:900;display:flex;flex-direction:column;pointer-events:none;transition:opacity .22s;visibility:hidden;opacity:0">
+    <div style="flex:1;background:rgba(0,0,0,.55);opacity:0;transition:opacity .22s" id="agent-ed-backdrop" onclick="adminCloseAgentEditor()"></div>
+    <div id="agent-ed-sheet" style="background:var(--bg2);border-radius:20px 20px 0 0;border-top:1px solid var(--bd);padding:20px 16px 40px;max-height:88dvh;overflow-y:auto;transform:translateY(100%);transition:transform .28s var(--ease)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:.78rem;font-weight:700;color:var(--t1)">Add Agent</div>
+        <button onclick="adminCloseAgentEditor()" style="width:30px;height:30px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="fg"><label class="flbl">Full Name *</label><input class="fi" id="agent-ed-name" type="text" placeholder="e.g. Jane Doe" maxlength="60"></div>
+      <div class="fg"><label class="flbl">Email *</label><input class="fi" id="agent-ed-email" type="email" placeholder="agent@example.com" maxlength="100"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fg"><label class="flbl">Phone / WhatsApp</label><input class="fi" id="agent-ed-phone" type="text" placeholder="0712345678" maxlength="20"></div>
+        <div class="fg"><label class="flbl">Location</label><input class="fi" id="agent-ed-location" type="text" placeholder="Kemera" maxlength="60"></div>
+      </div>
+      <div class="fg"><label class="flbl">Status</label>
+        <select class="fi" id="agent-ed-status">
+          <option value="approved">Approved</option>
+          <option value="pending">Pending</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <button class="btn btn-gold btn-full btn-sm" onclick="adminSaveNewAgent()" style="margin-top:6px"><i class="fas fa-check"></i> Add Agent</button>
+    </div>
+  </div>
+
+  <!-- ── QUICK ADD INSTITUTION MODAL ── -->
+  <div id="admin-inst-editor" style="position:fixed;inset:0;max-width:430px;margin:0 auto;z-index:900;display:flex;flex-direction:column;pointer-events:none;transition:opacity .22s;visibility:hidden;opacity:0">
+    <div style="flex:1;background:rgba(0,0,0,.55);opacity:0;transition:opacity .22s" id="inst-ed-backdrop" onclick="adminCloseInstEditor()"></div>
+    <div id="inst-ed-sheet" style="background:var(--bg2);border-radius:20px 20px 0 0;border-top:1px solid var(--bd);padding:20px 16px 40px;max-height:88dvh;overflow-y:auto;transform:translateY(100%);transition:transform .28s var(--ease)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:.78rem;font-weight:700;color:var(--t1)">Add Institution</div>
+        <button onclick="adminCloseInstEditor()" style="width:30px;height:30px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="fg"><label class="flbl">Institution Name *</label><input class="fi" id="inst-ed-name" type="text" placeholder="e.g. Kemera High School" maxlength="80"></div>
+      <div class="fg"><label class="flbl">Official Email *</label><input class="fi" id="inst-ed-email" type="email" placeholder="office@institution.com" maxlength="100"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fg"><label class="flbl">WhatsApp</label><input class="fi" id="inst-ed-wa" type="text" placeholder="0712345678" maxlength="20"></div>
+        <div class="fg"><label class="flbl">Location</label><input class="fi" id="inst-ed-loc" type="text" placeholder="Kemera" maxlength="60"></div>
+      </div>
+      <div class="fg"><label class="flbl">Contact Person</label><input class="fi" id="inst-ed-contact" type="text" placeholder="Representative name" maxlength="60"></div>
+      <button class="btn btn-gold btn-full btn-sm" onclick="adminSaveNewInstitution()" style="margin-top:6px"><i class="fas fa-check"></i> Add Institution</button>
+    </div>
+  </div>
+
   <!-- ── MESSAGES ── -->
+  <!-- ── FEEDBACK / REVIEWS ── -->
+  <div class="admin-section" id="asec-feedback">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
+      <div>
+        <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Customer Reviews</div>
+        <div style="font-size:.6rem;color:var(--t4);margin-top:2px">Approve to show in home carousel</div>
+      </div>
+      <button class="btn btn-ghost btn-xs" onclick="adminLoadFeedback()"><i class="fas fa-rotate-right"></i></button>
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <button class="btn btn-outline btn-xs on" id="afb-f-all"      onclick="adminFilterFeedback('all',this)">All</button>
+      <button class="btn btn-ghost btn-xs"      id="afb-f-approved" onclick="adminFilterFeedback('approved',this)"><i class="fas fa-eye"></i> Visible</button>
+      <button class="btn btn-ghost btn-xs"      id="afb-f-pending"  onclick="adminFilterFeedback('pending',this)"><i class="fas fa-eye-slash"></i> Hidden</button>
+    </div>
+    <div id="admin-feedback-list" style="display:flex;flex-direction:column;gap:8px;padding-bottom:80px">
+      <div style="text-align:center;padding:20px"><span class="spin"></span></div>
+    </div>
+  </div>
+
   <div class="admin-section" id="asec-messages">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
       <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Contact Messages</div>
@@ -2813,10 +3029,10 @@ body.admin-open .acct-tabs{ pointer-events:none; }
       </div>
       <div id="fb-star-label" style="font-size:.66rem;color:var(--t3);min-height:16px">Tap to rate</div>
     </div>
-    <div class="fg"><label class="flbl">Your Name (optional)</label><input class="fi" id="fb-name" type="text" placeholder="e.g. John K." maxlength="50"></div>
-    <div class="fg"><label class="flbl">Comment <span class="req">*</span></label><textarea class="fi" id="fb-comment" rows="3" placeholder="Tell us about your experience…" maxlength="400"></textarea></div>
-    <div class="fg"><label class="flbl">Service Used (optional)</label><input class="fi" id="fb-service" type="text" placeholder="e.g. CV Writing, Printing…" maxlength="60"></div>
-    <button class="btn btn-gold btn-full" id="fb-submit-btn" onclick="submitPublicFeedback()" style="margin-top:4px;padding:13px;font-size:.8rem">
+    <div class="fg"><label class="flbl">Your Name <span style="color:var(--t4);font-size:.62rem">(optional)</span></label><input class="fi" id="fb-name" type="text" placeholder="e.g. John K." maxlength="50"></div>
+    <div class="fg"><label class="flbl">Comment <span style="color:var(--t4);font-size:.62rem">(optional)</span></label><textarea class="fi" id="fb-comment" rows="3" placeholder="Tell us about your experience…" maxlength="400"></textarea></div>
+    <div class="fg"><label class="flbl">Service Used <span style="color:var(--t4);font-size:.62rem">(optional)</span></label><input class="fi" id="fb-service" type="text" placeholder="e.g. CV Writing, Printing…" maxlength="60"></div>
+    <button class="btn btn-gold btn-full" id="fb-submit-btn" onclick="submitPublicFeedback()" style="margin-top:8px;padding:14px;font-size:.82rem;display:flex;align-items:center;justify-content:center;gap:8px">
       <i class="fas fa-paper-plane"></i> Submit Review
     </button>
     <div id="fb-err" style="display:none;color:var(--red);font-size:.72rem;margin-top:8px;text-align:center"></div>
@@ -3092,11 +3308,13 @@ function popup(title, msg, icon='nf', btns=[{label:'OK',fn:null,style:'btn-gold'
   $('popup-icon-el').innerHTML = `<i class="fas ${icons[icon]||icons.nf}"></i>`;
   $('popup-ttl-el').textContent = title;
   $('popup-msg-el').textContent = msg;
-  $('popup-acts-el').innerHTML = btns.map((b,i)=>`<button class="btn ${b.style||'btn-ghost'} btn-sm" onclick="popupBtn(${i})">${esc(b.label)}</button>`).join('');
+  $('popup-acts-el').innerHTML = btns.map((b,i)=>`<button class="btn ${b.style||'btn-ghost'} btn-sm" onclick="popupBtn(${i})" ${b.danger?'style="color:var(--red);border-color:rgba(224,80,80,.4)"':''}>${esc(b.label)}</button>`).join('');
   window._popupBtns = btns;
   $('popup-overlay').classList.add('on');
 }
 function popupBtn(i) { $('popup-overlay').classList.remove('on'); window._popupBtns?.[i]?.fn?.(); }
+function closePopup(){ $('popup-overlay').classList.remove('on'); }
+window.closePopup = closePopup;
 
 /* ── OVERLAY ───────────────────────────────────────────────────── */
 let _ovlLock=false, _ovlLockTimer=null;
@@ -3128,7 +3346,7 @@ function closeModal(id){
   if (!stillOpen) { hideOvl(); document.body.style.overflow = ''; }
 }
 function closeAllModals(){
-  ['contact-modal','about-modal','my-reqs-modal','my-files-modal','upload-modal','notif-panel','profile-modal','svc-req-modal','rating-modal','notes-sheet','agent-register-modal','dev-contact-modal','privacy-modal','terms-modal','inst-request-modal','inst-all-reqs-modal','tech-req-modal','svc-detail-modal','tech-detail-modal','reg-success-modal','new-pw-modal'].forEach(id=>{
+  ['contact-modal','about-modal','my-reqs-modal','my-files-modal','upload-modal','notif-panel','profile-modal','svc-req-modal','rating-modal','notes-sheet','agent-register-modal','dev-contact-modal','privacy-modal','terms-modal','inst-request-modal','inst-all-reqs-modal','tech-req-modal','svc-detail-modal','tech-detail-modal','reg-success-modal','new-pw-modal','founder-about-modal','track-order-modal'].forEach(id=>{
     const el=$(id); el?.classList.remove('on');
   });
   hideOvl();
@@ -3464,6 +3682,10 @@ async function doSignIn(){
 
     err.textContent = friendlyMsg;
     err.style.display='block';
+    if (rawMsg.toLowerCase().includes('email not confirmed')) {
+      const loginEmail = ($('si-id')?.value||'').trim();
+      err.innerHTML = friendlyMsg + `<br><button onclick="resendConfirmEmail('${esc(loginEmail)}',this)" style="margin-top:8px;background:none;border:1px solid rgba(224,80,80,.4);color:var(--red);border-radius:8px;padding:6px 12px;font-size:.68rem;cursor:pointer">Resend Confirmation Email</button>`;
+    }
   } finally {
     if (!_loginLimiter.isLocked) {
       btn.disabled=false;
@@ -3473,6 +3695,34 @@ async function doSignIn(){
 }
 
 /* ── SIGN OUT ──────────────────────────────────────────────────── */
+async function resendConfirmEmail(email, btnEl){
+  if(!email || !email.includes('@')){ toast('Enter your email above first.','er'); return; }
+  if(btnEl){ btnEl.disabled=true; btnEl.textContent='Sending…'; }
+  try{
+    const { error } = await sb.auth.resend({ type:'signup', email });
+    if(error) throw error;
+    toast('Confirmation email requested. It can take a few minutes — also check Spam/Promotions.','ok');
+    if(btnEl){
+      btnEl.textContent='Sent ✓ (wait 60s to resend)';
+      let secs = 60;
+      const iv = setInterval(()=>{
+        secs--;
+        if(secs<=0){ clearInterval(iv); btnEl.disabled=false; btnEl.textContent='Resend Confirmation Email'; }
+        else { btnEl.textContent=`Sent ✓ (resend in ${secs}s)`; }
+      },1000);
+    }
+  }catch(e){
+    const msg=(e.message||'').toLowerCase();
+    if(msg.includes('rate') || msg.includes('security')){
+      toast('Too many requests — please wait a minute before trying again.','er');
+    } else {
+      toast(e.message||'Could not resend email.','er');
+    }
+    if(btnEl){ btnEl.disabled=false; btnEl.textContent='Resend Confirmation Email'; }
+  }
+}
+window.resendConfirmEmail = resendConfirmEmail;
+
 /* ════════════════════════════════════════════════════════════════
    SIGN OUT
 ════════════════════════════════════════════════════════════════ */
@@ -3602,9 +3852,46 @@ function generateNdUserId(uuid) {
 async function loadProfile(){
   if (!_user) return;
   try {
-    const { data } = await sb.from('profiles').select('*').eq('id', _user.id).single();
+    const { data, error } = await sb.from('profiles').select('*').eq('id', _user.id).maybeSingle();
+
+    if (error) {
+      console.error('loadProfile error:', error.message);
+      if (/row-level security|policy/i.test(error.message||'')) {
+        toast('Could not load your profile (database permissions). Run the updated SQL schema.','er');
+      }
+      // Fall back to a minimal in-memory profile so the UI isn't blank
+      if (!_profile) {
+        _profile = {
+          id: _user.id,
+          full_name: _user.user_metadata?.full_name || _user.email?.split('@')[0] || 'User',
+          role: 'user',
+          nd_user_id: generateNdUserId(_user.id)
+        };
+      }
+      return;
+    }
+
     if (data) {
       _profile = data;
+    } else {
+      // No profile row exists yet for this authenticated user — create one
+      const ndId = generateNdUserId(_user.id);
+      const newProfile = {
+        id: _user.id,
+        full_name: _user.user_metadata?.full_name || _user.email?.split('@')[0] || 'User',
+        email: _user.email || null,
+        role: 'user',
+        nd_user_id: ndId,
+        referral_code: ndId
+      };
+      const { data: created, error: insErr } = await sb.from('profiles').insert(newProfile).select().maybeSingle();
+      if (insErr) {
+        console.error('Could not create profile row:', insErr.message);
+        _profile = newProfile; // use in-memory so UI still renders
+      } else {
+        _profile = created || newProfile;
+      }
+    }
 
       // ── Auto-generate nd_user_id if missing (new column) ──
       if (!_profile.nd_user_id) {
@@ -3640,8 +3927,17 @@ async function loadProfile(){
 
       // Update last visit
       sb.from('profiles').update({last_visit:new Date().toISOString()}).eq('id',_user.id).then(()=>{}).catch(()=>{});
+  } catch(e) {
+    console.error('loadProfile fatal error:', e.message);
+    if (!_profile) {
+      _profile = {
+        id: _user.id,
+        full_name: _user.email?.split('@')[0] || 'User',
+        role: 'user',
+        nd_user_id: generateNdUserId(_user.id)
+      };
     }
-  } catch(e) {}
+  }
 }
 async function saveProfile(){
   if (!_user) return;
@@ -3736,20 +4032,44 @@ async function uploadAvatar(inp){
 /* ── RENDER ACCOUNT ────────────────────────────────────────────── */
 function renderAccount(){
   const loggedIn = !!_user;
+  document.body.classList.toggle('is-logged-in', loggedIn);
   $('acct-guest').style.display = loggedIn ? 'none' : 'block';
   $('acct-loggedin').style.display = loggedIn ? 'flex' : 'none';
   if (loggedIn) $('acct-loggedin').style.flexDirection = 'column';
   $('fab-notes')?.classList.toggle('show', loggedIn && window._currentScreen==='notes');
 
-  if (!loggedIn || !_profile) return;
-
-  // Show admin menu item in MORE tab if admin
-  const moreAdminSec = $('more-admin-section');
-  if (moreAdminSec) moreAdminSec.style.display = _profile?.role === 'admin' ? 'block' : 'none';
+  if (!loggedIn) {
+    const topbarAdminBtn = $('topbar-admin-btn');
+    if (topbarAdminBtn) topbarAdminBtn.style.display = 'none';
+    const topbarSignoutBtn = $('topbar-signout-btn');
+    if (topbarSignoutBtn) topbarSignoutBtn.style.display = 'none';
+    return;
+  }
+  if (!_profile) {
+    // Should not normally happen now that loadProfile() always sets a fallback,
+    // but guard anyway so the UI doesn't go fully blank.
+    _profile = {
+      id: _user.id,
+      full_name: _user.email?.split('@')[0] || 'User',
+      role: 'user',
+      nd_user_id: generateNdUserId(_user.id)
+    };
+  }
 
   // Show admin button in account header
   const adminBtnWrap = $('acct-admin-btn-wrap');
   if (adminBtnWrap) adminBtnWrap.style.display = _profile?.role === 'admin' ? 'block' : 'none';
+  const topbarAdminBtn = $('topbar-admin-btn');
+  if (topbarAdminBtn) topbarAdminBtn.style.display = _profile?.role === 'admin' ? 'flex' : 'none';
+  const topbarSignoutBtn = $('topbar-signout-btn');
+  if (topbarSignoutBtn) topbarSignoutBtn.style.display = _profile?.role === 'admin' ? 'none' : 'flex';
+
+  // Admins: watch for new requests platform-wide + ask for notification permission once
+  if (_profile?.role === 'admin' && !window._adminWatchStarted) {
+    window._adminWatchStarted = true;
+    subscribeAdminRealtime();
+    requestNotifPermission();
+  }
 
   // Resolve nd_user_id — prefer stored, generate from UUID as fallback
   const ndId = _profile.nd_user_id || generateNdUserId(_user.id);
@@ -3875,6 +4195,27 @@ const STATIC_SERVICES = [
   {id:'s39',name:'Online Form Fill',   description:'Fill in online forms and applications on your behalf.',       icon:'fa-list-check',      category:'digital',  price_label:'From KES 100',      requires_file:false, sort_order:39},
   {id:'s40',name:'Data Bundle Help',   description:'Airtime, bundles and M-Pesa merchant payments.',             icon:'fa-sim-card',        category:'digital',  price_label:'Face value',        requires_file:false, sort_order:40},
   {id:'s41',name:'Phone Repair Ref.',  description:'Referral to certified phone repair technicians nearby.',      icon:'fa-mobile',          category:'digital',  price_label:'Free referral',     requires_file:false, sort_order:41},
+  /* ── NEW PROFESSIONAL SERVICE CATEGORIES (from service flyer) ── */
+  {id:'s42',name:'KRA Services',       description:'KRA PIN registration, iTax returns, nil returns, P9/withholding tax, compliance certificates.',       icon:'fa-landmark',        category:'govt',     price_label:'From KES 200',      requires_file:true,  sort_order:42, is_active:true},
+  {id:'s43',name:'eCitizen Services',  description:'New account registration, password reset, eCitizen support, general applications.',                   icon:'fa-globe',           category:'govt',     price_label:'From KES 150',      requires_file:true,  sort_order:43, is_active:true},
+  {id:'s44',name:'Business & Company', description:'Business name reg, company reg, AGPO, NCA cert, scrap metal licensing, societies, partnerships.',     icon:'fa-briefcase',       category:'govt',     price_label:'From KES 500',      requires_file:true,  sort_order:44, is_active:true},
+  {id:'s45',name:'TSC Services',       description:'TSC number application/retrieval, TPAD registration, TPAD & payslip pushing, Good Conduct cert.',     icon:'fa-graduation-cap',  category:'govt',     price_label:'From KES 200',      requires_file:true,  sort_order:45, is_active:true},
+  {id:'s46',name:'SHA / SHIF Health',  description:'SHA registration, adding dependants, change of primary number, premium reduction, card retrieval.',   icon:'fa-hospital',        category:'govt',     price_label:'From KES 200',      requires_file:true,  sort_order:46, is_active:true},
+  {id:'s47',name:'NHIF / HELB',        description:'NHIF services & updates, HELB services & clearance, email changes, other accounts.',                  icon:'fa-shield-heart',    category:'govt',     price_label:'From KES 200',      requires_file:true,  sort_order:47, is_active:true},
+  {id:'s48',name:'NSSF Services',      description:'New NSSF registration, lost NSSF retrieval, NSSF statements and updates.',                            icon:'fa-piggy-bank',      category:'govt',     price_label:'From KES 200',      requires_file:true,  sort_order:48, is_active:true},
+  {id:'s49',name:'Birth & Personal Docs',description:'Birth certificate (new/late/lost), name/detail changes, ID change services, alien card processing.',icon:'fa-id-card',         category:'govt',     price_label:'From KES 300',      requires_file:true,  sort_order:49, is_active:true},
+  {id:'s50',name:'Certificate of Conduct',description:'New PCC application, delayed processing follow-up, lost certificate replacement.',                 icon:'fa-award',           category:'govt',     price_label:'From KES 300',      requires_file:true,  sort_order:50, is_active:true},
+  {id:'s51',name:'Affidavits & Legal', description:'Affidavit for marriage/document verification, general affidavits, letter from Registrar of Persons.', icon:'fa-scale-balanced',  category:'docs',     price_label:'From KES 400',      requires_file:true,  sort_order:51, is_active:true},
+  {id:'s52',name:'Passport & Immigration',description:'Passport application & renewal, fast processing, immigration support.',                            icon:'fa-passport',        category:'govt',     price_label:'From KES 300',      requires_file:true,  sort_order:52, is_active:true},
+  {id:'s53',name:'Driving & NTSA',     description:'Driving license renewal, Smart DL, temporary permit, logbook, vehicle transfer, NTSA & car tracking.',icon:'fa-car',             category:'govt',     price_label:'From KES 300',      requires_file:true,  sort_order:53, is_active:true},
+  {id:'s54',name:'Motor Vehicle Reg.', description:'New number plate registration, vehicle ownership transfer, advance tax, PSV badge.',                  icon:'fa-car-side',        category:'govt',     price_label:'From KES 400',      requires_file:true,  sort_order:54, is_active:true},
+  {id:'s55',name:'Land & Permits',     description:'Land rent & land rates, KenHA road permits, environmental approval (NEMA), county permits.',           icon:'fa-map',             category:'govt',     price_label:'From KES 300',      requires_file:true,  sort_order:55, is_active:true},
+  {id:'s56',name:'Academic Documents', description:'Lost certs, degree transcripts, KNEC replacement, school leaving, computer certs, recommendation letters, CV revamping.', icon:'fa-graduation-cap', category:'academic', price_label:'From KES 300', requires_file:true, sort_order:56, is_active:true},
+  {id:'s57',name:'Medical Forms',      description:'GP69 medical form (stamped), medical report forms, fitness certificates, insurance claim forms.',     icon:'fa-heart-pulse',     category:'docs',     price_label:'From KES 200',      requires_file:true,  sort_order:57, is_active:true},
+  {id:'s58',name:'Special Certificates',description:'Food handlers, marriage, single status, certificate of residence, certificate of good standing.',    icon:'fa-certificate',     category:'docs',     price_label:'From KES 300',      requires_file:true,  sort_order:58, is_active:true},
+  {id:'s59',name:'Digital & Creative', description:'Document editing, CV writing, posters, flyers, cards, website design, photography, T-shirt printing, funeral & wedding programs.', icon:'fa-palette', category:'design', price_label:'From KES 200', requires_file:false, sort_order:59, is_active:true},
+  {id:'s60',name:'Online Work Support',description:'Online research, data entry, copy typing, Excel analysis, virtual assistant, email management, customer support.', icon:'fa-laptop-code', category:'digital', price_label:'From KES 200', requires_file:false, sort_order:60, is_active:true},
+  {id:'s61',name:'Education Materials',description:'Full set of exams & marking schemes, schemes of work, notes, revision materials, topical questions, maths solutions.', icon:'fa-book-open', category:'academic', price_label:'From KES 100', requires_file:false, sort_order:61, is_active:true},
 ];
 
 async function loadServices(){
@@ -4020,6 +4361,48 @@ function closeSvcReq(){
 }
 window.closeSvcReq = closeSvcReq;
 
+/* ── REQUEST SUCCESS OVERLAY ───────────────────────────────────── */
+let _lastSentReqId = null;
+function showReqSuccess(serviceName, reqId){
+  _lastSentReqId = reqId || null;
+  const sub = $('req-success-sub');
+  if (sub) sub.textContent = serviceName ? `Your "${serviceName}" request is in. We'll reach you on WhatsApp soon.` : "We'll reach you on WhatsApp soon.";
+  const ov = $('req-success-overlay');
+  if (!ov) return;
+  // Restart the checkmark animation each time
+  const check = ov.querySelector('.req-success-check');
+  if (check) { check.style.animation='none'; void check.offsetWidth; check.style.animation=''; }
+  ov.classList.add('on');
+  if (navigator.vibrate) try{ navigator.vibrate(30); }catch(e){}
+}
+window.showReqSuccess = showReqSuccess;
+
+function closeReqSuccess(){
+  $('req-success-overlay')?.classList.remove('on');
+}
+window.closeReqSuccess = closeReqSuccess;
+
+function viewSentRequest(){
+  closeReqSuccess();
+  goNav('account');
+  setTimeout(()=>{
+    acctTab('requests');
+    if (_lastSentReqId) {
+      setTimeout(()=>{
+        const card = document.querySelector(`[data-req-id="${_lastSentReqId}"]`);
+        if (card) {
+          card.scrollIntoView({behavior:'smooth', block:'center'});
+          card.style.transition = 'box-shadow .3s, border-color .3s';
+          card.style.boxShadow = '0 0 0 2px var(--gold)';
+          card.style.borderColor = 'var(--gold)';
+          setTimeout(()=>{ card.style.boxShadow=''; card.style.borderColor=''; }, 2200);
+        }
+      }, 250);
+    }
+  }, 80);
+}
+window.viewSentRequest = viewSentRequest;
+
 async function submitSvcRequest(){
   if (!_user){ closeSvcReq(); openAuth(); return; }
   const notes = typeof sanitize==='function' ? sanitize($('svc-req-notes')?.value||'') : ($('svc-req-notes')?.value||'');
@@ -4028,15 +4411,25 @@ async function submitSvcRequest(){
   if(err){ err.style.display='none'; err.textContent=''; }
   if(btn){ btn.disabled=true; btn.innerHTML='<span class="spin"></span> Submitting…'; }
   try {
-    const { data: req, error: reqErr } = await sb.from('service_requests').insert({
+    const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const payload = {
       user_id: _user.id,
-      service_id: _currentSvc.id,
       service_name: _currentSvc.name,
       description: notes||null,
       status: 'pending',
       file_urls: '[]'
-    }).select().single();
+    };
+    // Only attach service_id when it's a real database UUID.
+    // Services shown from the built-in fallback list (e.g. "s01")
+    // don't exist as rows in the services table yet, so we omit it
+    // rather than send an invalid value the database will reject.
+    if (uuidRe.test(_currentSvc.id)) payload.service_id = _currentSvc.id;
+
+    const { data: req, error: reqErr } = await sb.from('service_requests').insert(payload).select().single();
     if (reqErr) throw reqErr;
+    sb.from('request_status_history').insert({
+      request_id: req.id, status: 'pending', changed_by: _user.id
+    }).then(()=>{}).catch(()=>{});
     let fileUrls = [];
     if (_pendingSvcFiles.length > 0) {
       if(btn) btn.innerHTML='<span class="spin"></span> Uploading files…';
@@ -4050,13 +4443,13 @@ async function submitSvcRequest(){
         await sb.from('service_requests').update({file_urls:JSON.stringify(fileUrls)}).eq('id',req.id);
       }
     }
-    toast("Request submitted! We'll reach you on WhatsApp. 🎉", 'ok', 4000);
     closeSvcReq();
+    showReqSuccess(_currentSvc.name, req.id);
     if(typeof loadMyReqs==='function') loadMyReqs();
     if(typeof refreshHomeCounts==='function') refreshHomeCounts();
     if(typeof renderHomeReqs==='function') renderHomeReqs();
     if(typeof awardLoyaltyPoints==='function') awardLoyaltyPoints(_user.id, 10);
-    if(typeof showReceiptOffer==='function') setTimeout(()=>showReceiptOffer(req,_profile),600);
+    if(typeof showReceiptOffer==='function') setTimeout(()=>{ if(!$('req-success-overlay')?.classList.contains('on')) showReceiptOffer(req,_profile); },5000);
   } catch(e){
     const msg = e?.message||'Submission failed. Please try again.';
     if(err){ err.textContent=msg; err.style.display='block'; }
@@ -4358,7 +4751,7 @@ function renderHomeReqs(){
   }
   $('home-reqs-empty').style.display='none';
   wrap.innerHTML = shown.map(r=>`
-    <div class="req-card" onclick="openMyRequestsModal()">
+    <div class="req-card" onclick="openTrackOrder('${r.id}')">
       <div class="req-icon ${esc(r.status||'pending')}"><i class="fas ${r.status==='completed'?'fa-check':r.status==='in_progress'?'fa-spinner':'fa-clock'}"></i></div>
       <div class="req-info">
         <div class="req-name">${esc(r.service_name)}</div>
@@ -4502,7 +4895,68 @@ function subscribeRealtime(){
       renderHomeReqs();
     })
     .subscribe();
+
+  // Admins also listen for brand-new requests from ANY user, platform-wide
+  if (_profile?.role === 'admin') subscribeAdminRealtime();
 }
+
+let _adminRealtimeChannel = null;
+function subscribeAdminRealtime(){
+  if (!_user || !sb) return;
+  if (_adminRealtimeChannel) { _adminRealtimeChannel.unsubscribe(); _adminRealtimeChannel = null; }
+  _adminRealtimeChannel = sb.channel('novadesk-admin-watch')
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'service_requests' }, payload=>{
+      const req = payload.new;
+      // Update in-memory admin list + counters if the panel data is loaded
+      if (Array.isArray(_allReqs)) {
+        _allReqs.unshift(req);
+        const pending = _allReqs.filter(r=>r.status==='pending').length;
+        const badge = $('admin-pending-badge');
+        if (badge){ badge.textContent=pending; badge.style.display=pending>0?'flex':'none'; }
+        if ($('admin-panel')?.classList.contains('on')) {
+          renderAdminReqs();
+          const rr = $('admin-recent-reqs');
+          if (rr) rr.innerHTML = _allReqs.slice(0,8).map(r=>adminReqRow(r)).join('');
+        }
+      }
+      notifyAdminNewRequest(req);
+    })
+    .subscribe();
+}
+window.subscribeAdminRealtime = subscribeAdminRealtime;
+
+function notifyAdminNewRequest(req){
+  const title = '🆕 New Service Request';
+  const body  = `${req.service_name} — just submitted`;
+  // In-app toast, always shown
+  toast(`${title}: ${req.service_name}`, 'nf', 5000);
+  // Play a short alert sound if available
+  try {
+    const audio = new Audio('data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCA');
+    audio.volume = 0.4;
+    audio.play().catch(()=>{});
+  } catch(e){}
+  // Native OS-level push notification (works even if tab isn't focused,
+  // and via the installed PWA's service worker if registered)
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try {
+      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.ready.then(reg=>{
+          reg.showNotification(title, {
+            body, icon:'/icon-192.png', badge:'/icon-192.png',
+            tag:'new-request-'+req.id, vibrate:[100,50,100],
+            data:{ url: window.location.origin }
+          });
+        });
+      } else {
+        const n = new Notification(title, { body, icon:'/icon-192.png' });
+        n.onclick = () => { window.focus(); n.close(); };
+      }
+    } catch(e){ console.warn('Admin notification failed:', e.message); }
+  }
+  if (navigator.vibrate) try{ navigator.vibrate([100,50,100]); }catch(e){}
+}
+window.notifyAdminNewRequest = notifyAdminNewRequest;
 
 /* ── ADMIN ─────────────────────────────────────────────────────── */
 let _allReqs = [], _allUsers = [], _adminReqFilter = 'all', _adminUserFilter = 'all';
@@ -4522,18 +4976,56 @@ function maybeOpenAdmin(){
     openAdmin();
   }
 }
+async function diagnoseAdminAccess(){
+  if (!_user) { toast('Sign in first.','er'); return; }
+  popup('Checking…','Looking up your account in the database.','nf',[]);
+  try {
+    const { data: prof, error } = await sb.from('profiles').select('id,role,email,full_name,nd_user_id').eq('id', _user.id).maybeSingle();
+    let msg;
+    if (error) {
+      msg = `Database error: ${error.message}\n\nYour auth ID: ${_user.id}\n\nThis usually means a SELECT policy is missing on the profiles table.`;
+    } else if (!prof) {
+      msg = `No profile row exists for your account.\n\nYour auth ID: ${_user.id}\nYour email: ${_user.email}\n\nRun this in Supabase SQL Editor:\n\nINSERT INTO public.profiles (id, full_name, email, role) VALUES ('${_user.id}', '${(_user.email||'User').split('@')[0]}', '${_user.email}', 'admin');`;
+    } else if (prof.role !== 'admin') {
+      msg = `Found your profile, but its role is "${prof.role||'(empty)'}", not "admin".\n\nYour auth ID: ${prof.id}\nEmail on file: ${prof.email||'(none)'}\n\nRun this in Supabase SQL Editor:\n\nUPDATE public.profiles SET role = 'admin' WHERE id = '${prof.id}';`;
+    } else {
+      msg = `Your role is already "admin" in the database. If the dashboard still won't open, try fully reloading the page — your local session may be stale.`;
+    }
+    popup(prof?.role==='admin' ? 'Already Admin ✓' : 'Admin Access Issue Found', msg, prof?.role==='admin'?'ok':'er', [{label:'OK',fn:null,style:'btn-gold'}]);
+  } catch(e) {
+    popup('Check Failed', e.message || 'Could not run the diagnostic.', 'er', [{label:'OK',fn:null,style:'btn-gold'}]);
+  }
+}
+window.diagnoseAdminAccess = diagnoseAdminAccess;
+
 async function openAdmin(){
   // Double-check role server-side — never trust client _profile alone
   if (!_user) { toast('Sign in required.','er'); return; }
   try {
-    const { data: prof, error } = await sb.from('profiles').select('role').eq('id', _user.id).single();
-    if (error || prof?.role !== 'admin') {
-      toast('Access denied. Admin privileges required.','er');
+    const { data: prof, error } = await sb.from('profiles').select('role').eq('id', _user.id).maybeSingle();
+    if (error) {
+      console.error('openAdmin role check failed:', error.message);
+      if (/row-level security|policy/i.test(error.message||'')) {
+        popup('Permission Check Failed','The database blocked the admin role check (Row Level Security). This means a SELECT policy is missing on the profiles table. Run the latest SQL schema, then try again.','er',[{label:'OK',fn:null,style:'btn-gold'}]);
+      } else {
+        popup('Permission Check Failed', error.message || 'Could not verify your admin role.', 'er', [{label:'OK',fn:null,style:'btn-gold'}]);
+      }
+      return;
+    }
+    if (!prof) {
+      popup('Profile Not Found','No profile row exists for your account in the database. Run the latest SQL schema, which includes a query to create or promote your profile to admin.','er',[{label:'OK',fn:null,style:'btn-gold'}]);
+      return;
+    }
+    if (prof.role !== 'admin') {
+      popup('Not an Admin Yet',`Your account role is currently "${prof.role||'user'}", not "admin". Run this in Supabase SQL Editor: UPDATE public.profiles SET role = 'admin' WHERE id = '${_user.id}';`,'er',[{label:'OK',fn:null,style:'btn-gold'}]);
       log.warn('Unauthorized admin access attempt by', _user.id);
       return;
     }
+    // Keep local profile in sync now that we've confirmed server-side
+    _profile = { ..._profile, role: 'admin' };
   } catch(e) {
-    toast('Could not verify permissions.','er'); return;
+    popup('Permission Check Failed', e.message || 'Could not verify permissions.', 'er', [{label:'OK',fn:null,style:'btn-gold'}]);
+    return;
   }
   $('admin-panel').classList.add('on');
   document.body.classList.add('admin-open');
@@ -4551,7 +5043,7 @@ function closeAdmin(){
 window.closeAdmin = closeAdmin;
 
 function adminTab(name){
-  ['overview','analytics','requests','users','agents','institutions','services','messages','settings'].forEach(t=>{
+  ['overview','analytics','requests','users','agents','institutions','services','messages','feedback','settings'].forEach(t=>{
     $(`atab-${t}`)?.classList.toggle('on', t===name);
     $(`asec-${t}`)?.classList.toggle('on', t===name);
   });
@@ -4562,6 +5054,7 @@ function adminTab(name){
   if (name==='analytics')    adminLoadAnalytics();
   if (name==='agents')       adminLoadAgents();
   if (name==='institutions') adminLoadInstitutions();
+  if (name==='feedback')     adminLoadFeedback();
 }
 window.adminTab = adminTab;
 
@@ -4752,6 +5245,10 @@ async function adminSetStatus(reqId, newStatus){
       .update({ status: newStatus, updated_at: new Date().toISOString() })
       .eq('id', reqId);
     if (error) throw error;
+    // Log this transition for the order tracking timeline
+    sb.from('request_status_history').insert({
+      request_id: reqId, status: newStatus, changed_by: _user?.id || null
+    }).then(()=>{}).catch(()=>{});
     _allReqs = _allReqs.map(r=>r.id===reqId ? {...r, status:newStatus} : r);
     const req = _allReqs.find(r=>r.id===reqId);
     if (req?.user_id) await sendStatusNotification(req, newStatus);
@@ -4784,17 +5281,59 @@ function adminUserActions(userId, userName, currentRole){
     `Role: ${currentRole}`,
     'nf',
     [
-      {label:'Close',    fn:null, style:'btn-ghost'},
       {label: isBanned ? 'Unban User' : 'Ban User',
        fn: ()=>adminSetUserRole(userId, isBanned?'user':'banned'),
        style: isBanned ? 'btn-ghost' : 'btn-outline'},
+      {label:'Upgrade to Agent',
+       fn: ()=>adminUpgradeToAgent(userId, userName),
+       style:'btn-ghost'},
       {label: isAdmin ? 'Remove Admin' : 'Make Admin',
        fn: ()=>adminSetUserRole(userId, isAdmin?'user':'admin'),
-       style:'btn-gold'}
+       style:'btn-gold'},
+      {label:'Delete User',
+       fn: ()=>adminDeleteUser(userId, userName),
+       style:'btn-outline', danger:true}
     ]
   );
 }
 window.adminUserActions = adminUserActions;
+
+async function adminDeleteUser(userId, userName){
+  popup(
+    `Delete ${userName}?`,
+    'This permanently removes the user\'s profile from the platform. This cannot be undone.',
+    'er',
+    [
+      {label:'Cancel', fn:null, style:'btn-ghost'},
+      {label:'Delete User', fn:async()=>{
+        try{
+          await _requireAdmin();
+          const { error } = await sb.from('profiles').delete().eq('id', userId);
+          if(error) throw error;
+          _allUsers = _allUsers.filter(u=>u.id!==userId);
+          renderAdminUsers();
+          const usersCount = $('as-users'); if(usersCount) usersCount.textContent = _allUsers.length;
+          logAdminAction('delete_user', `user:${userId}`);
+          toast(`${userName} deleted.`,'nf');
+        }catch(e){
+          const msg = e.message || '';
+          if (/row-level security|policy/i.test(msg)) {
+            popup('Cannot Delete User','Your database is blocking this delete (Row Level Security). Run the updated SQL schema to add a delete policy for admins, then try again. As a workaround for now, you can Ban the user instead to block their access.','er',[
+              {label:'OK', fn:null, style:'btn-gold'}
+            ]);
+          } else if (/foreign key|violates|constraint/i.test(msg)) {
+            popup('Cannot Delete User','This user has related records (requests, reviews, etc.) that reference their profile. Run the updated SQL schema, which sets these to delete or detach automatically, then try again.','er',[
+              {label:'OK', fn:null, style:'btn-gold'}
+            ]);
+          } else {
+            toast(msg||'Delete failed.','er');
+          }
+        }
+      }, style:'btn-outline'}
+    ]
+  );
+}
+window.adminDeleteUser = adminDeleteUser;
 
 async function adminSetUserRole(userId, role){
   try { await _requireAdmin(); } catch(e){ toast(e.message,'er'); return; }
@@ -4811,17 +5350,61 @@ async function adminSetUserRole(userId, role){
 }
 window.adminSetUserRole = adminSetUserRole;
 
+async function adminUpgradeToAgent(userId, userName){
+  // Get user profile to pre-fill agent application
+  try { await _requireAdmin(); } catch(e){ toast(e.message,'er'); return; }
+  popup(
+    `Upgrade ${userName} to Agent?`,
+    'This will create an approved agent application for this user.',
+    'nf',
+    [
+      {label:'Cancel', fn:null, style:'btn-ghost'},
+      {label:'Upgrade to Agent', fn:async()=>{
+        try{
+          const u = _allUsers.find(x=>x.id===userId);
+          const{error}=await sb.from('agent_applications').insert({
+            name: u?.full_name || userName,
+            email: u?.email || '',
+            phone: u?.whatsapp || '',
+            location: '',
+            channel: 'Admin Upgrade',
+            bio: `Upgraded by admin from user account.`,
+            status: 'approved',
+            user_id: userId
+          });
+          if(error)throw error;
+          toast(`${userName} upgraded to Agent ✅`,'ok');
+          logAdminAction('upgrade_to_agent', `user:${userId}`);
+        }catch(e){toast(e.message||'Failed','er');}
+      }, style:'btn-gold'}
+    ]
+  );
+}
+window.adminUpgradeToAgent = adminUpgradeToAgent;
+
 async function adminToggleService(svcId, active){
   try {
-    await sb.from('services').update({is_active:active}).eq('id',svcId);
-    toast(`Service ${active?'enabled':'disabled'}.`,'nf');
-    await loadServices();
-  } catch(e){ toast(e.message||'Failed.','er'); }
+    await _requireAdmin();
+    const { error } = await sb.from('services').update({is_active:active}).eq('id',svcId);
+    if (error) throw error;
+    toast(`Service ${active?'shown':'hidden'}.`,'nf');
+    adminLoadServices();
+    loadServices();
+  } catch(e){
+    if (/row-level security|policy/i.test(e.message||'')) {
+      toast('Update blocked by database security rules. Run the updated SQL schema.','er');
+    } else {
+      toast(e.message||'Failed.','er');
+    }
+  }
 }
 window.adminToggleService = adminToggleService;
 
 /* ── SERVICE CRUD ─────────────────────────────────────────────── */
 let _editingSvcId = null;
+
+let _allSvcsAdmin = [];
+let _svcsCatFilter = 'all';
 
 async function adminLoadServices(){
   const sl = $('admin-svcs-list');
@@ -4830,12 +5413,71 @@ async function adminLoadServices(){
   try {
     const { data: svcs, error } = await sb.from('services').select('*').order('sort_order');
     if (error) throw error;
-    if (!svcs?.length) {
-      sl.innerHTML = '<div class="empty-state" style="padding:30px"><i class="fas fa-concierge-bell"></i><p>No services yet. Add one above.</p></div>';
-      return;
-    }
-    sl.innerHTML = svcs.map(s=>`
-      <div style="background:var(--bg3);border:1px solid ${s.is_active?'var(--bd)':'rgba(224,80,80,.2)'};border-radius:var(--r);padding:10px 12px;display:flex;align-items:center;gap:10px;transition:border-color .2s">
+    _allSvcsAdmin = svcs || [];
+    renderAdminServicesStats();
+    renderAdminServicesCatChips();
+    renderAdminServicesList();
+  } catch(e) {
+    sl.innerHTML = `<div style="color:var(--red);font-size:.76rem;padding:16px">Failed to load services: ${esc(e.message)}</div>`;
+  }
+}
+window.adminLoadServices = adminLoadServices;
+
+function renderAdminServicesStats(){
+  const total  = _allSvcsAdmin.length;
+  const active = _allSvcsAdmin.filter(s=>s.is_active).length;
+  const hidden = total - active;
+  const elT=$('svcs-stat-total'), elA=$('svcs-stat-active'), elH=$('svcs-stat-hidden');
+  if(elT) elT.textContent = total;
+  if(elA) elA.textContent = active;
+  if(elH) elH.textContent = hidden;
+}
+
+function renderAdminServicesCatChips(){
+  const wrap = $('admin-svcs-cat-chips');
+  if(!wrap) return;
+  const cats = ['all', ...new Set(_allSvcsAdmin.map(s=>s.category||'general'))];
+  wrap.innerHTML = cats.map(c=>{
+    const count = c==='all' ? _allSvcsAdmin.length : _allSvcsAdmin.filter(s=>(s.category||'general')===c).length;
+    const on = _svcsCatFilter===c;
+    return `<button onclick="adminSetSvcsCatFilter('${esc(c)}')"
+      style="flex-shrink:0;padding:6px 12px;border-radius:20px;font-size:.62rem;font-weight:600;white-space:nowrap;cursor:pointer;
+      background:${on?'var(--gold-a8)':'var(--bg3)'};color:${on?'var(--gold)':'var(--t3)'};border:1px solid ${on?'var(--gold-a25)':'var(--bd)'}">
+      ${c==='all'?'All':esc(c)} <span style="opacity:.6">${count}</span>
+    </button>`;
+  }).join('');
+}
+
+function adminSetSvcsCatFilter(cat){
+  _svcsCatFilter = cat;
+  renderAdminServicesCatChips();
+  renderAdminServicesList();
+}
+window.adminSetSvcsCatFilter = adminSetSvcsCatFilter;
+
+function adminFilterServicesList(){ renderAdminServicesList(); }
+window.adminFilterServicesList = adminFilterServicesList;
+
+function renderAdminServicesList(){
+  const sl = $('admin-svcs-list');
+  if(!sl) return;
+  const q = ($('admin-svcs-search')?.value||'').trim().toLowerCase();
+  let list = _allSvcsAdmin;
+  if(_svcsCatFilter!=='all') list = list.filter(s=>(s.category||'general')===_svcsCatFilter);
+  if(q) list = list.filter(s=>(s.name||'').toLowerCase().includes(q) || (s.description||'').toLowerCase().includes(q));
+
+  if(!_allSvcsAdmin.length){
+    sl.innerHTML = '<div class="empty-state" style="padding:30px"><i class="fas fa-concierge-bell"></i><p>No services yet. Add one above, or tap Seed Defaults.</p></div>';
+    return;
+  }
+  if(!list.length){
+    sl.innerHTML = '<div class="empty-state" style="padding:30px"><i class="fas fa-magnifying-glass"></i><p>No services match your search.</p></div>';
+    return;
+  }
+
+  sl.innerHTML = list.map(s=>`
+    <div style="background:var(--bg3);border:1px solid ${s.is_active?'var(--bd)':'rgba(224,80,80,.2)'};border-radius:var(--r);padding:11px 12px;transition:border-color .2s">
+      <div style="display:flex;align-items:center;gap:10px">
         <div style="width:36px;height:36px;border-radius:10px;background:${s.is_active?'var(--gold-a8)':'var(--bg4)'};display:flex;align-items:center;justify-content:center;color:${s.is_active?'var(--gold)':'var(--t4)'};flex-shrink:0;font-size:.85rem">
           <i class="fas ${esc(s.icon||'fa-star')}"></i>
         </div>
@@ -4843,21 +5485,172 @@ async function adminLoadServices(){
           <div style="font-size:.76rem;font-weight:600;color:${s.is_active?'var(--t1)':'var(--t3)'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.name)}</div>
           <div style="font-size:.58rem;color:var(--t4);margin-top:1px">${esc(s.category||'general')} · ${esc(s.price_label||'—')}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
-          <span style="font-size:.54rem;padding:2px 7px;border-radius:20px;${s.is_active?'background:rgba(50,180,100,.12);color:var(--green);border:1px solid rgba(50,180,100,.3)':'background:rgba(224,80,80,.1);color:var(--red);border:1px solid rgba(224,80,80,.25)'}">
-            ${s.is_active?'Active':'Off'}
-          </span>
-          <button onclick="adminOpenEditService('${esc(s.id)}')"
-            style="width:30px;height:30px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem">
-            <i class="fas fa-pen"></i>
-          </button>
-        </div>
-      </div>`).join('');
-  } catch(e) {
-    sl.innerHTML = `<div style="color:var(--red);font-size:.76rem;padding:16px">Failed to load services: ${esc(e.message)}</div>`;
-  }
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:10px">
+        <button onclick="adminToggleService('${esc(s.id)}',${!s.is_active})"
+          style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:7px 0;border-radius:8px;font-size:.62rem;font-weight:600;cursor:pointer;
+          ${s.is_active?'background:rgba(50,180,100,.1);color:var(--green);border:1px solid rgba(50,180,100,.3)':'background:rgba(224,80,80,.1);color:var(--red);border:1px solid rgba(224,80,80,.25)'}">
+          <i class="fas ${s.is_active?'fa-eye':'fa-eye-slash'}"></i> ${s.is_active?'Visible — tap to hide':'Hidden — tap to show'}
+        </button>
+        <button onclick="adminOpenEditService('${esc(s.id)}')"
+          style="width:32px;height:32px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem;flex-shrink:0">
+          <i class="fas fa-pen"></i>
+        </button>
+        <button onclick="adminQuickDeleteService('${esc(s.id)}','${esc(s.name).replace(/'/g,"\\'")}')"
+          style="width:32px;height:32px;border-radius:8px;background:var(--bg4);border:1px solid rgba(224,80,80,.3);color:var(--red);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem;flex-shrink:0">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>`).join('');
 }
 window.adminLoadServices = adminLoadServices;
+
+async function adminSeedServices(){
+  popup(
+    'Seed Default Services',
+    `This will import all ${STATIC_SERVICES.length} default services into the database. Existing services won't be duplicated by name.`,
+    'nf',
+    [
+      {label:'Cancel', fn:null, style:'btn-ghost'},
+      {label:'Import All', fn:async()=>{
+        try{
+          await _requireAdmin();
+          const { data: existing } = await sb.from('services').select('name');
+          const existingNames = new Set((existing||[]).map(s=>s.name));
+          const toInsert = STATIC_SERVICES
+            .filter(s=>!existingNames.has(s.name))
+            .map(s=>({
+              name: s.name, description: s.description, icon: s.icon,
+              category: s.category, price_label: s.price_label,
+              sort_order: s.sort_order, is_active: s.is_active!==false
+            }));
+          if(!toInsert.length){ toast('All default services already exist.','nf'); return; }
+          const { error } = await sb.from('services').insert(toInsert);
+          if(error) throw error;
+          toast(`${toInsert.length} services imported ✅`,'ok');
+          adminLoadServices();
+        }catch(e){ toast(e.message||'Import failed','er'); }
+      }, style:'btn-gold'}
+    ]
+  );
+}
+window.adminSeedServices = adminSeedServices;
+
+async function adminQuickDeleteService(id, name){
+  popup(
+    `Delete "${name}"?`,
+    'This will permanently remove this service. This cannot be undone.',
+    'er',
+    [
+      {label:'Cancel', fn:null, style:'btn-ghost'},
+      {label:'Delete', fn:async()=>{
+        try{
+          await _requireAdmin();
+          const { error } = await sb.from('services').delete().eq('id', id);
+          if(error) throw error;
+          toast('Service deleted.','nf');
+          adminLoadServices();
+        }catch(e){ toast(e.message||'Delete failed.','er'); }
+      }, style:'btn-outline'}
+    ]
+  );
+}
+window.adminQuickDeleteService = adminQuickDeleteService;
+
+/* ── QUICK ADD AGENT ──────────────────────────────────────────── */
+function adminOpenAddAgent(){
+  $('agent-ed-name').value = '';
+  $('agent-ed-email').value = '';
+  $('agent-ed-phone').value = '';
+  $('agent-ed-location').value = '';
+  $('agent-ed-status').value = 'approved';
+  const ed = $('admin-agent-editor'), backdrop = $('agent-ed-backdrop'), sheet = $('agent-ed-sheet');
+  if(!ed) return;
+  ed.style.visibility='visible'; ed.style.opacity='1'; ed.style.pointerEvents='all';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(backdrop) backdrop.style.opacity='1';
+    if(sheet) sheet.style.transform='translateY(0)';
+  }));
+}
+window.adminOpenAddAgent = adminOpenAddAgent;
+
+function adminCloseAgentEditor(){
+  const ed = $('admin-agent-editor'), backdrop = $('agent-ed-backdrop'), sheet = $('agent-ed-sheet');
+  if(!ed) return;
+  if(backdrop) backdrop.style.opacity='0';
+  if(sheet) sheet.style.transform='translateY(100%)';
+  setTimeout(()=>{ ed.style.pointerEvents='none'; ed.style.visibility='hidden'; ed.style.opacity='0'; },300);
+}
+window.adminCloseAgentEditor = adminCloseAgentEditor;
+
+async function adminSaveNewAgent(){
+  const name = sanitizeShort($('agent-ed-name')?.value||'');
+  const email = ($('agent-ed-email')?.value||'').trim().toLowerCase();
+  const phone = ($('agent-ed-phone')?.value||'').replace(/\s/g,'');
+  const location = sanitizeShort($('agent-ed-location')?.value||'');
+  const status = $('agent-ed-status')?.value || 'approved';
+  if(!name || !email){ toast('Name and email are required.','er'); return; }
+  try{
+    await _requireAdmin();
+    let payload = { full_name:name, email, phone, location, status };
+    let { error } = await sb.from('agent_applications').insert(payload);
+    if (error && /column .*(location|channel|bio|phone).* (does not exist|not found|schema cache)/i.test(error.message||'')) {
+      const retry = await sb.from('agent_applications').insert({ full_name:name, email, status });
+      error = retry.error;
+    }
+    if(error) throw error;
+    toast(`Agent "${name}" added ✅`,'ok');
+    adminCloseAgentEditor();
+    adminLoadAgents();
+  }catch(e){ toast(e.message||'Failed to add agent.','er'); }
+}
+window.adminSaveNewAgent = adminSaveNewAgent;
+
+/* ── QUICK ADD INSTITUTION ────────────────────────────────────── */
+function adminOpenAddInstitution(){
+  $('inst-ed-name').value = '';
+  $('inst-ed-email').value = '';
+  $('inst-ed-wa').value = '';
+  $('inst-ed-loc').value = '';
+  $('inst-ed-contact').value = '';
+  const ed = $('admin-inst-editor'), backdrop = $('inst-ed-backdrop'), sheet = $('inst-ed-sheet');
+  if(!ed) return;
+  ed.style.visibility='visible'; ed.style.opacity='1'; ed.style.pointerEvents='all';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(backdrop) backdrop.style.opacity='1';
+    if(sheet) sheet.style.transform='translateY(0)';
+  }));
+}
+window.adminOpenAddInstitution = adminOpenAddInstitution;
+
+function adminCloseInstEditor(){
+  const ed = $('admin-inst-editor'), backdrop = $('inst-ed-backdrop'), sheet = $('inst-ed-sheet');
+  if(!ed) return;
+  if(backdrop) backdrop.style.opacity='0';
+  if(sheet) sheet.style.transform='translateY(100%)';
+  setTimeout(()=>{ ed.style.pointerEvents='none'; ed.style.visibility='hidden'; ed.style.opacity='0'; },300);
+}
+window.adminCloseInstEditor = adminCloseInstEditor;
+
+async function adminSaveNewInstitution(){
+  const name = sanitizeShort($('inst-ed-name')?.value||'');
+  const email = ($('inst-ed-email')?.value||'').trim().toLowerCase();
+  const wa = ($('inst-ed-wa')?.value||'').replace(/\s/g,'');
+  const loc = sanitizeShort($('inst-ed-loc')?.value||'');
+  const contact = sanitizeShort($('inst-ed-contact')?.value||'');
+  if(!name || !email){ toast('Institution name and email are required.','er'); return; }
+  try{
+    await _requireAdmin();
+    const { error } = await sb.from('institution_profiles').upsert({
+      inst_name:name, email, whatsapp_number:wa, location:loc,
+      contact_person:contact||null, status:'active'
+    }, { onConflict:'email' });
+    if(error) throw error;
+    toast(`Institution account "${name}" created ✅ They can sign in via the Institution tab using this email.`,'ok');
+    adminCloseInstEditor();
+  }catch(e){ toast(e.message||'Failed to add institution.','er'); }
+}
+window.adminSaveNewInstitution = adminSaveNewInstitution;
 
 function adminOpenAddService(){
   _editingSvcId = null;
@@ -4900,6 +5693,8 @@ function adminOpenSvcEditor(){
   const backdrop = $('svc-ed-backdrop');
   const sheet    = $('svc-ed-sheet');
   if (!ed) return;
+  ed.style.visibility = 'visible';
+  ed.style.opacity = '1';
   ed.style.pointerEvents = 'all';
   // Trigger reflow then animate
   requestAnimationFrame(()=>{
@@ -4916,7 +5711,11 @@ function adminCloseSvcEditor(){
   if (!ed) return;
   if (backdrop) backdrop.style.opacity = '0';
   if (sheet)    sheet.style.transform  = 'translateY(100%)';
-  setTimeout(()=>{ ed.style.pointerEvents = 'none'; }, 300);
+  setTimeout(()=>{
+    ed.style.pointerEvents = 'none';
+    ed.style.visibility = 'hidden';
+    ed.style.opacity = '0';
+  }, 300);
 }
 window.adminCloseSvcEditor = adminCloseSvcEditor;
 
@@ -5048,12 +5847,18 @@ async function adminLoadAgents(){
   al.innerHTML = '<div style="text-align:center;padding:20px"><span class="spin"></span></div>';
   try {
     const { data, error } = await sb.from('agent_applications').select('*').order('created_at',{ascending:false});
-    if (error) throw error;
+    if (error) {
+      if (error.message && (error.message.includes('schema cache') || error.message.includes('does not exist'))) {
+        al.innerHTML = `<div style="padding:16px;background:var(--bg3);border:1px solid rgba(255,165,0,.3);border-radius:var(--r)"><div style="color:#ffa500;font-size:.76rem;font-weight:700;margin-bottom:8px"><i class="fas fa-triangle-exclamation"></i> Table Not Found</div><div style="font-size:.7rem;color:var(--t2);line-height:1.6;margin-bottom:10px">The agent_applications table is missing or misconfigured. Run the SQL schema to create it, then retry.</div><button class="btn btn-gold btn-xs" onclick="adminLoadAgents()"><i class="fas fa-rotate-right"></i> Retry</button></div>`;
+        return;
+      }
+      throw error;
+    }
     if (!data?.length){ al.innerHTML='<div class="empty-state" style="padding:30px"><i class="fas fa-user-tie"></i><p>No agent applications yet</p></div>'; return; }
     al.innerHTML = data.map(a=>`
       <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <div style="font-size:.78rem;font-weight:600;color:var(--t1)">${esc(a.name||'Unknown')}</div>
+          <div style="font-size:.78rem;font-weight:600;color:var(--t1)">${esc(a.full_name||a.name||'Unknown')}</div>
           <span class="req-badge ${esc(a.status||'pending')}" style="font-size:.54rem">${esc(a.status||'pending')}</span>
         </div>
         <div style="font-size:.62rem;color:var(--t3);display:flex;flex-direction:column;gap:3px;margin-bottom:10px">
@@ -5064,6 +5869,7 @@ async function adminLoadAgents(){
           <div style="color:var(--t4);margin-top:2px">${fmtRel(a.created_at)}</div>
         </div>
         <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-xs" style="color:var(--red)" onclick="adminDeleteAgent('${esc(a.id)}')"><i class="fas fa-trash"></i></button>
           <button class="btn btn-ghost btn-xs" onclick="adminSetAgentStatus('${esc(a.id)}','rejected')"><i class="fas fa-times"></i> Reject</button>
           <button class="btn btn-gold btn-xs" style="flex:1" onclick="adminSetAgentStatus('${esc(a.id)}','approved')"><i class="fas fa-check"></i> Approve</button>
         </div>
@@ -5072,12 +5878,42 @@ async function adminLoadAgents(){
 }
 window.adminLoadAgents = adminLoadAgents;
 
+async function adminDeleteAgent(id){
+  popup('Delete Application','This will permanently remove this agent application.','er',[
+    {label:'Cancel', fn:null, style:'btn-ghost'},
+    {label:'Delete', fn:async()=>{
+      try{
+        await _requireAdmin();
+        const { error } = await sb.from('agent_applications').delete().eq('id', id);
+        if(error) throw error;
+        toast('Application deleted.','nf');
+        adminLoadAgents();
+      }catch(e){
+        if (/row-level security|policy/i.test(e.message||'')) {
+          toast('Delete blocked by database security rules. Run the updated SQL schema.','er');
+        } else {
+          toast(e.message||'Delete failed.','er');
+        }
+      }
+    }, style:'btn-outline'}
+  ]);
+}
+window.adminDeleteAgent = adminDeleteAgent;
+
 async function adminSetAgentStatus(id, status){
   try {
-    await sb.from('agent_applications').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
+    await _requireAdmin();
+    const { error } = await sb.from('agent_applications').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
+    if (error) throw error;
     toast(`Agent ${status} ✅`,'ok');
     adminLoadAgents();
-  } catch(e){ toast(e.message||'Failed','er'); }
+  } catch(e){
+    if (/row-level security|policy/i.test(e.message||'')) {
+      toast('Update blocked by database security rules. Run the updated SQL schema.','er');
+    } else {
+      toast(e.message||'Failed','er');
+    }
+  }
 }
 window.adminSetAgentStatus = adminSetAgentStatus;
 
@@ -5088,7 +5924,13 @@ async function adminLoadInstitutions(){
   il.innerHTML = '<div style="text-align:center;padding:20px"><span class="spin"></span></div>';
   try {
     const { data, error } = await sb.from('institution_requests').select('*').order('created_at',{ascending:false});
-    if (error) throw error;
+    if (error) {
+      if (error.message && (error.message.includes('schema cache') || error.message.includes('does not exist'))) {
+        il.innerHTML='<div style="padding:16px;background:var(--bg3);border:1px solid rgba(255,165,0,.3);border-radius:var(--r)"><div style="color:#ffa500;font-size:.76rem;font-weight:700;margin-bottom:8px"><i class="fas fa-triangle-exclamation"></i> Table Not Found</div><div style="font-size:.7rem;color:var(--t2);line-height:1.6;margin-bottom:10px">The institution_requests table does not exist in Supabase yet. Run the SQL schema to create it, then retry.</div><button class="btn btn-gold btn-xs" onclick="adminLoadInstitutions()"><i class="fas fa-rotate-right"></i> Retry</button></div>';
+        return;
+      }
+      throw error;
+    }
     if (!data?.length){ il.innerHTML='<div class="empty-state" style="padding:30px"><i class="fas fa-building-columns"></i><p>No institution requests yet</p></div>'; return; }
     il.innerHTML = data.map(r=>`
       <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px">
@@ -5097,16 +5939,20 @@ async function adminLoadInstitutions(){
           <span class="req-badge ${esc(r.status||'pending')}">${esc(r.status||'pending')}</span>
         </div>
         <div style="font-size:.62rem;color:var(--t3);display:flex;flex-direction:column;gap:3px;margin-bottom:8px">
+          <div><i class="fas fa-envelope" style="width:14px;color:var(--gold)"></i> ${esc(r.inst_email||'—')}</div>
           <div><i class="fas fa-concierge-bell" style="width:14px;color:var(--gold)"></i> ${esc(r.service_name||'—')}</div>
           ${r.quantity?`<div><i class="fas fa-hashtag" style="width:14px;color:var(--gold)"></i> Qty: ${esc(String(r.quantity))}</div>`:''}
           ${r.deadline?`<div><i class="fas fa-calendar" style="width:14px;color:var(--gold)"></i> Deadline: ${esc(r.deadline)}</div>`:''}
           ${r.notes?`<div style="color:var(--t2);margin-top:4px">${esc(r.notes.substring(0,100))}${r.notes.length>100?'…':''}</div>`:''}
           <div style="color:var(--t4)">${fmtRel(r.created_at)}</div>
         </div>
-        <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">
           ${['pending','in_progress','completed','cancelled'].map(s=>
             `<button class="btn btn-xs ${r.status===s?'btn-gold':'btn-ghost'}" onclick="adminSetInstStatus('${esc(r.id)}','${s}')" style="flex:1">${s.replace('_',' ')}</button>`
           ).join('')}
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-xs" style="color:var(--red)" onclick="adminDeleteInstRequest('${esc(r.id)}')"><i class="fas fa-trash"></i> Delete</button>
         </div>
       </div>`).join('');
   } catch(e){ il.innerHTML=`<div style="color:var(--red);padding:16px;font-size:.76rem">Failed: ${esc(e.message)}</div>`; }
@@ -5115,12 +5961,42 @@ window.adminLoadInstitutions = adminLoadInstitutions;
 
 async function adminSetInstStatus(id, status){
   try {
-    await sb.from('institution_requests').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
+    await _requireAdmin();
+    const { error } = await sb.from('institution_requests').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
+    if (error) throw error;
     toast(`Status updated to "${status}"`, 'ok');
     adminLoadInstitutions();
-  } catch(e){ toast(e.message||'Failed','er'); }
+  } catch(e){
+    if (/row-level security|policy/i.test(e.message||'')) {
+      toast('Update blocked by database security rules. Run the updated SQL schema.','er');
+    } else {
+      toast(e.message||'Failed','er');
+    }
+  }
 }
 window.adminSetInstStatus = adminSetInstStatus;
+
+async function adminDeleteInstRequest(id){
+  popup('Delete Institution Request','This will permanently remove this request. Cannot be undone.','er',[
+    {label:'Cancel',fn:null,style:'btn-ghost'},
+    {label:'Delete',fn:async()=>{
+      try{
+        await _requireAdmin();
+        const{error}=await sb.from('institution_requests').delete().eq('id',id);
+        if(error)throw error;
+        toast('Request deleted.','nf');
+        adminLoadInstitutions();
+      }catch(e){
+        if (/row-level security|policy/i.test(e.message||'')) {
+          toast('Delete blocked by database security rules. Run the updated SQL schema.','er');
+        } else {
+          toast(e.message||'Delete failed.','er');
+        }
+      }
+    },style:'btn-outline'}
+  ]);
+}
+window.adminDeleteInstRequest = adminDeleteInstRequest;
 
 /* ── STATUS NOTIFICATIONS ─────────────────────────────────────── */
 const STATUS_LABELS = {
@@ -5458,7 +6334,26 @@ async function doInstRegister(){
       if (error && !error.message.toLowerCase().includes('already registered')) throw error;
       // Step 3: Sign in after signup
       const { data: signInData, error: siErr } = await sb.auth.signInWithPassword({ email, password: pw });
-      if (siErr) throw new Error('Registration succeeded but sign-in failed. Please use the Sign In tab.');
+      if (siErr) {
+        if (siErr.message && siErr.message.toLowerCase().includes('confirm')) {
+          // Email confirmation required — still save the profile, just tell user to confirm first
+          await sb.from('institution_profiles').upsert({
+            inst_name: name, inst_type: type, location: loc,
+            whatsapp_number: wa, email,
+            contact_person: contact,
+            contact_phone: contactWa || null,
+            contact_email: contactEmail || null,
+            rep2_name: rep2Name || null,
+            rep2_phone: rep2Wa || null,
+            rep2_email: rep2Email || null,
+            status: 'active'
+          }, { onConflict: 'email' });
+          toast('Account created! Please check your email to confirm, then sign in.','ok');
+          closeAuth();
+          return;
+        }
+        throw new Error('Registration succeeded but sign-in failed. Please use the Sign In tab.');
+      }
       instUserId = signInData?.user?.id;
     }
 
@@ -5467,7 +6362,7 @@ async function doInstRegister(){
     // Step 4: Insert institution profile (upsert to avoid duplicates)
     const { error: pe } = await sb.from('institution_profiles').upsert({
       auth_user_id: instUserId,
-      name, inst_type: type, location: loc,
+      inst_name: name, inst_type: type, location: loc,
       whatsapp_number: wa, email,
       contact_person: contact,
       contact_phone: contactWa || null,
@@ -5586,7 +6481,14 @@ async function submitAgentApplication(){
   if(!name||!email||!isValidPhone(phone)){err.textContent='Name, email and phone are required.';err.style.display='block';return;}
   btn.disabled=true;btn.innerHTML='<span class="spin"></span> Submitting…';
   try{
-    const{error}=await sb.from('agent_applications').insert({name,email,phone,location,channel,bio,status:'pending',user_id:_user?.id||null});
+    let payload = {full_name:name,email,phone,location,channel,bio,status:'pending',user_id:_user?.id||null};
+    let { error } = await sb.from('agent_applications').insert(payload);
+    if (error && /column .*(user_id|channel|location|bio).* (does not exist|not found|schema cache)/i.test(error.message||'')) {
+      // Retry with a minimal payload if the table schema doesn't have optional columns
+      const minimal = {full_name:name,email,phone,status:'pending'};
+      const retry = await sb.from('agent_applications').insert(minimal);
+      error = retry.error;
+    }
     if(error)throw error;
     ok.style.display='block';
     ['ag-name','ag-email','ag-phone','ag-location','ag-bio'].forEach(id=>{const el=$(id);if(el)el.value='';});
@@ -5596,12 +6498,56 @@ async function submitAgentApplication(){
 
 /* ── DEV CONTACT, PRIVACY, TERMS ── */
 function openDevContactModal(){openModal('dev-contact-modal');}
-function openPrivacyModal(){openModal('privacy-modal');}
-function openTermsModal(){openModal('terms-modal');}
+function openFounderAbout(){ openModal('founder-about-modal'); }
+window.openFounderAbout = openFounderAbout;
+
+/* ── USER CONSENT (Terms & Privacy accept) ─────────────────────────── */
+async function acceptConsent(type){
+  const btn  = $(type+'-accept-btn');
+  const badge = $(type+'-accepted-badge');
+  if(btn) btn.disabled = true;
+  try {
+    if(_user){
+      // Store in user_consents table
+      await sb.from('user_consents').upsert({
+        user_id: _user.id,
+        type,
+        accepted: true,
+        accepted_at: new Date().toISOString()
+      }, { onConflict: 'user_id,type' });
+    }
+    // Also store locally for guests
+    localStorage.setItem('consent_'+type, new Date().toISOString());
+    if(badge){ badge.style.display='flex'; }
+    if(btn){ btn.style.display='none'; }
+    toast(type==='privacy'?'Privacy Policy accepted ✓':'Terms & Conditions accepted ✓','ok');
+  } catch(e){
+    // Save locally even if Supabase fails
+    localStorage.setItem('consent_'+type, new Date().toISOString());
+    if(badge){ badge.style.display='flex'; }
+    if(btn){ btn.style.display='none'; }
+    toast(type==='privacy'?'Privacy Policy accepted ✓':'Terms accepted ✓','ok');
+  }
+}
+window.acceptConsent = acceptConsent;
+
+// Check and reflect consent state when modals open
+function checkConsentState(type){
+  const stored = localStorage.getItem('consent_'+type);
+  const btn   = $(type+'-accept-btn');
+  const badge = $(type+'-accepted-badge');
+  if(stored && btn && badge){
+    btn.style.display   = 'none';
+    badge.style.display = 'flex';
+  }
+}
+
+function openPrivacyModal(){openModal('privacy-modal');checkConsentState('privacy');}
+function openTermsModal(){openModal('terms-modal');checkConsentState('terms');}
 
 /* ── CLOSE ALL MODALS UPDATE ── */
 function closeAllModals(){
-  ['contact-modal','about-modal','my-reqs-modal','my-files-modal','upload-modal','notif-panel','profile-modal','svc-req-modal','rating-modal','notes-sheet','agent-register-modal','dev-contact-modal','privacy-modal','terms-modal','inst-request-modal','inst-all-reqs-modal','tech-req-modal','svc-detail-modal','tech-detail-modal','reg-success-modal','new-pw-modal'].forEach(id=>{
+  ['contact-modal','about-modal','my-reqs-modal','my-files-modal','upload-modal','notif-panel','profile-modal','svc-req-modal','rating-modal','notes-sheet','agent-register-modal','dev-contact-modal','privacy-modal','terms-modal','inst-request-modal','inst-all-reqs-modal','tech-req-modal','svc-detail-modal','tech-detail-modal','reg-success-modal','new-pw-modal','founder-about-modal','track-order-modal'].forEach(id=>{
     const el=$(id);el?.classList.remove('on');
   });
   hideOvl();
@@ -5839,13 +6785,96 @@ window.addEventListener('popstate', ()=>{
 </div>
 
 <!-- ══ PRIVACY POLICY MODAL ═══════════════════════════════════════════ -->
+<!-- ══ FOUNDER ABOUT MODAL ══════════════════════════════════════════ -->
+<!-- ══ TRACK ORDER MODAL ══════════════════════════════════════════ -->
+<div id="track-order-modal" class="modal" role="dialog" aria-modal="true">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span class="sheet-title"><i class="fas fa-route" style="margin-right:8px;color:var(--gold)"></i>Track Order</span>
+    <button class="sheet-cls" onclick="closeModal('track-order-modal')"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body" style="overflow-y:auto;flex:1;padding-bottom:32px">
+    <div id="track-order-body">
+      <div style="text-align:center;padding:30px"><span class="spin"></span></div>
+    </div>
+  </div>
+</div>
+
+<div id="founder-about-modal" class="modal" role="dialog" aria-modal="true">
+  <div class="sheet-pull"></div>
+  <div class="sheet-hdr">
+    <span class="sheet-title"><i class="fas fa-crown" style="margin-right:8px;color:var(--gold)"></i>About the Founder</span>
+    <button class="sheet-cls" onclick="closeModal('founder-about-modal')"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body" style="padding-bottom:32px">
+    <!-- Photo + name -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 0 20px">
+      <div style="width:96px;height:96px;border-radius:50%;border:3px solid var(--gold-a45);overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.5)">
+        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAYGBgYHBgcICAcKCwoLCg8ODAwODxYQERAREBYiFRkVFRkVIh4kHhweJB42KiYmKjY+NDI0PkxERExfWl98fKcBBgYGBgcGBwgIBwoLCgsKDw4MDA4PFhAREBEQFiIVGRUVGRUiHiQeHB4kHjYqJiYqNj40MjQ+TERETF9aX3x8p//CABEIBQADVQMBIgACEQEDEQH/xAAyAAACAwEBAQAAAAAAAAAAAAAAAgEDBAUGBwEBAQEBAQEAAAAAAAAAAAAAAAECAwQF/9oADAMBAAIQAxAAAAL" alt="Darius Momanyi" style="width:100%;height:100%;object-fit:cover;object-position:top">
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:var(--fd);font-size:1.2rem;color:var(--gold);margin-bottom:2px">Darius Momanyi</div>
+        <div style="font-size:.68rem;color:var(--t3);letter-spacing:.06em">Founder & CEO · NovaDeskOnline</div>
+        <div style="margin-top:8px;display:flex;justify-content:center;gap:6px">
+          <span style="font-size:.52rem;padding:3px 10px;background:var(--gold-a8);color:var(--gold);border:1px solid var(--gold-a25);border-radius:12px">Founder</span>
+          <span style="font-size:.52rem;padding:3px 10px;background:var(--bg4);color:var(--t3);border:1px solid var(--bd);border-radius:12px">Kemera, Nyamira</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bio -->
+    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;margin-bottom:14px">
+      <div style="font-size:.62rem;font-weight:700;color:var(--gold);letter-spacing:.08em;margin-bottom:8px">ABOUT</div>
+      <p style="font-size:.74rem;color:var(--t2);line-height:1.75;margin:0">Darius Momanyi is the visionary founder and CEO of NovaDeskOnline — a digital cyber hub built to bring fast, affordable, and reliable digital services to the heart of Kemera, Nyamira. With a passion for technology and community development, Darius created a platform that empowers local residents to access government services, printing, document management, and more — all in one place.</p>
+    </div>
+
+    <!-- Mission -->
+    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;margin-bottom:14px">
+      <div style="font-size:.62rem;font-weight:700;color:var(--gold);letter-spacing:.08em;margin-bottom:8px">MISSION</div>
+      <p style="font-size:.74rem;color:var(--t2);line-height:1.75;margin:0">To democratize access to digital services for everyday people in Kemera and beyond — making government registrations, academic services, printing and more affordable and accessible to everyone, regardless of their background.</p>
+    </div>
+
+    <!-- Stats row -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px 8px;text-align:center">
+        <div style="font-family:var(--fd);font-size:1.1rem;color:var(--gold)">41+</div>
+        <div style="font-size:.56rem;color:var(--t4);margin-top:2px">Services</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px 8px;text-align:center">
+        <div style="font-family:var(--fd);font-size:1.1rem;color:var(--gold)">2025</div>
+        <div style="font-size:.56rem;color:var(--t4);margin-top:2px">Founded</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px 8px;text-align:center">
+        <div style="font-family:var(--fd);font-size:1.1rem;color:var(--gold)">Kemera</div>
+        <div style="font-size:.56rem;color:var(--t4);margin-top:2px">Location</div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px">
+      <div style="font-size:.62rem;font-weight:700;color:var(--gold);letter-spacing:.08em;margin-bottom:10px">CONNECT</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <a href="https://wa.me/254110554040" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;text-decoration:none;font-size:.72rem;color:var(--t2)">
+          <div style="width:28px;height:28px;border-radius:8px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fab fa-whatsapp" style="color:#25d366;font-size:.7rem"></i></div>
+          WhatsApp — 0110 554 040
+        </a>
+        <a href="https://dmn-solution.vercel.app/" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;text-decoration:none;font-size:.72rem;color:var(--t2)">
+          <div style="width:28px;height:28px;border-radius:8px;background:rgba(90,174,255,.1);border:1px solid rgba(90,174,255,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-globe" style="color:var(--blue);font-size:.7rem"></i></div>
+          DMN Solutions — Technology Partner
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PRIVACY POLICY MODAL ═════════════════════════════════════════ -->
 <div id="privacy-modal" class="modal" role="dialog" aria-modal="true">
   <div class="sheet-pull"></div>
   <div class="sheet-hdr">
     <span class="sheet-title"><i class="fas fa-shield-halved" style="margin-right:8px;color:var(--gold)"></i>Privacy Policy</span>
     <button class="sheet-cls" onclick="closeModal('privacy-modal')"><i class="fas fa-times"></i></button>
   </div>
-  <div class="modal-body" style="padding-bottom:24px">
+  <div class="modal-body" style="overflow-y:auto;flex:1;padding-bottom:80px">
     <div style="font-size:.76rem;color:var(--t2);line-height:1.8">
       <p style="font-family:var(--fd);font-size:1rem;color:var(--t1);margin-bottom:10px">Your Privacy Matters</p>
       <p style="margin-bottom:10px;color:var(--t3)">NovaDeskOnline collects minimal personal information necessary to deliver our services. Your ID number, WhatsApp number and email are used solely to identify your account and communicate service updates.</p>
@@ -5864,6 +6893,10 @@ window.addEventListener('popstate', ()=>{
       <p style="color:var(--t4);font-size:.68rem">For questions, contact us on WhatsApp or email. Last updated: 2025.</p>
     </div>
   </div>
+  <div style="position:sticky;bottom:0;padding:12px 16px;background:var(--bg2);border-top:1px solid var(--bd);display:flex;gap:8px;align-items:center">
+    <div id="privacy-accepted-badge" style="display:none;font-size:.62rem;color:var(--green)"><i class="fas fa-check-circle"></i> Accepted</div>
+    <button id="privacy-accept-btn" class="btn btn-gold" style="flex:1;font-size:.76rem" onclick="acceptConsent('privacy')"><i class="fas fa-shield-halved" style="margin-right:6px"></i>I Accept the Privacy Policy</button>
+  </div>
 </div>
 
 <!-- ══ TERMS & CONDITIONS MODAL ════════════════════════════════════════ -->
@@ -5873,7 +6906,7 @@ window.addEventListener('popstate', ()=>{
     <span class="sheet-title"><i class="fas fa-file-contract" style="margin-right:8px;color:var(--gold)"></i>Terms &amp; Conditions</span>
     <button class="sheet-cls" onclick="closeModal('terms-modal')"><i class="fas fa-times"></i></button>
   </div>
-  <div class="modal-body" style="padding-bottom:24px">
+  <div class="modal-body" style="overflow-y:auto;flex:1;padding-bottom:80px">
     <div style="font-size:.76rem;color:var(--t3);line-height:1.8">
       <p style="font-family:var(--fd);font-size:1rem;color:var(--t1);margin-bottom:10px">Terms of Service</p>
       <p style="margin-bottom:10px">By using NovaDeskOnline you agree to the following terms:</p>
@@ -5881,11 +6914,17 @@ window.addEventListener('popstate', ()=>{
         <div style="background:var(--bg4);border-radius:var(--r);padding:10px 12px"><strong style="color:var(--t1);font-size:.74rem">1. Acceptable Use</strong><p style="margin-top:4px">Use NovaDeskOnline only for lawful purposes. Do not misuse services or attempt to access accounts that are not yours.</p></div>
         <div style="background:var(--bg4);border-radius:var(--r);padding:10px 12px"><strong style="color:var(--t1);font-size:.74rem">2. Service Requests</strong><p style="margin-top:4px">Once a service request is submitted, it will be processed during business hours. Cancellations must be made before work commences.</p></div>
         <div style="background:var(--bg4);border-radius:var(--r);padding:10px 12px"><strong style="color:var(--t1);font-size:.74rem">3. Payments</strong><p style="margin-top:4px">Prices shown are indicative. Final pricing may vary based on specifications. Payment is due before or upon collection of completed work.</p></div>
-        <div style="background:var(--bg4);border-radius:var(--r);padding:10px 12px"><strong style="color:var(--t1);font-size:.74rem">4. Files & Documents</strong><p style="margin-top:4px">You are responsible for the content of files you upload. NovaDeskOnline will not reproduce or share your documents.</p></div>
+        <div style="background:var(--bg4);border-radius:var(--r);padding:10px 12px"><strong style="color:var(--t1);font-size:.74rem">4. Files &amp; Documents</strong><p style="margin-top:4px">You are responsible for the content of files you upload. NovaDeskOnline will not reproduce or share your documents.</p></div>
         <div style="background:var(--bg4);border-radius:var(--r);padding:10px 12px"><strong style="color:var(--t1);font-size:.74rem">5. Account</strong><p style="margin-top:4px">Keep your credentials secure. You are responsible for all activity under your account. Report unauthorized access immediately.</p></div>
+        <div style="background:var(--bg4);border-radius:var(--r);padding:10px 12px"><strong style="color:var(--t1);font-size:.74rem">6. Agents & Referrals</strong><p style="margin-top:4px">Commission payments are made monthly. NovaDeskOnline reserves the right to revoke agent status for misuse or fraudulent referrals.</p></div>
+        <div style="background:var(--bg4);border-radius:var(--r);padding:10px 12px"><strong style="color:var(--t1);font-size:.74rem">7. Governing Law</strong><p style="margin-top:4px">These terms are governed by the laws of Kenya. Disputes shall be resolved in the courts of Nyamira County.</p></div>
       </div>
       <p style="color:var(--t4);font-size:.68rem;margin-top:12px">NovaDeskOnline reserves the right to update these terms. Last updated: 2025.</p>
     </div>
+  </div>
+  <div style="position:sticky;bottom:0;padding:12px 16px;background:var(--bg2);border-top:1px solid var(--bd);display:flex;gap:8px;align-items:center">
+    <div id="terms-accepted-badge" style="display:none;font-size:.62rem;color:var(--green)"><i class="fas fa-check-circle"></i> Accepted</div>
+    <button id="terms-accept-btn" class="btn btn-gold" style="flex:1;font-size:.76rem" onclick="acceptConsent('terms')"><i class="fas fa-file-contract" style="margin-right:6px"></i>I Accept the Terms &amp; Conditions</button>
   </div>
 </div>
 
@@ -5968,10 +7007,31 @@ window.addEventListener('popstate', ()=>{
   </div>
 </div>
 
+<!-- ══ REQUEST SUCCESS OVERLAY ═══════════════════════════════════ -->
+<div id="req-success-overlay">
+  <div class="req-success-box">
+    <div class="req-success-check">
+      <svg viewBox="0 0 52 52">
+        <circle class="rsc-circle" cx="26" cy="26" r="23" fill="none"/>
+        <path class="rsc-check" fill="none" d="M14 27l7 7 16-16"/>
+      </svg>
+    </div>
+    <div class="req-success-title">Request Sent!</div>
+    <div class="req-success-sub" id="req-success-sub">We'll reach you on WhatsApp soon.</div>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%;margin-top:22px">
+      <button class="btn btn-gold btn-full" onclick="viewSentRequest()"><i class="fas fa-eye" style="margin-right:6px"></i>View Request</button>
+      <button class="btn btn-ghost btn-full" onclick="closeReqSuccess()">Done</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ POPUP CONFIRM OVERLAY ═════════════════════════════════════ -->
 <div id="popup-overlay">
   <div class="popup-box">
-    <div class="popup-head">
+    <div class="popup-head" style="position:relative">
+      <button onclick="closePopup()" aria-label="Close" style="position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;background:var(--bg4);border:1px solid var(--bd);color:var(--t3);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.68rem;padding:0">
+        <i class="fas fa-times"></i>
+      </button>
       <div id="popup-icon-el" class="popup-icon nf"><i class="fas fa-info-circle"></i></div>
       <div>
         <div id="popup-ttl-el" class="popup-ttl"></div>
@@ -6605,7 +7665,7 @@ function renderMyReqsList(filter) {
     return;
   }
   el.innerHTML = list.map(r=>`
-    <div class="my-req-item">
+    <div class="my-req-item" data-req-id="${esc(r.id)}">
       <div class="my-req-top">
         <div class="my-req-name">${esc(r.service_name)}</div>
         <div class="my-req-status ${r.status}">${r.status.replace('_',' ')}</div>
@@ -6614,12 +7674,129 @@ function renderMyReqsList(filter) {
       ${r.description?`<div style="font-size:.68rem;color:var(--t3);margin-bottom:8px;line-height:1.5">${esc(r.description.substring(0,100))}${r.description.length>100?'…':''}</div>`:''}
       ${r.admin_notes?`<div style="font-size:.66rem;padding:7px 10px;background:rgba(50,180,100,.06);border:1px solid rgba(50,180,100,.15);border-radius:6px;color:var(--green);margin-bottom:8px"><i class="fas fa-message" style="margin-right:4px"></i>${esc(r.admin_notes)}</div>`:''}
       <div class="my-req-btns">
-        ${r.status==='completed'?`<button class="btn btn-gold btn-xs" onclick="generateReceipt('${r.id}','${esc(r.service_name)}','${esc(_profile?.full_name||'Customer')}')"><i class="fas fa-file-pdf"></i> Receipt</button>`:''}
+        <button class="btn btn-gold btn-xs" onclick="openTrackOrder('${r.id}')"><i class="fas fa-route"></i> Track Order</button>
+        ${r.status==='completed'?`<button class="btn btn-ghost btn-xs" onclick="generateReceipt('${r.id}','${esc(r.service_name)}','${esc(_profile?.full_name||'Customer')}')"><i class="fas fa-file-pdf"></i> Receipt</button>`:''}
         ${(r.file_urls && JSON.parse(r.file_urls||'[]').length)?`<button class="btn btn-ghost btn-xs" onclick="viewReqFiles('${r.id}')"><i class="fas fa-paperclip"></i> Files</button>`:''}
+        <button class="btn btn-ghost btn-xs" onclick="shareRequest('${r.id}')"><i class="fas fa-share-nodes"></i> Share</button>
+        ${(r.status==='pending'||r.status==='in_progress')?`<button class="btn btn-ghost btn-xs" style="color:var(--red)" onclick="cancelMyRequest('${r.id}')"><i class="fas fa-ban"></i> Cancel</button>`:''}
         <button class="btn btn-ghost btn-xs" onclick="openSvcByName('${esc(r.service_name)}')"><i class="fas fa-redo"></i> Reorder</button>
       </div>
     </div>`).join('');
 }
+
+/* ── TRACK ORDER ────────────────────────────────────────────────── */
+const TRACK_STAGES = [
+  { key:'pending',     label:'Request Submitted', icon:'fa-paper-plane' },
+  { key:'in_progress', label:'In Progress',       icon:'fa-gear' },
+  { key:'completed',   label:'Completed',         icon:'fa-check' }
+];
+
+async function openTrackOrder(reqId){
+  const req = (_reqs||[]).find(r=>r.id===reqId);
+  if (!req) { toast('Request not found.','er'); return; }
+  openModal('track-order-modal');
+  const body = $('track-order-body');
+  body.innerHTML = '<div style="text-align:center;padding:30px"><span class="spin"></span></div>';
+
+  let history = [];
+  try {
+    const { data, error } = await sb.from('request_status_history')
+      .select('*').eq('request_id', reqId).order('created_at', {ascending:true});
+    if (!error && data) history = data;
+  } catch(e) { /* table may not exist yet — fall back gracefully below */ }
+
+  const isCancelled = req.status === 'cancelled';
+  const stages = isCancelled
+    ? [...TRACK_STAGES.slice(0, TRACK_STAGES.findIndex(s=>s.key===req.status)+1 || 1), {key:'cancelled', label:'Cancelled', icon:'fa-ban'}]
+    : TRACK_STAGES;
+
+  const currentIdx = isCancelled
+    ? stages.length - 1
+    : stages.findIndex(s => s.key === req.status);
+  const effectiveIdx = currentIdx === -1 ? 0 : currentIdx;
+
+  const findTime = (key) => {
+    const h = history.find(x => x.status === key);
+    return h ? h.created_at : (key==='pending' ? req.created_at : null);
+  };
+
+  body.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;padding:12px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r)">
+      <div style="width:38px;height:38px;border-radius:10px;background:var(--gold-a8);color:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-concierge-bell"></i></div>
+      <div style="flex:1">
+        <div style="font-size:.8rem;font-weight:600;color:var(--t1)">${esc(req.service_name)}</div>
+        <div style="font-size:.6rem;color:var(--t4)">Ref: ${esc(req.id.substring(0,8).toUpperCase())} · ${fmtRel(req.created_at)}</div>
+      </div>
+    </div>
+    <div class="req-timeline">
+      ${stages.map((s, i) => {
+        const done = i < effectiveIdx;
+        const current = i === effectiveIdx;
+        const cls = s.key==='cancelled' ? 'cancelled' : (done ? 'done' : current ? 'current' : '');
+        const ts = findTime(s.key);
+        return `
+        <div class="rt-step ${cls}">
+          <div>
+            <div class="rt-dot"><i class="fas ${s.icon}"></i></div>
+            <div class="rt-line"></div>
+          </div>
+          <div class="rt-content">
+            <div class="rt-label">${esc(s.label)}</div>
+            <div class="rt-time">${ts ? fmt(ts) : (current ? 'In progress…' : 'Pending')}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    ${(req.status==='pending'||req.status==='in_progress') ? `
+      <button class="btn btn-outline btn-full" style="color:var(--red);margin-top:10px" onclick="closeModal('track-order-modal');cancelMyRequest('${esc(req.id)}')"><i class="fas fa-ban" style="margin-right:6px"></i>Cancel This Request</button>
+    `:''}
+    <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="closeModal('track-order-modal');shareRequest('${esc(req.id)}')"><i class="fas fa-share-nodes" style="margin-right:6px"></i>Share Order</button>
+  `;
+}
+window.openTrackOrder = openTrackOrder;
+
+function shareRequest(reqId){
+  const req = _reqs.find(r=>r.id===reqId);
+  if (!req) { toast('Request not found','er'); return; }
+  const statusLabel = (req.status||'pending').replace('_',' ');
+  const siteUrl = window.location.origin || 'https://shofco.vercel.app';
+  const text = `NovaDeskOnline Request\n\nService: ${req.service_name}\nStatus: ${statusLabel}\nDate: ${fmt(req.created_at)}\nRef: ${req.id.substring(0,8).toUpperCase()}\n\nVisit us: ${siteUrl}`;
+  if (navigator.share) {
+    navigator.share({ title: 'My NovaDeskOnline Request', text, url: siteUrl }).catch(()=>{});
+  } else {
+    navigator.clipboard?.writeText(text)
+      .then(()=>toast('Request details copied to clipboard 📋','ok'))
+      .catch(()=>toast(text,'nf',6000));
+  }
+}
+window.shareRequest = shareRequest;
+
+function cancelMyRequest(reqId){
+  const req = _reqs.find(r=>r.id===reqId);
+  if (!req) { toast('Request not found','er'); return; }
+  popup(
+    'Cancel This Request?',
+    `This will cancel your "${req.service_name}" request. You can always submit a new one later.`,
+    'er',
+    [
+      {label:'Keep Request', fn:null, style:'btn-ghost'},
+      {label:'Cancel Request', fn:async()=>{
+        try{
+          const { error } = await sb.from('service_requests').update({ status:'cancelled', updated_at:new Date().toISOString() }).eq('id', reqId).eq('user_id', _user.id);
+          if (error) throw error;
+          sb.from('request_status_history').insert({
+            request_id: reqId, status: 'cancelled', changed_by: _user.id
+          }).then(()=>{}).catch(()=>{});
+          toast('Request cancelled.','nf');
+          if(typeof loadMyReqs==='function') await loadMyReqs();
+          renderMyReqsList(_reqFilter);
+          if(typeof refreshHomeCounts==='function') refreshHomeCounts();
+        }catch(e){ toast(e.message||'Could not cancel request.','er'); }
+      }, style:'btn-outline'}
+    ]
+  );
+}
+window.cancelMyRequest = cancelMyRequest;
 function viewReqFiles(reqId) {
   const req = _reqs.find(r=>r.id===reqId);
   if (!req) return;
@@ -7923,13 +9100,12 @@ window.openFeedbackModal = openFeedbackModal;
 /* ── SUBMIT PUBLIC FEEDBACK ───────────────────────────────────── */
 async function submitPublicFeedback(){
   const comment = ($('fb-comment')?.value||'').trim();
-  const name    = sanitizeShort($('fb-name')?.value||'Anonymous');
+  const name    = sanitizeShort($('fb-name')?.value||'').trim() || 'Anonymous';
   const service = sanitizeShort($('fb-service')?.value||'');
   const err     = $('fb-err');
   const btn     = $('fb-submit-btn');
 
   if(!_fbStar){ if(err){err.textContent='Please select a star rating.';err.style.display='block';} return; }
-  if(!comment||comment.length<5){ if(err){err.textContent='Please write at least a few words.';err.style.display='block';} return; }
   if(err) err.style.display='none';
   if(btn){ btn.disabled=true; btn.innerHTML='<span class="spin"></span> Submitting…'; }
 
@@ -7941,7 +9117,7 @@ async function submitPublicFeedback(){
       name:     name || 'Anonymous',
       service:  service || null,
       user_id:  _user?.id || null,
-      approved: false, // admin must approve before showing in carousel
+      approved: true, // auto-approved; admin can hide from carousel if needed
       created_at: new Date().toISOString()
     });
     if(error) throw error;
@@ -8064,3 +9240,115 @@ document.addEventListener('DOMContentLoaded', ()=>setTimeout(loadReviewsCarousel
 </script>
 </body>
 </html>
+<script>
+/* ── ADMIN FEEDBACK / REVIEWS ───────────────────────────────────── */
+let _fbFilter='all', _allFeedback=[];
+
+async function adminLoadFeedback(){
+  try{await _requireAdmin();}catch(e){toast(e.message,'er');return;}
+  const list=$('admin-feedback-list');
+  if(!list)return;
+  list.innerHTML='<div style="text-align:center;padding:20px"><span class="spin"></span></div>';
+  try{
+    const{data,error}=await sb.from('public_feedback').select('*').order('created_at',{ascending:false});
+    if(error)throw error;
+    _allFeedback=data||[];
+    const hidden=_allFeedback.filter(f=>!f.approved).length;
+    const badge=$('admin-feedback-badge');
+    if(badge){badge.textContent=hidden;badge.style.display=hidden>0?'flex':'none';}
+    renderAdminFeedback();
+  }catch(e){
+    list.innerHTML=`<div style="color:var(--red);padding:16px;font-size:.76rem">Failed: ${esc(e.message)}</div>`;
+  }
+}
+window.adminLoadFeedback=adminLoadFeedback;
+
+function adminFilterFeedback(filter,el){
+  _fbFilter=filter;
+  document.querySelectorAll('#asec-feedback .btn').forEach(b=>b.className='btn btn-ghost btn-xs');
+  if(el)el.className='btn btn-outline btn-xs on';
+  renderAdminFeedback();
+}
+window.adminFilterFeedback=adminFilterFeedback;
+
+function renderAdminFeedback(){
+  const list=$('admin-feedback-list');if(!list)return;
+  let items=_allFeedback;
+  if(_fbFilter==='pending') items=items.filter(f=>!f.approved);
+  if(_fbFilter==='approved')items=items.filter(f=>f.approved);
+  if(!items.length){
+    list.innerHTML=`<div class="empty-state" style="padding:30px"><i class="fas fa-star"></i><p>${_fbFilter==='pending'?'No hidden reviews':'No reviews yet'}</p></div>`;
+    return;
+  }
+  list.innerHTML=items.map(f=>`
+    <div style="background:var(--bg3);border:1px solid ${f.approved?'rgba(50,180,100,.3)':'rgba(224,80,80,.25)'};border-radius:var(--r);padding:12px;position:relative">
+      ${f.approved
+        ?`<span style="position:absolute;top:10px;right:10px;font-size:.52rem;padding:2px 7px;background:rgba(50,180,100,.12);color:var(--green);border:1px solid rgba(50,180,100,.3);border-radius:10px">✓ Visible</span>`
+        :`<span style="position:absolute;top:10px;right:10px;font-size:.52rem;padding:2px 7px;background:rgba(224,80,80,.1);color:var(--red);border:1px solid rgba(224,80,80,.3);border-radius:10px">Hidden</span>`}
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--gold);flex-shrink:0">${esc((f.name||'A').charAt(0).toUpperCase())}</div>
+        <div style="flex:1">
+          <div style="font-size:.76rem;font-weight:600;color:var(--t1)">${esc(f.name||'Anonymous')}</div>
+          <span style="color:#f0a500;font-size:.72rem">${'★'.repeat(f.rating||0)}${'☆'.repeat(5-(f.rating||0))}</span>
+          ${f.service?`<span style="font-size:.58rem;color:var(--t4);margin-left:6px">${esc(f.service)}</span>`:''}
+        </div>
+      </div>
+      <div style="font-size:.74rem;color:var(--t2);line-height:1.6;margin-bottom:8px;font-style:italic">"${esc(f.comment||'')}"</div>
+      <div style="font-size:.58rem;color:var(--t4);margin-bottom:10px">${fmtRel(f.created_at)}</div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost btn-xs" style="color:var(--red)" onclick="adminDeleteFeedback('${esc(f.id)}')"><i class="fas fa-trash"></i></button>
+        ${f.approved
+          ?`<button class="btn btn-outline btn-xs" style="flex:1;color:var(--red);border-color:rgba(224,80,80,.4)" onclick="adminUnapproveFeedback('${esc(f.id)}')"><i class="fas fa-eye-slash"></i> Hide from Carousel</button>`
+          :`<button class="btn btn-gold btn-xs" style="flex:1" onclick="adminApproveFeedback('${esc(f.id)}')"><i class="fas fa-eye"></i> Show in Carousel</button>`
+        }
+      </div>
+    </div>`).join('');
+}
+window.renderAdminFeedback=renderAdminFeedback;
+
+async function adminApproveFeedback(id){
+  try{await _requireAdmin();}catch(e){toast(e.message,'er');return;}
+  try{
+    await sb.from('public_feedback').update({approved:true}).eq('id',id);
+    _allFeedback=_allFeedback.map(f=>f.id===id?{...f,approved:true}:f);
+    toast('Review approved — now live in carousel ✅','ok');
+    renderAdminFeedback();
+    if(typeof loadReviewsCarousel==='function')loadReviewsCarousel();
+    logAdminAction('approve_review',id);
+    const pending=_allFeedback.filter(f=>!f.approved).length;
+    const badge=$('admin-feedback-badge');
+    if(badge){badge.textContent=pending;badge.style.display=pending>0?'flex':'none';}
+  }catch(e){toast(e.message||'Failed','er');}
+}
+window.adminApproveFeedback=adminApproveFeedback;
+
+async function adminUnapproveFeedback(id){
+  try{await _requireAdmin();}catch(e){toast(e.message,'er');return;}
+  try{
+    await sb.from('public_feedback').update({approved:false}).eq('id',id);
+    _allFeedback=_allFeedback.map(f=>f.id===id?{...f,approved:false}:f);
+    toast('Review hidden from carousel','nf');
+    renderAdminFeedback();
+    if(typeof loadReviewsCarousel==='function')loadReviewsCarousel();
+  }catch(e){toast(e.message||'Failed','er');}
+}
+window.adminUnapproveFeedback=adminUnapproveFeedback;
+
+async function adminDeleteFeedback(id){
+  popup('Delete Review','This permanently removes this review.','nf',[
+    {label:'Cancel',fn:null,style:'btn-ghost'},
+    {label:'Delete',fn:async()=>{
+      try{await _requireAdmin();}catch(e){toast(e.message,'er');return;}
+      try{
+        await sb.from('public_feedback').delete().eq('id',id);
+        _allFeedback=_allFeedback.filter(f=>f.id!==id);
+        toast('Review deleted','nf');
+        renderAdminFeedback();
+        if(typeof loadReviewsCarousel==='function')loadReviewsCarousel();
+        logAdminAction('delete_review',id);
+      }catch(e){toast(e.message||'Failed','er');}
+    },style:'btn-outline'}
+  ]);
+}
+window.adminDeleteFeedback=adminDeleteFeedback;
+</script>
