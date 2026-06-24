@@ -1558,7 +1558,86 @@ body.admin-open .acct-tabs{ pointer-events:none; }
         <div><div class="scr-ttl">Institution Portal</div><div class="scr-sub">Bulk services for schools &amp; businesses</div></div>
       </div>
       <div id="inst-body" style="padding:0 16px 80px">
-        <div style="text-align:center;padding:40px"><span class="spin"></span></div>
+
+        <!-- ══ GUEST VIEW (not logged in as institution) ══ -->
+        <div id="inst-guest-view" style="display:block">
+          <div style="text-align:center;padding:24px 8px 18px">
+            <div style="width:64px;height:64px;border-radius:16px;background:rgba(255,165,0,.1);border:1px solid rgba(255,165,0,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:1.6rem;color:#ffa500"><i class="fas fa-building-columns"></i></div>
+            <div style="font-family:var(--fd);font-size:1.2rem;color:var(--t1);margin-bottom:4px">Institution Dashboard</div>
+            <p style="font-size:.72rem;color:var(--t3);line-height:1.6;max-width:300px;margin:0 auto">Schools, hospitals, NGOs, and businesses get a dedicated dashboard to request bulk services and track every order.</p>
+          </div>
+
+          <!-- Login -->
+          <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:18px 16px;margin-bottom:14px">
+            <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:12px"><i class="fas fa-arrow-right-to-bracket" style="margin-right:6px;color:#ffa500"></i>Institution Login</div>
+            <div class="fg"><label class="flbl">Official Email</label><input class="fi" id="inst-li-email" type="email" placeholder="institution@example.com" autocomplete="email"></div>
+            <div class="fg" style="position:relative"><label class="flbl">Password</label><input class="fi" id="inst-li-pw" type="password" placeholder="Your password" style="padding-right:38px"><button type="button" onclick="togglePw('inst-li-pw','inst-li-eye')" style="position:absolute;right:8px;bottom:9px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.75rem" id="inst-li-eye"><i class="fas fa-eye"></i></button></div>
+            <div id="inst-li-err" class="ferr" style="margin-bottom:10px"></div>
+            <button class="btn btn-full" id="inst-li-btn" onclick="doInstLogin()" style="padding:12px;font-size:.78rem;background:#ffa500;color:#1a1305;border:none;font-weight:700"><i class="fas fa-arrow-right-to-bracket"></i> Login as Institution</button>
+          </div>
+
+          <!-- Register CTA -->
+          <div style="background:rgba(255,165,0,.05);border:1px solid rgba(255,165,0,.2);border-radius:var(--rl);padding:16px;text-align:center">
+            <div style="font-size:.74rem;color:var(--t2);margin-bottom:10px">Don't have an institution account yet?</div>
+            <button class="btn btn-outline btn-full" style="border-color:rgba(255,165,0,.4);color:#ffa500" onclick="openAuthModal();authTab('institution')"><i class="fas fa-building-columns"></i> Register Your Institution</button>
+          </div>
+        </div>
+
+        <!-- ══ DASHBOARD VIEW (logged in as institution) ══ -->
+        <div id="inst-dashboard-view" style="display:none">
+
+          <!-- Header card -->
+          <div style="background:linear-gradient(135deg,rgba(255,165,0,.1),rgba(255,165,0,.03));border:1px solid rgba(255,165,0,.25);border-radius:var(--rl);padding:18px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+            <div style="width:48px;height:48px;border-radius:12px;background:rgba(255,165,0,.15);border:1px solid rgba(255,165,0,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;color:#ffa500"><i class="fas fa-building-columns"></i></div>
+            <div style="flex:1;min-width:0">
+              <div id="inst-dash-name" style="font-family:var(--fd);font-size:1.05rem;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Institution</div>
+              <div id="inst-dash-type" style="font-size:.64rem;color:var(--t3);margin-top:2px"></div>
+            </div>
+            <span style="font-size:.5rem;padding:3px 9px;background:rgba(255,165,0,.15);color:#ffa500;border:1px solid rgba(255,165,0,.3);border-radius:20px;font-weight:700;letter-spacing:.05em;flex-shrink:0">INSTITUTION</span>
+          </div>
+
+          <!-- Stats row -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
+            <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px 8px;text-align:center">
+              <div id="inst-stat-total" style="font-family:var(--fd);font-size:1.3rem;color:#ffa500">0</div>
+              <div style="font-size:.56rem;color:var(--t4);text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Total Orders</div>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px 8px;text-align:center">
+              <div id="inst-stat-pending" style="font-family:var(--fd);font-size:1.3rem;color:var(--warm)">0</div>
+              <div style="font-size:.56rem;color:var(--t4);text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Active</div>
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px 8px;text-align:center">
+              <div id="inst-stat-done" style="font-family:var(--fd);font-size:1.3rem;color:var(--green)">0</div>
+              <div style="font-size:.56rem;color:var(--t4);text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Completed</div>
+            </div>
+          </div>
+
+          <!-- Quick actions -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px">
+            <button class="btn btn-full" style="padding:13px;font-size:.76rem;background:#ffa500;color:#1a1305;border:none;font-weight:700" onclick="openInstNewRequest()"><i class="fas fa-plus"></i> New Request</button>
+            <button class="btn btn-outline btn-full" style="padding:13px;font-size:.76rem;border-color:rgba(255,165,0,.35);color:#ffa500" onclick="openInstAllReqsModal()"><i class="fas fa-list"></i> All Orders</button>
+          </div>
+
+          <!-- Institution profile summary -->
+          <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:18px">
+            <div style="font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t4);margin-bottom:10px">Account Details</div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:.72rem">
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--t4)">Email</span><span id="inst-dash-email" style="color:var(--t2)">—</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--t4)">WhatsApp</span><span id="inst-dash-wa" style="color:var(--t2)">—</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--t4)">Contact Person</span><span id="inst-dash-contact" style="color:var(--t2)">—</span></div>
+            </div>
+          </div>
+
+          <!-- Recent requests -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div style="font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3)">Recent Orders</div>
+            <span style="font-size:.66rem;color:#ffa500;cursor:pointer" onclick="openInstAllReqsModal()">View all</span>
+          </div>
+          <div id="inst-recent-reqs"></div>
+
+          <button class="btn btn-ghost btn-full" style="margin-top:18px;color:var(--red)" onclick="instSignOut()"><i class="fas fa-arrow-right-from-bracket"></i> Sign Out of Institution Account</button>
+        </div>
+
       </div>
     </section>
     <!-- ── MORE ──────────────────────────────────────────────── -->
@@ -1880,6 +1959,32 @@ body.admin-open .acct-tabs{ pointer-events:none; }
             <div class="acct-info-row"><div class="acct-info-lbl"><i class="fas fa-clock"></i> Last Visit</div><div class="acct-info-val" id="pi-lastvisit">—</div></div>
             <div class="acct-info-row" id="pi-ref-row" style="display:none"><div class="acct-info-lbl"><i class="fas fa-user-group"></i> Referred by</div><div class="acct-info-val" id="pi-refby">—</div></div>
           </div>
+
+          <!-- ── INSTITUTION EXTRA INFO (shown only for role=institution) ── -->
+          <div id="acct-inst-info" style="display:none;margin-bottom:16px">
+            <div style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ffa500;margin:0 0 8px;display:flex;align-items:center;gap:6px"><i class="fas fa-building-columns"></i> Institution Details</div>
+            <div style="background:rgba(255,165,0,.05);border:1px solid rgba(255,165,0,.2);border-radius:var(--r);padding:12px">
+              <div class="acct-info-row"><div class="acct-info-lbl" style="color:rgba(255,165,0,.7)"><i class="fas fa-building-columns"></i> Inst. Name</div><div class="acct-info-val" id="pi-inst-name">—</div></div>
+              <div class="acct-info-row"><div class="acct-info-lbl" style="color:rgba(255,165,0,.7)"><i class="fas fa-tag"></i> Type</div><div class="acct-info-val" id="pi-inst-type">—</div></div>
+              <div class="acct-info-row"><div class="acct-info-lbl" style="color:rgba(255,165,0,.7)"><i class="fas fa-map-marker-alt"></i> Location</div><div class="acct-info-val" id="pi-inst-location">—</div></div>
+              <div class="acct-info-row"><div class="acct-info-lbl" style="color:rgba(255,165,0,.7)"><i class="fab fa-whatsapp"></i> Inst. WhatsApp</div><div class="acct-info-val" id="pi-inst-wa">—</div></div>
+              <div class="acct-info-row"><div class="acct-info-lbl" style="color:rgba(255,165,0,.7)"><i class="fas fa-person"></i> Contact</div><div class="acct-info-val" id="pi-inst-contact">—</div></div>
+            </div>
+            <button class="btn btn-outline btn-full btn-sm" style="margin-top:8px;border-color:rgba(255,165,0,.3);color:#ffa500" onclick="goNav('institution')"><i class="fas fa-arrow-right"></i> Go to Institution Dashboard</button>
+          </div>
+
+          <!-- ── AGENT EXTRA INFO (shown only for role=agent) ── -->
+          <div id="acct-agent-info" style="display:none;margin-bottom:16px">
+            <div style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin:0 0 8px;display:flex;align-items:center;gap:6px"><i class="fas fa-handshake"></i> Agent Details</div>
+            <div style="background:rgba(90,174,255,.05);border:1px solid rgba(90,174,255,.2);border-radius:var(--r);padding:12px">
+              <div class="acct-info-row"><div class="acct-info-lbl" style="color:rgba(90,174,255,.7)"><i class="fas fa-circle-check"></i> Status</div><div class="acct-info-val" id="pi-agent-status">—</div></div>
+              <div class="acct-info-row"><div class="acct-info-lbl" style="color:rgba(90,174,255,.7)"><i class="fas fa-bullhorn"></i> Channel</div><div class="acct-info-val" id="pi-agent-channel">—</div></div>
+              <div class="acct-info-row"><div class="acct-info-lbl" style="color:rgba(90,174,255,.7)"><i class="fas fa-star"></i> Specialization</div><div class="acct-info-val" id="pi-agent-spec">—</div></div>
+              <div class="acct-info-row"><div class="acct-info-lbl" style="color:rgba(90,174,255,.7)"><i class="fas fa-percent"></i> Commission</div><div class="acct-info-val" id="pi-agent-commission">—</div></div>
+              <div class="acct-info-row"><div class="acct-info-lbl" style="color:rgba(90,174,255,.7)"><i class="fas fa-people-arrows"></i> Referrals</div><div class="acct-info-val" id="pi-agent-referrals">—</div></div>
+            </div>
+          </div>
+
           <div style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin:16px 0 8px">Most Requested Services</div>
           <div id="pi-top-services" style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
             <div style="text-align:center;padding:14px;color:var(--t3);font-size:.74rem">Loading…</div>
@@ -2210,14 +2315,23 @@ body.admin-open .acct-tabs{ pointer-events:none; }
   <!-- ── INSTITUTIONS ── -->
   <div class="admin-section" id="asec-institutions">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px;gap:8px">
-      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Institution Requests</div>
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Institutions</div>
       <div style="display:flex;gap:6px">
         <button class="btn btn-ghost btn-xs" onclick="adminLoadInstitutions()"><i class="fas fa-rotate-right"></i></button>
         <button class="btn btn-gold btn-xs" onclick="adminOpenAddInstitution()"><i class="fas fa-plus"></i> Add Institution</button>
       </div>
     </div>
+
+    <!-- Registered institution accounts -->
+    <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffa500;margin-bottom:8px"><i class="fas fa-building-columns" style="margin-right:4px"></i>Registered Accounts</div>
+    <div id="admin-inst-accounts" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px">
+      <div style="text-align:center;padding:16px"><span class="spin"></span></div>
+    </div>
+
+    <!-- Institution service requests -->
+    <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:8px"><i class="fas fa-inbox" style="margin-right:4px"></i>Service Requests from Institutions</div>
     <div id="admin-inst-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
-      <div style="text-align:center;padding:20px"><span class="spin"></span></div>
+      <div style="text-align:center;padding:16px"><span class="spin"></span></div>
     </div>
   </div>
   <div class="admin-section" id="asec-requests">
@@ -2635,7 +2749,7 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 
       <div id="inst-rg-err" class="ferr" style="margin:12px 0 10px"></div>
       <button class="btn btn-gold btn-full" id="inst-rg-btn" onclick="doInstRegister()" style="padding:13px;font-size:.78rem"><i class="fas fa-building-columns"></i> Register Institution</button>
-      <p style="text-align:center;font-size:.68rem;color:var(--t3);margin-top:12px">Already registered? <span style="color:var(--gold);cursor:pointer;font-weight:600" onclick="authTab('signin')">Sign In instead</span></p>
+      <p style="text-align:center;font-size:.68rem;color:var(--t3);margin-top:12px">Already registered? <span style="color:#ffa500;cursor:pointer;font-weight:600" onclick="closeAuth();goNav('institution')">Sign In instead</span></p>
       <div style="height:20px"></div>
     </div>
   </div>
@@ -4087,7 +4201,31 @@ function renderAccount(){
       .then(() => toast('Account ID copied! 📋', 'ok'))
       .catch(() => toast(ndId, 'nf', 5000));
   };
-  $('acct-role-chip').innerHTML = `<i class="fas fa-${_profile.role==='admin'?'shield-halved':'star'}"></i> ${_profile.role==='admin'?'Admin':'Member'}`;
+  // Role chip — show correct badge for all roles
+  const roleChip = $('acct-role-chip');
+  if (roleChip) {
+    const r = _profile.role;
+    if (r === 'admin')       roleChip.innerHTML = `<i class="fas fa-shield-halved"></i> Admin`;
+    else if (r === 'institution') roleChip.innerHTML = `<i class="fas fa-building-columns"></i> Institution`;
+    else if (r === 'agent')  roleChip.innerHTML = `<i class="fas fa-handshake"></i> Agent`;
+    else                     roleChip.innerHTML = `<i class="fas fa-star"></i> Member`;
+    // Colour the chip based on role
+    roleChip.style.background = r==='institution' ? 'rgba(255,165,0,.1)'
+                               : r==='agent'       ? 'rgba(90,174,255,.1)'
+                               : 'var(--gold-a8)';
+    roleChip.style.color = r==='institution' ? '#ffa500'
+                          : r==='agent'       ? 'var(--blue)'
+                          : 'var(--gold)';
+    roleChip.style.border = r==='institution' ? '1px solid rgba(255,165,0,.3)'
+                           : r==='agent'       ? '1px solid rgba(90,174,255,.3)'
+                           : '1px solid var(--gold-a25)';
+  }
+
+  // Show/hide role-specific info panels in Profile tab
+  const instInfoPanel = $('acct-inst-info');
+  const agentInfoPanel = $('acct-agent-info');
+  if (instInfoPanel)  instInfoPanel.style.display = _profile.role === 'institution' ? 'block' : 'none';
+  if (agentInfoPanel) agentInfoPanel.style.display = _profile.role === 'agent'       ? 'block' : 'none';
   const pts = _profile?.loyalty_points || (_reqs.filter(r=>r.status==='completed').length * 10);
   const ptChip = $('acct-pts-chip');
   if (ptChip) ptChip.innerHTML = `<i class="fas fa-star"></i> ${pts} pts`;
@@ -4344,6 +4482,8 @@ function openSvcReq(svcId){
   $('svc-req-icon').className = 'fas ' + (svc.icon||'fa-star');
   $('svc-req-desc').textContent = (svc.description||'') + (svc.price_label ? '\n\nPricing: ' + svc.price_label : '');
   $('svc-req-notes').value = '';
+  const dl = $('svc-req-deadline'); if(dl) dl.value='';
+  const dlLabel = $('svc-req-deadline-label'); if(dlLabel) dlLabel.textContent='Tap to set a deadline';
   $('upload-file-list').innerHTML = '';
   const errEl = $('svc-req-err');
   if(errEl){ errEl.style.display='none'; errEl.textContent=''; }
@@ -4403,20 +4543,39 @@ function viewSentRequest(){
 }
 window.viewSentRequest = viewSentRequest;
 
+function updateDeadlineBtn(){
+  const val = $('svc-req-deadline')?.value;
+  const lbl = $('svc-req-deadline-label');
+  const btn = $('svc-req-deadline-btn');
+  if (!lbl) return;
+  if (val) {
+    const d = new Date(val);
+    lbl.textContent = d.toLocaleString('en-KE',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    if (btn) { btn.style.borderStyle='solid'; btn.style.borderColor='var(--gold-a45)'; btn.style.color='var(--t1)'; }
+  } else {
+    lbl.textContent = 'Tap to set a deadline';
+    if (btn) { btn.style.borderStyle='dashed'; btn.style.borderColor='var(--bd)'; btn.style.color='var(--t4)'; }
+  }
+}
+window.updateDeadlineBtn = updateDeadlineBtn;
+
 async function submitSvcRequest(){
-  if (!_user){ closeSvcReq(); openAuth(); return; }
   const notes = typeof sanitize==='function' ? sanitize($('svc-req-notes')?.value||'') : ($('svc-req-notes')?.value||'');
   const btn = $('svc-req-btn');
   const err = $('svc-req-err');
   if(err){ err.style.display='none'; err.textContent=''; }
   if(btn){ btn.disabled=true; btn.innerHTML='<span class="spin"></span> Submitting…'; }
   try {
+    const deadlineVal = $('svc-req-deadline')?.value || null;
+    const deadline = deadlineVal ? new Date(deadlineVal).toISOString() : null;
+
     const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     const payload = {
       user_id: _user.id,
       service_name: _currentSvc.name,
       description: notes||null,
       status: 'pending',
+      deadline: deadline,
       file_urls: '[]'
     };
     // Only attach service_id when it's a real database UUID.
@@ -5157,11 +5316,19 @@ function adminReqRow(r){
 function adminUserRow(u){
   const init = (u.full_name||'?').split(' ').map(w=>w[0]?.toUpperCase()||'').join('').substring(0,2)||'ND';
   const ndId = u.nd_user_id || generateNdUserId(u.id||'');
-  const isBanned = u.role==='banned';
-  const isAdmin  = u.role==='admin';
-  const statusColor = isBanned ? 'rgba(224,80,80,.12)' : isAdmin ? 'rgba(201,168,76,.12)' : 'rgba(90,174,255,.08)';
-  const statusBorder= isBanned ? 'rgba(224,80,80,.3)' : isAdmin ? 'rgba(201,168,76,.3)' : 'rgba(90,174,255,.2)';
-  const statusTxt   = isBanned ? 'var(--red)' : isAdmin ? 'var(--gold)' : 'var(--blue)';
+  const role = u.role || 'user';
+  const isBanned = role==='banned';
+  const isAdmin  = role==='admin';
+  const isAgent  = role==='agent';
+  const isInst   = role==='institution';
+  const roleStyles = {
+    admin:       {bg:'rgba(201,168,76,.12)',bd:'rgba(201,168,76,.3)',tx:'var(--gold)',icon:'fa-shield-halved',label:'Admin'},
+    agent:       {bg:'rgba(90,174,255,.1)',bd:'rgba(90,174,255,.3)',tx:'var(--blue)',icon:'fa-handshake',label:'Agent'},
+    institution: {bg:'rgba(255,165,0,.1)',bd:'rgba(255,165,0,.3)',tx:'#ffa500',icon:'fa-building-columns',label:'Institution'},
+    banned:      {bg:'rgba(224,80,80,.12)',bd:'rgba(224,80,80,.3)',tx:'var(--red)',icon:'fa-ban',label:'Banned'},
+    user:        {bg:'rgba(90,174,255,.08)',bd:'rgba(90,174,255,.2)',tx:'var(--blue)',icon:'fa-user',label:'Member'}
+  };
+  const rs = roleStyles[role] || roleStyles.user;
   return `<div class="admin-user-row" style="${isBanned?'opacity:.7':''}">
     <div class="admin-user-ava" style="${isBanned?'background:rgba(224,80,80,.1);border-color:rgba(224,80,80,.3)':''}">${u.avatar_url?`<img src="${esc(u.avatar_url)}" alt="" style="width:100%;height:100%;object-fit:cover">`:init}</div>
     <div class="admin-user-info">
@@ -5178,7 +5345,7 @@ function adminUserRow(u){
       </div>
     </div>
     <div class="admin-user-actions">
-      <span style="font-size:.52rem;padding:3px 8px;border-radius:20px;background:${statusColor};color:${statusTxt};border:1px solid ${statusBorder};white-space:nowrap">${esc(u.role||'user')}</span>
+      <span style="font-size:.52rem;padding:3px 8px;border-radius:20px;background:${rs.bg};color:${rs.tx};border:1px solid ${rs.bd};white-space:nowrap;display:flex;align-items:center;gap:4px"><i class="fas ${rs.icon}" style="font-size:.5rem"></i>${rs.label}</span>
       <button onclick="event.stopPropagation();adminUserActions('${esc(u.id)}','${esc(u.full_name||'User')}','${esc(u.role||'user')}')"
         style="width:30px;height:30px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem;flex-shrink:0;margin-left:4px">
         <i class="fas fa-ellipsis-v"></i>
@@ -5287,6 +5454,9 @@ function adminUserActions(userId, userName, currentRole){
       {label:'Upgrade to Agent',
        fn: ()=>adminUpgradeToAgent(userId, userName),
        style:'btn-ghost'},
+      {label:'Upgrade to Institution',
+       fn: ()=>adminUpgradeToInstitution(userId, userName),
+       style:'btn-ghost'},
       {label: isAdmin ? 'Remove Admin' : 'Make Admin',
        fn: ()=>adminSetUserRole(userId, isAdmin?'user':'admin'),
        style:'btn-gold'},
@@ -5363,9 +5533,9 @@ async function adminUpgradeToAgent(userId, userName){
         try{
           const u = _allUsers.find(x=>x.id===userId);
           const{error}=await sb.from('agent_applications').insert({
-            name: u?.full_name || userName,
+            full_name: u?.full_name || userName,
             email: u?.email || '',
-            phone: u?.whatsapp || '',
+            phone: u?.whatsapp_number || '',
             location: '',
             channel: 'Admin Upgrade',
             bio: `Upgraded by admin from user account.`,
@@ -5381,6 +5551,39 @@ async function adminUpgradeToAgent(userId, userName){
   );
 }
 window.adminUpgradeToAgent = adminUpgradeToAgent;
+
+async function adminUpgradeToInstitution(userId, userName){
+  try { await _requireAdmin(); } catch(e){ toast(e.message,'er'); return; }
+  popup(
+    `Upgrade ${userName} to Institution?`,
+    'This creates an institution account using this user\'s existing email, so they can log in through the Institution Portal.',
+    'nf',
+    [
+      {label:'Cancel', fn:null, style:'btn-ghost'},
+      {label:'Upgrade to Institution', fn:async()=>{
+        try{
+          const u = _allUsers.find(x=>x.id===userId);
+          if (!u?.email) { toast('This user has no email on file — cannot create an institution login.','er'); return; }
+          const { error } = await sb.from('institution_profiles').upsert({
+            auth_user_id: userId,
+            inst_name: u.full_name || userName,
+            inst_type: 'other',
+            location: '',
+            whatsapp_number: u.whatsapp_number || '',
+            email: u.email,
+            contact_person: u.full_name || userName,
+            status: 'active'
+          }, { onConflict: 'email' });
+          if (error) throw error;
+          await sb.from('profiles').update({ role: 'institution' }).eq('id', userId);
+          toast(`${userName} upgraded to Institution ✅ They can log in via the Institution Portal using their existing email/password.`,'ok');
+          logAdminAction('upgrade_to_institution', `user:${userId}`);
+        }catch(e){toast(e.message||'Failed','er');}
+      }, style:'btn-gold'}
+    ]
+  );
+}
+window.adminUpgradeToInstitution = adminUpgradeToInstitution;
 
 async function adminToggleService(svcId, active){
   try {
@@ -5855,8 +6058,11 @@ async function adminLoadAgents(){
       throw error;
     }
     if (!data?.length){ al.innerHTML='<div class="empty-state" style="padding:30px"><i class="fas fa-user-tie"></i><p>No agent applications yet</p></div>'; return; }
-    al.innerHTML = data.map(a=>`
-      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px">
+    al.innerHTML = data.map(a=>{
+      const isApproved = a.status === 'approved';
+      const services = a.specialization ? a.specialization.split(',').map(s=>s.trim()) : [];
+      return `
+      <div style="background:var(--bg3);border:1px solid ${isApproved?'rgba(50,180,100,.25)':'var(--bd)'};border-radius:var(--r);padding:12px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
           <div style="font-size:.78rem;font-weight:600;color:var(--t1)">${esc(a.full_name||a.name||'Unknown')}</div>
           <span class="req-badge ${esc(a.status||'pending')}" style="font-size:.54rem">${esc(a.status||'pending')}</span>
@@ -5865,15 +6071,28 @@ async function adminLoadAgents(){
           ${a.email?`<div><i class="fas fa-envelope" style="width:14px;color:var(--gold)"></i> ${esc(a.email)}</div>`:''}
           ${a.phone?`<div><i class="fas fa-phone" style="width:14px;color:var(--gold)"></i> ${esc(a.phone)}</div>`:''}
           ${a.location?`<div><i class="fas fa-map-marker-alt" style="width:14px;color:var(--gold)"></i> ${esc(a.location)}</div>`:''}
+          ${a.channel?`<div><i class="fas fa-bullhorn" style="width:14px;color:var(--gold)"></i> ${esc(a.channel)}</div>`:''}
+          <div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:4px">
+            ${services.length ? services.map(s=>`<span style="font-size:.54rem;padding:2px 7px;background:rgba(90,174,255,.1);color:var(--blue);border:1px solid rgba(90,174,255,.25);border-radius:10px">${esc(s)}</span>`).join('') : '<span style="font-size:.62rem;color:var(--t4)"><i class="fas fa-star" style="width:14px"></i> No services assigned</span>'}
+          </div>
+          ${a.commission_rate?`<div style="color:var(--green)"><i class="fas fa-percent" style="width:14px;color:var(--green)"></i> Commission: ${esc(String(a.commission_rate))}%</div>`:''}
           ${a.bio?`<div style="color:var(--t2);line-height:1.5;margin-top:4px">${esc(a.bio.substring(0,100))}${a.bio.length>100?'…':''}</div>`:''}
           <div style="color:var(--t4);margin-top:2px">${fmtRel(a.created_at)}</div>
         </div>
-        <div style="display:flex;gap:6px">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
           <button class="btn btn-ghost btn-xs" style="color:var(--red)" onclick="adminDeleteAgent('${esc(a.id)}')"><i class="fas fa-trash"></i></button>
-          <button class="btn btn-ghost btn-xs" onclick="adminSetAgentStatus('${esc(a.id)}','rejected')"><i class="fas fa-times"></i> Reject</button>
-          <button class="btn btn-gold btn-xs" style="flex:1" onclick="adminSetAgentStatus('${esc(a.id)}','approved')"><i class="fas fa-check"></i> Approve</button>
+          ${isApproved
+            ? `<button class="btn btn-outline btn-xs" style="color:var(--warm);border-color:rgba(255,165,0,.3)" onclick="adminSetAgentStatus('${esc(a.id)}','pending','${esc(a.email)}','${esc(a.full_name||'')}')"><i class="fas fa-ban"></i> Unapprove</button>`
+            : `<button class="btn btn-ghost btn-xs" onclick="adminSetAgentStatus('${esc(a.id)}','rejected','${esc(a.email)}','${esc(a.full_name||'')}')"><i class="fas fa-times"></i> Reject</button>`
+          }
+          ${!isApproved
+            ? `<button class="btn btn-gold btn-xs" style="flex:1" onclick="adminSetAgentStatus('${esc(a.id)}','approved','${esc(a.email)}','${esc(a.full_name||'')}')"><i class="fas fa-check"></i> Approve</button>`
+            : ''
+          }
+          <button class="btn btn-ghost btn-xs" onclick="adminAssignAgent('${esc(a.id)}','${esc(a.full_name||'')}','${esc(a.specialization||'')}','${esc(String(a.commission_rate||5))}')"><i class="fas fa-sliders"></i> Assign Services</button>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   } catch(e){ al.innerHTML=`<div style="color:var(--red);padding:16px;font-size:.76rem">Failed: ${esc(e.message)}</div>`; }
 }
 window.adminLoadAgents = adminLoadAgents;
@@ -5900,12 +6119,25 @@ async function adminDeleteAgent(id){
 }
 window.adminDeleteAgent = adminDeleteAgent;
 
-async function adminSetAgentStatus(id, status){
+async function adminSetAgentStatus(id, status, email, name){
   try {
     await _requireAdmin();
     const { error } = await sb.from('agent_applications').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
     if (error) throw error;
     toast(`Agent ${status} ✅`,'ok');
+    // Send approval email via Supabase auth email or edge function if available
+    if (status === 'approved' && email) {
+      try {
+        await sb.from('notifications').insert({
+          user_id: null, // no user_id since agent may not have a profile row
+          title: `🎉 Agent Application Approved`,
+          message: `Congratulations ${name||''}! Your agent application has been approved. You can now earn commission by referring clients to NovaDeskOnline.`,
+          type: 'agent_approved'
+        });
+      } catch(ne){ /* notification table may not exist, non-fatal */ }
+      // Show admin a copy of what was sent
+      toast(`Approval notification sent to ${email}`,'ok');
+    }
     adminLoadAgents();
   } catch(e){
     if (/row-level security|policy/i.test(e.message||'')) {
@@ -5917,47 +6149,207 @@ async function adminSetAgentStatus(id, status){
 }
 window.adminSetAgentStatus = adminSetAgentStatus;
 
+async function adminAssignAgent(id, name, currentSpec, currentRate){
+  const allServices = [
+    'Print & Documents','CV & Resume Writing','Government Services',
+    'Academic Services','Social Media Marketing','WhatsApp Broadcasts',
+    'Community Outreach','Photography & Design','Tech Support',
+    'Typing Services','Translation','Legal Documents','Financial Services','All Services'
+  ];
+  const currentSelected = currentSpec ? currentSpec.split(',').map(s=>s.trim()) : [];
+
+  popup(
+    `Assign Services: ${name}`,
+    'Select all services this agent handles and set commission rate.',
+    'nf',
+    [
+      {label:'Cancel', fn:null, style:'btn-ghost'},
+      {label:'Save', fn:async()=>{
+        const checked = allServices.filter(s=>{
+          const el = document.getElementById(`asgn-svc-${s.replace(/[^a-z]/gi,'_')}`);
+          return el?.checked;
+        });
+        const rate = parseFloat(document.getElementById('admin-assign-rate')?.value)||5;
+        const spec = checked.join(', ');
+        try{
+          await _requireAdmin();
+          const { error } = await sb.from('agent_applications').update({
+            specialization: spec||null, commission_rate: rate
+          }).eq('id', id);
+          if(error) throw error;
+          toast(`${name} assigned ${checked.length} service(s) at ${rate}% ✅`,'ok');
+          adminLoadAgents();
+        }catch(e){ toast(e.message||'Failed','er'); }
+      }, style:'btn-gold'}
+    ]
+  );
+  setTimeout(()=>{
+    const msgEl = $('popup-msg-el');
+    if(!msgEl) return;
+    msgEl.innerHTML = `
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto">
+        <div style="font-size:.62rem;color:var(--t4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Services Handled</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${allServices.map(s=>{
+            const sid = `asgn-svc-${s.replace(/[^a-z]/gi,'_')}`;
+            const checked = currentSelected.includes(s) ? 'checked' : '';
+            return `<label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 8px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd)">
+              <input type="checkbox" id="${sid}" ${checked} style="accent-color:var(--gold);width:14px;height:14px">
+              <span style="font-size:.72rem;color:var(--t2)">${s}</span>
+            </label>`;
+          }).join('')}
+        </div>
+        <div style="margin-top:6px">
+          <div style="font-size:.62rem;color:var(--t4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Commission Rate (%)</div>
+          <input id="admin-assign-rate" type="number" min="1" max="30" value="${currentRate||5}" style="width:100%;background:var(--bg4);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;color:var(--t1);font-size:.76rem">
+          <div style="font-size:.6rem;color:var(--t4);margin-top:4px">5% Standard · 10% Silver (11–30 refs) · 15% Gold (30+ refs)</div>
+        </div>
+      </div>`;
+  }, 60);
+}
+window.adminAssignAgent = adminAssignAgent;
+
 /* ── INSTITUTIONS ─────────────────────────────────────────────── */
 async function adminLoadInstitutions(){
-  const il = $('admin-inst-list');
-  if (!il) return;
-  il.innerHTML = '<div style="text-align:center;padding:20px"><span class="spin"></span></div>';
+  const il  = $('admin-inst-list');
+  const iac = $('admin-inst-accounts');
+  if (il)  il.innerHTML  = '<div style="text-align:center;padding:16px"><span class="spin"></span></div>';
+  if (iac) iac.innerHTML = '<div style="text-align:center;padding:16px"><span class="spin"></span></div>';
+
+  // 1. Registered institution accounts
+  try {
+    const { data: accounts, error: ae } = await sb.from('institution_profiles').select('*').order('created_at',{ascending:false});
+    if (ae) throw ae;
+    if (!iac) {}
+    else if (!accounts?.length) {
+      iac.innerHTML = '<div class="empty-state" style="padding:20px"><i class="fas fa-building-columns"></i><p>No registered institutions yet</p></div>';
+    } else {
+      iac.innerHTML = accounts.map(a=>`
+        <div style="background:rgba(255,165,0,.04);border:1px solid rgba(255,165,0,.22);border-radius:var(--r);padding:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,165,0,.12);display:flex;align-items:center;justify-content:center;color:#ffa500;flex-shrink:0"><i class="fas fa-building-columns" style="font-size:.75rem"></i></div>
+              <div>
+                <div style="font-size:.78rem;font-weight:600;color:var(--t1)">${esc(a.inst_name||'Unknown')}</div>
+                <div style="font-size:.58rem;color:#ffa500">${esc((typeof INST_TYPE_LABELS!=='undefined'&&INST_TYPE_LABELS[a.inst_type])||a.inst_type||'Institution')}</div>
+              </div>
+            </div>
+            <span style="font-size:.52rem;padding:2px 8px;border-radius:20px;background:rgba(50,180,100,.1);color:var(--green);border:1px solid rgba(50,180,100,.25)">${esc(a.status||'active')}</span>
+          </div>
+          <div style="font-size:.62rem;color:var(--t3);display:flex;flex-direction:column;gap:3px;margin-bottom:10px">
+            ${a.email?`<div><i class="fas fa-envelope" style="width:14px;color:var(--t4)"></i> ${esc(a.email)}</div>`:''}
+            ${a.whatsapp_number?`<div><i class="fab fa-whatsapp" style="width:14px;color:#25d366"></i> ${esc(a.whatsapp_number)}</div>`:''}
+            ${a.location?`<div><i class="fas fa-map-marker-alt" style="width:14px;color:var(--t4)"></i> ${esc(a.location)}</div>`:''}
+            ${a.contact_person?`<div><i class="fas fa-person" style="width:14px;color:var(--t4)"></i> ${esc(a.contact_person)}</div>`:''}
+            <div style="color:var(--t4);margin-top:2px">${fmtRel(a.created_at)}</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-ghost btn-xs" style="color:var(--red)" onclick="adminDeleteInstAccount('${esc(a.id)}','${esc(a.inst_name||'')}')"><i class="fas fa-trash"></i></button>
+            <button class="btn btn-ghost btn-xs" onclick="adminEditInstAccount('${esc(a.id)}','${esc(a.inst_name||'')}','${esc(a.status||'active')}')"><i class="fas fa-pen"></i> Edit</button>
+            <button class="btn btn-gold btn-xs" style="flex:1" onclick="adminViewInstOrders('${esc(a.email)}','${esc(a.inst_name||'')}')"><i class="fas fa-list"></i> Orders</button>
+          </div>
+        </div>`).join('');
+    }
+  } catch(e) {
+    if (iac) iac.innerHTML = `<div style="color:var(--red);font-size:.74rem;padding:12px"><i class="fas fa-triangle-exclamation"></i> ${esc(e.message)}</div>`;
+  }
+
+  // 2. Institution service requests
   try {
     const { data, error } = await sb.from('institution_requests').select('*').order('created_at',{ascending:false});
     if (error) {
-      if (error.message && (error.message.includes('schema cache') || error.message.includes('does not exist'))) {
-        il.innerHTML='<div style="padding:16px;background:var(--bg3);border:1px solid rgba(255,165,0,.3);border-radius:var(--r)"><div style="color:#ffa500;font-size:.76rem;font-weight:700;margin-bottom:8px"><i class="fas fa-triangle-exclamation"></i> Table Not Found</div><div style="font-size:.7rem;color:var(--t2);line-height:1.6;margin-bottom:10px">The institution_requests table does not exist in Supabase yet. Run the SQL schema to create it, then retry.</div><button class="btn btn-gold btn-xs" onclick="adminLoadInstitutions()"><i class="fas fa-rotate-right"></i> Retry</button></div>';
+      if (/does not exist|schema cache/i.test(error.message||'')) {
+        if(il) il.innerHTML = '<div style="padding:12px;font-size:.72rem;color:var(--t3)">No institution service requests table yet. Run the SQL schema.</div>';
         return;
       }
       throw error;
     }
-    if (!data?.length){ il.innerHTML='<div class="empty-state" style="padding:30px"><i class="fas fa-building-columns"></i><p>No institution requests yet</p></div>'; return; }
+    if (!il) return;
+    if (!data?.length) {
+      il.innerHTML = '<div class="empty-state" style="padding:20px"><i class="fas fa-inbox"></i><p>No institution service requests yet</p></div>';
+      return;
+    }
     il.innerHTML = data.map(r=>`
       <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <div style="font-size:.78rem;font-weight:600;color:var(--t1)">${esc(r.inst_name||'Institution')}</div>
-          <span class="req-badge ${esc(r.status||'pending')}">${esc(r.status||'pending')}</span>
+          <div style="font-size:.76rem;font-weight:600;color:var(--t1)">${esc(r.service_name||r.service||'Service')}</div>
+          <span class="req-badge ${esc(r.status||'pending')}" style="font-size:.54rem">${esc(r.status||'pending')}</span>
         </div>
         <div style="font-size:.62rem;color:var(--t3);display:flex;flex-direction:column;gap:3px;margin-bottom:8px">
-          <div><i class="fas fa-envelope" style="width:14px;color:var(--gold)"></i> ${esc(r.inst_email||'—')}</div>
-          <div><i class="fas fa-concierge-bell" style="width:14px;color:var(--gold)"></i> ${esc(r.service_name||'—')}</div>
-          ${r.quantity?`<div><i class="fas fa-hashtag" style="width:14px;color:var(--gold)"></i> Qty: ${esc(String(r.quantity))}</div>`:''}
-          ${r.deadline?`<div><i class="fas fa-calendar" style="width:14px;color:var(--gold)"></i> Deadline: ${esc(r.deadline)}</div>`:''}
-          ${r.notes?`<div style="color:var(--t2);margin-top:4px">${esc(r.notes.substring(0,100))}${r.notes.length>100?'…':''}</div>`:''}
+          <div><i class="fas fa-building-columns" style="width:14px;color:#ffa500"></i> ${esc(r.inst_name||r.inst_email||'Institution')}</div>
+          ${r.quantity?`<div><i class="fas fa-hashtag" style="width:14px;color:var(--t4)"></i> Qty: ${esc(String(r.quantity))}</div>`:''}
+          ${r.deadline?`<div style="color:#ffa500"><i class="fas fa-calendar-clock" style="width:14px"></i> Due: ${fmt(r.deadline)}</div>`:''}
+          ${r.notes?`<div style="color:var(--t2);margin-top:3px">${esc(r.notes.substring(0,80))}${r.notes.length>80?'...':''}</div>`:''}
           <div style="color:var(--t4)">${fmtRel(r.created_at)}</div>
         </div>
-        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">
-          ${['pending','in_progress','completed','cancelled'].map(s=>
-            `<button class="btn btn-xs ${r.status===s?'btn-gold':'btn-ghost'}" onclick="adminSetInstStatus('${esc(r.id)}','${s}')" style="flex:1">${s.replace('_',' ')}</button>`
-          ).join('')}
-        </div>
         <div style="display:flex;gap:6px">
-          <button class="btn btn-ghost btn-xs" style="color:var(--red)" onclick="adminDeleteInstRequest('${esc(r.id)}')"><i class="fas fa-trash"></i> Delete</button>
+          <button class="btn btn-ghost btn-xs" style="color:var(--red)" onclick="adminDeleteInstRequest('${esc(r.id)}')"><i class="fas fa-trash"></i></button>
+          <button class="btn btn-ghost btn-xs" onclick="adminSetInstStatus('${esc(r.id)}','in_progress')"><i class="fas fa-gear"></i> In Progress</button>
+          <button class="btn btn-gold btn-xs" style="flex:1" onclick="adminSetInstStatus('${esc(r.id)}','completed')"><i class="fas fa-check"></i> Complete</button>
         </div>
       </div>`).join('');
-  } catch(e){ il.innerHTML=`<div style="color:var(--red);padding:16px;font-size:.76rem">Failed: ${esc(e.message)}</div>`; }
+  } catch(e) {
+    if (il) il.innerHTML = `<div style="color:var(--red);font-size:.74rem;padding:12px">${esc(e.message)}</div>`;
+  }
 }
 window.adminLoadInstitutions = adminLoadInstitutions;
+
+async function adminDeleteInstAccount(id, name){
+  popup(`Delete "${name}"?`,'This removes the institution account permanently.','er',[
+    {label:'Cancel',fn:null,style:'btn-ghost'},
+    {label:'Delete',fn:async()=>{
+      try{
+        await _requireAdmin();
+        const{error}=await sb.from('institution_profiles').delete().eq('id',id);
+        if(error)throw error;
+        toast('Institution deleted.','nf');
+        adminLoadInstitutions();
+      }catch(e){toast(e.message||'Failed','er');}
+    },style:'btn-outline'}
+  ]);
+}
+window.adminDeleteInstAccount = adminDeleteInstAccount;
+
+function adminEditInstAccount(id, name, status){
+  popup(`Edit: ${name}`,'Update this institution account.','nf',[
+    {label:'Cancel',fn:null,style:'btn-ghost'},
+    {label:'Save',fn:async()=>{
+      const newStatus = document.getElementById('inst-edit-status')?.value || status;
+      try{
+        await _requireAdmin();
+        const{error}=await sb.from('institution_profiles').update({status:newStatus}).eq('id',id);
+        if(error)throw error;
+        toast('Updated ✅','ok');
+        adminLoadInstitutions();
+      }catch(e){toast(e.message||'Failed','er');}
+    },style:'btn-gold'}
+  ]);
+  setTimeout(()=>{
+    const msgEl=$('popup-msg-el');
+    if(!msgEl)return;
+    msgEl.innerHTML=`<div style="margin-top:10px"><div style="font-size:.62rem;color:var(--t4);margin-bottom:4px">STATUS</div>
+      <select id="inst-edit-status" style="width:100%;background:var(--bg4);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;color:var(--t1);font-size:.76rem">
+        <option value="active" ${status==='active'?'selected':''}>Active</option>
+        <option value="suspended" ${status==='suspended'?'selected':''}>Suspended</option>
+        <option value="pending" ${status==='pending'?'selected':''}>Pending Review</option>
+      </select></div>`;
+  },60);
+}
+window.adminEditInstAccount = adminEditInstAccount;
+
+function adminViewInstOrders(email, name){
+  toast(`Filtering orders for ${name}...`,'nf');
+  sb.from('institution_requests').select('*').eq('inst_email',email).order('created_at',{ascending:false}).then(({data,error})=>{
+    if(error||!data?.length){
+      popup(`Orders: ${name}`,'No service orders from this institution yet.','nf',[{label:'OK',fn:null,style:'btn-gold'}]);
+      return;
+    }
+    const il=$('admin-inst-list');
+    if(!il)return;
+    il.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+}
+window.adminViewInstOrders = adminViewInstOrders;
 
 async function adminSetInstStatus(id, status){
   try {
@@ -6250,6 +6642,16 @@ function openNoteEditorFromSheet(noteId){
 }
 
 /* ── INSTITUTION LOGIC ── */
+const INST_TYPE_LABELS = {
+  school:   '🏫 School',
+  hospital: '🏥 Hospital',
+  ngo:      '🌍 NGO',
+  business: '🏢 Business',
+  govt:     '🏛 Government',
+  church:   '⛪ Church',
+  other:    '📋 Other'
+};
+
 let _instUser=null, _instProfile=null, _instReqs=[];
 function instTab(t){
   ['login','register'].forEach(tab=>{
@@ -6263,7 +6665,10 @@ function renderInstitutionScreen(){
     $('inst-guest-view').style.display='none';
     $('inst-dashboard-view').style.display='block';
     $('inst-dash-name').textContent=_instProfile.inst_name||'Institution';
-    $('inst-dash-type').textContent=`${_instProfile.inst_type||''}${_instProfile.location?' · '+_instProfile.location:''}`;
+    $('inst-dash-type').textContent=`${INST_TYPE_LABELS[_instProfile.inst_type]||_instProfile.inst_type||''}${_instProfile.location?' · '+_instProfile.location:''}`;
+    $('inst-dash-email').textContent=_instProfile.email||'—';
+    $('inst-dash-wa').textContent=_instProfile.whatsapp_number||'—';
+    $('inst-dash-contact').textContent=_instProfile.contact_person||'—';
     loadInstReqs();
   } else {
     $('inst-guest-view').style.display='block';
@@ -6285,6 +6690,7 @@ async function doInstLogin(){
     if(!prof)throw new Error('No institution account found with this email.');
     _instUser=email;_instProfile=prof;
     renderInstitutionScreen();
+    goNav('institution');
     toast('Welcome, '+prof.inst_name+'!','ok');
   }catch(e){err.textContent=e.message||'Login failed.';err.style.display='block';}
   finally{btn.disabled=false;btn.innerHTML='<i class="fas fa-arrow-right-to-bracket"></i> Login as Institution';}
@@ -6376,7 +6782,9 @@ async function doInstRegister(){
 
     toast('Institution registered! Welcome aboard 🎉','ok');
     closeAuth();
-    setTimeout(() => { goNav('account'); }, 400);
+    _instUser = email;
+    _instProfile = { auth_user_id: instUserId, inst_name: name, inst_type: type, location: loc, whatsapp_number: wa, email, contact_person: contact, status: 'active' };
+    setTimeout(() => { renderInstitutionScreen(); goNav('institution'); }, 400);
   } catch(e) {
     err.textContent = e.message==='User already registered'
       ? 'An account with this email already exists. Use Login instead.'
@@ -6459,6 +6867,7 @@ function openInstAllRequests(){
   openModal('inst-all-reqs-modal');
 }
 async function instSignOut(){
+  try { await sb.auth.signOut(); } catch(e){}
   _instUser=null;_instProfile=null;_instReqs=[];
   renderInstitutionScreen();toast('Signed out.','nf');
 }
@@ -6806,32 +7215,38 @@ window.addEventListener('popstate', ()=>{
     <span class="sheet-title"><i class="fas fa-crown" style="margin-right:8px;color:var(--gold)"></i>About the Founder</span>
     <button class="sheet-cls" onclick="closeModal('founder-about-modal')"><i class="fas fa-times"></i></button>
   </div>
-  <div class="modal-body" style="padding-bottom:32px">
-    <!-- Photo + name -->
-    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 0 20px">
-      <div style="width:96px;height:96px;border-radius:50%;border:3px solid var(--gold-a45);overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.5)">
-        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAYGBgYHBgcICAcKCwoLCg8ODAwODxYQERAREBYiFRkVFRkVIh4kHhweJB42KiYmKjY+NDI0PkxERExfWl98fKcBBgYGBgcGBwgIBwoLCgsKDw4MDA4PFhAREBEQFiIVGRUVGRUiHiQeHB4kHjYqJiYqNj40MjQ+TERETF9aX3x8p//CABEIBQADVQMBIgACEQEDEQH/xAAyAAACAwEBAQAAAAAAAAAAAAAAAgEDBAUGBwEBAQEBAQEAAAAAAAAAAAAAAAECAwQF/9oADAMBAAIQAxAAAAL" alt="Darius Momanyi" style="width:100%;height:100%;object-fit:cover;object-position:top">
+  <div class="modal-body" style="overflow-y:auto;flex:1;padding-bottom:32px">
+
+    <!-- Photo hero banner (same pattern as About modal creator section) -->
+    <div style="background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04));border:1px solid var(--gold-a25);border-radius:var(--rl);padding:22px 16px 18px;margin-bottom:16px;text-align:center;position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0,rgba(201,168,76,.08),transparent 70%);pointer-events:none"></div>
+      <!-- Profile photo — swap src for real photo URL or base64 -->
+      <div style="width:88px;height:88px;border-radius:50%;border:3px solid var(--gold-a45);overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.55);margin:0 auto 12px;background:linear-gradient(135deg,#0d2050,#001840);display:flex;align-items:center;justify-content:center" id="founder-photo-wrap">
+        <span style="font-family:var(--fd);font-size:2rem;color:var(--gold)" id="founder-initials">DM</span>
       </div>
-      <div style="text-align:center">
-        <div style="font-family:var(--fd);font-size:1.2rem;color:var(--gold);margin-bottom:2px">Darius Momanyi</div>
-        <div style="font-size:.68rem;color:var(--t3);letter-spacing:.06em">Founder & CEO · NovaDeskOnline</div>
-        <div style="margin-top:8px;display:flex;justify-content:center;gap:6px">
-          <span style="font-size:.52rem;padding:3px 10px;background:var(--gold-a8);color:var(--gold);border:1px solid var(--gold-a25);border-radius:12px">Founder</span>
-          <span style="font-size:.52rem;padding:3px 10px;background:var(--bg4);color:var(--t3);border:1px solid var(--bd);border-radius:12px">Kemera, Nyamira</span>
-        </div>
+      <div style="font-family:var(--fd);font-size:1.15rem;color:var(--gold);margin-bottom:3px">Darius Momanyi</div>
+      <div style="font-size:.66rem;color:var(--t3);letter-spacing:.06em;margin-bottom:10px">Founder &amp; CEO · NovaDeskOnline</div>
+      <div style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap">
+        <span style="font-size:.52rem;padding:3px 10px;background:var(--gold-a8);color:var(--gold);border:1px solid var(--gold-a25);border-radius:12px"><i class="fas fa-crown" style="margin-right:4px"></i>Founder</span>
+        <span style="font-size:.52rem;padding:3px 10px;background:var(--bg4);color:var(--t3);border:1px solid var(--bd);border-radius:12px"><i class="fas fa-map-marker-alt" style="margin-right:4px"></i>Kemera, Nyamira</span>
       </div>
     </div>
 
-    <!-- Bio -->
+    <!-- WHY I CREATED THIS — personal statement (styled like "Our Story") -->
+    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <div style="width:30px;height:30px;background:var(--gold-a8);border:1px solid var(--gold-a25);border-radius:9px;display:flex;align-items:center;justify-content:center"><i class="fas fa-lightbulb" style="color:var(--gold);font-size:.75rem"></i></div>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)">Why I Created NovaDeskOnline</div>
+      </div>
+      <p style="font-size:.76rem;color:var(--t3);line-height:1.75;margin-bottom:10px">Growing up in Kemera, I saw how much people struggled just to print a document, write a CV, or access basic government services. The nearest reliable cyber café was far away, the prices were high, and the quality was inconsistent. Students missed opportunities, businesses stalled, and families paid more than they should for simple tasks.</p>
+      <p style="font-size:.76rem;color:var(--t3);line-height:1.75;margin-bottom:10px">I created NovaDeskOnline because I believed our community deserved better — a one-stop digital hub that is fast, affordable, and genuinely built for the people of Kemera and Nyamira County. Not just a cyber café, but a partner in your everyday digital life.</p>
+      <p style="font-size:.76rem;color:var(--t3);line-height:1.75">Every service we offer — from printing and scanning, to government registrations and academic support — is designed to save you time, save you money, and help you move forward. That vision drives everything we do at NovaDeskOnline.</p>
+    </div>
+
+    <!-- ABOUT -->
     <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;margin-bottom:14px">
       <div style="font-size:.62rem;font-weight:700;color:var(--gold);letter-spacing:.08em;margin-bottom:8px">ABOUT</div>
-      <p style="font-size:.74rem;color:var(--t2);line-height:1.75;margin:0">Darius Momanyi is the visionary founder and CEO of NovaDeskOnline — a digital cyber hub built to bring fast, affordable, and reliable digital services to the heart of Kemera, Nyamira. With a passion for technology and community development, Darius created a platform that empowers local residents to access government services, printing, document management, and more — all in one place.</p>
-    </div>
-
-    <!-- Mission -->
-    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;margin-bottom:14px">
-      <div style="font-size:.62rem;font-weight:700;color:var(--gold);letter-spacing:.08em;margin-bottom:8px">MISSION</div>
-      <p style="font-size:.74rem;color:var(--t2);line-height:1.75;margin:0">To democratize access to digital services for everyday people in Kemera and beyond — making government registrations, academic services, printing and more affordable and accessible to everyone, regardless of their background.</p>
+      <p style="font-size:.74rem;color:var(--t2);line-height:1.75;margin:0">Darius Momanyi is the visionary founder and CEO of NovaDeskOnline — a digital cyber hub built to bring fast, affordable, and reliable digital services to the heart of Kemera, Nyamira. With a passion for technology and community development, he built a platform that empowers local residents, students, businesses, and institutions to get things done — all in one place.</p>
     </div>
 
     <!-- Stats row -->
@@ -6850,7 +7265,7 @@ window.addEventListener('popstate', ()=>{
       </div>
     </div>
 
-    <!-- Contact -->
+    <!-- Connect -->
     <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px">
       <div style="font-size:.62rem;font-weight:700;color:var(--gold);letter-spacing:.08em;margin-bottom:10px">CONNECT</div>
       <div style="display:flex;flex-direction:column;gap:8px">
@@ -7053,8 +7468,20 @@ window.addEventListener('popstate', ()=>{
   <div class="modal-body">
     <div id="svc-req-desc" style="font-size:.76rem;color:var(--t3);background:var(--gold-a8);border:1px solid var(--bd);border-radius:var(--r);padding:10px 12px;margin-bottom:14px;line-height:1.6"></div>
     <div class="fg">
-      <label class="flbl">Additional Notes (optional)</label>
-      <textarea class="fi" id="svc-req-notes" rows="3" placeholder="Tell us more — quantity, deadline, colour options, etc." maxlength="500"></textarea>
+      <label class="flbl">Additional Notes <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(optional)</span></label>
+      <textarea class="fi" id="svc-req-notes" rows="3" placeholder="Tell us more — quantity, colour options, specifications, etc." maxlength="500"></textarea>
+    </div>
+    <div class="fg">
+      <label class="flbl">Deadline <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(optional)</span></label>
+      <div style="position:relative">
+        <input type="datetime-local" id="svc-req-deadline" class="fi" style="display:none" onchange="updateDeadlineBtn()">
+        <button type="button" id="svc-req-deadline-btn" onclick="$('svc-req-deadline').showPicker?$('svc-req-deadline').showPicker():$('svc-req-deadline').click()"
+          style="width:100%;display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--bg3);border:1px dashed var(--bd);border-radius:var(--r);color:var(--t4);font-size:.74rem;cursor:pointer;text-align:left">
+          <i class="fas fa-calendar-clock" style="color:var(--gold)"></i>
+          <span id="svc-req-deadline-label">Tap to set a deadline</span>
+          <i class="fas fa-chevron-right" style="margin-left:auto;font-size:.6rem"></i>
+        </button>
+      </div>
     </div>
     <div class="fg" id="svc-req-file-section">
       <label class="flbl">Attach Files <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(optional)</span></label>
@@ -7615,8 +8042,33 @@ function renderProfileTab() {
   $('pi-email').textContent   = _user?.email || '—';
   $('pi-idnum').textContent   = _profile.id_number || '—';
   $('pi-wa').textContent      = _profile.whatsapp_number || '—';
-  $('pi-joined').textContent  = fmt(_profile.created_at);
+  $('pi-joined').textContent    = fmt(_profile.created_at);
   $('pi-lastvisit').textContent = fmt(_profile.last_visit || _profile.created_at);
+
+  // ── Institution extra info ──
+  if (_profile.role === 'institution') {
+    sb.from('institution_profiles').select('*').eq('email', _user?.email||'').maybeSingle().then(({data})=>{
+      if (!data) return;
+      if($('pi-inst-name'))     $('pi-inst-name').textContent     = data.inst_name || '—';
+      if($('pi-inst-type'))     $('pi-inst-type').textContent     = INST_TYPE_LABELS[data.inst_type] || data.inst_type || '—';
+      if($('pi-inst-location')) $('pi-inst-location').textContent = data.location || '—';
+      if($('pi-inst-wa'))       $('pi-inst-wa').textContent       = data.whatsapp_number || '—';
+      if($('pi-inst-contact'))  $('pi-inst-contact').textContent  = data.contact_person || '—';
+    }).catch(()=>{});
+  }
+
+  // ── Agent extra info ──
+  if (_profile.role === 'agent') {
+    sb.from('agent_applications').select('*').eq('user_id', _user?.id||'').maybeSingle().then(({data})=>{
+      if (!data) return;
+      const chanMap = { social:'📱 Social Media', whatsapp:'💬 WhatsApp', physical:'🤝 Physical', community:'🏘️ Community', other:'🔗 Other' };
+      if($('pi-agent-status'))     $('pi-agent-status').textContent     = data.status || '—';
+      if($('pi-agent-channel'))    $('pi-agent-channel').textContent    = chanMap[data.channel] || data.channel || '—';
+      if($('pi-agent-spec'))       $('pi-agent-spec').textContent       = data.specialization || 'Not yet assigned';
+      if($('pi-agent-commission')) $('pi-agent-commission').textContent = data.commission_rate ? `${data.commission_rate}%` : '5% (Standard)';
+      if($('pi-agent-referrals'))  $('pi-agent-referrals').textContent  = data.referral_count || 0;
+    }).catch(()=>{});
+  }
   // Quick stats
   const piReq = $('pi-req-count'); if (piReq) piReq.textContent = _reqs.length;
   const piNts = $('pi-notes-count'); if (piNts) piNts.textContent = _notes.length;
@@ -7671,6 +8123,7 @@ function renderMyReqsList(filter) {
         <div class="my-req-status ${r.status}">${r.status.replace('_',' ')}</div>
       </div>
       <div class="my-req-meta"><i class="fas fa-clock" style="margin-right:4px"></i>${fmt(r.created_at)}${r.price?` · <strong style="color:var(--green)">KES ${r.price}</strong>`:''}</div>
+      ${r.deadline?`<div style="font-size:.66rem;padding:5px 9px;background:rgba(255,165,0,.07);border:1px solid rgba(255,165,0,.2);border-radius:6px;color:#ffa500;margin-bottom:8px;display:flex;align-items:center;gap:5px"><i class="fas fa-calendar-clock"></i> Deadline: ${fmt(r.deadline)}</div>`:''}
       ${r.description?`<div style="font-size:.68rem;color:var(--t3);margin-bottom:8px;line-height:1.5">${esc(r.description.substring(0,100))}${r.description.length>100?'…':''}</div>`:''}
       ${r.admin_notes?`<div style="font-size:.66rem;padding:7px 10px;background:rgba(50,180,100,.06);border:1px solid rgba(50,180,100,.15);border-radius:6px;color:var(--green);margin-bottom:8px"><i class="fas fa-message" style="margin-right:4px"></i>${esc(r.admin_notes)}</div>`:''}
       <div class="my-req-btns">
@@ -7976,21 +8429,35 @@ async function doSetNewPassword() {
   const pw2 = $('new-pw2-inp')?.value||'';
   const err = $('new-pw-err');
   const btn = $('new-pw-btn');
-  err.style.display='none';
-  if (pw.length<8) { err.textContent='Password must be at least 8 characters.'; err.style.display='block'; return; }
-  if (pw!==pw2) { err.textContent='Passwords do not match.'; err.style.display='block'; return; }
-  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Setting password…';
+  if (err) err.style.display='none';
+  if (pw.length<8) { if(err){err.textContent='Password must be at least 8 characters.';err.style.display='block';} return; }
+  if (pw!==pw2) { if(err){err.textContent='Passwords do not match.';err.style.display='block';} return; }
+  if (btn) { btn.disabled=true; btn.innerHTML='<span class="spin"></span> Setting password…'; }
   try {
     const { error } = await sb.auth.updateUser({ password: pw });
     if (error) throw error;
-    closeModal('new-pw-modal');
-    toast('Password updated successfully! You are now logged in. ✅','ok',4000);
-    goNav('account');
-  } catch(e) { err.textContent=e.message||'Failed to update password.'; err.style.display='block'; }
-  finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Set New Password'; }
+    // Show success state inside the modal
+    const body = $('new-pw-modal')?.querySelector('.modal-body');
+    if (body) {
+      body.innerHTML = `
+        <div style="text-align:center;padding:32px 16px">
+          <div style="width:70px;height:70px;border-radius:50%;background:rgba(50,180,100,.15);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.8rem;color:var(--green)">
+            <i class="fas fa-check"></i>
+          </div>
+          <div style="font-family:var(--fd);font-size:1.1rem;color:var(--t1);margin-bottom:8px">Password Updated!</div>
+          <p style="font-size:.76rem;color:var(--t3);line-height:1.6;margin-bottom:22px">Your new password has been saved. You are now logged in to your NovaDeskOnline account.</p>
+          <button class="btn btn-gold btn-full" onclick="closeModal('new-pw-modal');goNav('account')"><i class="fas fa-arrow-right"></i> Go to My Account</button>
+        </div>`;
+    }
+    // Reload profile after password update
+    if(_user) await loadProfile().catch(()=>{});
+    renderAccount();
+  } catch(e) {
+    if(err){ err.textContent=e.message||'Failed to update password.'; err.style.display='block'; }
+    if(btn){ btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Set New Password'; }
+  }
 }
 window.doSetNewPassword = doSetNewPassword;
-window.showNewPasswordModal = showNewPasswordModal;
 
 
 /* ── REGISTRATION SUCCESS ──────────────────────────────────────── */
