@@ -1,15 +1,15 @@
 {
   "name": "NovaDeskOnline",
   "short_name": "NovaDeskOnline",
-  "description": "Fast, affordable cyber services in Kemera, Nyamira — printing, scanning, CV writing, government services and more.",
+  "description": "Fast, affordable cyber services in Kemera, Nyamira.",
   "start_url": "/",
-  "scope": "/",
+  "id": "/",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#060e1f",
-  "theme_color": "#0066ff",
+  "background_color": "#0a0f1e",
+  "theme_color": "#0a0f1e",
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity"],
   "lang": "en",
-  "categories": ["business", "productivity", "utilities"],
   "icons": [
     {
       "src": "/icon-192.png",
@@ -24,21 +24,23 @@
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [],
   "shortcuts": [
     {
-      "name": "Request a Service",
+      "name": "Services",
       "short_name": "Services",
-      "description": "Browse and request cyber services",
-      "url": "/?tab=services",
+      "description": "Browse all 41 cyber services",
+      "url": "/?screen=services",
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "My Account",
-      "short_name": "Account",
-      "description": "View your account and requests",
-      "url": "/?tab=account",
+      "name": "Contact Us",
+      "short_name": "Contact",
+      "description": "Get in touch with NovaDeskOnline",
+      "url": "/?screen=contact",
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
-  ]
+  ],
+  "screenshots": [],
+  "related_applications": [],
+  "prefer_related_applications": false
 }
