@@ -1698,6 +1698,14 @@ body.admin-open .acct-tabs{ pointer-events:none; }
         </div>
         <div class="promo-img"><div style="width:80px;height:80px;border-radius:12px;background:rgba(0,102,255,.2);display:flex;align-items:center;justify-content:center;font-size:2rem">💻</div></div>
       </div>
+      <!-- SPONSORED ADS CAROUSEL -->
+      <div id="home-ads-section" style="display:none;margin-bottom:16px">
+        <div class="h-sect-head">
+          <span class="h-sect-ttl" style="display:flex;align-items:center;gap:6px"><span style="font-size:.52rem;background:var(--gold);color:#000;padding:2px 6px;border-radius:4px;font-weight:700">AD</span> Sponsored</span>
+        </div>
+        <div id="home-ads-list" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+
       <!-- CATEGORY TILES -->
       <div class="h-sect-head"><span class="h-sect-ttl">Browse by Category</span></div>
       <div class="cat-grid">
@@ -1760,14 +1768,14 @@ body.admin-open .acct-tabs{ pointer-events:none; }
       </div><!-- /home-right-col -->
 
       <!-- REVIEWS SECTION (inside left col, before footer) -->
-      <div id="home-reviews-section" style="display:none">
+      <div id="home-reviews-section" style="display:block">
         <div class="h-sect-head" style="padding:0 24px 10px;margin-top:0">
           <span class="h-sect-ttl">⭐ What Customers Say</span>
           <span class="h-sect-link" onclick="closeModal('contact-modal');setTimeout(()=>openRatingModal(),200)">Leave a review</span>
         </div>
         <div id="home-reviews-list" style="padding:0 24px 0;margin-bottom:16px">
           <!-- Carousel wrapper -->
-          <div id="reviews-carousel" style="display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:4px;scroll-snap-type:x mandatory"></div>
+          <div id="reviews-carousel" style="display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:4px;scroll-snap-type:x mandatory"><div style="flex:0 0 200px;background:var(--bg3);border:1px solid var(--bd);border-radius:16px;padding:16px;display:flex;align-items:center;justify-content:center;height:100px"><span class="spin"></span></div></div>
           <!-- Dot indicators -->
           <div id="reviews-dots" style="display:flex;gap:5px;justify-content:center;margin-top:10px"></div>
         </div>
@@ -1863,6 +1871,35 @@ body.admin-open .acct-tabs{ pointer-events:none; }
           <div class="op-tile-sub">Sites · PWAs · Shops · Care</div>
           <span class="op-tile-count">4 services</span>
         </div>
+        <!-- SciFi Networks -->
+        <div id="scifi-tile" data-url="https://sci-fi-networks-fyr8.vercel.app/" style="grid-column:1/-1;background:linear-gradient(135deg,#030a1a,#050f24);border:1px solid rgba(0,200,255,.25);border-radius:var(--rl);padding:16px;cursor:pointer;transition:border-color .2s;-webkit-tap-highlight-color:transparent"
+             onclick="window.open(this.dataset.url,'_blank')"
+             onmouseover="this.style.borderColor='rgba(0,200,255,.5)'" onmouseout="this.style.borderColor='rgba(0,200,255,.25)'">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#001840,#003080);border:1px solid rgba(0,200,255,.35);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="26" height="26" viewBox="0 0 64 64" fill="none">
+                <circle cx="32" cy="32" r="28" stroke="#00c8ff" stroke-width="2" opacity=".4"/>
+                <circle cx="32" cy="32" r="18" stroke="#00c8ff" stroke-width="1.5" opacity=".6"/>
+                <circle cx="32" cy="32" r="6" fill="#00c8ff"/>
+                <line x1="4" y1="32" x2="26" y2="32" stroke="#00c8ff" stroke-width="1.5" opacity=".7"/>
+                <line x1="38" y1="32" x2="60" y2="32" stroke="#00c8ff" stroke-width="1.5" opacity=".7"/>
+                <line x1="32" y1="4" x2="32" y2="26" stroke="#00c8ff" stroke-width="1.5" opacity=".7"/>
+                <line x1="32" y1="38" x2="32" y2="60" stroke="#00c8ff" stroke-width="1.5" opacity=".7"/>
+              </svg>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:.82rem;font-weight:700;color:#00c8ff;margin-bottom:2px">SciFi Networks</div>
+              <div style="font-size:.62rem;color:rgba(0,200,255,.7);margin-bottom:4px">Advanced WiFi · Fibre · Network Solutions</div>
+              <div style="font-size:.58rem;color:var(--t4)">sci-fi-networks-fyr8.vercel.app</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;background:rgba(0,200,255,.1);border:1px solid rgba(0,200,255,.25);padding:6px 10px;border-radius:20px;flex-shrink:0">
+              <span style="font-size:.6rem;font-weight:700;color:#00c8ff">Visit</span>
+              <i class="fas fa-external-link-alt" style="font-size:.52rem;color:#00c8ff"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- WhatsApp advice -->
         <div style="grid-column:1/-1;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;display:flex;align-items:center;gap:12px">
           <div style="width:40px;height:40px;border-radius:12px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);display:flex;align-items:center;justify-content:center;color:#25D366;font-size:.95rem;flex-shrink:0"><i class="fab fa-whatsapp"></i></div>
           <div style="flex:1"><div style="font-size:.76rem;font-weight:500;color:var(--t1);margin-bottom:2px">Need advice?</div><div style="font-size:.62rem;color:var(--t3)">WhatsApp us — we respond within minutes.</div></div>
@@ -2063,20 +2100,20 @@ body.admin-open .acct-tabs{ pointer-events:none; }
           <div class="more2-item-body"><strong>Register as Agent</strong><span>Earn commission by referring clients</span></div>
           <i class="fas fa-chevron-right more2-arr"></i>
         </div>
+        <div class="more2-item" id="more-submit-ad-item" onclick="openSubmitAdModal()" style="display:none">
+          <div class="more2-item-icon" style="background:rgba(51,138,255,.1);color:#338aff;border-color:rgba(51,138,255,.25)"><i class="fas fa-rectangle-ad"></i></div>
+          <div class="more2-item-body"><strong>Submit an Ad</strong><span>Place a sponsored ad on the home page</span></div>
+          <i class="fas fa-chevron-right more2-arr"></i>
+        </div>
+        <div class="more2-item" id="more-admin-item" onclick="openAdmin()" style="display:none">
+          <div class="more2-item-icon" style="background:rgba(224,80,80,.1);color:var(--red);border-color:rgba(224,80,80,.25)"><i class="fas fa-shield-halved"></i></div>
+          <div class="more2-item-body"><strong style="color:var(--t1)">Admin Dashboard</strong><span>Manage requests, users & more</span></div>
+          <i class="fas fa-chevron-right more2-arr"></i>
+        </div>
         <div class="more2-item" onclick="goNav('institution')">
           <div class="more2-item-icon" style="background:rgba(255,165,0,.1);color:#ffa500;border-color:rgba(255,165,0,.25)"><i class="fas fa-building-columns"></i></div>
           <div class="more2-item-body"><strong>Institution Portal</strong><span>Bulk services for schools &amp; businesses</span></div>
           <i class="fas fa-chevron-right more2-arr"></i>
-        </div>
-      </div>
-
-      <!-- ══ SECTION: ADMIN (shown only to admins) ══ -->
-      <div class="more2-section" id="more-admin-section" style="display:none">
-        <div class="more2-sect-label" style="color:var(--red)"><i class="fas fa-shield-halved" style="margin-right:5px"></i>Administration</div>
-        <div class="more2-item" onclick="openAdmin()" style="border-color:rgba(224,80,80,.3);background:rgba(224,80,80,.04)">
-          <div class="more2-item-icon" style="background:rgba(224,80,80,.12);color:var(--red);border-color:rgba(224,80,80,.3)"><i class="fas fa-gauge-high"></i></div>
-          <div class="more2-item-body"><strong style="color:var(--t1)">Admin Dashboard</strong><span>Manage requests, users, services & analytics</span></div>
-          <i class="fas fa-chevron-right more2-arr" style="color:var(--red)"></i>
         </div>
       </div>
 
@@ -2193,6 +2230,11 @@ body.admin-open .acct-tabs{ pointer-events:none; }
               <div id="pi-pts-count" style="font-family:var(--fd);font-size:1.4rem;color:#ffc81e">0</div>
               <div style="font-size:.54rem;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px">Points</div>
             </div>
+          </div>
+          <!-- Activity timeline -->
+          <div style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin:0 0 8px">Recent Activity</div>
+          <div id="pi-activity" style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+            <div style="text-align:center;padding:14px;color:var(--t3);font-size:.7rem">Loading…</div>
           </div>
           <button class="btn btn-ghost btn-full btn-sm" onclick="doSignOut()" style="margin-bottom:80px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.25);color:var(--red)"><i class="fas fa-arrow-right-from-bracket"></i> Sign Out of Account</button>
         </div>
@@ -2520,8 +2562,12 @@ body.admin-open .acct-tabs{ pointer-events:none; }
     <button class="admin-nav-tab"    id="atab-agents"        onclick="adminTab('agents')"      ><i class="fas fa-user-tie"></i> Agents</button>
     <button class="admin-nav-tab"    id="atab-institutions"  onclick="adminTab('institutions')"><i class="fas fa-building-columns"></i> Institutions</button>
     <button class="admin-nav-tab"    id="atab-services"      onclick="adminTab('services')"    ><i class="fas fa-concierge-bell"></i> Services</button>
+    <button class="admin-nav-tab"    id="atab-institutions"  onclick="adminTab('institutions')" ><i class="fas fa-building-columns"></i> Institutions</button>
     <button class="admin-nav-tab"    id="atab-reviews"       onclick="adminTab('reviews')"     ><i class="fas fa-star"></i> Reviews</button>
+    <button class="admin-nav-tab"    id="atab-ads"           onclick="adminTab('ads')"          ><i class="fas fa-rectangle-ad"></i> Ads</button>
     <button class="admin-nav-tab"    id="atab-messages"      onclick="adminTab('messages')"    ><i class="fas fa-envelope"></i> Messages</button>
+    <button class="admin-nav-tab"    id="atab-legal"         onclick="adminTab('legal')"       ><i class="fas fa-file-contract"></i> Legal</button>
+    <button class="admin-nav-tab"    id="atab-security"      onclick="adminTab('security')"    ><i class="fas fa-shield-halved"></i> Security</button>
     <button class="admin-nav-tab"    id="atab-settings"      onclick="adminTab('settings')"    ><i class="fas fa-gear"></i> Settings</button>
   </div>
 
@@ -2578,17 +2624,49 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 
   <!-- ── ANALYTICS ── -->
   <div class="admin-section" id="asec-analytics">
-    <div style="padding:12px 0 6px;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">App Analytics</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Analytics Dashboard</div>
+      <button class="btn btn-ghost btn-xs" onclick="adminLoadAnalytics()"><i class="fas fa-rotate-right"></i> Refresh</button>
+    </div>
+
+    <!-- KPI cards row -->
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px">
+      <div style="background:var(--bg3);border:1px solid rgba(77,158,255,.3);border-radius:var(--rl);padding:12px">
+        <div style="font-size:.54rem;color:var(--t4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Total Revenue</div>
+        <div id="an-revenue" style="font-family:var(--fd);font-size:1.5rem;color:#5aaeff">KES —</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid rgba(50,180,100,.3);border-radius:var(--rl);padding:12px">
+        <div style="font-size:.54rem;color:var(--t4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Avg Rating</div>
+        <div id="an-rating" style="font-family:var(--fd);font-size:1.5rem;color:var(--green)">—★</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid rgba(201,168,76,.3);border-radius:var(--rl);padding:12px">
+        <div style="font-size:.54rem;color:var(--t4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Completion Rate</div>
+        <div id="an-completion" style="font-family:var(--fd);font-size:1.5rem;color:var(--gold)">—%</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid rgba(255,165,0,.3);border-radius:var(--rl);padding:12px">
+        <div style="font-size:.54rem;color:var(--t4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Avg Response Time</div>
+        <div id="an-response" style="font-family:var(--fd);font-size:1.5rem;color:#ffa500">—h</div>
+      </div>
+    </div>
+
+    <!-- 30-day bar chart -->
+    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:12px">
+      <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-chart-column" style="color:var(--gold)"></i> Requests — Last 30 Days</div>
+      <div id="analytics-timeline" style="display:flex;align-items:flex-end;gap:2px;height:90px;padding:0 2px">
+        <div style="text-align:center;padding:16px;width:100%"><span class="spin"></span></div>
+      </div>
+      <div id="analytics-timeline-labels" style="display:flex;gap:2px;margin-top:4px;padding:0 2px"></div>
+    </div>
 
     <!-- Top services bar chart -->
     <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:12px">
-      <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-fire" style="color:var(--gold)"></i> Most Requested Services</div>
+      <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-fire" style="color:var(--gold)"></i> Top Requested Services</div>
       <div id="analytics-top-svcs" style="display:flex;flex-direction:column;gap:8px">
         <div style="text-align:center;padding:16px"><span class="spin"></span></div>
       </div>
     </div>
 
-    <!-- Requests by status pie-style -->
+    <!-- Status breakdown -->
     <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:12px">
       <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-chart-pie" style="color:var(--gold)"></i> Requests by Status</div>
       <div id="analytics-status" style="display:flex;flex-direction:column;gap:8px">
@@ -2596,19 +2674,34 @@ body.admin-open .acct-tabs{ pointer-events:none; }
       </div>
     </div>
 
-    <!-- Requests by time -->
+    <!-- Revenue by service -->
     <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:12px">
-      <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-clock" style="color:var(--gold)"></i> Request Volume — Last 7 Days</div>
-      <div id="analytics-timeline" style="display:flex;align-items:flex-end;gap:4px;height:80px;padding:0 4px">
-        <div style="text-align:center;padding:16px;width:100%"><span class="spin"></span></div>
+      <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-coins" style="color:var(--gold)"></i> Revenue by Service (Est.)</div>
+      <div id="analytics-revenue-svcs" style="display:flex;flex-direction:column;gap:8px">
+        <div style="text-align:center;padding:16px"><span class="spin"></span></div>
       </div>
-      <div id="analytics-timeline-labels" style="display:flex;gap:4px;margin-top:4px;padding:0 4px"></div>
+    </div>
+
+    <!-- Reviews summary -->
+    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:12px">
+      <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-star" style="color:#ffc81e"></i> Customer Satisfaction</div>
+      <div id="analytics-reviews-summary" style="display:flex;flex-direction:column;gap:6px">
+        <div style="text-align:center;padding:16px"><span class="spin"></span></div>
+      </div>
     </div>
 
     <!-- User growth -->
-    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:80px">
+    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:12px">
       <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-users" style="color:var(--gold)"></i> User Growth</div>
       <div id="analytics-users" style="display:flex;flex-direction:column;gap:6px">
+        <div style="text-align:center;padding:16px"><span class="spin"></span></div>
+      </div>
+    </div>
+
+    <!-- Agents summary -->
+    <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;margin-bottom:80px">
+      <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-user-tie" style="color:var(--gold)"></i> Agent Pipeline</div>
+      <div id="analytics-agents" style="display:flex;flex-direction:column;gap:6px">
         <div style="text-align:center;padding:16px"><span class="spin"></span></div>
       </div>
     </div>
@@ -2647,6 +2740,12 @@ body.admin-open .acct-tabs{ pointer-events:none; }
       <i class="fas fa-search" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--t4);font-size:.75rem"></i>
       <input class="fi" id="admin-req-search" type="search" placeholder="Search requests…" style="padding-left:32px;font-size:.76rem" oninput="adminSearchReqs(this.value)">
     </div>
+    <div style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:0 0 6px">
+      <span style="font-size:.58rem;color:var(--t4);padding:4px 2px;white-space:nowrap;align-self:center">Sort:</span>
+      <button class="btn btn-outline btn-xs on" id="asort-new"      onclick="adminSortReqs('newest')">Newest</button>
+      <button class="btn btn-ghost btn-xs"      id="asort-deadline" onclick="adminSortReqs('deadline')"><i class="fas fa-calendar-clock"></i> Deadline</button>
+      <button class="btn btn-ghost btn-xs"      id="asort-old"      onclick="adminSortReqs('oldest')">Oldest</button>
+    </div>
     <div id="admin-reqs-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
       <div style="text-align:center;padding:20px"><span class="spin"></span></div>
     </div>
@@ -2670,6 +2769,29 @@ body.admin-open .acct-tabs{ pointer-events:none; }
   </div>
 
   <!-- ── SERVICES ── -->
+  <!-- ── ADS ── -->
+  <div class="admin-section" id="asec-ads">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Advertisements</div>
+      <button class="btn btn-ghost btn-xs" onclick="adminLoadAds()"><i class="fas fa-rotate-right"></i></button>
+    </div>
+    <!-- Pending approval -->
+    <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffa500;margin-bottom:8px;display:flex;align-items:center;gap:5px"><i class="fas fa-clock"></i> Pending Approval</div>
+    <div id="admin-ads-pending" style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+      <div style="text-align:center;padding:14px"><span class="spin"></span></div>
+    </div>
+    <!-- Active ads -->
+    <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:8px;display:flex;align-items:center;gap:5px"><i class="fas fa-check-circle"></i> Active Ads</div>
+    <div id="admin-ads-active" style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+      <div style="text-align:center;padding:14px"><span class="spin"></span></div>
+    </div>
+    <!-- Rejected / paused -->
+    <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin-bottom:8px;display:flex;align-items:center;gap:5px"><i class="fas fa-ban"></i> Rejected / Paused</div>
+    <div id="admin-ads-rejected" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
+      <div style="text-align:center;padding:14px"><span class="spin"></span></div>
+    </div>
+  </div>
+
   <div class="admin-section" id="asec-services">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
       <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">All Services</div>
@@ -2680,48 +2802,18 @@ body.admin-open .acct-tabs{ pointer-events:none; }
     </div>
   </div>
 
-  <!-- ── SERVICE EDIT MODAL (inline slide-up sheet) ── -->
-  <div id="admin-svc-editor" style="position:fixed;inset:0;max-width:430px;margin:0 auto;z-index:900;display:flex;flex-direction:column;pointer-events:none;transition:opacity .22s">
-    <div style="flex:1;background:rgba(0,0,0,.55);opacity:0;transition:opacity .22s" id="svc-ed-backdrop" onclick="adminCloseSvcEditor()"></div>
-    <div id="svc-ed-sheet" style="background:var(--bg2);border-radius:20px 20px 0 0;border-top:1px solid var(--bd);padding:20px 16px 40px;max-height:88dvh;overflow-y:auto;transform:translateY(100%);transition:transform .28s var(--ease)">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-        <div style="font-size:.78rem;font-weight:700;color:var(--t1)" id="svc-editor-title">Edit Service</div>
-        <button onclick="adminCloseSvcEditor()" style="width:30px;height:30px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem"><i class="fas fa-times"></i></button>
-      </div>
-      <input type="hidden" id="svc-ed-id">
-      <div class="fg"><label class="flbl">Service Name *</label><input class="fi" id="svc-ed-name" type="text" placeholder="e.g. Print Documents" maxlength="60"></div>
-      <div class="fg"><label class="flbl">Description</label><textarea class="fi" id="svc-ed-desc" rows="2" placeholder="Short description of the service" maxlength="200"></textarea></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="fg"><label class="flbl">Price Label</label><input class="fi" id="svc-ed-price" type="text" placeholder="From KES 50" maxlength="30"></div>
-        <div class="fg"><label class="flbl">Category</label>
-          <select class="fi" id="svc-ed-cat">
-            <option value="print">Print</option>
-            <option value="docs">Documents</option>
-            <option value="photos">Photos</option>
-            <option value="academic">Academic</option>
-            <option value="govt">Government</option>
-            <option value="digital">Digital</option>
-            <option value="design">Design</option>
-            <option value="general">General</option>
-          </select>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="fg"><label class="flbl">Icon (Font Awesome)</label><input class="fi" id="svc-ed-icon" type="text" placeholder="fa-print" maxlength="40"></div>
-        <div class="fg"><label class="flbl">Sort Order</label><input class="fi" id="svc-ed-sort" type="number" placeholder="1" min="1" max="999"></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px 0 14px">
-        <input type="checkbox" id="svc-ed-active" style="width:16px;height:16px;accent-color:var(--gold)">
-        <label for="svc-ed-active" style="font-size:.74rem;color:var(--t2);cursor:pointer">Active — visible to users</label>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button id="svc-ed-del" class="btn btn-outline btn-sm" style="color:var(--red);border-color:rgba(224,80,80,.4)" onclick="adminDeleteService()"><i class="fas fa-trash"></i></button>
-        <button class="btn btn-gold btn-full btn-sm" onclick="adminSaveService()"><i class="fas fa-check"></i> Save Service</button>
-      </div>
+  <!-- ── MESSAGES ── -->
+  <!-- ── REVIEWS ── -->
+  <div class="admin-section" id="asec-reviews">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Customer Reviews</div>
+      <button class="btn btn-ghost btn-xs" onclick="adminLoadReviews()"><i class="fas fa-rotate-right"></i></button>
+    </div>
+    <div id="admin-reviews-list" style="display:flex;flex-direction:column;gap:8px;padding-bottom:80px">
+      <div style="text-align:center;padding:20px"><span class="spin"></span></div>
     </div>
   </div>
 
-  <!-- ── MESSAGES ── -->
   <div class="admin-section" id="asec-messages">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
       <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Contact Messages</div>
@@ -2733,6 +2825,82 @@ body.admin-open .acct-tabs{ pointer-events:none; }
   </div>
 
   <!-- ── SETTINGS ── -->
+
+
+  <!-- ── LEGAL ── -->
+  <div class="admin-section" id="asec-legal">
+    <div style="margin-top:14px">
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:14px">
+        <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="fas fa-file-contract" style="color:var(--gold)"></i> Terms &amp; Conditions</div>
+        <textarea class="fi" id="adm-terms-content" rows="10" placeholder="Enter your Terms & Conditions here…" style="font-size:.72rem;line-height:1.7;font-family:inherit"></textarea>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn btn-ghost btn-sm" onclick="adminLoadLegal()"><i class="fas fa-rotate-right"></i> Reload</button>
+          <button class="btn btn-gold btn-full btn-sm" onclick="adminSaveLegal('terms')"><i class="fas fa-save"></i> Save Terms</button>
+        </div>
+        <button class="btn btn-outline btn-full btn-sm" style="margin-top:8px" onclick="openModal('terms-modal')"><i class="fas fa-eye"></i> Preview</button>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:14px">
+        <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="fas fa-shield-halved" style="color:var(--gold)"></i> Privacy Policy</div>
+        <textarea class="fi" id="adm-privacy-content" rows="10" placeholder="Enter your Privacy Policy here…" style="font-size:.72rem;line-height:1.7;font-family:inherit"></textarea>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn btn-ghost btn-sm" onclick="adminLoadLegal()"><i class="fas fa-rotate-right"></i> Reload</button>
+          <button class="btn btn-gold btn-full btn-sm" onclick="adminSaveLegal('privacy')"><i class="fas fa-save"></i> Save Privacy</button>
+        </div>
+        <button class="btn btn-outline btn-full btn-sm" style="margin-top:8px" onclick="openModal('privacy-modal')"><i class="fas fa-eye"></i> Preview</button>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:80px">
+        <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="fas fa-list-check" style="color:var(--gold)"></i> Acceptance Log</div>
+        <div id="adm-consent-log"><div style="text-align:center;padding:10px"><span class="spin"></span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECURITY ── -->
+  <div class="admin-section" id="asec-security">
+    <div style="padding:12px 0 8px">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:14px">Security & Account Management</div>
+
+      <!-- Reset user password -->
+      <div style="background:var(--bg3);border:1px solid rgba(224,80,80,.25);border-radius:var(--rl);padding:16px;margin-bottom:14px">
+        <div style="font-size:.74rem;font-weight:700;color:var(--t1);margin-bottom:4px;display:flex;align-items:center;gap:8px"><i class="fas fa-key" style="color:#ffa500"></i> Reset User to Default Password</div>
+        <div style="font-size:.64rem;color:var(--t3);margin-bottom:12px">Search for a user by email or name and reset their password to the default. They will be notified via WhatsApp.</div>
+        <div class="fg"><label class="flbl">User Email or Name</label><input class="fi" id="sec-reset-user" type="text" placeholder="Enter email or name to search…"></div>
+        <div id="sec-reset-results" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;max-height:200px;overflow-y:auto"></div>
+        <div class="fg"><label class="flbl">Default Password</label>
+          <div style="display:flex;gap:8px">
+            <input class="fi" id="sec-default-pw" type="text" placeholder="e.g. NovaDeskOnline@2025" style="flex:1">
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('sec-default-pw').value='NovaDeskOnline@'+new Date().getFullYear()">Auto</button>
+          </div>
+        </div>
+        <div style="font-size:.6rem;color:var(--t4);margin-bottom:10px"><i class="fas fa-info-circle" style="margin-right:4px"></i>The user will need to log in with this password and can change it from their account settings.</div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm" onclick="secSearchUsers()"><i class="fas fa-magnifying-glass"></i> Search</button>
+          <button class="btn btn-gold btn-sm" style="flex:1;background:rgba(255,100,100,.2);border:1px solid rgba(255,100,100,.4);color:var(--red)" onclick="secResetSelectedUser()"><i class="fas fa-rotate-left"></i> Reset Password</button>
+        </div>
+        <div id="sec-reset-msg" style="display:none;margin-top:10px;font-size:.7rem;padding:8px 12px;border-radius:8px"></div>
+      </div>
+
+      <!-- Bulk operations -->
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:14px">
+        <div style="font-size:.74rem;font-weight:700;color:var(--t1);margin-bottom:4px;display:flex;align-items:center;gap:8px"><i class="fas fa-users-gear" style="color:var(--blue)"></i> Bulk Account Actions</div>
+        <div style="font-size:.64rem;color:var(--t3);margin-bottom:12px">Mass operations — use with caution.</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-ghost btn-full btn-sm" onclick="secExportUsers()"><i class="fas fa-download"></i> Export All Users (CSV)</button>
+          <button class="btn btn-ghost btn-full btn-sm" onclick="secListSuspended()"><i class="fas fa-ban"></i> View Suspended Accounts</button>
+        </div>
+      </div>
+
+      <!-- Admin audit log -->
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:80px">
+        <div style="font-size:.74rem;font-weight:700;color:var(--t1);margin-bottom:4px;display:flex;align-items:center;gap:8px"><i class="fas fa-list-check" style="color:var(--green)"></i> Admin Audit Log</div>
+        <div id="sec-audit-log" style="display:flex;flex-direction:column;gap:5px;max-height:300px;overflow-y:auto">
+          <div style="font-size:.7rem;color:var(--t4);text-align:center;padding:16px">Click Refresh to load log</div>
+        </div>
+        <button class="btn btn-ghost btn-full btn-sm" style="margin-top:10px" onclick="secLoadAuditLog()"><i class="fas fa-rotate-right"></i> Refresh Log</button>
+      </div>
+    </div>
+  </div>
+
   <div class="admin-section" id="asec-settings">
     <div style="margin-top:14px">
       <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px">
@@ -2753,6 +2921,17 @@ body.admin-open .acct-tabs{ pointer-events:none; }
         <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-shield-halved" style="color:var(--gold)"></i> Admin Access Code</div>
         <div class="fg"><label class="flbl">New Secret Code</label><input class="fi" id="adm-secret-new" type="password" placeholder="Leave blank to keep current"></div>
         <div class="form-hint">Used to unlock admin panel. Store securely.</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px">
+        <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-share-nodes" style="color:var(--gold)"></i> Social & Site Links</div>
+        <div class="fg"><label class="flbl"><i class="fab fa-facebook" style="color:#1877F2;width:16px"></i> Facebook URL</label><input class="fi" id="adm-link-fb" type="url" placeholder="https://facebook.com/NovaDeskOnline"></div>
+        <div class="fg"><label class="flbl"><i class="fab fa-instagram" style="color:#E1306C;width:16px"></i> Instagram URL</label><input class="fi" id="adm-link-ig" type="url" placeholder="https://instagram.com/NovaDeskOnline"></div>
+        <div class="fg"><label class="flbl"><i class="fab fa-tiktok" style="color:#fff;width:16px"></i> TikTok URL</label><input class="fi" id="adm-link-tt" type="url" placeholder="https://tiktok.com/@NovaDeskOnline"></div>
+        <div class="fg"><label class="flbl"><i class="fab fa-x-twitter" style="color:#fff;width:16px"></i> X / Twitter URL</label><input class="fi" id="adm-link-x" type="url" placeholder="https://x.com/NovaDeskOnline"></div>
+        <div class="fg"><label class="flbl"><i class="fas fa-envelope" style="color:#ffa500;width:16px"></i> Contact Email</label><input class="fi" id="adm-link-email" type="email" placeholder="novadeskke@gmail.com"></div>
+        <div class="fg"><label class="flbl"><i class="fas fa-location-dot" style="color:var(--green);width:16px"></i> Maps Link</label><input class="fi" id="adm-link-maps" type="url" placeholder="https://maps.google.com/?q=Kemera+Nyamira"></div>
+        <div class="fg"><label class="flbl"><i class="fas fa-globe" style="color:#00c8ff;width:16px"></i> SciFi Networks URL</label><input class="fi" id="adm-link-scifi" type="url" placeholder="https://sci-fi-networks-fyr8.vercel.app/"></div>
+        <div class="form-hint">These links power the Contact page buttons automatically.</div>
       </div>
       <button class="btn btn-gold btn-full" onclick="saveAdminSettings()" style="padding:13px;font-size:.78rem;margin-bottom:80px"><i class="fas fa-check"></i> Save All Settings</button>
     </div>
@@ -2999,26 +3178,29 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 </div>
 
 <!-- ══ RATING MODAL ═══════════════════════════════════════════════════ -->
-<div id="rating-modal" class="modal" role="dialog" aria-modal="true">
+<div id="rating-modal" class="modal" role="dialog" aria-modal="true" style="z-index:820">
   <div class="sheet-pull"></div>
   <div class="sheet-hdr">
     <span class="sheet-title"><i class="fas fa-star" style="margin-right:8px;color:var(--gold)"></i>Rate Our Services</span>
     <button class="sheet-cls" onclick="closeModal('rating-modal')"><i class="fas fa-times"></i></button>
   </div>
-  <div class="modal-body" style="padding-bottom:24px">
-    <div style="text-align:center;margin-bottom:6px">
-      <div class="star-row" id="star-row">
-        <button class="star-btn" onclick="setRating(1)" title="1 star">★</button>
-        <button class="star-btn" onclick="setRating(2)" title="2 stars">★</button>
-        <button class="star-btn" onclick="setRating(3)" title="3 stars">★</button>
-        <button class="star-btn" onclick="setRating(4)" title="4 stars">★</button>
-        <button class="star-btn" onclick="setRating(5)" title="5 stars">★</button>
+  <div class="modal-body" style="padding-bottom:100px">
+    <div style="text-align:center;margin-bottom:16px;padding:16px;background:var(--bg3);border-radius:14px;border:1px solid var(--bd)">
+      <div style="font-size:.7rem;color:var(--t4);margin-bottom:12px">How would you rate our services?</div>
+      <div class="star-row" id="star-row" style="display:flex;justify-content:center;gap:8px;margin-bottom:10px">
+        <button class="star-btn" onclick="setRating(1)" title="1 star" style="font-size:2rem;background:none;border:none;cursor:pointer;color:var(--bd2);transition:color .15s">★</button>
+        <button class="star-btn" onclick="setRating(2)" title="2 stars" style="font-size:2rem;background:none;border:none;cursor:pointer;color:var(--bd2);transition:color .15s">★</button>
+        <button class="star-btn" onclick="setRating(3)" title="3 stars" style="font-size:2rem;background:none;border:none;cursor:pointer;color:var(--bd2);transition:color .15s">★</button>
+        <button class="star-btn" onclick="setRating(4)" title="4 stars" style="font-size:2rem;background:none;border:none;cursor:pointer;color:var(--bd2);transition:color .15s">★</button>
+        <button class="star-btn" onclick="setRating(5)" title="5 stars" style="font-size:2rem;background:none;border:none;cursor:pointer;color:var(--bd2);transition:color .15s">★</button>
       </div>
-      <div id="rating-label" style="font-size:.72rem;color:var(--t3);margin-bottom:14px">Tap a star to rate</div>
+      <div id="rating-label" style="font-size:.72rem;color:var(--t3)">Tap a star to rate</div>
     </div>
-    <div class="fg"><label class="flbl">Comment (optional)</label><textarea class="fi" id="rating-comment" rows="3" placeholder="Tell us about your experience…" maxlength="500"></textarea></div>
+    <div class="fg"><label class="flbl">Comment (optional)</label><textarea class="fi" id="rating-comment" rows="4" placeholder="Tell us about your experience…" maxlength="500"></textarea></div>
     <div id="rating-err" class="ferr" style="margin-bottom:12px"></div>
-    <button class="btn btn-gold btn-full" onclick="submitRating()"><i class="fas fa-paper-plane"></i> Submit Feedback</button>
+    <button onclick="submitRating()" style="width:100%;padding:15px;background:var(--gold);color:#000;border:none;border-radius:14px;font-size:.84rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;position:relative;z-index:2">
+      <i class="fas fa-paper-plane"></i> Submit Review
+    </button>
   </div>
 </div>
 
@@ -3298,13 +3480,25 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 <div id="notif-panel" class="modal" role="dialog" aria-modal="true">
   <div class="sheet-pull"></div>
   <div class="sheet-hdr">
-    <span class="sheet-title"><i class="fas fa-bell" style="margin-right:8px;color:var(--gold)"></i>Notifications</span>
+    <span class="sheet-title"><i class="fas fa-bell" style="margin-right:8px;color:var(--gold)"></i>Alerts &amp; Activity</span>
     <div style="display:flex;gap:6px">
       <button onclick="markAllNotifsRead()" class="btn btn-ghost btn-xs">Mark all read</button>
       <button class="sheet-cls" onclick="closeModal('notif-panel')"><i class="fas fa-times"></i></button>
     </div>
   </div>
-  <div class="modal-body" id="notif-panel-body" style="padding-bottom:24px">
+  <div class="modal-body" style="padding-bottom:4px">
+    <!-- Recent Activity -->
+    <div style="margin-bottom:10px">
+      <div style="font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t4);margin-bottom:8px;display:flex;align-items:center;gap:5px"><i class="fas fa-clock-rotate-left"></i> Recent Activity</div>
+      <div id="notif-activity-list" style="display:flex;flex-direction:column;gap:5px">
+        <div style="font-size:.7rem;color:var(--t4);text-align:center;padding:8px">Loading…</div>
+      </div>
+    </div>
+    <div style="height:1px;background:var(--bd);margin:10px 0"></div>
+    <!-- Notifications -->
+    <div style="font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t4);margin-bottom:8px;display:flex;align-items:center;gap:5px"><i class="fas fa-bell"></i> Notifications</div>
+  </div>
+  <div class="modal-body" id="notif-panel-body" style="padding-top:0;padding-bottom:24px">
     <div class="empty-state"><i class="fas fa-bell-slash"></i><h3>No notifications</h3><p>You'll see service updates here</p></div>
   </div>
 </div>
@@ -3601,15 +3795,23 @@ function toast(msg, type='nf', dur=3000) {
 /* ── POPUP ─────────────────────────────────────────────────────── */
 function popup(title, msg, icon='nf', btns=[{label:'OK',fn:null,style:'btn-gold'}]) {
   const icons = {ok:'fa-check-circle',er:'fa-exclamation-circle',nf:'fa-info-circle'};
-  $('popup-icon-el').className = `popup-icon ${icon}`;
-  $('popup-icon-el').innerHTML = `<i class="fas ${icons[icon]||icons.nf}"></i>`;
-  $('popup-ttl-el').textContent = title;
-  $('popup-msg-el').textContent = msg;
-  $('popup-acts-el').innerHTML = btns.map((b,i)=>`<button class="btn ${b.style||'btn-ghost'} btn-sm" onclick="popupBtn(${i})">${esc(b.label)}</button>`).join('');
+  const iconEl = $('popup-icon-el');
+  const ttlEl  = $('popup-ttl-el');
+  const msgEl  = $('popup-msg-el');
+  const actsEl = $('popup-acts-el');
+  const overlayEl = $('popup-overlay');
+  if (!overlayEl) { console.warn('popup-overlay not found in DOM'); return; }
+  if (iconEl) { iconEl.className = `popup-icon ${icon}`; iconEl.innerHTML = `<i class="fas ${icons[icon]||icons.nf}"></i>`; }
+  if (ttlEl) ttlEl.textContent = title;
+  if (msgEl) {
+    if (/<[a-z][\s\S]*>/i.test(msg)) { msgEl.innerHTML = msg; }
+    else { msgEl.textContent = msg; }
+  }
+  if (actsEl) actsEl.innerHTML = btns.map((b,i)=>`<button class="btn ${b.style||'btn-ghost'} btn-sm" onclick="popupBtn(${i})">${esc(b.label)}</button>`).join('');
   window._popupBtns = btns;
-  $('popup-overlay').classList.add('on');
+  overlayEl.classList.add('on');
 }
-function popupBtn(i) { $('popup-overlay').classList.remove('on'); window._popupBtns?.[i]?.fn?.(); }
+function popupBtn(i) { $('popup-overlay')?.classList.remove('on'); window._popupBtns?.[i]?.fn?.(); }
 
 /* ── OVERLAY ───────────────────────────────────────────────────── */
 let _ovlLock=false, _ovlLockTimer=null;
@@ -3629,6 +3831,18 @@ function openModal(id){
   showOvl();
   document.body.style.overflow = 'hidden';
   _ovlLockTimer = setTimeout(()=>{ _ovlLock=false; }, 600);
+  // Load dynamic legal content when opening legal modals
+  if(id==='terms-modal') loadLegalModal('terms');
+  if(id==='privacy-modal') loadLegalModal('privacy');
+}
+async function loadLegalModal(type){
+  const el=$(type+'-content-display');
+  if(!el||!sb) return;
+  try{
+    const key=type==='terms'?'terms_content':'privacy_content';
+    const{data}=await sb.from('app_settings').select('value').eq('key',key).single();
+    if(data?.value) el.textContent=data.value;
+  }catch(e){}
 }
 function closeModal(id){
   const el=$(id);
@@ -3641,12 +3855,38 @@ function closeModal(id){
   if (!stillOpen) { hideOvl(); document.body.style.overflow = ''; }
 }
 function closeAllModals(){
-  ['contact-modal','about-modal','my-reqs-modal','my-files-modal','upload-modal','notif-panel','profile-modal','svc-req-modal','rating-modal','notes-sheet','agent-register-modal','dev-contact-modal','privacy-modal','terms-modal','inst-request-modal','inst-all-reqs-modal','tech-req-modal','svc-detail-modal','tech-detail-modal','reg-success-modal','new-pw-modal'].forEach(id=>{
-    const el=$(id); el?.classList.remove('on');
-  });
+  document.querySelectorAll('.modal.on, .modal-full.on').forEach(el=>el.classList.remove('on'));
+  closeModal('notif-panel');
   hideOvl();
   document.body.style.overflow = '';
 }
+// Universal close: any .sheet-cls or [data-close] inside any modal or overlay
+document.addEventListener('click', function(e){
+  const btn = e.target.closest('.sheet-cls, [data-close], .modal-close');
+  if(!btn) return;
+  // Find parent modal — check all common patterns
+  const modal = btn.closest([
+    '.modal','.modal-full','[id$="-modal"]','[id$="-panel"]',
+    '[id$="-sheet"]','[id$="-overlay"]','[id="notif-panel"]',
+    '[id="auth-modal"]','[id="note-editor"]','[id="global-search-overlay"]'
+  ].join(','));
+  if(modal && modal.id) {
+    if(modal.id==='note-editor') { if(typeof closeNoteEditor==='function') closeNoteEditor(); }
+    else if(modal.id==='svc-req-modal') { if(typeof closeSvcReq==='function') closeSvcReq(); }
+    else if(modal.id==='global-search-overlay') { modal.classList.remove('on'); }
+    else if(modal.id==='admin-svc-editor') { if(typeof adminCloseSvcEditor==='function') adminCloseSvcEditor(); }
+    else closeModal(modal.id);
+  } else {
+    // Fallback: walk up and close anything with .on class
+    let el = btn.parentElement;
+    while(el && el!==document.body){
+      if(el.classList.contains('on') && (el.classList.contains('modal')||el.classList.contains('modal-full'))){
+        closeModal(el.id); break;
+      }
+      el=el.parentElement;
+    }
+  }
+});
 // Escape key closes the topmost open modal or note editor
 document.addEventListener('keydown', function(e){
   if(e.key !== 'Escape') return;
@@ -3990,6 +4230,12 @@ function onAuthStateChange(){
     _user = session?.user || null;
 
     if (event === 'PASSWORD_RECOVERY') {
+      // Load profile if we have a session so user details show correctly
+      if (session?.user) {
+        _user = session.user;
+        await loadProfile().catch(()=>{});
+        renderAccount();
+      }
       showNewPasswordModal();
       return;
     }
@@ -4192,8 +4438,12 @@ function renderAccount(){
   if (!loggedIn || !_profile) return;
 
   // Show admin menu item in MORE tab if admin
-  const moreAdminSec = $('more-admin-section');
-  if (moreAdminSec) moreAdminSec.style.display = _profile?.role === 'admin' ? 'block' : 'none';
+  const moreAdminItem = $('more-admin-item');
+  if(moreAdminItem) moreAdminItem.style.display = _profile?.role==='admin' ? 'flex' : 'none';
+  // Show Submit Ad button for agents and admins
+  const moreAdItem = $('more-submit-ad-item');
+  if(moreAdItem) moreAdItem.style.display = ['agent','admin'].includes(_profile?.role) ? 'flex' : 'none';
+
 
   // Show admin button in account header
   const adminBtnWrap = $('acct-admin-btn-wrap');
@@ -4451,6 +4701,11 @@ function openSvcReq(svcId){
   $('svc-req-icon').className = 'fas ' + (svc.icon||'fa-star');
   $('svc-req-desc').textContent = (svc.description||'') + (svc.price_label ? '\n\nPricing: ' + svc.price_label : '');
   $('svc-req-notes').value = '';
+  const dlEl = $('svc-req-deadline');
+  if (dlEl) {
+    dlEl.value = '';
+    dlEl.min = new Date().toISOString().split('T')[0];
+  }
   $('upload-file-list').innerHTML = '';
   const errEl = $('svc-req-err');
   if(errEl){ errEl.style.display='none'; errEl.textContent=''; }
@@ -4458,6 +4713,34 @@ function openSvcReq(svcId){
   showOvl();
 }
 window.openSvcReq = openSvcReq;
+
+function sendRequestViaWhatsApp(){
+  const svcName = _currentSvc?.name || 'Service';
+  const notes   = $('svc-req-notes')?.value?.trim() || '';
+  const dlRaw   = $('svc-req-deadline')?.value || '';
+  const deadline = dlRaw ? new Date(dlRaw).toLocaleString('en-KE',{dateStyle:'medium',timeStyle:'short'}) : 'Not specified';
+  const userName = _profile?.full_name || _user?.email || 'Customer';
+  const userPhone = _profile?.whatsapp_number || '';
+  const text = encodeURIComponent(
+    `*NovaDeskOnline — Service Request*
+
+`+
+    `*Service:* ${svcName}
+`+
+    `*Customer:* ${userName}${userPhone?' ('+userPhone+')':''}
+`+
+    `*Deadline:* ${deadline}
+`+
+    (notes?`*Notes:* ${notes}
+`:'')+
+    `
+Please confirm this request. Thank you!`
+  );
+  const wa = (window._siteLinks?.whatsapp || '254111923477').replace(/[^0-9]/g,'');
+  window.open(`https://wa.me/${wa}?text=${text}`,'_blank');
+  closeSvcReq();
+}
+window.sendRequestViaWhatsApp = sendRequestViaWhatsApp;
 
 function closeSvcReq(){
   const el = $('svc-req-modal');
@@ -4471,6 +4754,8 @@ window.closeSvcReq = closeSvcReq;
 async function submitSvcRequest(){
   if (!_user){ closeSvcReq(); openAuth(); return; }
   const notes = typeof sanitize==='function' ? sanitize($('svc-req-notes')?.value||'') : ($('svc-req-notes')?.value||'');
+  const deadlineRaw = $('svc-req-deadline')?.value || null;
+  const deadline = deadlineRaw ? new Date(deadlineRaw).toISOString() : null;
   const btn = $('svc-req-btn');
   const err = $('svc-req-err');
   if(err){ err.style.display='none'; err.textContent=''; }
@@ -4481,6 +4766,7 @@ async function submitSvcRequest(){
       service_id: _currentSvc.id,
       service_name: _currentSvc.name,
       description: notes||null,
+      deadline: deadline,
       status: 'pending',
       file_urls: '[]'
     }).select().single();
@@ -4773,7 +5059,7 @@ async function loadMyReqs(){
   if (!_user) return;
   try {
     const { data } = await sb.from('service_requests').select('*').eq('user_id', _user.id).order('created_at', {ascending:false});
-    if (data) _reqs = data;
+    if (data) { _reqs = data; if(typeof cacheForOffline==='function') cacheForOffline('reqs',data); }
   } catch(e) {}
 }
 function openMyRequestsModal(){
@@ -4834,7 +5120,47 @@ function renderNotifCount(){
     badge.textContent = unread > 9 ? '9+' : unread;
   }
 }
-function toggleNotifPanel(){ openModal('notif-panel'); renderNotifPanel(); }
+function toggleNotifPanel(){
+  openModal('notif-panel');
+  renderNotifPanel();
+  renderNotifActivity();
+}
+
+function renderNotifActivity(){
+  const el = $('notif-activity-list');
+  if (!el) return;
+  const activities = [];
+  // Account events
+  if (_profile?.last_visit)          activities.push({icon:'fas fa-clock',color:'var(--blue)',label:'Last visited',time:_profile.last_visit});
+  if (_user?.last_sign_in_at)        activities.push({icon:'fas fa-right-to-bracket',color:'var(--gold)',label:'Last sign in',time:_user.last_sign_in_at});
+  if (_profile?.created_at)          activities.push({icon:'fas fa-user-plus',color:'var(--green)',label:'Account created',time:_profile.created_at});
+  if (_profile?.password_changed_at) activities.push({icon:'fas fa-key',color:'#a78bfa',label:'Password changed',time:_profile.password_changed_at});
+  // Recent requests
+  (_reqs||[]).slice(0,4).forEach(r=>{
+    const statusColor = {pending:'var(--gold)',in_progress:'var(--blue)',completed:'var(--green)',ready:'#a78bfa',cancelled:'var(--red)'}[r.status]||'var(--t3)';
+    activities.push({icon:'fas fa-concierge-bell',color:statusColor,label:r.service_name+' — '+(r.status||'pending').replace('_',' '),time:r.updated_at||r.created_at});
+  });
+  // Recent notes
+  (_notes||[]).slice(0,2).forEach(n=>
+    activities.push({icon:'fas fa-note-sticky',color:'#ffc81e',label:'Note: '+(n.title||'Untitled'),time:n.updated_at||n.created_at})
+  );
+  activities.sort((a,b)=>new Date(b.time)-new Date(a.time));
+  if (!activities.length){
+    el.innerHTML='<div style="font-size:.7rem;color:var(--t4);text-align:center;padding:8px">No activity yet — sign in to see your history</div>';
+    return;
+  }
+  el.innerHTML = activities.slice(0,7).map(a=>`
+    <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px">
+      <div style="width:26px;height:26px;border-radius:7px;background:var(--bg4);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="${a.icon}" style="color:${a.color};font-size:.66rem"></i>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.68rem;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.label)}</div>
+        <div style="font-size:.56rem;color:var(--t4);margin-top:1px">${fmtRel(a.time)}</div>
+      </div>
+    </div>`).join('');
+}
+window.renderNotifActivity = renderNotifActivity;
 function renderNotifPanel(){
   const body = $('notif-panel-body');
   if (!body) return;
@@ -4905,9 +5231,53 @@ async function loadAppSettings(){
       const bg = $('hero-bg');
       if (bg) bg.style.backgroundImage = `url('${s.hero_image.replace(/'/g,"\'")}')`;
     }
+    // Populate admin settings form fields (if visible)
+    const setVal = (id,v) => { const e=$(id); if(e && v) e.value = v; };
+    setVal('adm-announcement', s.announcement);
+    setVal('adm-biz-hrs', s.business_hrs);
+    setVal('adm-wa-num', s.wa_number);
+    setVal('adm-link-fb', s.link_facebook);
+    setVal('adm-link-ig', s.link_instagram);
+    setVal('adm-link-tt', s.link_tiktok);
+    setVal('adm-link-x', s.link_x);
+    setVal('adm-link-email', s.link_email);
+    setVal('adm-link-maps', s.link_maps);
+    setVal('adm-link-scifi', s.link_scifi);
+
+    // Apply links live across the app (Contact page, footer, etc.)
+    window._siteLinks = {
+      facebook: s.link_facebook || 'https://facebook.com/NovaDeskOnline',
+      instagram: s.link_instagram || 'https://instagram.com/NovaDeskOnline',
+      tiktok: s.link_tiktok || 'https://tiktok.com/@NovaDeskOnline',
+      x: s.link_x || '',
+      email: s.link_email || 'novadeskke@gmail.com',
+      maps: s.link_maps || 'https://maps.google.com/?q=Kemera+Nyamira+Kenya',
+      scifi: s.link_scifi || 'https://sci-fi-networks-fyr8.vercel.app/'
+    };
+    applySiteLinks();
     updateMoreScreen();
   } catch(e) {}
 }
+
+function applySiteLinks(){
+  const L = window._siteLinks; if(!L) return;
+  const setHref = (sel, url) => { const els = document.querySelectorAll(sel); els.forEach(el=>{ if(url) el.href = url; }); };
+  const setText = (id, text) => { const el=$(id); if(el && text) el.textContent = text; };
+  setHref('a[href*="facebook.com/NovaDeskOnline"]', L.facebook);
+  setHref('a[href*="instagram.com/NovaDeskOnline"]', L.instagram);
+  setHref('a[href*="tiktok.com/@NovaDeskOnline"]', L.tiktok);
+  setHref('a[href*="sci-fi-networks-fyr8.vercel.app"]', L.scifi);
+  const scifiTile = $('scifi-tile'); if (scifiTile && L.scifi) scifiTile.dataset.url = L.scifi;
+  setHref('a[href*="maps.google.com/?q=Kemera"]', L.maps);
+  // Email — update copy-to-clipboard onclick targets
+  document.querySelectorAll('[onclick*="novadeskke@gmail.com"]').forEach(el=>{
+    el.setAttribute('onclick', el.getAttribute('onclick').replace('novadeskke@gmail.com', L.email));
+  });
+  document.querySelectorAll('div').forEach(el=>{
+    if(el.textContent.trim()==='novadeskke@gmail.com' && el.children.length===0) el.textContent = L.email;
+  });
+}
+window.applySiteLinks = applySiteLinks;
 
 /* ── WHATSAPP ──────────────────────────────────────────────────── */
 function openWhatsApp(){
@@ -5023,7 +5393,7 @@ function closeAdmin(){
 window.closeAdmin = closeAdmin;
 
 function adminTab(name){
-  ['overview','analytics','requests','users','agents','institutions','services','messages','settings'].forEach(t=>{
+  ['overview','analytics','requests','users','agents','institutions','reviews','ads','services','messages','legal','security','settings'].forEach(t=>{
     $(`atab-${t}`)?.classList.toggle('on', t===name);
     $(`asec-${t}`)?.classList.toggle('on', t===name);
   });
@@ -5034,7 +5404,10 @@ function adminTab(name){
   if (name==='analytics')    adminLoadAnalytics();
   if (name==='agents')       adminLoadAgents();
   if (name==='reviews')      adminLoadReviews();
+  if (name==='ads')          adminLoadAds();
   if (name==='institutions') adminLoadInstitutions();
+  if (name==='legal')        adminLoadLegal();
+  if (name==='security')     secInit();
 }
 window.adminTab = adminTab;
 
@@ -5094,13 +5467,32 @@ async function adminLoadAll(){
 }
 window.adminLoadAll = adminLoadAll;
 
+let _adminReqSort='newest';
+function adminSortReqs(sort){
+  _adminReqSort=sort;
+  ['new','deadline','old'].forEach(s=>$('asort-'+s)?.classList.remove('on'));
+  $({'newest':'asort-new','deadline':'asort-deadline','oldest':'asort-old'}[sort])?.classList.add('on');
+  // Also fix button styles
+  document.querySelectorAll('[id^="asort-"]').forEach(b=>{ b.className=b.classList.contains('on')?'btn btn-outline btn-xs on':'btn btn-ghost btn-xs'; });
+  renderAdminReqs();
+}
+window.adminSortReqs=adminSortReqs;
+
 function renderAdminReqs(){
   const rl = $('admin-reqs-list');
   if (!rl) return;
   const search = ($('admin-req-search')?.value||'').toLowerCase().trim();
-  let list = _allReqs;
+  let list = [..._allReqs];
   if (_adminReqFilter !== 'all') list = list.filter(r=>r.status===_adminReqFilter);
   if (search) list = list.filter(r=>(r.service_name+r.description+r.id+r.user_id).toLowerCase().includes(search));
+  // Sort
+  const sort=_adminReqSort||'newest';
+  if(sort==='newest') list.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  else if(sort==='oldest') list.sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+  else if(sort==='deadline') list.sort((a,b)=>{
+    if(!a.deadline&&!b.deadline) return 0; if(!a.deadline) return 1; if(!b.deadline) return -1;
+    return new Date(a.deadline)-new Date(b.deadline);
+  });
   rl.innerHTML = list.length
     ? list.map(r=>adminReqRow(r)).join('')
     : `<div class="empty-state" style="padding:30px"><i class="fas fa-inbox"></i><p>No requests found</p></div>`;
@@ -5121,7 +5513,17 @@ function adminReqRow(r){
   const userInfo = _allUsers.find(u=>u.id===r.user_id);
   const statusColors = {pending:'var(--gold)',in_progress:'var(--blue)',completed:'var(--green)',cancelled:'var(--red)'};
   const col = statusColors[r.status]||'var(--t3)';
-  return `<div class="admin-req-row" onclick="adminOpenReq('${esc(r.id)}')">
+  let deadlineBadge = '';
+  if (r.deadline && r.status!=='completed' && r.status!=='cancelled') {
+    const dl=new Date(r.deadline), now=new Date(); now.setHours(0,0,0,0);
+    const daysLeft=Math.ceil((dl-now)/86400000);
+    const overdue = daysLeft<0;
+    const urgent = daysLeft>=0 && daysLeft<=2;
+    const bcol = overdue?'var(--red)':urgent?'#ffa500':'var(--t4)';
+    const label = overdue?`${Math.abs(daysLeft)}d overdue`:daysLeft===0?'Due today':daysLeft===1?'Due tmrw':`${daysLeft}d left`;
+    deadlineBadge = `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:10px;background:${overdue||urgent?'rgba(255,80,80,.1)':'var(--bg4)'};color:${bcol};font-size:.56rem;font-weight:600;margin-left:6px"><i class="fas fa-calendar-clock"></i>${label}</span>`;
+  }
+  return `<div class="admin-req-row" onclick="showOrderDetail(_allReqs.find(x=>x.id==='${esc(r.id)}'),true)">
     <div class="admin-req-top">
       <span class="admin-req-name">${esc(r.service_name)}</span>
       <span class="req-badge ${esc(r.status||'pending')}">${esc((r.status||'pending').replace('_',' '))}</span>
@@ -5131,6 +5533,7 @@ function adminReqRow(r){
       <span>${fmtRel(r.created_at)}</span>
       ${userInfo ? `<span style="color:var(--t4)">· ${esc(userInfo.full_name||'Unknown')}</span>` : ''}
       ${r.description ? `<span style="color:var(--t4)">· ${esc(r.description.substring(0,40))}${r.description.length>40?'…':''}</span>` : ''}
+      ${deadlineBadge}
     </div>
   </div>`;
 }
@@ -5194,50 +5597,103 @@ window.adminSearchReqs = adminSearchReqs;
 function adminSearchUsers(q){ renderAdminUsers(); }
 window.adminSearchUsers = adminSearchUsers;
 
-function adminViewUser(userId){
+async function adminViewUser(userId){
   const u = _allUsers.find(x=>x.id===userId);
   if (!u) { toast('User not found','er'); return; }
   const init = (u.full_name||'?').split(' ').map(w=>w[0]?.toUpperCase()||'').join('').substring(0,2)||'ND';
-  const ndId = u.nd_user_id || generateNdUserId(u.id||'');
-  const wa = (u.whatsapp_number||'').replace(/[^0-9]/g,'');
-  const waNum = wa.startsWith('0')?'254'+wa.slice(1):wa.startsWith('254')?wa:'254'+wa;
+  const ndId = u.nd_user_id || (u.id||'').substring(0,6).toUpperCase();
+  const pRaw = (u.whatsapp_number||'').replace(/[^0-9]/g,'');
+  const pWa  = pRaw.startsWith('0')?'254'+pRaw.slice(1):pRaw.startsWith('254')?pRaw:'254'+pRaw;
+  const pTel = (u.whatsapp_number||'').replace(/[^0-9+]/g,'');
+
+  // Fetch user's orders
+  let userOrders = (_allReqs||[]).filter(r=>r.user_id===userId);
+  if(!userOrders.length){
+    try{
+      const{data}=await sb.from('service_requests').select('*').eq('user_id',userId).order('created_at',{ascending:false}).limit(10);
+      userOrders = data||[];
+    }catch(e){}
+  }
+
+  const roleColor = {admin:'var(--red)',agent:'#a78bfa',suspended:'var(--t4)',user:'var(--gold)'}[u.role||'user']||'var(--gold)';
+  const statusCounts = {pending:0,in_progress:0,completed:0,cancelled:0};
+  userOrders.forEach(r=>{ if(statusCounts[r.status]!==undefined) statusCounts[r.status]++; });
 
   const overlay = document.createElement('div');
-  overlay.style.cssText='position:fixed;inset:0;z-index:9900;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)';
-  overlay.innerHTML=`
-    <div style="background:var(--bg2);border-radius:24px 24px 0 0;border:1px solid var(--bd);width:100%;max-width:500px;max-height:85dvh;overflow-y:auto;padding:20px 20px 40px">
-      <div style="width:36px;height:4px;background:var(--bd2);border-radius:4px;margin:0 auto 18px"></div>
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
-        <div style="width:56px;height:56px;border-radius:50%;background:var(--gold-a8);border:2px solid var(--gold-a45);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.4rem;font-weight:700;color:var(--gold);flex-shrink:0">${u.avatar_url?`<img src="${esc(u.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:init}</div>
-        <div>
-          <div style="font-family:var(--fd);font-size:1.1rem;color:var(--t1)">${esc(u.full_name||'Unknown')}</div>
-          <div style="font-size:.6rem;color:var(--gold);font-family:monospace;margin-top:2px">${esc(ndId)}</div>
-          <span style="font-size:.52rem;padding:2px 8px;border-radius:20px;background:var(--gold-a8);color:var(--gold);border:1px solid var(--gold-a25)">${esc(u.role||'user')}</span>
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px">
-        ${u.email?`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-envelope" style="color:var(--gold);width:16px;font-size:.8rem"></i><span style="font-size:.74rem;color:var(--t1);flex:1">${esc(u.email)}</span><button onclick="navigator.clipboard.writeText('${esc(u.email)}').then(()=>toast('Copied!','ok'))" style="background:none;border:none;color:var(--t4);cursor:pointer;font-size:.7rem"><i class="fas fa-copy"></i></button></div>`:''}
-        ${u.whatsapp_number?`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-phone" style="color:#25D366;width:16px;font-size:.8rem"></i><span style="font-size:.74rem;color:var(--t1);flex:1">${esc(u.whatsapp_number)}</span><button onclick="navigator.clipboard.writeText('${esc(u.whatsapp_number)}').then(()=>toast('Copied!','ok'))" style="background:none;border:none;color:var(--t4);cursor:pointer;font-size:.7rem"><i class="fas fa-copy"></i></button></div>`:''}
-        ${u.id_number?`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-id-card" style="color:var(--blue);width:16px;font-size:.8rem"></i><span style="font-size:.74rem;color:var(--t1);flex:1">ID: ${esc(u.id_number)}</span></div>`:''}
-        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-calendar" style="color:var(--t4);width:16px;font-size:.8rem"></i><span style="font-size:.74rem;color:var(--t3)">Joined ${fmt(u.created_at)}</span></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-        ${u.whatsapp_number?`
-        <a href="tel:${esc(u.whatsapp_number.replace(/[^0-9+]/g,''))}"
-           style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;background:rgba(77,158,255,.1);border:1px solid rgba(77,158,255,.3);border-radius:12px;color:#5aaeff;text-decoration:none;font-size:.76rem;font-weight:600">
-          <i class="fas fa-phone"></i> Call
-        </a>
-        <a href="https://wa.me/${waNum}" target="_blank" rel="noopener"
-           style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:12px;color:#25D366;text-decoration:none;font-size:.76rem;font-weight:600">
-          <i class="fab fa-whatsapp"></i> WhatsApp
-        </a>`:'<div></div><div></div>'}
-      </div>
-      <button onclick="this.closest('div[style*="position:fixed"]').remove()" style="width:100%;padding:12px;background:var(--bg4);border:1px solid var(--bd);border-radius:12px;color:var(--t2);font-size:.78rem;cursor:pointer">Close</button>
-    </div>`;
+  overlay.style.cssText='position:fixed;inset:0;z-index:9900;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)';
+
+  // Build role change buttons
+  const otherRoles = ['user','agent','admin','suspended'].filter(r=>r!==(u.role||'user'));
+  const roleBtns = otherRoles.map(r=>`<button onclick="adminChangeUserRole('${u.id}','${r}',this)" style="flex:1;padding:8px 4px;background:var(--bg4);border:1px solid var(--bd);border-radius:8px;color:var(--t2);font-size:.62rem;font-weight:600;cursor:pointer;text-transform:capitalize">${r==='suspended'?'⛔ Suspend':'🔄 Make '+r}</button>`).join('');
+
+  // Build orders list
+  const ordersHtml = userOrders.length ? userOrders.slice(0,5).map(r=>{
+    const sCol={pending:'var(--gold)',in_progress:'var(--blue)',completed:'var(--green)',ready:'#a78bfa',cancelled:'var(--red)'}[r.status]||'var(--t3)';
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--bg4);border:1px solid var(--bd);border-radius:8px">'
+      +'<div><div style="font-size:.7rem;color:var(--t1);font-weight:500">'+esc(r.service_name)+'</div><div style="font-size:.56rem;color:var(--t4)">'+fmtRel(r.created_at)+(r.deadline?' · Due '+new Date(r.deadline).toLocaleDateString('en-KE'):'')+'</div></div>'
+      +'<span style="font-size:.54rem;padding:2px 7px;border-radius:20px;background:'+sCol+'22;color:'+sCol+';border:1px solid '+sCol+'44">'+esc((r.status||'').replace('_',' '))+'</span>'
+      +'</div>';
+  }).join('') : '<div style="font-size:.7rem;color:var(--t4);text-align:center;padding:10px">No orders yet</div>';
+
+  overlay.innerHTML =
+    '<div style="background:var(--bg2);border-radius:24px 24px 0 0;border:1px solid var(--bd);width:100%;max-width:520px;max-height:90dvh;overflow-y:auto;padding:20px 16px 40px">'
+    +'<div style="width:36px;height:4px;background:var(--bd2);border-radius:4px;margin:0 auto 16px"></div>'
+    // Avatar + name
+    +'<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">'
+    +'<div style="width:60px;height:60px;border-radius:50%;background:var(--gold-a8);border:2px solid '+roleColor+';display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--gold);flex-shrink:0">'
+    +(u.avatar_url?'<img src="'+esc(u.avatar_url)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':init)
+    +'</div>'
+    +'<div><div style="font-family:var(--fd);font-size:1.1rem;color:var(--t1)">'+esc(u.full_name||'Unknown')+'</div>'
+    +'<div style="font-size:.6rem;color:var(--gold);font-family:monospace;margin-top:2px">'+esc(ndId)+'</div>'
+    +'<span style="font-size:.52rem;padding:2px 8px;border-radius:20px;background:'+roleColor+'22;color:'+roleColor+';border:1px solid '+roleColor+'44;text-transform:uppercase">'+esc(u.role||'user')+'</span>'
+    +'</div></div>'
+    // Info rows
+    +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px">'
+    +(u.email?'<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-envelope" style="color:var(--gold);width:16px;font-size:.78rem"></i><span style="font-size:.72rem;color:var(--t1);flex:1">'+esc(u.email)+'</span><button onclick="navigator.clipboard.writeText(\''+esc(u.email)+'\').then(()=>toast(\'Copied!\',\'ok\'))" style="background:none;border:none;color:var(--t4);cursor:pointer"><i class="fas fa-copy"></i></button></div>':'')
+    +(u.whatsapp_number?'<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-phone" style="color:#25D366;width:16px;font-size:.78rem"></i><span style="font-size:.72rem;color:var(--t1);flex:1">'+esc(u.whatsapp_number)+'</span><button onclick="navigator.clipboard.writeText(\''+esc(u.whatsapp_number)+'\').then(()=>toast(\'Copied!\',\'ok\'))" style="background:none;border:none;color:var(--t4);cursor:pointer"><i class="fas fa-copy"></i></button></div>':'')
+    +(u.id_number?'<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-id-card" style="color:var(--blue);width:16px;font-size:.78rem"></i><span style="font-size:.72rem;color:var(--t1)">ID: '+esc(u.id_number)+'</span></div>':'')
+    +'<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-calendar-plus" style="color:var(--t4);width:16px;font-size:.78rem"></i><span style="font-size:.72rem;color:var(--t3)">Joined '+fmt(u.created_at)+'</span></div>'
+    +(u.last_visit?'<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-clock" style="color:var(--blue);width:16px;font-size:.78rem"></i><span style="font-size:.72rem;color:var(--t2)">Last visit: '+fmtRel(u.last_visit)+'</span></div>':'')
+    +(u.password_changed_at?'<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-key" style="color:#a78bfa;width:16px;font-size:.78rem"></i><span style="font-size:.72rem;color:var(--t2)">Password changed: '+fmtRel(u.password_changed_at)+'</span></div>':'')
+    +'</div>'
+    // Stats
+    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px">'
+    +Object.entries(statusCounts).map(([st,n])=>{const c={pending:'var(--gold)',in_progress:'var(--blue)',completed:'var(--green)',cancelled:'var(--red)'}[st]||'var(--t3)';return '<div style="background:var(--bg3);border:1px solid var(--bd);border-radius:10px;padding:10px 6px;text-align:center"><div style="font-family:var(--fd);font-size:1.3rem;color:'+c+'">'+n+'</div><div style="font-size:.5rem;color:var(--t4);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">'+st.replace('_',' ')+'</div></div>';}).join('')
+    +'</div>'
+    // Recent orders
+    +'<div style="font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin-bottom:8px"><i class="fas fa-concierge-bell" style="margin-right:4px"></i>Recent Orders</div>'
+    +'<div style="display:flex;flex-direction:column;gap:5px;margin-bottom:14px">'+ordersHtml+'</div>'
+    // Contact buttons
+    +(u.whatsapp_number?'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><a href="tel:'+pTel+'" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;background:rgba(77,158,255,.1);border:1px solid rgba(77,158,255,.3);border-radius:12px;color:#5aaeff;text-decoration:none;font-size:.76rem;font-weight:600"><i class="fas fa-phone"></i> Call</a><a href="https://wa.me/'+pWa+'" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:12px;color:#25D366;text-decoration:none;font-size:.76rem;font-weight:600"><i class="fab fa-whatsapp"></i> WhatsApp</a></div>':'')
+    // Role change buttons
+    +'<div style="font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin-bottom:8px"><i class="fas fa-user-gear" style="margin-right:4px"></i>Change Role</div>'
+    +'<div style="display:flex;gap:6px;margin-bottom:10px">'+roleBtns+'</div>'
+    // Close
+    +'<button onclick="this.closest(\'[style*=\\\"position:fixed\\\"]\').remove()" style="width:100%;padding:12px;background:var(--bg4);border:1px solid var(--bd);border-radius:12px;color:var(--t2);font-size:.78rem;cursor:pointer">Close</button>'
+    +'</div>';
+
   document.body.appendChild(overlay);
   overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
 }
 window.adminViewUser = adminViewUser;
+
+async function adminChangeUserRole(userId, newRole, btn){
+  const u = _allUsers.find(x=>x.id===userId);
+  const name = u?.full_name||'User';
+  popup('Change Role','Set '+name+' as "'+newRole+'"?','nf',[
+    {label:'Cancel',fn:null,style:'btn-ghost'},
+    {label:'Confirm',style:'btn-gold',fn:async()=>{
+      try{
+        await sb.from('profiles').update({role:newRole,updated_at:new Date().toISOString()}).eq('id',userId);
+        if(u) u.role=newRole;
+        await sb.from('admin_audit_log').insert({admin_id:_user?.id,action:'change_role',target_table:'profiles',target_id:userId,details:{new_role:newRole,user_name:name}}).catch(()=>{});
+        toast(name+' is now '+newRole+' ✅','ok');
+        renderAdminUsers();
+      }catch(e){toast(e.message,'er');}
+    }}
+  ]);
+}
+window.adminChangeUserRole = adminChangeUserRole;
 
 function adminOpenReq(reqId){
   const r = _allReqs.find(x=>x.id===reqId);
@@ -5357,25 +5813,29 @@ async function adminLoadServices(){
       sl.innerHTML = '<div class="empty-state" style="padding:30px"><i class="fas fa-concierge-bell"></i><p>No services yet. Add one above.</p></div>';
       return;
     }
-    sl.innerHTML = svcs.map(s=>`
-      <div style="background:var(--bg3);border:1px solid ${s.is_active?'var(--bd)':'rgba(224,80,80,.2)'};border-radius:var(--r);padding:10px 12px;display:flex;align-items:center;gap:10px;transition:border-color .2s">
-        <div style="width:36px;height:36px;border-radius:10px;background:${s.is_active?'var(--gold-a8)':'var(--bg4)'};display:flex;align-items:center;justify-content:center;color:${s.is_active?'var(--gold)':'var(--t4)'};flex-shrink:0;font-size:.85rem">
-          <i class="fas ${esc(s.icon||'fa-star')}"></i>
-        </div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:.76rem;font-weight:600;color:${s.is_active?'var(--t1)':'var(--t3)'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.name)}</div>
-          <div style="font-size:.58rem;color:var(--t4);margin-top:1px">${esc(s.category||'general')} · ${esc(s.price_label||'—')}</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
-          <span style="font-size:.54rem;padding:2px 7px;border-radius:20px;${s.is_active?'background:rgba(50,180,100,.12);color:var(--green);border:1px solid rgba(50,180,100,.3)':'background:rgba(224,80,80,.1);color:var(--red);border:1px solid rgba(224,80,80,.25)'}">
-            ${s.is_active?'Active':'Off'}
-          </span>
-          <button onclick="adminOpenEditService('${esc(s.id)}')"
-            style="width:30px;height:30px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem">
-            <i class="fas fa-pen"></i>
-          </button>
-        </div>
-      </div>`).join('');
+    sl.innerHTML = svcs.map(s=>{
+      const activeCls = s.is_active
+        ? 'background:rgba(50,180,100,.12);color:var(--green);border:1px solid rgba(50,180,100,.3)'
+        : 'background:rgba(224,80,80,.1);color:var(--red);border:1px solid rgba(224,80,80,.25)';
+      const borderCol = s.is_active ? 'var(--bd)' : 'rgba(224,80,80,.2)';
+      const iconBg    = s.is_active ? 'var(--gold-a8)' : 'var(--bg4)';
+      const iconCol   = s.is_active ? 'var(--gold)' : 'var(--t4)';
+      const nameCol   = s.is_active ? 'var(--t1)' : 'var(--t3)';
+      const safeId    = esc(s.id||'');
+      return '<div style="background:var(--bg3);border:1px solid '+borderCol+';border-radius:var(--r);padding:10px 12px;display:flex;align-items:center;gap:10px;transition:border-color .2s">'
+        +'<div style="width:36px;height:36px;border-radius:10px;background:'+iconBg+';display:flex;align-items:center;justify-content:center;color:'+iconCol+';flex-shrink:0;font-size:.85rem">'
+        +'<i class="fas '+esc(s.icon||'fa-star')+'"></i>'
+        +'</div>'
+        +'<div style="flex:1;min-width:0">'
+        +'<div style="font-size:.76rem;font-weight:600;color:'+nameCol+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(s.name)+'</div>'
+        +'<div style="font-size:.58rem;color:var(--t4);margin-top:1px">'+esc(s.category||'general')+' · '+esc(s.price_label||'—')+'</div>'
+        +'</div>'
+        +'<div style="display:flex;align-items:center;gap:6px;flex-shrink:0">'
+        +'<span style="font-size:.54rem;padding:2px 7px;border-radius:20px;'+activeCls+'">'+( s.is_active?'Active':'Off')+'</span>'
+        +'<button data-svcid="'+safeId+'" onclick="adminOpenEditService(this.dataset.svcid)" style="width:30px;height:30px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem"><i class="fas fa-pen"></i></button>'
+        +'</div>'
+        +'</div>';
+    }).join('');
   } catch(e) {
     sl.innerHTML = `<div style="color:var(--red);font-size:.76rem;padding:16px">Failed to load services: ${esc(e.message)}</div>`;
   }
@@ -5419,27 +5879,28 @@ async function adminOpenEditService(svcId){
 window.adminOpenEditService = adminOpenEditService;
 
 function adminOpenSvcEditor(){
-  const ed       = $('admin-svc-editor');
-  const backdrop = $('svc-ed-backdrop');
-  const sheet    = $('svc-ed-sheet');
+  const ed = $('admin-svc-editor');
   if (!ed) return;
+  ed.style.visibility = 'visible';
+  ed.style.opacity    = '1';
   ed.style.pointerEvents = 'all';
-  // Trigger reflow then animate
+  const sheet = $('svc-ed-sheet');
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
-      if (backdrop) backdrop.style.opacity = '1';
-      if (sheet)    sheet.style.transform  = 'translateY(0)';
+      if (sheet) sheet.style.transform = 'translateY(0)';
     });
   });
 }
 function adminCloseSvcEditor(){
-  const ed       = $('admin-svc-editor');
-  const backdrop = $('svc-ed-backdrop');
-  const sheet    = $('svc-ed-sheet');
+  const ed = $('admin-svc-editor');
   if (!ed) return;
-  if (backdrop) backdrop.style.opacity = '0';
-  if (sheet)    sheet.style.transform  = 'translateY(100%)';
-  setTimeout(()=>{ ed.style.pointerEvents = 'none'; }, 300);
+  const sheet = $('svc-ed-sheet');
+  if (sheet) sheet.style.transform = 'translateY(100%)';
+  setTimeout(()=>{
+    ed.style.visibility    = 'hidden';
+    ed.style.opacity       = '0';
+    ed.style.pointerEvents = 'none';
+  }, 310);
 }
 window.adminCloseSvcEditor = adminCloseSvcEditor;
 
@@ -5499,67 +5960,164 @@ async function adminLoadAnalytics(){
     const reqs = _allReqs.length ? _allReqs : (await sb.from('service_requests').select('*').order('created_at',{ascending:false})).data || [];
     if (!_allReqs.length) _allReqs = reqs;
 
+    const completed = reqs.filter(r=>r.status==='completed');
+    const total = reqs.length || 1;
+    const compRate = Math.round(completed.length/total*100);
+
+    // Fetch reviews from DB
+    const { data: reviews } = await sb.from('feedback').select('rating,created_at').order('created_at',{ascending:false}).limit(200);
+    const avgRating = reviews?.length ? (reviews.reduce((s,r)=>s+(r.rating||0),0)/reviews.length).toFixed(1) : null;
+
+    // Estimate revenue from completed requests (using price from service_name lookup)
+    const revenueMap = {};
+    reqs.filter(r=>r.status==='completed').forEach(r=>{
+      const svc = STATIC_SERVICES?.find?.(s=>s.name===r.service_name);
+      const price = svc?.price_num || 0;
+      revenueMap[r.service_name] = (revenueMap[r.service_name]||0) + price;
+    });
+    const totalRevenue = Object.values(revenueMap).reduce((a,b)=>a+b,0);
+
+    // Avg response (created_at → updated_at on completed)
+    const responseTimes = reqs.filter(r=>r.status==='completed'&&r.updated_at&&r.created_at)
+      .map(r=>(new Date(r.updated_at)-new Date(r.created_at))/3600000);
+    const avgResponse = responseTimes.length ? (responseTimes.reduce((a,b)=>a+b,0)/responseTimes.length).toFixed(1) : null;
+
+    // KPI cards
+    const set = (id,v)=>{ const e=$(id); if(e) e.textContent=v; };
+    set('an-revenue', totalRevenue ? 'KES '+(totalRevenue.toLocaleString()) : 'KES —');
+    set('an-rating', avgRating ? avgRating+'★' : '—★');
+    set('an-completion', compRate+'%');
+    set('an-response', avgResponse ? avgResponse+'h' : '—h');
+    // Also update overview
+    set('as-revenue', totalRevenue ? 'KES '+(totalRevenue.toLocaleString()) : 'KES —');
+
+    // 30-day bar chart
+    const days30 = Array.from({length:30},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-29+i); return d.toISOString().split('T')[0]; });
+    const dayCounts = {}; days30.forEach(d=>dayCounts[d]=0);
+    reqs.forEach(r=>{ const d=(r.created_at||'').split('T')[0]; if(dayCounts[d]!==undefined) dayCounts[d]++; });
+    const maxDay = Math.max(...Object.values(dayCounts), 1);
+    const tlEl = $('analytics-timeline'), lblEl = $('analytics-timeline-labels');
+    if(tlEl) tlEl.innerHTML = days30.map((d,i)=>{
+      const h = Math.max(2, Math.round(dayCounts[d]/maxDay*80));
+      const isWeekend = [0,6].includes(new Date(d).getDay());
+      return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end" title="${d}: ${dayCounts[d]}">
+        <div style="width:100%;height:${h}px;background:${isWeekend?'rgba(201,168,76,.4)':'linear-gradient(180deg,var(--gold),rgba(201,168,76,.2))'};border-radius:2px 2px 0 0"></div>
+      </div>`;
+    }).join('');
+    if(lblEl) lblEl.innerHTML = days30.map((d,i)=>`<div style="flex:1;text-align:center;font-size:.42rem;color:${i%5===0?'var(--t4)':'transparent'}">${i%5===0?d.slice(5):''}</div>`).join('');
+
     // Top services
-    const svcCount = {};
-    reqs.forEach(r=>{ svcCount[r.service_name]=(svcCount[r.service_name]||0)+1; });
-    const topSvcs = Object.entries(svcCount).sort((a,b)=>b[1]-a[1]).slice(0,8);
-    const maxSvc  = topSvcs[0]?.[1] || 1;
+    const svcCount = {}, svcRev = {};
+    reqs.forEach(r=>{ 
+      svcCount[r.service_name]=(svcCount[r.service_name]||0)+1;
+      if(r.status==='completed'){
+        const svc=STATIC_SERVICES?.find?.(s=>s.name===r.service_name);
+        svcRev[r.service_name]=(svcRev[r.service_name]||0)+(svc?.price_num||0);
+      }
+    });
+    const topSvcs = Object.entries(svcCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
+    const maxSvc = topSvcs[0]?.[1]||1;
     const tEl = $('analytics-top-svcs');
-    if (tEl) tEl.innerHTML = topSvcs.length ? topSvcs.map(([name,count])=>`
+    if(tEl) tEl.innerHTML = topSvcs.length ? topSvcs.map(([name,count],i)=>`
       <div style="display:flex;align-items:center;gap:8px">
-        <div style="font-size:.66rem;color:var(--t2);width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0">${esc(name)}</div>
-        <div style="flex:1;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden">
-          <div style="height:100%;width:${Math.round(count/maxSvc*100)}%;background:linear-gradient(90deg,var(--gold),#f0a500);border-radius:4px"></div>
+        <div style="font-size:.58rem;color:var(--t4);width:14px;text-align:right;flex-shrink:0">${i+1}</div>
+        <div style="font-size:.64rem;color:var(--t2);width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0">${esc(name)}</div>
+        <div style="flex:1;height:10px;background:var(--bg4);border-radius:5px;overflow:hidden">
+          <div style="height:100%;width:${Math.round(count/maxSvc*100)}%;background:linear-gradient(90deg,var(--gold),#f0a500);border-radius:5px;transition:width .6s ease"></div>
         </div>
-        <div style="font-size:.64rem;color:var(--gold);font-weight:700;min-width:18px;text-align:right">${count}</div>
-      </div>`).join('') : '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No request data yet</div>';
+        <div style="font-size:.62rem;color:var(--gold);font-weight:700;min-width:22px;text-align:right">${count}</div>
+      </div>`).join('') : '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No data yet</div>';
 
     // Status breakdown
-    const statuses = {pending:'var(--gold)',in_progress:'var(--blue)',completed:'var(--green)',cancelled:'var(--red)'};
-    const total = reqs.length || 1;
+    const statuses = {pending:'var(--gold)',in_progress:'var(--blue)',completed:'var(--green)',ready:'#a78bfa',cancelled:'var(--red)'};
     const sEl = $('analytics-status');
-    if (sEl) sEl.innerHTML = Object.entries(statuses).map(([st,col])=>{
-      const n   = reqs.filter(r=>r.status===st).length;
-      const pct = Math.round(n/total*100);
+    if(sEl) sEl.innerHTML = Object.entries(statuses).map(([st,col])=>{
+      const n=reqs.filter(r=>r.status===st).length, pct=Math.round(n/total*100);
       return `<div style="display:flex;align-items:center;gap:8px">
-        <div style="width:88px;font-size:.62rem;color:var(--t3);text-transform:capitalize;flex-shrink:0">${st.replace('_',' ')}</div>
+        <div style="width:80px;font-size:.6rem;color:var(--t3);text-transform:capitalize;flex-shrink:0">${st.replace('_',' ')}</div>
         <div style="flex:1;height:10px;background:var(--bg4);border-radius:5px;overflow:hidden">
           <div style="height:100%;width:${pct}%;background:${col};border-radius:5px"></div>
         </div>
-        <div style="font-size:.62rem;color:${col};font-weight:700;min-width:46px;text-align:right">${n} (${pct}%)</div>
+        <div style="font-size:.6rem;color:${col};font-weight:700;min-width:52px;text-align:right">${n} · ${pct}%</div>
       </div>`;
     }).join('');
 
-    // 7-day bar chart
-    const days = Array.from({length:7},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-6+i); return d.toISOString().split('T')[0]; });
-    const dayCounts = {}; days.forEach(d=>dayCounts[d]=0);
-    reqs.forEach(r=>{ const d=(r.created_at||'').split('T')[0]; if(dayCounts[d]!==undefined) dayCounts[d]++; });
-    const maxDay = Math.max(...Object.values(dayCounts), 1);
-    const tlEl  = $('analytics-timeline');
-    const lblEl = $('analytics-timeline-labels');
-    if (tlEl) tlEl.innerHTML = days.map(d=>{
-      const h = Math.max(4, Math.round(dayCounts[d]/maxDay*72));
-      return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px">
-        <div style="font-size:.5rem;color:var(--gold);font-weight:700">${dayCounts[d]||''}</div>
-        <div style="width:100%;height:${h}px;background:linear-gradient(180deg,var(--gold),rgba(201,168,76,.25));border-radius:3px 3px 0 0"></div>
-      </div>`;
-    }).join('');
-    if (lblEl) lblEl.innerHTML = days.map(d=>`<div style="flex:1;text-align:center;font-size:.48rem;color:var(--t4)">${d.slice(5)}</div>`).join('');
+    // Revenue by service
+    const topRev = Object.entries(svcRev).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    const maxRev = topRev[0]?.[1]||1;
+    const rEl = $('analytics-revenue-svcs');
+    if(rEl) rEl.innerHTML = topRev.length ? topRev.map(([name,rev])=>`
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:.64rem;color:var(--t2);width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0">${esc(name)}</div>
+        <div style="flex:1;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden">
+          <div style="height:100%;width:${Math.round(rev/maxRev*100)}%;background:linear-gradient(90deg,#25D366,#1a9e4d);border-radius:4px"></div>
+        </div>
+        <div style="font-size:.62rem;color:#25D366;font-weight:700;min-width:56px;text-align:right">KES ${rev.toLocaleString()}</div>
+      </div>`).join('') : '<div style="font-size:.7rem;color:var(--t4);text-align:center;padding:10px">No completed services yet</div>';
 
-    // User stats
-    const users = _allUsers.length ? _allUsers : (await sb.from('profiles').select('id,created_at').order('created_at',{ascending:false})).data || [];
+    // Reviews summary
+    const revEl = $('analytics-reviews-summary');
+    if(revEl && reviews){
+      const dist = [5,4,3,2,1].map(s=>({s,n:reviews.filter(r=>r.rating===s).length}));
+      const maxR = Math.max(...dist.map(d=>d.n),1);
+      revEl.innerHTML = `
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px">
+          <div style="text-align:center">
+            <div style="font-family:var(--fd);font-size:2.2rem;color:#ffc81e">${avgRating||'—'}</div>
+            <div style="color:#ffc81e;font-size:.8rem;letter-spacing:1px">${avgRating?'★'.repeat(Math.round(avgRating)):''}</div>
+            <div style="font-size:.58rem;color:var(--t4);margin-top:2px">${reviews.length} reviews</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+            ${dist.map(({s,n})=>`<div style="display:flex;align-items:center;gap:5px">
+              <div style="font-size:.56rem;color:var(--t4);width:12px">${s}</div>
+              <div style="flex:1;height:7px;background:var(--bg4);border-radius:4px;overflow:hidden">
+                <div style="height:100%;width:${Math.round(n/maxR*100)}%;background:#ffc81e;border-radius:4px"></div>
+              </div>
+              <div style="font-size:.56rem;color:var(--t4);min-width:16px;text-align:right">${n}</div>
+            </div>`).join('')}
+          </div>
+        </div>`;
+    }
+
+    // User growth
+    const users = _allUsers.length ? _allUsers : (await sb.from('profiles').select('id,created_at,role').order('created_at',{ascending:false})).data||[];
     const uEl = $('analytics-users');
-    if (uEl) uEl.innerHTML = `
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-        ${[['Total', users.length,'var(--t1)',0],
-           ['This Week', users.filter(u=>(Date.now()-new Date(u.created_at))<7*864e5).length,'var(--green)',7],
-           ['This Month',users.filter(u=>(Date.now()-new Date(u.created_at))<30*864e5).length,'var(--blue)',30]]
+    if(uEl) uEl.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        ${[['Total',users.length,'var(--t1)'],
+           ['This Week',users.filter(u=>(Date.now()-new Date(u.created_at))<7*864e5).length,'var(--green)'],
+           ['This Month',users.filter(u=>(Date.now()-new Date(u.created_at))<30*864e5).length,'var(--blue)'],
+           ['Agents',users.filter(u=>u.role==='agent').length,'var(--gold)']]
           .map(([lbl,n,col])=>`
-          <div style="background:var(--bg4);border-radius:var(--r);padding:10px;text-align:center">
-            <div style="font-family:var(--fd);font-size:1.5rem;color:${col}">${n}</div>
-            <div style="font-size:.54rem;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">${lbl}</div>
+          <div style="background:var(--bg4);border:1px solid var(--bd);border-radius:var(--r);padding:10px;text-align:center">
+            <div style="font-family:var(--fd);font-size:1.4rem;color:${col}">${n}</div>
+            <div style="font-size:.5rem;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">${lbl}</div>
           </div>`).join('')}
       </div>`;
+
+    // Agent pipeline
+    const { data: agentApps } = await sb.from('agent_applications').select('status,created_at');
+    const agEl = $('analytics-agents');
+    if(agEl && agentApps){
+      const pending=agentApps.filter(a=>a.status==='pending').length;
+      const approved=agentApps.filter(a=>a.status==='approved').length;
+      const rejected=agentApps.filter(a=>a.status==='rejected').length;
+      agEl.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <div style="background:var(--bg4);border:1px solid rgba(201,168,76,.3);border-radius:var(--r);padding:10px;text-align:center">
+          <div style="font-family:var(--fd);font-size:1.4rem;color:var(--gold)">${pending}</div>
+          <div style="font-size:.5rem;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">Pending</div>
+        </div>
+        <div style="background:var(--bg4);border:1px solid rgba(50,180,100,.3);border-radius:var(--r);padding:10px;text-align:center">
+          <div style="font-family:var(--fd);font-size:1.4rem;color:var(--green)">${approved}</div>
+          <div style="font-size:.5rem;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">Approved</div>
+        </div>
+        <div style="background:var(--bg4);border:1px solid rgba(224,80,80,.25);border-radius:var(--r);padding:10px;text-align:center">
+          <div style="font-family:var(--fd);font-size:1.4rem;color:var(--red)">${rejected}</div>
+          <div style="font-size:.5rem;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">Rejected</div>
+        </div>
+      </div>`;
+    }
+
   } catch(e){ toast('Analytics error: '+e.message,'er'); }
 }
 window.adminLoadAnalytics = adminLoadAnalytics;
@@ -5596,9 +6154,19 @@ async function adminLoadAgents(){
         ${isPending?`<div style="display:flex;gap:6px">
           <button class="btn btn-ghost btn-xs" style="flex:1" onclick="adminSetAgentStatus('${esc(a.id)}','rejected')"><i class="fas fa-times"></i> Reject</button>
           <button class="btn btn-gold btn-xs" style="flex:2" onclick="adminSetAgentStatus('${esc(a.id)}','approved')"><i class="fas fa-check"></i> Approve & Notify</button>
-        </div>`:`<div style="font-size:.62rem;color:var(--t4);text-align:center;padding:4px">
-          ${a.status==='approved'?'✅ Approved':'❌ Rejected'} ${a.reviewed_at?'on '+fmt(a.reviewed_at):''}
-          ${isPending?'':`<button class="btn btn-ghost btn-xs" style="margin-left:8px" onclick="adminSetAgentStatus('${esc(a.id)}','${a.status==='approved'?'rejected':'approved'}')">Change</button>`}
+        </div>`:
+        a.status==='approved'?`<div style="display:flex;gap:6px;margin-top:4px">
+          <div style="flex:1;font-size:.6rem;color:var(--green);display:flex;align-items:center;gap:4px"><i class="fas fa-check-circle"></i> Approved ${a.reviewed_at?'· '+fmtRel(a.reviewed_at):''}</div>
+          <button class="btn btn-xs" style="background:rgba(255,165,0,.12);border:1px solid rgba(255,165,0,.3);color:#ffa500;font-size:.6rem" onclick="adminSetAgentStatus('${esc(a.id)}','suspended')"><i class="fas fa-pause-circle"></i> Suspend</button>
+          <button class="btn btn-ghost btn-xs" onclick="adminSetAgentStatus('${esc(a.id)}','rejected')"><i class="fas fa-ban"></i> Revoke</button>
+        </div>`:
+        a.status==='suspended'?`<div style="display:flex;gap:6px;margin-top:4px">
+          <div style="flex:1;font-size:.6rem;color:#ffa500;display:flex;align-items:center;gap:4px"><i class="fas fa-pause-circle"></i> Suspended</div>
+          <button class="btn btn-gold btn-xs" onclick="adminSetAgentStatus('${esc(a.id)}','approved')"><i class="fas fa-play-circle"></i> Reinstate</button>
+          <button class="btn btn-ghost btn-xs" onclick="adminSetAgentStatus('${esc(a.id)}','rejected')"><i class="fas fa-ban"></i> Revoke</button>
+        </div>`:
+        `<div style="font-size:.62rem;color:var(--red);display:flex;align-items:center;gap:4px;margin-top:4px"><i class="fas fa-ban"></i> Rejected ${a.reviewed_at?'· '+fmtRel(a.reviewed_at):''}
+          <button class="btn btn-gold btn-xs" style="margin-left:auto" onclick="adminSetAgentStatus('${esc(a.id)}','approved')">Reconsider</button>
         </div>`}
       </div>`;
     }).join('');
@@ -5614,6 +6182,17 @@ async function adminSetAgentStatus(id, status){
     const { data: apps } = await sb.from('agent_applications').select('*').eq('id', id).limit(1);
     const app = apps?.[0];
 
+    if (status === 'suspended' && app) {
+      if (app.user_id) await sb.from('profiles').update({role:'suspended'}).eq('id',app.user_id).catch(()=>{});
+      if (app.phone) {
+        const wa=(app.phone||'').replace(/[^0-9]/g,'');
+        const num=wa.startsWith('0')?'254'+wa.slice(1):wa.startsWith('254')?wa:'254'+wa;
+        const msg=encodeURIComponent(`Hello ${app.name||''}!\n\nYour NovaDeskOnline Agent account has been temporarily suspended. Please contact us for more information.\n\n— NovaDeskOnline`);
+        setTimeout(()=>window.open(`https://wa.me/${num}?text=${msg}`,'_blank'),500);
+      }
+      toast('Agent suspended. Notification sent.','nf',3000);
+      adminLoadAgents(); return;
+    }
     if (status === 'approved' && app) {
       // Update user role to 'agent' if they have an account
       if (app.user_id) {
@@ -5707,45 +6286,6 @@ Thank you for your interest!
 window.adminSetAgentStatus = adminSetAgentStatus;
 
 /* ── INSTITUTIONS ─────────────────────────────────────────────── */
-async function adminLoadInstitutions(){
-  const il = $('admin-inst-list');
-  if (!il) return;
-  il.innerHTML = '<div style="text-align:center;padding:20px"><span class="spin"></span></div>';
-  try {
-    const { data, error } = await sb.from('institution_requests').select('*').order('created_at',{ascending:false});
-    if (error) throw error;
-    if (!data?.length){ il.innerHTML='<div class="empty-state" style="padding:30px"><i class="fas fa-building-columns"></i><p>No institution requests yet</p></div>'; return; }
-    il.innerHTML = data.map(r=>`
-      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <div style="font-size:.78rem;font-weight:600;color:var(--t1)">${esc(r.inst_name||'Institution')}</div>
-          <span class="req-badge ${esc(r.status||'pending')}">${esc(r.status||'pending')}</span>
-        </div>
-        <div style="font-size:.62rem;color:var(--t3);display:flex;flex-direction:column;gap:3px;margin-bottom:8px">
-          <div><i class="fas fa-concierge-bell" style="width:14px;color:var(--gold)"></i> ${esc(r.service_name||'—')}</div>
-          ${r.quantity?`<div><i class="fas fa-hashtag" style="width:14px;color:var(--gold)"></i> Qty: ${esc(String(r.quantity))}</div>`:''}
-          ${r.deadline?`<div><i class="fas fa-calendar" style="width:14px;color:var(--gold)"></i> Deadline: ${esc(r.deadline)}</div>`:''}
-          ${r.notes?`<div style="color:var(--t2);margin-top:4px">${esc(r.notes.substring(0,100))}${r.notes.length>100?'…':''}</div>`:''}
-          <div style="color:var(--t4)">${fmtRel(r.created_at)}</div>
-        </div>
-        <div style="display:flex;gap:4px;flex-wrap:wrap">
-          ${['pending','in_progress','completed','cancelled'].map(s=>
-            `<button class="btn btn-xs ${r.status===s?'btn-gold':'btn-ghost'}" onclick="adminSetInstStatus('${esc(r.id)}','${s}')" style="flex:1">${s.replace('_',' ')}</button>`
-          ).join('')}
-        </div>
-      </div>`).join('');
-  } catch(e){ il.innerHTML=`<div style="color:var(--red);padding:16px;font-size:.76rem">Failed: ${esc(e.message)}</div>`; }
-}
-window.adminLoadInstitutions = adminLoadInstitutions;
-
-async function adminSetInstStatus(id, status){
-  try {
-    await sb.from('institution_requests').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
-    toast(`Status updated to "${status}"`, 'ok');
-    adminLoadInstitutions();
-  } catch(e){ toast(e.message||'Failed','er'); }
-}
-window.adminSetInstStatus = adminSetInstStatus;
 
 /* ── STATUS NOTIFICATIONS ─────────────────────────────────────── */
 const STATUS_LABELS = {
@@ -5886,6 +6426,336 @@ async function requestNotifPermission(){
 }
 window.requestNotifPermission = requestNotifPermission;
 
+
+/* ── INSTITUTIONS ──────────────────────────────────────────────── */
+async function adminLoadInstitutions(){
+  const il  = $('admin-inst-list');
+  const iac = $('admin-inst-accounts');
+  if(il)  il.innerHTML  = '<div style="text-align:center;padding:16px"><span class="spin"></span></div>';
+  if(iac) iac.innerHTML = '<div style="text-align:center;padding:16px"><span class="spin"></span></div>';
+  try {
+    const { data: accounts } = await sb.from('institution_profiles').select('*').order('created_at',{ascending:false});
+    if(!iac) {}
+    else if(!accounts?.length) iac.innerHTML='<div class="empty-state" style="padding:20px"><i class="fas fa-building-columns"></i><p>No registered institutions yet</p></div>';
+    else iac.innerHTML = accounts.map(a=>{
+      const aPhone = a.whatsapp_number||a.phone||'';
+      const aRaw = aPhone.replace(/[^0-9]/g,'');
+      const aWaNum = aRaw.startsWith('0')?'254'+aRaw.slice(1):aRaw.startsWith('254')?aRaw:'254'+aRaw;
+      const aTel = aPhone.replace(/[^0-9+]/g,'');
+      return `<div style="background:rgba(255,165,0,.04);border:1px solid rgba(255,165,0,.22);border-radius:var(--r);padding:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,165,0,.12);display:flex;align-items:center;justify-content:center;color:#ffa500;flex-shrink:0"><i class="fas fa-building-columns" style="font-size:.75rem"></i></div>
+            <div>
+              <div style="font-size:.78rem;font-weight:600;color:var(--t1)">${esc(a.institution_name||a.inst_name||'Unknown')}</div>
+              <div style="font-size:.58rem;color:#ffa500">${esc(a.institution_type||a.inst_type||'Institution')}</div>
+            </div>
+          </div>
+          <span style="font-size:.52rem;padding:2px 8px;border-radius:20px;background:rgba(50,180,100,.1);color:var(--green);border:1px solid rgba(50,180,100,.25)">${esc(a.status||'active')}</span>
+        </div>
+        <div style="font-size:.62rem;color:var(--t3);display:flex;flex-direction:column;gap:3px;margin-bottom:10px">
+          ${a.email?`<div><i class="fas fa-envelope" style="width:14px;color:var(--t4)"></i> ${esc(a.email)}</div>`:''}
+          ${aPhone?`<div><i class="fab fa-whatsapp" style="width:14px;color:#25d366"></i> ${esc(aPhone)}</div>`:''}
+          ${a.location?`<div><i class="fas fa-map-marker-alt" style="width:14px;color:var(--t4)"></i> ${esc(a.location)}</div>`:''}
+          ${a.contact_person?`<div><i class="fas fa-person" style="width:14px;color:var(--t4)"></i> ${esc(a.contact_person)}</div>`:''}
+          <div style="color:var(--t4)">${fmtRel(a.created_at)}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px">
+          ${aPhone?`<a href="tel:${aTel}" style="display:flex;align-items:center;justify-content:center;gap:4px;padding:7px;background:rgba(77,158,255,.1);border:1px solid rgba(77,158,255,.25);border-radius:8px;color:#5aaeff;text-decoration:none;font-size:.6rem;font-weight:600"><i class="fas fa-phone"></i>Call</a>`:'<div></div>'}
+          ${aPhone?`<a href="https://wa.me/${aWaNum}" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:4px;padding:7px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);border-radius:8px;color:#25D366;text-decoration:none;font-size:.6rem;font-weight:600"><i class="fab fa-whatsapp"></i>WA</a>`:'<div></div>'}
+          <button class="btn btn-ghost btn-xs" style="font-size:.6rem" onclick="adminSetInstAccountStatus('${esc(a.id)}','${a.status==='active'?'suspended':'active'}')"><i class="fas fa-${a.status==='active'?'pause':'play'}"></i> ${a.status==='active'?'Suspend':'Activate'}</button>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    const isMissing=e.message?.includes('schema cache')||e.message?.includes('does not exist');
+    if(iac) iac.innerHTML=isMissing?schemaErrHtml('institution_profiles'):'<div style="color:var(--red);font-size:.72rem;padding:10px">'+esc(e.message)+'</div>';
+  }
+  try {
+    const { data } = await sb.from('institution_requests').select('*').order('created_at',{ascending:false});
+    if(!il) return;
+    if(!data?.length){ il.innerHTML='<div class="empty-state" style="padding:20px"><i class="fas fa-inbox"></i><p>No institution requests yet</p></div>'; return; }
+    il.innerHTML = data.map(r=>`
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="font-size:.76rem;font-weight:600;color:var(--t1)">${esc(r.service_name||r.service||'Service')}</div>
+          <span class="req-badge ${esc(r.status||'pending')}" style="font-size:.54rem">${esc(r.status||'pending')}</span>
+        </div>
+        <div style="font-size:.62rem;color:var(--t3);display:flex;flex-direction:column;gap:3px;margin-bottom:8px">
+          ${r.institution_id?`<div><i class="fas fa-building-columns" style="width:14px;color:#ffa500"></i> Institution Order</div>`:''}
+          ${r.quantity?`<div><i class="fas fa-hashtag" style="width:14px;color:var(--t4)"></i> Qty: ${esc(String(r.quantity))}</div>`:''}
+          ${r.deadline?`<div style="color:#ffa500"><i class="fas fa-calendar-clock" style="width:14px"></i> Due: ${fmtRel(r.deadline)}</div>`:''}
+          ${r.details?`<div style="color:var(--t2);margin-top:3px">${esc((r.details||'').substring(0,80))}</div>`:''}
+          <div style="color:var(--t4)">${fmtRel(r.created_at)}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-xs" style="color:var(--red)" onclick="adminDeleteInstRequest('${esc(r.id)}')"><i class="fas fa-trash"></i></button>
+          <button class="btn btn-ghost btn-xs" onclick="adminSetInstStatus('${esc(r.id)}','in_progress')"><i class="fas fa-gear"></i> In Progress</button>
+          <button class="btn btn-gold btn-xs" style="flex:1" onclick="adminSetInstStatus('${esc(r.id)}','completed')"><i class="fas fa-check"></i> Complete</button>
+        </div>
+      </div>`).join('');
+  } catch(e) { if(il) il.innerHTML=`<div style="color:var(--red);font-size:.72rem;padding:10px">${esc(e.message)}</div>`; }
+}
+window.adminLoadInstitutions = adminLoadInstitutions;
+
+async function adminSetInstAccountStatus(id, status){
+  try{ await sb.from('institution_profiles').update({status}).eq('id',id); toast('Status updated ✅','ok'); adminLoadInstitutions(); }
+  catch(e){ toast(e.message||'Failed','er'); }
+}
+window.adminSetInstAccountStatus = adminSetInstAccountStatus;
+
+async function adminSetInstStatus(id, status){
+  try{ await sb.from('institution_requests').update({status,updated_at:new Date().toISOString()}).eq('id',id); toast('Updated ✅','ok'); adminLoadInstitutions(); }
+  catch(e){ toast(e.message||'Failed','er'); }
+}
+window.adminSetInstStatus = adminSetInstStatus;
+
+async function adminDeleteInstRequest(id){
+  popup('Delete?','Remove this institution request permanently.','er',[
+    {label:'Cancel',fn:null,style:'btn-ghost'},
+    {label:'Delete',fn:async()=>{ try{ await sb.from('institution_requests').delete().eq('id',id); toast('Deleted','nf'); adminLoadInstitutions(); }catch(e){toast(e.message,'er');} },style:'btn-outline'}
+  ]);
+}
+window.adminDeleteInstRequest = adminDeleteInstRequest;
+
+function adminOpenInstEditor(){
+  const overlay = document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;z-index:9960;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center';
+  overlay.innerHTML=`
+    <div style="background:var(--bg2);border-radius:24px 24px 0 0;border:1px solid var(--bd);width:100%;max-width:500px;padding:20px 16px 40px">
+      <div style="width:36px;height:4px;background:var(--bd2);border-radius:4px;margin:0 auto 16px"></div>
+      <div style="font-size:.82rem;font-weight:700;color:var(--t1);margin-bottom:16px">Add Institution</div>
+      <div class="fg"><label class="flbl">Institution Name *</label><input class="fi" id="inst-ed-name" type="text" placeholder="e.g. Kemera High School" maxlength="80"></div>
+      <div class="fg"><label class="flbl">Type</label>
+        <select class="fi" id="inst-ed-type"><option value="school">School</option><option value="business">Business</option><option value="ngo">NGO</option><option value="church">Church</option><option value="other">Other</option></select>
+      </div>
+      <div class="fg"><label class="flbl">Email</label><input class="fi" id="inst-ed-email" type="email" placeholder="office@institution.com"></div>
+      <div class="fg"><label class="flbl">WhatsApp / Phone</label><input class="fi" id="inst-ed-wa" type="text" placeholder="0712345678"></div>
+      <div class="fg"><label class="flbl">Contact Person</label><input class="fi" id="inst-ed-contact" type="text" placeholder="Representative name"></div>
+      <div class="fg"><label class="flbl">Location</label><input class="fi" id="inst-ed-loc" type="text" placeholder="Kemera, Nyamira"></div>
+      <button onclick="adminSaveNewInstitution(this)" style="width:100%;padding:13px;background:var(--gold);color:#000;border:none;border-radius:14px;font-size:.82rem;font-weight:700;cursor:pointer"><i class="fas fa-check"></i> Add Institution</button>
+      <button onclick="this.closest('[style*=position]').remove()" style="width:100%;padding:10px;background:transparent;border:1px solid var(--bd);border-radius:12px;color:var(--t3);font-size:.76rem;cursor:pointer;margin-top:8px">Cancel</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) overlay.remove(); });
+}
+window.adminOpenInstEditor = adminOpenInstEditor;
+
+async function adminSaveNewInstitution(btn){
+  const name=$('inst-ed-name')?.value?.trim();
+  if(!name){toast('Institution name is required','er');return;}
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> Saving…';}
+  try{
+    await sb.from('institution_profiles').insert({
+      institution_name:name, institution_type:$('inst-ed-type')?.value||'other',
+      email:$('inst-ed-email')?.value?.trim()||null, whatsapp_number:$('inst-ed-wa')?.value?.trim()||null,
+      contact_person:$('inst-ed-contact')?.value?.trim()||null, location:$('inst-ed-loc')?.value?.trim()||null,
+      status:'active', created_at:new Date().toISOString()
+    });
+    toast('Institution added ✅','ok');
+    btn?.closest('[style*="position"]')?.remove();
+    adminLoadInstitutions();
+  }catch(e){toast(e.message||'Failed','er');if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-check"></i> Add Institution';}}
+}
+window.adminSaveNewInstitution = adminSaveNewInstitution;
+
+/* ── LEGAL ─────────────────────────────────────────────────────── */
+async function adminLoadLegal(){
+  try{
+    const{data}=await sb.from('app_settings').select('key,value').in('key',['terms_content','privacy_content']);
+    if(data) data.forEach(row=>{
+      if(row.key==='terms_content'){const el=$('adm-terms-content');if(el)el.value=row.value||'';}
+      if(row.key==='privacy_content'){const el=$('adm-privacy-content');if(el)el.value=row.value||'';}
+    });
+  }catch(e){toast('Could not load legal content','er');}
+  try{
+    const{data:consents}=await sb.from('user_consents').select('user_id,type,accepted_at').order('accepted_at',{ascending:false}).limit(30);
+    const logEl=$('adm-consent-log');
+    if(!logEl)return;
+    if(!consents?.length){logEl.innerHTML='<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:10px">No acceptances recorded yet.</div>';return;}
+    logEl.innerHTML=consents.map(c=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd);font-size:.66rem">
+      <div style="color:var(--t2)">${c.type==='terms'?'📋 Terms':'🔒 Privacy'}</div>
+      <div style="color:var(--t4)">${esc((c.user_id||'').substring(0,8))}…</div>
+      <div style="color:var(--t4)">${fmtRel(c.accepted_at)}</div></div>`).join('');
+  }catch(e){}
+}
+window.adminLoadLegal = adminLoadLegal;
+
+async function adminSaveLegal(type){
+  const key=type==='terms'?'terms_content':'privacy_content';
+  const val=$(type==='terms'?'adm-terms-content':'adm-privacy-content')?.value||'';
+  try{
+    const{error}=await sb.from('app_settings').upsert({key,value:val,updated_at:new Date().toISOString()},{onConflict:'key'});
+    if(error)throw error;
+    toast(`${type==='terms'?'Terms & Conditions':'Privacy Policy'} saved ✅`,'ok');
+  }catch(e){toast(e.message||'Save failed','er');}
+}
+window.adminSaveLegal = adminSaveLegal;
+
+/* ── SECURITY TAB ──────────────────────────────────────────────── */
+let _secSelectedUserId = null;
+let _secSelectedUserName = '';
+
+function secInit(){
+  const searchEl=$('sec-reset-user'); if(searchEl) searchEl.value='';
+  const resEl=$('sec-reset-results'); if(resEl) resEl.innerHTML='';
+  const pwEl=$('sec-default-pw');
+  if(pwEl) pwEl.value='NovaDeskOnline@'+new Date().getFullYear();
+  const msg=$('sec-reset-msg'); if(msg) msg.style.display='none';
+  _secSelectedUserId=null; _secSelectedUserName='';
+  // Load audit log
+  secLoadAuditLog();
+}
+window.secInit = secInit;
+
+function secSearchUsers(){
+  const q = ($('sec-reset-user')?.value||'').trim().toLowerCase();
+  const res = $('sec-reset-results');
+  if(!res) return;
+  if(!q){ res.innerHTML='<div style="font-size:.7rem;color:var(--t4);padding:8px">Enter a name or email to search</div>'; return; }
+  const matches = (_allUsers||[]).filter(u=>
+    (u.full_name||'').toLowerCase().includes(q) ||
+    (u.email||'').toLowerCase().includes(q) ||
+    (u.nd_user_id||'').toLowerCase().includes(q)
+  ).slice(0,8);
+  if(!matches.length){ res.innerHTML='<div style="font-size:.7rem;color:var(--t4);padding:8px">No users found</div>'; return; }
+  res.innerHTML = matches.map(u=>`
+    <div onclick="secSelectUser('${esc(u.id)}','${esc(u.full_name||u.email||'User')}')"
+         style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg4);border:1px solid var(--bd);border-radius:10px;cursor:pointer;transition:border-color .2s"
+         onmouseover="this.style.borderColor='var(--gold-a45)'" onmouseout="this.style.borderColor='var(--bd)'">
+      <div style="width:30px;height:30px;border-radius:50%;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--gold);flex-shrink:0">
+        ${(u.full_name||'?').substring(0,2).toUpperCase()}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.74rem;color:var(--t1);font-weight:500">${esc(u.full_name||'Unknown')}</div>
+        <div style="font-size:.6rem;color:var(--t4)">${esc(u.email||'')} · ${esc(u.role||'user')}</div>
+      </div>
+      <div style="font-size:.58rem;padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--t4);border:1px solid var(--bd)">${esc(u.nd_user_id||'')}</div>
+    </div>`).join('');
+}
+window.secSearchUsers = secSearchUsers;
+
+function secSelectUser(id, name){
+  _secSelectedUserId = id; _secSelectedUserName = name;
+  const res = $('sec-reset-results');
+  if(res) res.querySelectorAll('div').forEach(el=>{
+    el.style.background = el.onclick?.toString().includes(id) ? 'rgba(201,168,76,.1)' : 'var(--bg4)';
+    el.style.borderColor = el.onclick?.toString().includes(id) ? 'var(--gold)' : 'var(--bd)';
+  });
+  const msg = $('sec-reset-msg');
+  if(msg){ msg.style.display='block'; msg.style.background='rgba(201,168,76,.08)'; msg.style.border='1px solid var(--gold-a25)'; msg.style.color='var(--gold)'; msg.textContent='Selected: '+name; }
+}
+window.secSelectUser = secSelectUser;
+
+async function secResetSelectedUser(){
+  if(!_secSelectedUserId){ toast('Select a user first','er'); return; }
+  const pw = ($('sec-default-pw')?.value||'').trim();
+  if(pw.length < 8){ toast('Password must be at least 8 characters','er'); return; }
+  popup(
+    'Reset Password',
+    'Reset password for '+_secSelectedUserName+' to: "'+pw+'"?\n\nThey will be notified via WhatsApp if a phone number is on file.',
+    'er',
+    [
+      {label:'Cancel', fn:null, style:'btn-ghost'},
+      {label:'Reset', style:'btn-outline', fn: async()=>{
+        try{
+          // Use Supabase Admin API via edge function or direct RPC
+          // Since we're client-side, we call a custom DB function
+          const { error } = await sb.rpc('admin_reset_user_password', {
+            target_user_id: _secSelectedUserId,
+            new_password: pw
+          });
+          if(error) throw error;
+
+          // Log the action
+          await sb.from('admin_audit_log').insert({
+            admin_id: _user?.id, action:'reset_password',
+            target_table:'auth.users', target_id:_secSelectedUserId,
+            details:{user_name:_secSelectedUserName,reset_by:_profile?.full_name||'Admin'}
+          }).catch(()=>{});
+
+          // Notify user via WhatsApp if phone available
+          const u = (_allUsers||[]).find(x=>x.id===_secSelectedUserId);
+          if(u?.whatsapp_number){
+            const pRaw=(u.whatsapp_number||'').replace(/[^0-9]/g,'');
+            const pWa=pRaw.startsWith('0')?'254'+pRaw.slice(1):pRaw.startsWith('254')?pRaw:'254'+pRaw;
+            const msg=encodeURIComponent('Hello '+(_secSelectedUserName||'')+'!\n\nYour NovaDeskOnline account password has been reset by an admin.\n\nNew password: '+pw+'\n\nPlease log in and change your password immediately from Account → Settings.\n\n— NovaDeskOnline Team');
+            setTimeout(()=>window.open('https://wa.me/'+pWa+'?text='+msg,'_blank'),500);
+          }
+
+          const msgEl=$('sec-reset-msg');
+          if(msgEl){msgEl.style.display='block';msgEl.style.background='rgba(50,180,100,.08)';msgEl.style.border='1px solid rgba(50,180,100,.3)';msgEl.style.color='var(--green)';msgEl.textContent='✅ Password reset for '+_secSelectedUserName+'! WhatsApp notification opened.';}
+          toast('Password reset successfully ✅','ok',4000);
+          _secSelectedUserId=null; _secSelectedUserName='';
+        }catch(e){
+          toast('Reset failed: '+e.message,'er');
+          const msgEl=$('sec-reset-msg');
+          if(msgEl){msgEl.style.display='block';msgEl.style.background='rgba(224,80,80,.08)';msgEl.style.border='1px solid rgba(224,80,80,.3)';msgEl.style.color='var(--red)';msgEl.textContent='❌ '+e.message;}
+        }
+      }}
+    ]
+  );
+}
+window.secResetSelectedUser = secResetSelectedUser;
+
+function secExportUsers(){
+  if(!_allUsers?.length){ toast('No users to export','nf'); return; }
+  const rows = [['Name','Email','ND ID','Role','WhatsApp','Joined']];
+  _allUsers.forEach(u=>rows.push([
+    u.full_name||'', u.email||'', u.nd_user_id||'',
+    u.role||'user', u.whatsapp_number||'',
+    u.created_at?new Date(u.created_at).toLocaleDateString('en-KE'):''
+  ]));
+  const csv = rows.map(r=>r.map(v=>'"'+(v||'').replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='novadesk-users-'+Date.now()+'.csv'; a.click();
+  toast('Users exported ✅','ok');
+}
+window.secExportUsers = secExportUsers;
+
+async function secListSuspended(){
+  const suspended = (_allUsers||[]).filter(u=>u.role==='suspended'||u.status==='suspended');
+  if(!suspended.length){ toast('No suspended accounts','nf'); return; }
+  popup('Suspended Accounts ('+suspended.length+')',
+    suspended.map(u=>'• '+( u.full_name||u.email||'Unknown')+' ('+( u.nd_user_id||'')+ ')').join('\n'),
+    'nf',[{label:'OK',fn:null,style:'btn-gold'}]
+  );
+}
+window.secListSuspended = secListSuspended;
+
+async function secLoadAuditLog(){
+  const el=$('sec-audit-log');
+  if(!el) return;
+  el.innerHTML='<div style="text-align:center;padding:10px"><span class="spin"></span></div>';
+  try{
+    const{data}=await sb.from('admin_audit_log').select('*').order('created_at',{ascending:false}).limit(30);
+    if(!data?.length){el.innerHTML='<div style="font-size:.7rem;color:var(--t4);text-align:center;padding:10px">No audit entries yet</div>';return;}
+    el.innerHTML=data.map(e=>`
+      <div style="display:flex;gap:8px;padding:8px;background:var(--bg4);border-radius:8px;border:1px solid var(--bd)">
+        <i class="fas fa-${e.action?.includes('reset')?'key':e.action?.includes('suspend')?'ban':e.action?.includes('approve')?'check':'shield-halved'}" style="color:var(--gold);margin-top:2px;font-size:.7rem;width:14px"></i>
+        <div style="flex:1">
+          <div style="font-size:.68rem;color:var(--t1);font-weight:500">${esc(e.action||'action')}</div>
+          <div style="font-size:.58rem;color:var(--t4)">${esc(e.target_table||'')} · ${fmtRel(e.created_at)}</div>
+        </div>
+      </div>`).join('');
+  }catch(e){el.innerHTML='<div style="font-size:.7rem;color:var(--red);padding:8px">'+esc(e.message)+'</div>';}
+}
+window.secLoadAuditLog = secLoadAuditLog;
+
+
+
+function schemaErrHtml(tableName){
+  var tbl = tableName || 'table';
+  return '<div style="padding:18px;text-align:center">'
+    +'<div style="font-size:2rem;margin-bottom:8px">&#x1F5C4;&#xFE0F;</div>'
+    +'<div style="font-size:.76rem;color:var(--t1);font-weight:600;margin-bottom:4px">Table &quot;'+tbl+'&quot; not found</div>'
+    +'<div style="font-size:.66rem;color:var(--t3);line-height:1.6;margin-bottom:12px">Run schema.sql + schema_ads.sql in your Supabase SQL Editor.</div>'
+    +'<a href="https://supabase.com/dashboard" target="_blank" style="display:inline-block;padding:9px 18px;background:var(--gold);color:#000;border-radius:8px;font-size:.72rem;font-weight:700;text-decoration:none">Open Supabase</a>'
+    +'</div>';
+}
+window.schemaErrHtml = schemaErrHtml;
+
 async function adminLoadReviews(){
   const rl = $('admin-reviews-list');
   if (!rl) return;
@@ -5899,23 +6769,37 @@ async function adminLoadReviews(){
       const user = _allUsers.find(u=>u.id===r.user_id);
       const name = user?.full_name || 'Anonymous';
       const init = name.split(' ').map(w=>w[0]?.toUpperCase()||'').join('').substring(0,2)||'A';
+      // Pre-compute phone/WA to avoid IIFE in template
+      const uPhone = user?.whatsapp_number || '';
+      const uRaw   = uPhone.replace(/[^0-9]/g,'');
+      const uWaNum = uRaw.startsWith('0') ? '254'+uRaw.slice(1) : uRaw.startsWith('254') ? uRaw : '254'+uRaw;
+      const uTel   = uPhone.replace(/[^0-9+]/g,'');
+      const uMsg   = encodeURIComponent('Hi! Thanks for your review on NovaDeskOnline 😊');
+      const contactBtns = uPhone
+        ? `<div style="display:flex;gap:6px;margin-top:8px">
+            <a href="tel:${uTel}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:7px;background:rgba(77,158,255,.1);border:1px solid rgba(77,158,255,.25);border-radius:8px;color:#5aaeff;text-decoration:none;font-size:.64rem;font-weight:600"><i class="fas fa-phone"></i> Call</a>
+            <a href="https://wa.me/${uWaNum}?text=${uMsg}" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:7px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);border-radius:8px;color:#25D366;text-decoration:none;font-size:.64rem;font-weight:600"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+           </div>`
+        : '';
       return `<div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:13px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <div style="width:34px;height:34px;border-radius:50%;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--gold);flex-shrink:0">${user?.avatar_url?`<img src="${esc(user.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:init}</div>
+          <div style="width:34px;height:34px;border-radius:50%;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--gold);flex-shrink:0">${user?.avatar_url ? `<img src="${esc(user.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : init}</div>
           <div style="flex:1">
             <div style="font-size:.76rem;font-weight:600;color:var(--t1)">${esc(name)}</div>
             <div style="font-size:.58rem;color:var(--t4)">${fmtRel(r.created_at)}</div>
           </div>
           <div style="font-size:.9rem;color:#ffc81e;letter-spacing:1px">${stars(r.rating)}</div>
         </div>
-        ${r.comment?`<div style="font-size:.72rem;color:var(--t2);line-height:1.6;font-style:italic;padding:8px 10px;background:var(--bg4);border-radius:8px">"${esc(r.comment)}"</div>`:'<div style="font-size:.66rem;color:var(--t4)">No comment left</div>'}
-        ${user?.whatsapp_number?`<div style="display:flex;gap:6px;margin-top:8px">
-          <a href="tel:${esc(user.whatsapp_number.replace(/[^0-9+]/g,''))}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:7px;background:rgba(77,158,255,.1);border:1px solid rgba(77,158,255,.25);border-radius:8px;color:#5aaeff;text-decoration:none;font-size:.64rem;font-weight:600"><i class="fas fa-phone"></i> Call</a>
-          <a href="https://wa.me/${(()=>{const w=(user.whatsapp_number||'').replace(/[^0-9]/g,'');return w.startsWith('0')?'254'+w.slice(1):w.startsWith('254')?w:'254'+w;})()+encodeURIComponent('\nHi! Thanks for your review on NovaDeskOnline 😊')}" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:7px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);border-radius:8px;color:#25D366;text-decoration:none;font-size:.64rem;font-weight:600"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-        </div>`:''}
+        ${r.comment ? `<div style="font-size:.72rem;color:var(--t2);line-height:1.6;font-style:italic;padding:8px 10px;background:var(--bg4);border-radius:8px">"${esc(r.comment)}"</div>` : '<div style="font-size:.66rem;color:var(--t4)">No comment left</div>'}
+        ${contactBtns}
       </div>`;
     }).join('');
-  } catch(e){ rl.innerHTML=`<div style="color:var(--red);padding:16px;font-size:.76rem">Failed: ${esc(e.message)}</div>`; }
+  } catch(e){
+    const isTableMissing = e.message?.includes('schema cache')||e.message?.includes('does not exist');
+    rl.innerHTML = isTableMissing
+      ? schemaErrHtml('feedback')
+      : '<div style="color:var(--red);padding:16px;font-size:.76rem">Failed: '+esc(e.message)+'</div>';
+  }
 }
 window.adminLoadReviews = adminLoadReviews;
 
@@ -5939,9 +6823,169 @@ async function adminLoadMessages(){
         <div style="font-size:.72rem;color:var(--t2);line-height:1.6;background:var(--bg4);border-radius:6px;padding:8px;margin-top:6px">${esc(m.message||'')}</div>
         ${m.email?`<a href="mailto:${esc(m.email)}?subject=Re: ${esc(m.subject||'Your message')}" style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:.64rem;color:var(--gold);text-decoration:none"><i class="fas fa-reply"></i> Reply by email</a>`:''}
       </div>`).join('');
-  } catch(e){ ml.innerHTML=`<div style="text-align:center;padding:20px;color:var(--red);font-size:.76rem">Failed to load: ${esc(e.message)}</div>`; }
+  } catch(e){
+    const isMissing=e.message?.includes('schema cache')||e.message?.includes('does not exist')||e.message?.includes('relation');
+    ml.innerHTML = isMissing ? schemaErrHtml('contact_messages') : '<div style="text-align:center;padding:20px;color:var(--red);font-size:.76rem">Failed: '+esc(e.message)+'</div>';
+  }
 }
 window.adminLoadMessages = adminLoadMessages;
+
+/* ── ADVERTISEMENTS SYSTEM ─────────────────────────────────────── */
+async function adminLoadAds(){
+  const pEl=$('admin-ads-pending'), aEl=$('admin-ads-active'), rEl=$('admin-ads-rejected');
+  [pEl,aEl,rEl].forEach(el=>{ if(el) el.innerHTML='<div style="text-align:center;padding:14px"><span class="spin"></span></div>'; });
+  try{
+    const{data,error}=await sb.from('advertisements').select('*,profiles(full_name,whatsapp_number,nd_user_id)').order('created_at',{ascending:false});
+    if(error) throw error;
+    const pending  = (data||[]).filter(a=>a.status==='pending');
+    const active   = (data||[]).filter(a=>a.status==='active');
+    const rejected = (data||[]).filter(a=>a.status==='rejected'||a.status==='paused');
+
+    const renderAd = (a,showActions=true)=>{
+      const agentName = a.profiles?.full_name||'Unknown Agent';
+      const agentWa   = a.profiles?.whatsapp_number||'';
+      const aRaw=agentWa.replace(/[^0-9]/g,'');
+      const aWa=aRaw.startsWith('0')?'254'+aRaw.slice(1):aRaw.startsWith('254')?aRaw:'254'+aRaw;
+      const statusColor={pending:'#ffa500',active:'var(--green)',rejected:'var(--red)',paused:'var(--t4)'}[a.status]||'var(--t3)';
+      return '<div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:13px">'
+        +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">'
+        +'<div style="flex:1;min-width:0"><div style="font-size:.78rem;font-weight:700;color:var(--t1)">'+esc(a.title||'Ad')+'</div>'
+        +'<div style="font-size:.6rem;color:var(--t4);margin-top:1px">by '+esc(agentName)+' · '+fmtRel(a.created_at)+'</div></div>'
+        +'<span style="font-size:.52rem;padding:2px 8px;border-radius:20px;background:'+statusColor+'22;color:'+statusColor+';border:1px solid '+statusColor+'44;flex-shrink:0;margin-left:8px">'+esc(a.status||'pending')+'</span>'
+        +'</div>'
+        +(a.image_url?'<img src="'+esc(a.image_url)+'" style="width:100%;height:120px;object-fit:cover;border-radius:8px;margin-bottom:8px" onerror="this.style.display=\'none\'">':'')
+        +'<div style="font-size:.72rem;color:var(--t2);line-height:1.6;margin-bottom:8px">'+esc(a.body||a.description||'')+'</div>'
+        +(a.link_url?'<div style="font-size:.62rem;color:var(--blue);margin-bottom:8px"><i class="fas fa-link" style="width:14px"></i>'+esc(a.link_url)+'</div>':'')
+        +(a.runs_until?'<div style="font-size:.6rem;color:var(--t4);margin-bottom:8px"><i class="fas fa-calendar-clock" style="width:14px;color:'+statusColor+'"></i>Runs until: '+new Date(a.runs_until).toLocaleDateString('en-KE')+'</div>':'')
+        +(showActions?'<div style="display:flex;gap:6px;flex-wrap:wrap">'
+        +(a.status!=='active'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'active\')" style="flex:1;padding:8px;background:rgba(50,180,100,.1);border:1px solid rgba(50,180,100,.3);border-radius:8px;color:var(--green);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-check"></i> Approve</button>':'')
+        +(a.status!=='paused'&&a.status==='active'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'paused\')" style="flex:1;padding:8px;background:var(--bg4);border:1px solid var(--bd);border-radius:8px;color:var(--t3);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-pause"></i> Pause</button>':'')
+        +(a.status!=='rejected'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'rejected\')" style="flex:1;padding:8px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.25);border-radius:8px;color:var(--red);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-times"></i> Reject</button>':'')
+        +(agentWa?'<a href="https://wa.me/'+aWa+'?text='+encodeURIComponent('Hello! Regarding your ad "'+( a.title||'')+'" on NovaDeskOnline:')+'" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);border-radius:8px;color:#25D366;text-decoration:none;font-size:.64rem;font-weight:600"><i class="fab fa-whatsapp"></i> Agent</a>':'')
+        +'<button onclick="adminDeleteAd(\''+esc(a.id)+'\')" style="width:32px;padding:8px;background:rgba(224,80,80,.06);border:1px solid rgba(224,80,80,.2);border-radius:8px;color:var(--red);font-size:.64rem;cursor:pointer"><i class="fas fa-trash"></i></button>'
+        +'</div>':'')
+        +'</div>';
+    };
+
+    if(pEl) pEl.innerHTML = pending.length ? pending.map(a=>renderAd(a,true)).join('') : '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No pending ads</div>';
+    if(aEl) aEl.innerHTML = active.length  ? active.map(a=>renderAd(a,true)).join('')  : '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No active ads</div>';
+    if(rEl) rEl.innerHTML = rejected.length? rejected.map(a=>renderAd(a,false)).join(''): '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No rejected ads</div>';
+  }catch(e){
+    const isTableMissing = e.message?.includes('schema cache')||e.message?.includes('does not exist')||e.message?.includes('relation');
+    const msg = isTableMissing
+      ? schemaErrHtml('advertisements')
+      : '<div style="color:var(--red);font-size:.72rem;padding:10px">'+esc(e.message)+'</div>';
+    [pEl,aEl,rEl].forEach(el=>{ if(el) el.innerHTML=msg; });
+  }
+}
+window.adminLoadAds = adminLoadAds;
+
+async function adminSetAdStatus(id, status){
+  try{
+    await sb.from('advertisements').update({status,reviewed_at:new Date().toISOString(),reviewed_by:_user?.id||null}).eq('id',id);
+    // If approved, notify agent via in-app notification
+    if(status==='active'){
+      const{data:ad}=await sb.from('advertisements').select('agent_id,title').eq('id',id).single();
+      if(ad?.agent_id) await sb.from('notifications').insert({user_id:ad.agent_id,type:'ad_approved',title:'🎉 Ad Approved!',body:'Your ad "'+ad.title+'" is now live on NovaDeskOnline.',read:false,created_at:new Date().toISOString()}).catch(()=>{});
+    }
+    toast('Ad status: '+status+' ✅','ok');
+    adminLoadAds();
+  }catch(e){ toast(e.message,'er'); }
+}
+window.adminSetAdStatus = adminSetAdStatus;
+
+async function adminDeleteAd(id){
+  popup('Delete Ad?','This will permanently remove the advertisement.','er',[
+    {label:'Cancel',fn:null,style:'btn-ghost'},
+    {label:'Delete',style:'btn-outline',fn:async()=>{
+      try{ await sb.from('advertisements').delete().eq('id',id); toast('Ad deleted','nf'); adminLoadAds(); }
+      catch(e){ toast(e.message,'er'); }
+    }}
+  ]);
+}
+window.adminDeleteAd = adminDeleteAd;
+
+/* Load ads on home page */
+async function loadHomeAds(){
+  try{
+    if(!sb) return;
+    const now = new Date().toISOString();
+    const{data}=await sb.from('advertisements').select('*').eq('status','active').or('runs_until.is.null,runs_until.gte.'+now).order('created_at',{ascending:false}).limit(5);
+    if(!data?.length) return;
+    const sec=$('home-ads-section'), list=$('home-ads-list');
+    if(!sec||!list) return;
+    list.innerHTML = data.map(a=>`
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:14px;overflow:hidden;position:relative" ${a.link_url?'onclick="window.open(\''+esc(a.link_url)+'\',\'_blank\')" style="cursor:pointer;background:var(--bg3);border:1px solid var(--bd);border-radius:14px;overflow:hidden;position:relative"':''}>
+        <span style="position:absolute;top:8px;right:8px;font-size:.48rem;background:rgba(0,0,0,.7);color:var(--t4);padding:2px 6px;border-radius:4px;font-weight:700;letter-spacing:.06em">SPONSORED</span>
+        ${a.image_url?'<img src="'+esc(a.image_url)+'" style="width:100%;height:140px;object-fit:cover" onerror="this.style.display=\'none\'">':''}
+        <div style="padding:12px">
+          <div style="font-size:.8rem;font-weight:700;color:var(--t1);margin-bottom:4px">'+esc(a.title||'')+'</div>
+          ${a.body?'<div style="font-size:.7rem;color:var(--t3);line-height:1.55">'+esc(a.body)+'</div>':''}
+          ${a.cta_label&&a.link_url?'<div style="display:inline-block;margin-top:10px;padding:7px 16px;background:var(--gold);color:#000;border-radius:20px;font-size:.68rem;font-weight:700">'+esc(a.cta_label)+'</div>':''}
+        </div>
+      </div>`).join('');
+    sec.style.display='block';
+  }catch(e){ console.warn('Ads load error:',e.message); }
+}
+window.loadHomeAds = loadHomeAds;
+
+/* Agent: submit an ad */
+function openSubmitAdModal(){
+  if(!_user){ openAuth(); return; }
+  if(!['agent','admin'].includes(_profile?.role)){ toast('Only agents can submit ads. Apply to become an agent first.','nf',4000); return; }
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;z-index:9900;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)';
+  overlay.innerHTML=`
+    <div style="background:var(--bg2);border-radius:24px 24px 0 0;border:1px solid var(--bd);width:100%;max-width:520px;max-height:88dvh;overflow-y:auto;padding:20px 16px 40px">
+      <div style="width:36px;height:4px;background:var(--bd2);border-radius:4px;margin:0 auto 16px"></div>
+      <div style="font-family:var(--fd);font-size:1rem;color:var(--t1);margin-bottom:4px">Submit an Ad</div>
+      <div style="font-size:.66rem;color:var(--t3);margin-bottom:16px">Ads require admin approval before going live.</div>
+      <div class="fg"><label class="flbl">Ad Title *</label><input class="fi" id="ad-title" type="text" placeholder="e.g. Kemera Wholesale — Best Prices" maxlength="80"></div>
+      <div class="fg"><label class="flbl">Ad Body / Description</label><textarea class="fi" id="ad-body" rows="3" placeholder="Short description of what you're advertising…" maxlength="300"></textarea></div>
+      <div class="fg"><label class="flbl">Image URL (optional)</label><input class="fi" id="ad-image" type="url" placeholder="https://…/image.jpg"></div>
+      <div class="fg"><label class="flbl">Link URL (optional)</label><input class="fi" id="ad-link" type="url" placeholder="https://yoursite.com or wa.me/…"></div>
+      <div class="fg"><label class="flbl">Call-to-Action Button Label</label><input class="fi" id="ad-cta" type="text" placeholder="e.g. Shop Now, Call Us, Learn More" maxlength="30"></div>
+      <div class="fg"><label class="flbl">Run Until (optional)</label><input class="fi" id="ad-until" type="date"></div>
+      <div id="ad-err" style="display:none;color:var(--red);font-size:.7rem;padding:8px 12px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.25);border-radius:8px;margin-bottom:10px"></div>
+      <button onclick="submitAdForm(this)" style="width:100%;padding:14px;background:var(--gold);color:#000;border:none;border-radius:14px;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">
+        <i class="fas fa-paper-plane"></i> Submit for Approval
+      </button>
+      <button onclick="this.closest('[style*=position]').remove()" style="width:100%;padding:10px;background:transparent;border:1px solid var(--bd);border-radius:12px;color:var(--t3);font-size:.76rem;cursor:pointer">Cancel</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) overlay.remove(); });
+}
+window.openSubmitAdModal = openSubmitAdModal;
+
+async function submitAdForm(btn){
+  const title=($('ad-title')?.value||'').trim();
+  const body=($('ad-body')?.value||'').trim();
+  const imageUrl=($('ad-image')?.value||'').trim();
+  const linkUrl=($('ad-link')?.value||'').trim();
+  const ctaLabel=($('ad-cta')?.value||'').trim();
+  const until=($('ad-until')?.value||'');
+  const errEl=$('ad-err');
+  if(!title){ if(errEl){errEl.textContent='Ad title is required.';errEl.style.display='block';} return; }
+  if(errEl) errEl.style.display='none';
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> Submitting…';}
+  try{
+    await sb.from('advertisements').insert({
+      agent_id:_user.id, title, body:body||null,
+      image_url:imageUrl||null, link_url:linkUrl||null,
+      cta_label:ctaLabel||null,
+      runs_until:until?new Date(until).toISOString():null,
+      status:'pending', created_at:new Date().toISOString()
+    });
+    toast('Ad submitted! Admin will review it shortly. ✅','ok',4000);
+    btn?.closest('[style*="position"]')?.remove();
+    // Notify admin
+    await sb.from('notifications').insert({user_id:null,type:'new_ad',title:'📢 New Ad Submitted',body:(_profile?.full_name||'An agent')+' submitted a new ad: "'+title+'".',read:false,created_at:new Date().toISOString()}).catch(()=>{});
+  }catch(e){
+    if(errEl){errEl.textContent=e.message||'Failed to submit.';errEl.style.display='block';}
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> Submit for Approval';}
+  }
+}
+window.submitAdForm = submitAdForm;
 
 async function saveAdminSettings(){
   try { await _requireAdmin(); } catch(e){ toast(e.message,'er'); return; }
@@ -5949,11 +6993,25 @@ async function saveAdminSettings(){
   const hrs  = $('adm-biz-hrs')?.value||'';
   const wa   = $('adm-wa-num')?.value||'';
   const newSecret = $('adm-secret-new')?.value||'';
+  const linkFb = $('adm-link-fb')?.value||'';
+  const linkIg = $('adm-link-ig')?.value||'';
+  const linkTt = $('adm-link-tt')?.value||'';
+  const linkX  = $('adm-link-x')?.value||'';
+  const linkEmail = $('adm-link-email')?.value||'';
+  const linkMaps  = $('adm-link-maps')?.value||'';
+  const linkScifi = $('adm-link-scifi')?.value||'';
   try {
     const upserts = [
       {key:'announcement', value:ann},
       {key:'business_hrs', value:hrs},
-      {key:'wa_number',    value:wa}
+      {key:'wa_number',    value:wa},
+      {key:'link_facebook', value:linkFb},
+      {key:'link_instagram', value:linkIg},
+      {key:'link_tiktok', value:linkTt},
+      {key:'link_x', value:linkX},
+      {key:'link_email', value:linkEmail},
+      {key:'link_maps', value:linkMaps},
+      {key:'link_scifi', value:linkScifi}
     ];
     for (const row of upserts) {
       await sb.from('app_settings').upsert({...row, updated_at:new Date().toISOString()});
@@ -5973,13 +7031,7 @@ async function saveAdminSettings(){
 window.saveAdminSettings = saveAdminSettings;
 
 /* ── OFFLINE ───────────────────────────────────────────────────── */
-function initOfflineDetect(){
-  const banner = $('offline-banner');
-  const upd = () => banner?.classList.toggle('on', !navigator.onLine);
-  window.addEventListener('online', upd);
-  window.addEventListener('offline', upd);
-  upd();
-}
+// initOfflineDetect defined later in the file
 
 
 /* ── FORGOT PASSWORD ── */
@@ -6063,13 +7115,17 @@ function openRatingModal(){_curRating=0;renderStars(0);const c=$('rating-comment
 /* ── HOME REVIEWS ─────────────────────────────────── */
 async function loadHomeReviews(){
   try {
-    if (!sb) return;
-    const { data, error } = await sb
+    if (!sb) { setTimeout(loadHomeReviews, 2000); return; }
+    const res = await sb
       .from('feedback')
       .select('rating,comment,created_at,user_id')
+      .not('rating','is',null)
       .order('created_at', { ascending: false })
-      .limit(6);
-    if (error || !data || !data.length) return;
+      .limit(8);
+    const data = res?.data ?? null;
+    const error = res?.error ?? null;
+    if (error) { console.warn('Reviews error:', error.message||String(error)); return; }
+    if (!data || !data.length) return;
 
     const section = $('home-reviews-section');
     const list = $('home-reviews-list');
@@ -6407,6 +7463,7 @@ async function init(){
   // ② Pre-render static services so screen is never blank
   _services = [...STATIC_SERVICES];
   window._allServices = _services;
+  if(typeof cacheForOffline==='function') cacheForOffline('svcs',_services);
   renderServices('all');
   renderQuickServices();
 
@@ -6442,6 +7499,7 @@ async function init(){
   // ⑦ Load live data in background
   await Promise.all([loadAppSettings(), loadServices()]);
   loadHomeReviews().catch(()=>{});
+  loadHomeAds().catch(()=>{});
   injectManifestFallback();
   updateMoreScreen();
   initPWAInstall();
@@ -6628,23 +7686,10 @@ window.addEventListener('popstate', ()=>{
     <span class="sheet-title"><i class="fas fa-shield-halved" style="margin-right:8px;color:var(--gold)"></i>Privacy Policy</span>
     <button class="sheet-cls" onclick="closeModal('privacy-modal')"><i class="fas fa-times"></i></button>
   </div>
-  <div class="modal-body" style="padding-bottom:24px">
-    <div style="font-size:.76rem;color:var(--t2);line-height:1.8">
+  <div class="modal-body" id="privacy-modal-body" style="padding-bottom:24px">
+    <div style="font-size:.76rem;color:var(--t2);line-height:1.8" id="privacy-content-display">
       <p style="font-family:var(--fd);font-size:1rem;color:var(--t1);margin-bottom:10px">Your Privacy Matters</p>
-      <p style="margin-bottom:10px;color:var(--t3)">NovaDeskOnline collects minimal personal information necessary to deliver our services. Your ID number, WhatsApp number and email are used solely to identify your account and communicate service updates.</p>
-      <p style="font-weight:500;color:var(--t2);margin-bottom:6px">We do not:</p>
-      <ul style="list-style:none;display:flex;flex-direction:column;gap:5px;margin-bottom:12px">
-        <li style="color:var(--t3)"><i class="fas fa-times-circle" style="color:var(--red);margin-right:6px;font-size:.7rem"></i>Sell your data to third parties</li>
-        <li style="color:var(--t3)"><i class="fas fa-times-circle" style="color:var(--red);margin-right:6px;font-size:.7rem"></i>Share personal info without consent</li>
-        <li style="color:var(--t3)"><i class="fas fa-times-circle" style="color:var(--red);margin-right:6px;font-size:.7rem"></i>Store payment card information</li>
-      </ul>
-      <p style="font-weight:500;color:var(--t2);margin-bottom:6px">We do:</p>
-      <ul style="list-style:none;display:flex;flex-direction:column;gap:5px;margin-bottom:12px">
-        <li style="color:var(--t3)"><i class="fas fa-check-circle" style="color:var(--green);margin-right:6px;font-size:.7rem"></i>Encrypt data in transit and at rest</li>
-        <li style="color:var(--t3)"><i class="fas fa-check-circle" style="color:var(--green);margin-right:6px;font-size:.7rem"></i>Let you delete your account and data</li>
-        <li style="color:var(--t3)"><i class="fas fa-check-circle" style="color:var(--green);margin-right:6px;font-size:.7rem"></i>Use files only to fulfill your requests</li>
-      </ul>
-      <p style="color:var(--t4);font-size:.68rem">For questions, contact us on WhatsApp or email. Last updated: 2025.</p>
+      <p style="margin-bottom:10px;color:var(--t3)">NovaDeskOnline collects minimal personal information necessary to deliver our services.</p>
     </div>
   </div>
 </div>
@@ -6656,18 +7701,10 @@ window.addEventListener('popstate', ()=>{
     <span class="sheet-title"><i class="fas fa-file-contract" style="margin-right:8px;color:var(--gold)"></i>Terms &amp; Conditions</span>
     <button class="sheet-cls" onclick="closeModal('terms-modal')"><i class="fas fa-times"></i></button>
   </div>
-  <div class="modal-body" style="padding-bottom:24px">
-    <div style="font-size:.76rem;color:var(--t3);line-height:1.8">
+  <div class="modal-body" id="terms-modal-body" style="padding-bottom:24px">
+    <div id="terms-content-display" style="font-size:.76rem;color:var(--t3);line-height:1.8;white-space:pre-wrap">
       <p style="font-family:var(--fd);font-size:1rem;color:var(--t1);margin-bottom:10px">Terms of Service</p>
-      <p style="margin-bottom:10px">By using NovaDeskOnline you agree to the following terms:</p>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="background:var(--bg4);border-radius:var(--r);padding:10px 12px"><strong style="color:var(--t1);font-size:.74rem">1. Acceptable Use</strong><p style="margin-top:4px">Use NovaDeskOnline only for lawful purposes. Do not misuse services or attempt to access accounts that are not yours.</p></div>
-        <div style="background:var(--bg4);border-radius:var(--r);padding:10px 12px"><strong style="color:var(--t1);font-size:.74rem">2. Service Requests</strong><p style="margin-top:4px">Once a service request is submitted, it will be processed during business hours. Cancellations must be made before work commences.</p></div>
-        <div style="background:var(--bg4);border-radius:var(--r);padding:10px 12px"><strong style="color:var(--t1);font-size:.74rem">3. Payments</strong><p style="margin-top:4px">Prices shown are indicative. Final pricing may vary based on specifications. Payment is due before or upon collection of completed work.</p></div>
-        <div style="background:var(--bg4);border-radius:var(--r);padding:10px 12px"><strong style="color:var(--t1);font-size:.74rem">4. Files & Documents</strong><p style="margin-top:4px">You are responsible for the content of files you upload. NovaDeskOnline will not reproduce or share your documents.</p></div>
-        <div style="background:var(--bg4);border-radius:var(--r);padding:10px 12px"><strong style="color:var(--t1);font-size:.74rem">5. Account</strong><p style="margin-top:4px">Keep your credentials secure. You are responsible for all activity under your account. Report unauthorized access immediately.</p></div>
-      </div>
-      <p style="color:var(--t4);font-size:.68rem;margin-top:12px">NovaDeskOnline reserves the right to update these terms. Last updated: 2025.</p>
+      <p style="margin-bottom:10px">By using NovaDeskOnline you agree to the following terms. Full terms are managed by the admin.</p>
     </div>
   </div>
 </div>
@@ -6777,7 +7814,11 @@ window.addEventListener('popstate', ()=>{
     <div id="svc-req-desc" style="font-size:.76rem;color:var(--t3);background:var(--gold-a8);border:1px solid var(--bd);border-radius:var(--r);padding:10px 12px;margin-bottom:14px;line-height:1.6"></div>
     <div class="fg">
       <label class="flbl">Additional Notes (optional)</label>
-      <textarea class="fi" id="svc-req-notes" rows="3" placeholder="Tell us more — quantity, deadline, colour options, etc." maxlength="500"></textarea>
+      <textarea class="fi" id="svc-req-notes" rows="3" placeholder="Tell us more — quantity, colour options, etc." maxlength="500"></textarea>
+    </div>
+    <div class="fg">
+      <label class="flbl"><i class="fas fa-calendar-clock" style="color:var(--gold);margin-right:5px"></i>Deadline <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(when do you need this by?)</span></label>
+      <input class="fi" id="svc-req-deadline" type="datetime-local">
     </div>
     <div class="fg" id="svc-req-file-section">
       <label class="flbl">Attach Files <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(optional)</span></label>
@@ -6790,8 +7831,10 @@ window.addEventListener('popstate', ()=>{
       <div id="upload-file-list" class="upload-file-list"></div>
     </div>
     <div id="svc-req-err" class="ferr" style="margin-bottom:12px;display:none"></div>
-    <button class="btn btn-gold btn-full" id="svc-req-btn" onclick="submitSvcRequest()"><i class="fas fa-paper-plane"></i> Send Request</button>
-    <p style="text-align:center;font-size:.66rem;color:var(--t3);margin-top:12px">Prefer to message directly? <span style="color:#25D366;font-weight:700;cursor:pointer" onclick="openWhatsApp()"><i class="fab fa-whatsapp"></i> Chat on WhatsApp</span></p>
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <button class="btn btn-gold" style="flex:2" id="svc-req-btn" onclick="submitSvcRequest()"><i class="fas fa-paper-plane"></i> Submit Request</button>
+      <button class="btn" style="flex:1;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);color:#25D366;font-size:.76rem" onclick="sendRequestViaWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+    </div>
   </div>
 </div>
 <div id="svc-detail-modal" class="modal" role="dialog" aria-modal="true">
@@ -6906,6 +7949,7 @@ window.addEventListener('popstate', ()=>{
   <div class="sheet-pull"></div>
   <div class="sheet-hdr">
     <span class="sheet-title"><i class="fas fa-lock-open" style="margin-right:8px;color:var(--gold)"></i>Create New Password</span>
+    <button class="sheet-cls" onclick="closeModal('new-pw-modal');location.hash=''" aria-label="Close"><i class="fas fa-times"></i></button>
   </div>
   <div class="modal-body" style="padding-bottom:24px">
     <div style="background:linear-gradient(135deg,rgba(0,102,255,.1),rgba(0,102,255,.04));border:1px solid var(--gold-a25);border-radius:var(--rl);padding:14px;margin-bottom:18px;text-align:center">
@@ -7004,10 +8048,14 @@ function loadJsPDF(){
 
 function showReceiptOffer(req, profile) {
   const name = profile?.full_name || 'Customer';
-  showPopup('nf','fa-file-pdf',`Receipt Ready`,
-    `Your request for <strong>${esc(req.service_name)}</strong> is confirmed, ${esc(name.split(' ')[0])}. Would you like to download a PDF receipt?`,
-    [{label:'Download PDF', cls:'btn-gold', fn:`generateReceipt('${req.id}','${esc(req.service_name)}','${esc(name)}')`},
-     {label:'No thanks', cls:'btn-ghost', fn:'closePopup()'}]
+  popup(
+    'Receipt Ready',
+    `Your request for ${req.service_name} is confirmed, ${name.split(' ')[0]}. Would you like to download a PDF receipt?`,
+    'nf',
+    [
+      {label:'Download PDF', style:'btn-gold', fn:()=>generateReceipt(req.id, req.service_name, name)},
+      {label:'No thanks', style:'btn-ghost', fn:null}
+    ]
   );
 }
 
@@ -7337,6 +8385,29 @@ function renderProfileTab() {
   $('pi-wa').textContent      = _profile.whatsapp_number || '—';
   $('pi-joined').textContent  = fmt(_profile.created_at);
   $('pi-lastvisit').textContent = fmt(_profile.last_visit || _profile.created_at);
+  // Populate activity timeline
+  (function(){
+    const actEl = $('pi-activity');
+    if(!actEl||!_user) return;
+    const activities = [];
+    activities.push({icon:'fas fa-clock',color:'var(--blue)',label:'Last visited',time:_profile?.last_visit||new Date().toISOString()});
+    activities.push({icon:'fas fa-user-plus',color:'var(--green)',label:'Account created',time:_profile.created_at});
+    if(_user.last_sign_in_at) activities.push({icon:'fas fa-right-to-bracket',color:'var(--gold)',label:'Last sign in',time:_user.last_sign_in_at});
+    if(_profile.password_changed_at) activities.push({icon:'fas fa-key',color:'#a78bfa',label:'Password changed',time:_profile.password_changed_at});
+    (_reqs||[]).slice(0,3).forEach(r=>activities.push({icon:'fas fa-concierge-bell',color:'var(--warm)',label:`Requested: ${r.service_name}`,time:r.created_at}));
+    activities.sort((a,b)=>new Date(b.time)-new Date(a.time));
+    actEl.innerHTML = activities.slice(0,6).map(a=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px">
+        <div style="width:28px;height:28px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="${a.icon}" style="color:${a.color};font-size:.72rem"></i>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.7rem;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.label)}</div>
+          <div style="font-size:.58rem;color:var(--t4);margin-top:1px">${fmtRel(a.time)}</div>
+        </div>
+      </div>`).join('');
+    if(sb&&_user) sb.from('profiles').update({last_visit:new Date().toISOString()}).eq('id',_user.id).then(()=>{}).catch(()=>{});
+  })();
   // Quick stats
   const piReq = $('pi-req-count'); if (piReq) piReq.textContent = _reqs.length;
   const piNts = $('pi-notes-count'); if (piNts) piNts.textContent = _notes.length;
@@ -7391,6 +8462,16 @@ function renderMyReqsList(filter) {
         <div class="my-req-status ${r.status}">${r.status.replace('_',' ')}</div>
       </div>
       <div class="my-req-meta"><i class="fas fa-clock" style="margin-right:4px"></i>${fmt(r.created_at)}${r.price?` · <strong style="color:var(--green)">KES ${r.price}</strong>`:''}</div>
+      <button onclick="event.stopPropagation();sendMyOrderWhatsApp('${r.id}')" style="margin-top:6px;width:100%;padding:7px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);border-radius:9px;color:#25D366;font-size:.64rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px"><i class="fab fa-whatsapp"></i> Send via WhatsApp</button>
+      ${r.deadline?(()=>{
+        const dl=new Date(r.deadline), now=new Date(); now.setHours(0,0,0,0);
+        const daysLeft=Math.ceil((dl-now)/86400000);
+        const overdue = daysLeft<0 && r.status!=='completed' && r.status!=='cancelled';
+        const urgent = daysLeft>=0 && daysLeft<=2 && r.status!=='completed' && r.status!=='cancelled';
+        const col = overdue?'var(--red)':urgent?'#ffa500':'var(--t3)';
+        const label = overdue?`Overdue by ${Math.abs(daysLeft)}d`:daysLeft===0?'Due today':daysLeft===1?'Due tomorrow':`Due in ${daysLeft}d`;
+        return `<div style="font-size:.66rem;color:${col};margin-bottom:6px;display:flex;align-items:center;gap:5px"><i class="fas fa-calendar-clock"></i>${fmt(r.deadline)} <span style="opacity:.8">(${label})</span></div>`;
+      })():''}
       ${r.description?`<div style="font-size:.68rem;color:var(--t3);margin-bottom:8px;line-height:1.5">${esc(r.description.substring(0,100))}${r.description.length>100?'…':''}</div>`:''}
       ${r.admin_notes?`<div style="font-size:.66rem;padding:7px 10px;background:rgba(50,180,100,.06);border:1px solid rgba(50,180,100,.15);border-radius:6px;color:var(--green);margin-bottom:8px"><i class="fas fa-message" style="margin-right:4px"></i>${esc(r.admin_notes)}</div>`:''}
       <div class="my-req-btns">
@@ -7406,7 +8487,7 @@ function viewReqFiles(reqId) {
   const files = JSON.parse(req.file_urls||'[]');
   if (!files.length) { toast('No files attached','nf'); return; }
   const links = files.map(f=>`<a href="${esc(f.url)}" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg4);border-radius:6px;color:var(--t1);font-size:.72rem;text-decoration:none"><i class="fas fa-file" style="color:var(--gold)"></i>${esc(f.name)}</a>`).join('');
-  showPopup('nf','fa-paperclip','Attached Files',links,[{label:'Close',cls:'btn-ghost',fn:'closePopup()'}]);
+  popup('Attached Files', links, 'nf', [{label:'Close', style:'btn-ghost', fn:null}]);
 }
 window.viewReqFiles = viewReqFiles;
 
@@ -7558,6 +8639,7 @@ async function saveSettingsPassword() {
     if (reAuthErr) { err.textContent='Current password is incorrect.'; err.style.display='block'; btn.disabled=false; btn.innerHTML='<i class="fas fa-key"></i> Update Password'; return; }
     const { error } = await sb.auth.updateUser({ password: pw });
     if (error) throw error;
+    if (_user?.id) await sb.from('profiles').update({ password_changed_at: new Date().toISOString() }).eq('id', _user.id).catch(()=>{});
     ok.style.display='block';
     $('set-cur-pw').value=''; $('set-pw').value=''; $('set-pw2').value='';
     toast('Password updated! 🔐','ok');
@@ -7586,8 +8668,14 @@ async function doSetNewPassword() {
   try {
     const { error } = await sb.auth.updateUser({ password: pw });
     if (error) throw error;
+    // Track password change timestamp + load full profile so account isn't blank
+    if (_user?.id) {
+      await sb.from('profiles').update({ password_changed_at: new Date().toISOString() }).eq('id', _user.id).catch(()=>{});
+      await loadProfile().catch(()=>{});
+    }
     closeModal('new-pw-modal');
     toast('Password updated successfully! You are now logged in. ✅','ok',4000);
+    renderAccount();
     goNav('account');
   } catch(e) { err.textContent=e.message||'Failed to update password.'; err.style.display='block'; }
   finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Set New Password'; }
@@ -8126,6 +9214,13 @@ function initPWAInstall(){
     setTimeout(showPWAInstallBar, 4000);
   });
 
+  // Always show the install banner after a short delay for ANY user
+  // who hasn't installed/dismissed it — regardless of whether the
+  // browser fires beforeinstallprompt yet (it may fire late or not
+  // at all depending on engagement heuristics). This guarantees every
+  // non-installed visitor sees the option to install.
+  setTimeout(()=>{ showPWAInstallBar(); }, 4000);
+
   window.addEventListener('appinstalled', ()=>{
     dismissPWABanner(true);
     localStorage.setItem('nd-pwa-installed','1');
@@ -8143,12 +9238,28 @@ function dismissPWABanner(permanent){
     localStorage.setItem('nd-pwa-dismiss-ts', Date.now().toString());
   }
 }
+let _pwaBannerTimer = null;
 function showPWAInstallBar(){
   if(localStorage.getItem('nd-pwa-dismissed')) return;
   if(localStorage.getItem('nd-pwa-installed')) return;
   if(window.matchMedia('(display-mode: standalone)').matches) return;
   $('pwa-install-bar')?.classList.add('show');
   document.body.classList.add('pwa-showing');
+  // Auto-dismiss after 5 seconds, re-show every 45s
+  clearTimeout(_pwaBannerTimer);
+  _pwaBannerTimer = setTimeout(()=>{
+    const bar = $('pwa-install-bar');
+    if(bar && bar.classList.contains('show')){
+      bar.classList.remove('show');
+      document.body.classList.remove('pwa-showing');
+      // Re-show after 45s unless dismissed permanently
+      setTimeout(()=>{
+        if(!localStorage.getItem('nd-pwa-dismissed') && !localStorage.getItem('nd-pwa-installed')){
+          showPWAInstallBar();
+        }
+      }, 45000);
+    }
+  }, 5000);
 }
 window.showPWAInstallBar = showPWAInstallBar;
 
@@ -8736,9 +9847,29 @@ window.logAdminAction=logAdminAction;
 
 /* ── FEATURE 36: OFFLINE QUEUE ────────────────────────────────── */
 function initOfflineDetect(){
-  window.addEventListener('offline',()=>toast('You\'re offline. Requests will be saved and submitted when you reconnect.','nf',5000));
-  window.addEventListener('online', ()=>{ toast('Back online! ✅','ok',3000); });
+  const bar = $('offline-bar');
+  const show = ()=>{
+    if(bar){bar.style.display='flex';bar.innerHTML='<i class="fas fa-wifi-slash" style="margin-right:6px"></i>Offline — showing cached data';}
+    toast('You\'re offline. Showing cached data.','nf',4000);
+    if(typeof hapticFeedback==='function') hapticFeedback('double');
+  };
+  const hide = ()=>{
+    toast('Back online! Syncing… ✅','ok',3000);
+    if(bar){bar.innerHTML='<i class="fas fa-wifi" style="color:var(--green);margin-right:6px"></i>Back online — syncing…';
+      setTimeout(()=>{ if(bar) bar.style.display='none'; },2800);}
+    if(typeof loadMyReqs==='function') loadMyReqs().catch(()=>{});
+    if(typeof loadHomeReviews==='function') loadHomeReviews().catch(()=>{});
+    if(typeof refreshHomeCounts==='function') refreshHomeCounts().catch(()=>{});
+  };
+  window.addEventListener('online', hide);
+  window.addEventListener('offline', show);
+  if(!navigator.onLine) show();
+  // Load any cached data
+  try{window._offlineSvcs=JSON.parse(sessionStorage.getItem('nd_svcs')||'[]');}catch(e){}
+  try{window._offlineReqs=JSON.parse(sessionStorage.getItem('nd_reqs')||'[]');}catch(e){}
 }
+function cacheForOffline(key,data){try{sessionStorage.setItem('nd_'+key,JSON.stringify(data));}catch(e){}}
+window.cacheForOffline=cacheForOffline;
 
 /* ── FEATURE 40: USAGE TRACKING ─────────────────────────────── */
 function trackView(screen){
@@ -8758,5 +9889,159 @@ window.setServiceAvailability=setServiceAvailability;
 console.log('%c NovaDeskOnline v2.0 ','background:#0066ff;color:#fff;font-size:1rem;font-weight:bold;border-radius:4px;padding:2px 8px');
 console.log('%c Built for Kemera, Nyamira ','color:#5aaeff;font-size:.8rem');
 </script>
+
+<!-- ══ MISSING FUNCTIONS SCRIPT ═══════════════════════════════════ -->
+<script>
+/* showOrderDetail — full order info sheet */
+function showOrderDetail(r, isAdmin){
+  if(!r||!r.id) return;
+  const user = (isAdmin?_allUsers:null)?.find?.(u=>u.id===r.user_id);
+  const name = r.full_name||user?.full_name||'Unknown';
+  const phone = r.phone||user?.whatsapp_number||'';
+  const email = r.email||user?.email||'';
+  const pRaw = phone.replace(/[^0-9]/g,'');
+  const pWa  = pRaw.startsWith('0')?'254'+pRaw.slice(1):pRaw.startsWith('254')?pRaw:'254'+pRaw;
+  const pTel = phone.replace(/[^0-9+]/g,'');
+  const deadline = r.deadline ? new Date(r.deadline).toLocaleString('en-KE',{dateStyle:'medium',timeStyle:'short'}) : null;
+  const deadlineMs = r.deadline ? new Date(r.deadline)-Date.now() : null;
+  const isOverdue = deadlineMs!==null && deadlineMs<0;
+  const isDueSoon = deadlineMs!==null && deadlineMs>=0 && deadlineMs<86400000;
+  const statusColors = {pending:'var(--gold)',in_progress:'var(--blue)',completed:'var(--green)',ready:'#a78bfa',cancelled:'var(--red)'};
+  const sCol = statusColors[r.status]||'var(--t3)';
+  const orderId = (r.id||'').substring(0,8).toUpperCase();
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;z-index:9850;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)';
+
+  let statusBtns = '';
+  if(isAdmin){
+    statusBtns = ['pending','in_progress','completed','ready','cancelled'].map(st=>
+      '<button onclick="adminUpdateReqStatus(\''+r.id+'\',\''+st+'\',this)" style="padding:8px 4px;background:'+(r.status===st?statusColors[st]+'22':'var(--bg4)')+';border:1px solid '+(r.status===st?statusColors[st]+'55':'var(--bd)')+';border-radius:8px;color:'+(r.status===st?statusColors[st]:'var(--t3)')+';font-size:.6rem;font-weight:600;cursor:pointer;text-transform:capitalize;flex:1">'+st.replace('_',' ')+'</button>'
+    ).join('');
+  }
+
+  let contactBtns = '';
+  if(isAdmin && phone){
+    const waMsg = encodeURIComponent('Hello '+name+'! Regarding your '+r.service_name+' request (Order #'+orderId+'):');
+    contactBtns = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">'
+      +'<a href="tel:'+pTel+'" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;background:rgba(77,158,255,.1);border:1px solid rgba(77,158,255,.3);border-radius:12px;color:#5aaeff;text-decoration:none;font-size:.74rem;font-weight:600"><i class="fas fa-phone"></i> Call</a>'
+      +'<a href="https://wa.me/'+pWa+'?text='+waMsg+'" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:12px;color:#25D366;text-decoration:none;font-size:.74rem;font-weight:600"><i class="fab fa-whatsapp"></i> WhatsApp</a>'
+      +'</div>';
+  } else if(!isAdmin){
+    contactBtns = '<button onclick="sendMyOrderWhatsApp(\''+r.id+'\')" style="width:100%;padding:12px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:12px;color:#25D366;font-size:.76rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px"><i class="fab fa-whatsapp"></i> Send this order via WhatsApp</button>';
+  }
+
+  let deadlineHtml = '';
+  if(deadline){
+    const dlCol = isOverdue?'var(--red)':isDueSoon?'#ffa500':'var(--gold)';
+    const dlBg  = isOverdue?'rgba(224,80,80,.08)':isDueSoon?'rgba(255,165,0,.08)':'var(--bg3)';
+    const dlBd  = isOverdue?'rgba(224,80,80,.3)':isDueSoon?'rgba(255,165,0,.3)':'var(--bd)';
+    deadlineHtml = '<div style="display:flex;gap:8px;padding:9px 12px;background:'+dlBg+';border:1px solid '+dlBd+';border-radius:10px">'
+      +'<i class="fas fa-calendar-clock" style="color:'+dlCol+';width:16px;font-size:.78rem;margin-top:1px"></i>'
+      +'<div><div style="font-size:.72rem;color:'+dlCol+'">Due '+deadline+'</div>'+(isOverdue?'<div style="font-size:.6rem;color:var(--red)">OVERDUE</div>':isDueSoon?'<div style="font-size:.6rem;color:#ffa500">Due soon</div>':'')+'</div></div>';
+  }
+
+  overlay.innerHTML = '<div style="background:var(--bg2);border-radius:24px 24px 0 0;border:1px solid var(--bd);width:100%;max-width:520px;max-height:88dvh;overflow-y:auto;padding:20px 16px 40px">'
+    +'<div style="width:36px;height:4px;background:var(--bd2);border-radius:4px;margin:0 auto 16px"></div>'
+    +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">'
+    +'<div><div style="font-family:var(--fd);font-size:1.15rem;color:var(--t1)">'+esc(r.service_name)+'</div>'
+    +'<div style="font-size:.6rem;color:var(--t4);font-family:monospace;margin-top:2px">Order #'+orderId+'</div></div>'
+    +'<span style="font-size:.6rem;font-weight:700;padding:4px 10px;border-radius:20px;background:'+sCol+'22;color:'+sCol+';border:1px solid '+sCol+'44;text-transform:uppercase">'+esc((r.status||'pending').replace('_',' '))+'</span>'
+    +'</div>'
+    +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px">'
+    +'<div style="display:flex;gap:8px;padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-user" style="color:var(--gold);width:16px;font-size:.78rem;margin-top:1px"></i><div><div style="font-size:.72rem;color:var(--t1);font-weight:500">'+esc(name)+'</div>'+(email?'<div style="font-size:.6rem;color:var(--t4)">'+esc(email)+'</div>':'')+'</div></div>'
+    +(phone?'<div style="display:flex;gap:8px;padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-phone" style="color:#25D366;width:16px;font-size:.78rem;margin-top:1px"></i><div style="font-size:.72rem;color:var(--t1)">'+esc(phone)+'</div></div>':'')
+    +'<div style="display:flex;gap:8px;padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-clock" style="color:var(--t4);width:16px;font-size:.78rem;margin-top:1px"></i><div style="font-size:.72rem;color:var(--t2)">'+fmtRel(r.created_at)+'</div></div>'
+    +deadlineHtml
+    +((r.description||r.details)?'<div style="padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><div style="font-size:.58rem;color:var(--t4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Notes</div><div style="font-size:.72rem;color:var(--t2);line-height:1.6">'+esc(r.description||r.details||'')+'</div></div>':'')
+    +(r.admin_notes?'<div style="padding:9px 12px;background:rgba(201,168,76,.05);border:1px solid var(--gold-a25);border-radius:10px"><div style="font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Admin Notes</div><div style="font-size:.72rem;color:var(--t2);line-height:1.6">'+esc(r.admin_notes)+'</div></div>':'')
+    +'</div>'
+    +contactBtns
+    +(isAdmin?'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px">'+statusBtns+'</div>':'')
+    +'<button onclick="this.closest(\'[style*=\\\"position:fixed\\\"]\').remove()" style="width:100%;padding:12px;background:var(--bg4);border:1px solid var(--bd);border-radius:12px;color:var(--t2);font-size:.76rem;cursor:pointer">Close</button>'
+    +'</div>';
+
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) overlay.remove(); });
+}
+window.showOrderDetail = showOrderDetail;
+
+async function adminUpdateReqStatus(id, status){
+  try {
+    await sb.from('service_requests').update({status,updated_at:new Date().toISOString()}).eq('id',id);
+    const req = _allReqs?.find?.(r=>r.id===id);
+    if(req){ req.status=status; sendStatusNotification(req,status).catch(()=>{}); }
+    toast('Status: '+status.replace('_',' '),'ok');
+    if(typeof adminLoadReqs==='function') adminLoadReqs();
+    else if(typeof renderAdminReqs==='function') renderAdminReqs();
+  }catch(e){ toast(e.message,'er'); }
+}
+window.adminUpdateReqStatus = adminUpdateReqStatus;
+
+function sendOrderWhatsApp(id){
+  const r = _allReqs?.find?.(x=>x.id===id);
+  if(!r) return;
+  const user = _allUsers?.find?.(u=>u.id===r.user_id);
+  const phone = r.phone||user?.whatsapp_number||'';
+  const pRaw = phone.replace(/[^0-9]/g,'');
+  const pWa = pRaw.startsWith('0')?'254'+pRaw.slice(1):pRaw.startsWith('254')?pRaw:'254'+pRaw;
+  const name = r.full_name||user?.full_name||'Customer';
+  const msgs = {pending:'Your request is received and pending.',in_progress:'Your request is being processed!',completed:'Your order is ready for pickup!',ready:'Your order is ready!',cancelled:'Your request has been cancelled.'};
+  const msg = encodeURIComponent('Hello '+name+'!\n\nNovaDeskOnline Update\nOrder: '+r.service_name+' (#'+(r.id||'').substring(0,8).toUpperCase()+')\nStatus: '+(r.status||'').replace('_',' ').toUpperCase()+'\n\n'+(msgs[r.status]||'')+'\n\nThank you!');
+  if(pWa) window.open('https://wa.me/'+pWa+'?text='+msg,'_blank');
+}
+window.sendOrderWhatsApp = sendOrderWhatsApp;
+
+function sendMyOrderWhatsApp(id){
+  const r = (_reqs||[]).find(x=>x.id===id)||(_allReqs||[]).find(x=>x.id===id);
+  if(!r) return;
+  const waNum = (window._siteLinks?.whatsapp||'254111923477').replace(/[^0-9]/g,'');
+  const name = _profile?.full_name||'Customer';
+  const deadline = r.deadline?new Date(r.deadline).toLocaleString('en-KE',{dateStyle:'medium',timeStyle:'short'}):'Not specified';
+  const msg = encodeURIComponent('NovaDeskOnline — My Order\n\nService: '+r.service_name+'\nOrder #: '+(r.id||'').substring(0,8).toUpperCase()+'\nCustomer: '+name+'\nStatus: '+(r.status||'').replace('_',' ')+'\nDeadline: '+deadline+(r.description?'\nNotes: '+r.description:'')+'\n\nPlease assist. Thank you!');
+  window.open('https://wa.me/'+waNum+'?text='+msg,'_blank');
+}
+window.sendMyOrderWhatsApp = sendMyOrderWhatsApp;
+</script>
+
+<!-- ══ SERVICE EDITOR (body-level, not inside admin panel) ════════ -->
+<div id="admin-svc-editor" style="position:fixed;inset:0;z-index:9950;display:flex;flex-direction:column;visibility:hidden;opacity:0;transition:opacity .22s,visibility .22s">
+  <div style="flex:1;background:rgba(0,0,0,.65)" id="svc-ed-backdrop" onclick="adminCloseSvcEditor()"></div>
+  <div id="svc-ed-sheet" style="background:var(--bg2);border-radius:20px 20px 0 0;border-top:1px solid var(--bd);padding:20px 16px 40px;max-height:90dvh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,0,.67,0)">
+    <div style="width:36px;height:4px;background:var(--bd2);border-radius:4px;margin:0 auto 16px"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:.82rem;font-weight:700;color:var(--t1)" id="svc-editor-title">Edit Service</div>
+      <button onclick="adminCloseSvcEditor()" style="width:30px;height:30px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem"><i class="fas fa-times"></i></button>
+    </div>
+    <input type="hidden" id="svc-ed-id">
+    <div class="fg"><label class="flbl">Service Name *</label><input class="fi" id="svc-ed-name" type="text" placeholder="e.g. Print Documents" maxlength="60"></div>
+    <div class="fg"><label class="flbl">Description</label><textarea class="fi" id="svc-ed-desc" rows="2" placeholder="Short description of the service" maxlength="200"></textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="fg"><label class="flbl">Price Label</label><input class="fi" id="svc-ed-price" type="text" placeholder="From KES 50" maxlength="30"></div>
+      <div class="fg"><label class="flbl">Category</label>
+        <select class="fi" id="svc-ed-cat">
+          <option value="print">Print</option><option value="docs">Documents</option>
+          <option value="photos">Photos</option><option value="academic">Academic</option>
+          <option value="govt">Government</option><option value="digital">Digital</option>
+          <option value="design">Design</option><option value="general">General</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="fg"><label class="flbl">Icon (Font Awesome)</label><input class="fi" id="svc-ed-icon" type="text" placeholder="fa-print" maxlength="40"></div>
+      <div class="fg"><label class="flbl">Sort Order</label><input class="fi" id="svc-ed-sort" type="number" placeholder="1" min="1" max="999"></div>
+    </div>
+    <div class="fg"><label class="flbl">Price (numeric, for revenue estimates)</label><input class="fi" id="svc-ed-price-num" type="number" placeholder="0" min="0"></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0 14px">
+      <input type="checkbox" id="svc-ed-active" style="width:16px;height:16px;accent-color:var(--gold)">
+      <label for="svc-ed-active" style="font-size:.74rem;color:var(--t2);cursor:pointer">Active — visible to users</label>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button id="svc-ed-del" class="btn btn-outline btn-sm" style="color:var(--red);border-color:rgba(224,80,80,.4)" onclick="adminDeleteService()"><i class="fas fa-trash"></i></button>
+      <button class="btn btn-gold btn-full btn-sm" onclick="adminSaveService()"><i class="fas fa-check"></i> Save Service</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
