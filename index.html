@@ -418,7 +418,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6}
 .notif-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
 .notif-icon.request{background:rgba(0,102,255,.1);color:var(--gold)}
 .notif-icon.system{background:rgba(50,180,100,.1);color:var(--green)}
-.notif-icon.promotion{background:rgba(255,165,0,.1);color:#ffa500}
+.notif-icon.promotion,.notif-icon.promo{background:rgba(255,165,0,.1);color:#ffa500}
 .notif-icon.general{background:var(--bg4);color:var(--t3)}
 /* ── ACCOUNT AVATAR WRAP ────────────────────────────────────────── */
 .acct-avatar-wrap{display:flex;flex-direction:column;align-items:center;padding:24px 16px 16px;background:var(--bg2);border-bottom:1px solid var(--bd)}
@@ -1628,6 +1628,17 @@ body.admin-open .acct-tabs{ pointer-events:none; }
     </div>
   </header>
 
+  <!-- APP LOCK SCREEN — shown on load/resume only if the user enabled it on this device -->
+  <div id="applock-screen" style="display:none;position:fixed;inset:0;z-index:99999;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:24px">
+    <div style="width:64px;height:64px;border-radius:18px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.6rem;margin-bottom:18px"><i class="fas fa-fingerprint"></i></div>
+    <div style="font-family:var(--fd);font-size:1.1rem;color:var(--t1);margin-bottom:4px">NovaDeskOnline is locked</div>
+    <div style="font-size:.72rem;color:var(--t4);margin-bottom:24px">Enter your PIN to continue</div>
+    <div id="applock-dots" style="display:flex;gap:12px;margin-bottom:24px"></div>
+    <div id="applock-err" style="display:none;color:var(--red);font-size:.68rem;margin-bottom:14px"></div>
+    <div id="applock-keypad" style="display:grid;grid-template-columns:repeat(3,64px);gap:12px;margin-bottom:18px"></div>
+    <button class="btn btn-outline btn-sm" id="applock-bio-unlock-btn" onclick="tryAppLockBiometric()" style="display:none;margin-bottom:8px"><i class="fas fa-fingerprint"></i> Use Biometric</button>
+  </div>
+
   <main id="screens">
     <section class="scr on" id="scr-home">
       <!-- HERO -->
@@ -1722,11 +1733,16 @@ body.admin-open .acct-tabs{ pointer-events:none; }
         <span class="h-sect-link" onclick="acctTab('requests');goNav('account')">View all</span>
       </div>
       <div id="home-recent-reqs" style="padding:0 16px">
-        <div style="text-align:center;padding:28px;color:var(--t3);font-size:.76rem">
+        <div id="home-reqs-empty" style="text-align:center;padding:28px;color:var(--t3);font-size:.76rem">
           <i class="fas fa-inbox" style="font-size:2rem;display:block;margin-bottom:10px;color:var(--t4)"></i>
           No requests yet · <span style="color:var(--gold);cursor:pointer" onclick="goNav('services')">Request a service</span>
         </div>
       </div>
+      <!-- RECOMMENDED FOR YOU -->
+      <div class="h-sect-head" style="margin-top:8px">
+        <span class="h-sect-ttl">✨ Recommended For You</span>
+      </div>
+      <div id="home-recommended" style="display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 16px 4px"></div>
       </div><!-- /home-left-col -->
 
       <!-- DESKTOP RIGHT SIDEBAR PANEL -->
@@ -2105,11 +2121,6 @@ body.admin-open .acct-tabs{ pointer-events:none; }
           <div class="more2-item-body"><strong>Submit an Ad</strong><span>Place a sponsored ad on the home page</span></div>
           <i class="fas fa-chevron-right more2-arr"></i>
         </div>
-        <div class="more2-item" id="more-admin-item" onclick="openAdmin()" style="display:none">
-          <div class="more2-item-icon" style="background:rgba(224,80,80,.1);color:var(--red);border-color:rgba(224,80,80,.25)"><i class="fas fa-shield-halved"></i></div>
-          <div class="more2-item-body"><strong style="color:var(--t1)">Admin Dashboard</strong><span>Manage requests, users & more</span></div>
-          <i class="fas fa-chevron-right more2-arr"></i>
-        </div>
         <div class="more2-item" onclick="goNav('institution')">
           <div class="more2-item-icon" style="background:rgba(255,165,0,.1);color:#ffa500;border-color:rgba(255,165,0,.25)"><i class="fas fa-building-columns"></i></div>
           <div class="more2-item-body"><strong>Institution Portal</strong><span>Bulk services for schools &amp; businesses</span></div>
@@ -2357,6 +2368,21 @@ body.admin-open .acct-tabs{ pointer-events:none; }
             <div id="set-pw-ok" style="display:none;font-size:.72rem;color:var(--green);padding:9px;background:rgba(50,180,100,.07);border:1px solid rgba(50,180,100,.2);border-radius:6px;margin-bottom:10px"><i class="fas fa-check-circle"></i> Password changed successfully!</div>
             <button class="btn btn-gold btn-full" id="set-pw-btn" onclick="saveSettingsPassword()"><i class="fas fa-key"></i> Update Password</button>
           </div>
+          <!-- App Lock -->
+          <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px">
+            <div style="font-size:.7rem;font-weight:600;color:var(--t2);margin-bottom:12px"><i class="fas fa-fingerprint" style="color:var(--gold);margin-right:6px"></i>App Lock</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
+              <div style="display:flex;align-items:center;gap:10px"><i class="fas fa-shield-halved" style="color:var(--gold);width:16px"></i><div><div style="font-size:.78rem;font-weight:500;color:var(--t1)">Require PIN / Biometric</div><div style="font-size:.62rem;color:var(--t3)">Locks the app when you open it — optional, this device only</div></div></div>
+              <div class="theme-toggle" id="applock-toggle" onclick="toggleAppLockSetting()"></div>
+            </div>
+            <div id="applock-details" style="display:none;margin-top:8px;padding-top:12px;border-top:1px solid var(--bd)">
+              <div style="font-size:.64rem;color:var(--t4);margin-bottom:8px" id="applock-status-line">PIN not set</div>
+              <div style="display:flex;gap:8px">
+                <button class="btn btn-outline btn-xs" style="flex:1" onclick="startAppLockSetup()"><i class="fas fa-key"></i> <span id="applock-pin-btn-label">Set PIN</span></button>
+                <button class="btn btn-outline btn-xs" style="flex:1" id="applock-bio-btn" onclick="registerAppLockBiometric()"><i class="fas fa-fingerprint"></i> Enable Biometric</button>
+              </div>
+            </div>
+          </div>
           <!-- Theme + sign out -->
           <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px">
             <div style="font-size:.7rem;font-weight:600;color:var(--t2);margin-bottom:12px"><i class="fas fa-paint-roller" style="color:var(--gold);margin-right:6px"></i>Appearance</div>
@@ -2568,6 +2594,8 @@ body.admin-open .acct-tabs{ pointer-events:none; }
     <button class="admin-nav-tab"    id="atab-messages"      onclick="adminTab('messages')"    ><i class="fas fa-envelope"></i> Messages</button>
     <button class="admin-nav-tab"    id="atab-legal"         onclick="adminTab('legal')"       ><i class="fas fa-file-contract"></i> Legal</button>
     <button class="admin-nav-tab"    id="atab-security"      onclick="adminTab('security')"    ><i class="fas fa-shield-halved"></i> Security</button>
+    <button class="admin-nav-tab"    id="atab-adminloyalty"  onclick="adminTab('adminloyalty')" ><i class="fas fa-star"></i> Loyalty</button>
+    <button class="admin-nav-tab"    id="atab-logs"           onclick="adminTab('logs')"         ><i class="fas fa-clock-rotate-left"></i> Logs</button>
     <button class="admin-nav-tab"    id="atab-settings"      onclick="adminTab('settings')"    ><i class="fas fa-gear"></i> Settings</button>
   </div>
 
@@ -2833,20 +2861,30 @@ body.admin-open .acct-tabs{ pointer-events:none; }
       <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:14px">
         <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="fas fa-file-contract" style="color:var(--gold)"></i> Terms &amp; Conditions</div>
         <textarea class="fi" id="adm-terms-content" rows="10" placeholder="Enter your Terms & Conditions here…" style="font-size:.72rem;line-height:1.7;font-family:inherit"></textarea>
+        <div id="adm-terms-savemsg" style="display:none;margin-top:8px;font-size:.66rem;padding:8px 10px;border-radius:8px;background:rgba(50,180,100,.08);border:1px solid rgba(50,180,100,.25);color:var(--green)"></div>
+        <div id="adm-terms-lastedit" style="font-size:.6rem;color:var(--t4);margin-top:6px"></div>
         <div style="display:flex;gap:8px;margin-top:10px">
           <button class="btn btn-ghost btn-sm" onclick="adminLoadLegal()"><i class="fas fa-rotate-right"></i> Reload</button>
-          <button class="btn btn-gold btn-full btn-sm" onclick="adminSaveLegal('terms')"><i class="fas fa-save"></i> Save Terms</button>
+          <button class="btn btn-gold btn-full btn-sm" id="adm-terms-savebtn" onclick="adminSaveLegal('terms')"><i class="fas fa-save"></i> Save Terms</button>
         </div>
-        <button class="btn btn-outline btn-full btn-sm" style="margin-top:8px" onclick="openModal('terms-modal')"><i class="fas fa-eye"></i> Preview</button>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn btn-outline btn-full btn-sm" onclick="openModal('terms-modal')"><i class="fas fa-eye"></i> Preview</button>
+          <button class="btn btn-outline btn-full btn-sm" onclick="adminShowLegalHistory('terms_content','Terms & Conditions')"><i class="fas fa-clock-rotate-left"></i> History</button>
+        </div>
       </div>
       <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:14px">
         <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="fas fa-shield-halved" style="color:var(--gold)"></i> Privacy Policy</div>
         <textarea class="fi" id="adm-privacy-content" rows="10" placeholder="Enter your Privacy Policy here…" style="font-size:.72rem;line-height:1.7;font-family:inherit"></textarea>
+        <div id="adm-privacy-savemsg" style="display:none;margin-top:8px;font-size:.66rem;padding:8px 10px;border-radius:8px;background:rgba(50,180,100,.08);border:1px solid rgba(50,180,100,.25);color:var(--green)"></div>
+        <div id="adm-privacy-lastedit" style="font-size:.6rem;color:var(--t4);margin-top:6px"></div>
         <div style="display:flex;gap:8px;margin-top:10px">
           <button class="btn btn-ghost btn-sm" onclick="adminLoadLegal()"><i class="fas fa-rotate-right"></i> Reload</button>
-          <button class="btn btn-gold btn-full btn-sm" onclick="adminSaveLegal('privacy')"><i class="fas fa-save"></i> Save Privacy</button>
+          <button class="btn btn-gold btn-full btn-sm" id="adm-privacy-savebtn" onclick="adminSaveLegal('privacy')"><i class="fas fa-save"></i> Save Privacy</button>
         </div>
-        <button class="btn btn-outline btn-full btn-sm" style="margin-top:8px" onclick="openModal('privacy-modal')"><i class="fas fa-eye"></i> Preview</button>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn btn-outline btn-full btn-sm" onclick="openModal('privacy-modal')"><i class="fas fa-eye"></i> Preview</button>
+          <button class="btn btn-outline btn-full btn-sm" onclick="adminShowLegalHistory('privacy_content','Privacy Policy')"><i class="fas fa-clock-rotate-left"></i> History</button>
+        </div>
       </div>
       <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:80px">
         <div style="font-size:.7rem;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="fas fa-list-check" style="color:var(--gold)"></i> Acceptance Log</div>
@@ -2897,6 +2935,47 @@ body.admin-open .acct-tabs{ pointer-events:none; }
           <div style="font-size:.7rem;color:var(--t4);text-align:center;padding:16px">Click Refresh to load log</div>
         </div>
         <button class="btn btn-ghost btn-full btn-sm" style="margin-top:10px" onclick="secLoadAuditLog()"><i class="fas fa-rotate-right"></i> Refresh Log</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-section" id="asec-adminloyalty">
+    <div style="padding:12px 0 8px">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:14px">Loyalty & Referral Program</div>
+      <div class="admin-stat-row" style="margin-bottom:14px">
+        <div class="admin-stat-card" style="border-color:var(--gold-a45)">
+          <div class="admin-stat-icon" style="background:var(--gold-a8);color:var(--gold)"><i class="fas fa-star"></i></div>
+          <div class="admin-stat-val" id="loy-total-pts">—</div>
+          <div class="admin-stat-lbl">Points Issued</div>
+        </div>
+        <div class="admin-stat-card" style="border-color:rgba(167,139,250,.4)">
+          <div class="admin-stat-icon" style="background:rgba(167,139,250,.1);color:#a78bfa"><i class="fas fa-user-group"></i></div>
+          <div class="admin-stat-val" id="loy-total-refs">—</div>
+          <div class="admin-stat-lbl">Total Referrals</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none">
+        <div class="req-filter-pill on" onclick="filterLoyalty('all',this)">All Members</div>
+        <div class="req-filter-pill" onclick="filterLoyalty('top',this)">🏆 Most Referrals</div>
+        <div class="req-filter-pill" onclick="filterLoyalty('active',this)">✅ Credited Only</div>
+      </div>
+      <div id="admin-loyalty-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
+        <div style="text-align:center;padding:20px"><span class="spin"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-section" id="asec-logs">
+    <div style="padding:12px 0 8px">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:14px">Activity Logs</div>
+      <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none">
+        <div class="req-filter-pill on" onclick="filterLogs('all',this)">All Activity</div>
+        <div class="req-filter-pill" onclick="filterLogs('admin',this)">🛡️ Admin Actions</div>
+        <div class="req-filter-pill" onclick="filterLogs('account',this)">👤 Account Events</div>
+        <div class="req-filter-pill" onclick="filterLogs('order',this)">📋 Orders</div>
+      </div>
+      <div id="admin-logs-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
+        <div style="text-align:center;padding:20px"><span class="spin"></span></div>
       </div>
     </div>
   </div>
@@ -3910,7 +3989,7 @@ function goNav(name) {
   });
   window._currentScreen = name;
   if (name==='account')     renderAccount();
-  if (name==='home')        refreshHomeCounts();
+  if (name==='home') { refreshHomeCounts(); renderHomeRecommended(); loadHomeAds().catch(()=>{}); }
   if (name==='institution') renderInstitutionScreen();
   if (name==='services') {
     if (!_services.length) _services = [...STATIC_SERVICES];
@@ -4263,6 +4342,8 @@ function onAuthStateChange(){
       // Update UI
       renderAccount();
       refreshHomeCounts();
+      renderHomeRecommended();
+      loadHomeAds().catch(()=>{});
       subscribeRealtime();
       // Navigate to account tab for everyone (admin included)
       goNav('account');
@@ -4281,6 +4362,8 @@ function onAuthStateChange(){
       ]);
       renderAccount();
       refreshHomeCounts();
+      renderHomeRecommended();
+      loadHomeAds().catch(()=>{});
       subscribeRealtime();
     }
   });
@@ -4437,9 +4520,6 @@ function renderAccount(){
 
   if (!loggedIn || !_profile) return;
 
-  // Show admin menu item in MORE tab if admin
-  const moreAdminItem = $('more-admin-item');
-  if(moreAdminItem) moreAdminItem.style.display = _profile?.role==='admin' ? 'flex' : 'none';
   // Show Submit Ad button for agents and admins
   const moreAdItem = $('more-submit-ad-item');
   if(moreAdItem) moreAdItem.style.display = ['agent','admin'].includes(_profile?.role) ? 'flex' : 'none';
@@ -4786,6 +4866,11 @@ async function submitSvcRequest(){
     }
     toast("Request submitted! We'll reach you on WhatsApp. 🎉", 'ok', 4000);
     closeSvcReq();
+    sb.from('notifications').insert({
+      user_id: _user.id, type: 'request_created', category: 'request', ref_table:'service_requests', ref_id:req.id,
+      title: '🆕 Request Created', body: `Your "${req.service_name}" request was received and is pending.`,
+      read: false, created_at: new Date().toISOString()
+    }).then(()=>{ if(typeof loadNotifs==='function') loadNotifs(); }).catch(()=>{});
     if(typeof loadMyReqs==='function') loadMyReqs();
     if(typeof refreshHomeCounts==='function') refreshHomeCounts();
     if(typeof renderHomeReqs==='function') renderHomeReqs();
@@ -5061,7 +5146,12 @@ async function loadMyReqs(){
     const { data } = await sb.from('service_requests').select('*').eq('user_id', _user.id).order('created_at', {ascending:false});
     if (data) { _reqs = data; if(typeof cacheForOffline==='function') cacheForOffline('reqs',data); }
   } catch(e) {}
+  try {
+    const { data: rv } = await sb.from('reviews').select('request_id').eq('user_id', _user.id);
+    _myReviewedIds = new Set((rv||[]).map(r=>r.request_id));
+  } catch(e) { _myReviewedIds = _myReviewedIds || new Set(); }
 }
+let _myReviewedIds = new Set();
 function openMyRequestsModal(){
   if (!_user) { openAuth(); return; }
   const body = $('my-reqs-body');
@@ -5084,14 +5174,15 @@ function openMyRequestsModal(){
 }
 function renderHomeReqs(){
   const wrap = $('home-recent-reqs');
+  const emptyEl = $('home-reqs-empty');
   if (!wrap) return;
-  const shown = _reqs.slice(0,3);
+  const shown = (_reqs||[]).slice(0,3);
   if (!shown.length) {
-    $('home-reqs-empty').style.display='block';
+    if (emptyEl) emptyEl.style.display='block';
     return;
   }
-  $('home-reqs-empty').style.display='none';
-  wrap.innerHTML = shown.map(r=>`
+  if (emptyEl) emptyEl.style.display='none';
+  wrap.innerHTML = `<div id="home-reqs-empty" style="display:none"></div>` + shown.map(r=>`
     <div class="req-card" onclick="openMyRequestsModal()">
       <div class="req-icon ${esc(r.status||'pending')}"><i class="fas ${r.status==='completed'?'fa-check':r.status==='in_progress'?'fa-spinner':'fa-clock'}"></i></div>
       <div class="req-info">
@@ -5100,8 +5191,34 @@ function renderHomeReqs(){
       </div>
       <span class="req-badge ${esc(r.status||'pending')}">${esc(r.status||'pending').replace('_',' ')}</span>
     </div>
-  `).join('') + `<div style="display:block;margin:0 0 8px">`;
+  `).join('');
 }
+
+// Suggest services the user hasn't ordered yet, ranked by how popular
+// they are overall (falls back gracefully with no data required upfront)
+async function renderHomeRecommended(){
+  const el = $('home-recommended');
+  if (!el) return;
+  try {
+    if (!_services || !_services.length) { if(typeof loadServices==='function') await loadServices(); }
+    const orderedNames = new Set((_reqs||[]).map(r=>r.service_name));
+    let candidates = (_services||[]).filter(s => s.is_active && !orderedNames.has(s.name));
+    if (!candidates.length) candidates = (_services||[]).filter(s=>s.is_active).slice(0,6); // nothing new left to recommend — just show active ones
+    // Rank by how often OTHER customers ordered each service, using whatever request data we already have client-side
+    const popularity = {};
+    (_allReqs && _allReqs.length ? _allReqs : _reqs || []).forEach(r=>{ popularity[r.service_name]=(popularity[r.service_name]||0)+1; });
+    candidates.sort((a,b)=>(popularity[b.name]||0)-(popularity[a.name]||0));
+    const top = candidates.slice(0,6);
+    if (!top.length) { el.innerHTML = ''; return; }
+    el.innerHTML = top.map(s=>`
+      <div onclick="openSvcByName('${esc(s.name)}')" style="flex:0 0 150px;background:var(--bg3);border:1px solid var(--bd);border-radius:14px;padding:14px;cursor:pointer">
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.85rem;margin-bottom:8px"><i class="fas ${esc(s.icon||'fa-star')}"></i></div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--t1);margin-bottom:2px">${esc(s.name)}</div>
+        <div style="font-size:.6rem;color:var(--t4)">${esc(s.price_label||'')}</div>
+      </div>`).join('');
+  } catch(e) { el.innerHTML=''; }
+}
+window.renderHomeRecommended = renderHomeRecommended;
 
 /* ── NOTIFICATIONS ─────────────────────────────────────────────── */
 async function loadNotifs(){
@@ -5393,7 +5510,7 @@ function closeAdmin(){
 window.closeAdmin = closeAdmin;
 
 function adminTab(name){
-  ['overview','analytics','requests','users','agents','institutions','reviews','ads','services','messages','legal','security','settings'].forEach(t=>{
+  ['overview','analytics','requests','users','agents','institutions','reviews','ads','services','messages','legal','security','adminloyalty','logs','settings'].forEach(t=>{
     $(`atab-${t}`)?.classList.toggle('on', t===name);
     $(`asec-${t}`)?.classList.toggle('on', t===name);
   });
@@ -5408,6 +5525,8 @@ function adminTab(name){
   if (name==='institutions') adminLoadInstitutions();
   if (name==='legal')        adminLoadLegal();
   if (name==='security')     secInit();
+  if (name==='adminloyalty') adminLoadLoyalty();
+  if (name==='logs')         adminLoadLogs();
 }
 window.adminTab = adminTab;
 
@@ -5618,9 +5737,12 @@ async function adminViewUser(userId){
   const roleColor = {admin:'var(--red)',agent:'#a78bfa',suspended:'var(--t4)',user:'var(--gold)'}[u.role||'user']||'var(--gold)';
   const statusCounts = {pending:0,in_progress:0,completed:0,cancelled:0};
   userOrders.forEach(r=>{ if(statusCounts[r.status]!==undefined) statusCounts[r.status]++; });
+  const totalOrders = userOrders.length;
+  const referredUsers = (_allUsers||[]).filter(x=>u.referral_code && x.referred_by_code===u.referral_code);
 
   const overlay = document.createElement('div');
   overlay.style.cssText='position:fixed;inset:0;z-index:9900;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)';
+  overlay.className='nd-overlay';
 
   // Build role change buttons
   const otherRoles = ['user','agent','admin','suspended'].filter(r=>r!==(u.role||'user'));
@@ -5657,25 +5779,48 @@ async function adminViewUser(userId){
     +(u.password_changed_at?'<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-key" style="color:#a78bfa;width:16px;font-size:.78rem"></i><span style="font-size:.72rem;color:var(--t2)">Password changed: '+fmtRel(u.password_changed_at)+'</span></div>':'')
     +'</div>'
     // Stats
-    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px">'
-    +Object.entries(statusCounts).map(([st,n])=>{const c={pending:'var(--gold)',in_progress:'var(--blue)',completed:'var(--green)',cancelled:'var(--red)'}[st]||'var(--t3)';return '<div style="background:var(--bg3);border:1px solid var(--bd);border-radius:10px;padding:10px 6px;text-align:center"><div style="font-family:var(--fd);font-size:1.3rem;color:'+c+'">'+n+'</div><div style="font-size:.5rem;color:var(--t4);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">'+st.replace('_',' ')+'</div></div>';}).join('')
+    +'<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px">'
+    +'<div style="background:var(--gold-a8);border:1px solid var(--gold-a25);border-radius:10px;padding:10px 4px;text-align:center"><div style="font-family:var(--fd);font-size:1.3rem;color:var(--gold)">'+totalOrders+'</div><div style="font-size:.5rem;color:var(--t4);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">Total</div></div>'
+    +Object.entries(statusCounts).map(([st,n])=>{const c={pending:'var(--gold)',in_progress:'var(--blue)',completed:'var(--green)',cancelled:'var(--red)'}[st]||'var(--t3)';return '<div style="background:var(--bg3);border:1px solid var(--bd);border-radius:10px;padding:10px 4px;text-align:center"><div style="font-family:var(--fd);font-size:1.3rem;color:'+c+'">'+n+'</div><div style="font-size:.5rem;color:var(--t4);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">'+st.replace('_',' ')+'</div></div>';}).join('')
+    +'</div>'
+    // Referred people
+    +'<div style="font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin-bottom:8px"><i class="fas fa-user-group" style="margin-right:4px"></i>Referred People ('+referredUsers.length+')</div>'
+    +'<div style="display:flex;flex-direction:column;gap:5px;margin-bottom:14px;max-height:140px;overflow-y:auto">'
+    +(referredUsers.length ? referredUsers.map(ru=>'<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--bg4);border:1px solid var(--bd);border-radius:8px"><span style="font-size:.7rem;color:var(--t1)">'+esc(ru.full_name||ru.email||'Unknown')+'</span><span style="font-size:.56rem;color:var(--t4)">'+fmtRel(ru.created_at)+'</span></div>').join('') : '<div style="font-size:.7rem;color:var(--t4);text-align:center;padding:10px">No referrals yet</div>')
     +'</div>'
     // Recent orders
     +'<div style="font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin-bottom:8px"><i class="fas fa-concierge-bell" style="margin-right:4px"></i>Recent Orders</div>'
     +'<div style="display:flex;flex-direction:column;gap:5px;margin-bottom:14px">'+ordersHtml+'</div>'
+    // Quick actions
+    +'<div style="font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin-bottom:8px"><i class="fas fa-bolt" style="margin-right:4px"></i>Quick Actions</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">'
+    +'<button onclick="adminQuickResetPw(\''+esc(u.id)+'\',\''+esc((u.full_name||u.email||'User').replace(/'/g,"\\'"))+'\')" style="display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;background:rgba(255,165,0,.1);border:1px solid rgba(255,165,0,.3);border-radius:12px;color:#ffa500;font-size:.72rem;font-weight:600;cursor:pointer"><i class="fas fa-key"></i> Reset Password</button>'
+    +(u.role!=='suspended'?'<button onclick="adminChangeUserRole(\''+esc(u.id)+'\',\'suspended\',this)" style="display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;background:rgba(224,80,80,.1);border:1px solid rgba(224,80,80,.3);border-radius:12px;color:var(--red);font-size:.72rem;font-weight:600;cursor:pointer"><i class="fas fa-ban"></i> Suspend</button>':'<button onclick="adminChangeUserRole(\''+esc(u.id)+'\',\'user\',this)" style="display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;background:rgba(50,180,100,.1);border:1px solid rgba(50,180,100,.3);border-radius:12px;color:var(--green);font-size:.72rem;font-weight:600;cursor:pointer"><i class="fas fa-rotate-left"></i> Reinstate</button>')
+    +'</div>'
     // Contact buttons
     +(u.whatsapp_number?'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><a href="tel:'+pTel+'" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;background:rgba(77,158,255,.1);border:1px solid rgba(77,158,255,.3);border-radius:12px;color:#5aaeff;text-decoration:none;font-size:.76rem;font-weight:600"><i class="fas fa-phone"></i> Call</a><a href="https://wa.me/'+pWa+'" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:12px;color:#25D366;text-decoration:none;font-size:.76rem;font-weight:600"><i class="fab fa-whatsapp"></i> WhatsApp</a></div>':'')
     // Role change buttons
     +'<div style="font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin-bottom:8px"><i class="fas fa-user-gear" style="margin-right:4px"></i>Change Role</div>'
     +'<div style="display:flex;gap:6px;margin-bottom:10px">'+roleBtns+'</div>'
     // Close
-    +'<button onclick="this.closest(\'[style*=\\\"position:fixed\\\"]\').remove()" style="width:100%;padding:12px;background:var(--bg4);border:1px solid var(--bd);border-radius:12px;color:var(--t2);font-size:.78rem;cursor:pointer">Close</button>'
+    +'<button onclick="this.closest(\'.nd-overlay\').remove()" style="width:100%;padding:12px;background:var(--bg4);border:1px solid var(--bd);border-radius:12px;color:var(--t2);font-size:.78rem;cursor:pointer">Close</button>'
     +'</div>';
 
   document.body.appendChild(overlay);
   overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
 }
 window.adminViewUser = adminViewUser;
+
+function adminQuickResetPw(userId, name){
+  document.querySelectorAll('.nd-overlay').forEach(o=>o.remove());
+  adminTab('security');
+  setTimeout(()=>{
+    secSelectUser(userId, name);
+    const searchEl = $('sec-reset-user'); if (searchEl) searchEl.value = name;
+    $('sec-default-pw')?.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 120);
+}
+window.adminQuickResetPw = adminQuickResetPw;
 
 async function adminChangeUserRole(userId, newRole, btn){
   const u = _allUsers.find(x=>x.id===userId);
@@ -5832,6 +5977,7 @@ async function adminLoadServices(){
         +'</div>'
         +'<div style="display:flex;align-items:center;gap:6px;flex-shrink:0">'
         +'<span style="font-size:.54rem;padding:2px 7px;border-radius:20px;'+activeCls+'">'+( s.is_active?'Active':'Off')+'</span>'
+        +'<button data-svcid="'+safeId+'" onclick="adminViewServiceDetail(this.dataset.svcid)" style="width:30px;height:30px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem"><i class="fas fa-circle-info"></i></button>'
         +'<button data-svcid="'+safeId+'" onclick="adminOpenEditService(this.dataset.svcid)" style="width:30px;height:30px;border-radius:8px;background:var(--bg4);border:1px solid var(--bd);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem"><i class="fas fa-pen"></i></button>'
         +'</div>'
         +'</div>';
@@ -5878,6 +6024,204 @@ async function adminOpenEditService(svcId){
 }
 window.adminOpenEditService = adminOpenEditService;
 
+async function adminViewServiceDetail(svcId){
+  try{
+    const { data: s, error } = await sb.from('services').select('*').eq('id', svcId).single();
+    if (error || !s) throw error || new Error('Service not found');
+    // Count customers: distinct users who ordered this service (match by id, fallback to name)
+    const reqs = _allReqs.length ? _allReqs : (await sb.from('service_requests').select('user_id,service_id,service_name').order('created_at',{ascending:false})).data || [];
+    const matching = reqs.filter(r => r.service_id === svcId || (!r.service_id && r.service_name === s.name));
+    const customerIds = new Set(matching.map(r=>r.user_id));
+    const overlay = document.createElement('div');
+    overlay.style.cssText='position:fixed;inset:0;z-index:9900;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)';
+  overlay.className='nd-overlay';
+    overlay.innerHTML =
+      '<div style="background:var(--bg2);border-radius:24px 24px 0 0;border:1px solid var(--bd);width:100%;max-width:520px;max-height:90dvh;overflow-y:auto;padding:20px 16px 40px">'
+      +'<div style="width:36px;height:4px;background:var(--bd2);border-radius:4px;margin:0 auto 16px"></div>'
+      +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">'
+      +'<div style="width:48px;height:48px;border-radius:12px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.1rem;flex-shrink:0"><i class="fas '+esc(s.icon||'fa-star')+'"></i></div>'
+      +'<div><div style="font-family:var(--fd);font-size:1.05rem;color:var(--t1)">'+esc(s.name)+'</div><div style="font-size:.62rem;color:var(--t4);margin-top:2px">'+esc(s.category||'general')+' · '+esc(s.price_label||'—')+'</div></div>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">'
+      +'<div style="background:var(--bg3);border:1px solid var(--bd);border-radius:10px;padding:12px;text-align:center"><div style="font-family:var(--fd);font-size:1.4rem;color:var(--gold)">'+matching.length+'</div><div style="font-size:.54rem;color:var(--t4);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">Orders</div></div>'
+      +'<div style="background:var(--bg3);border:1px solid var(--bd);border-radius:10px;padding:12px;text-align:center"><div style="font-family:var(--fd);font-size:1.4rem;color:var(--blue)">'+customerIds.size+'</div><div style="font-size:.54rem;color:var(--t4);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">Customers</div></div>'
+      +'</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">'
+      +'<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-calendar-plus" style="color:var(--t4);width:16px;font-size:.78rem"></i><span style="font-size:.72rem;color:var(--t3)">Created '+(s.created_at?fmt(s.created_at):'—')+'</span></div>'
+      +(s.updated_at?'<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-pen-clip" style="color:var(--t4);width:16px;font-size:.78rem"></i><span style="font-size:.72rem;color:var(--t3)">Last edited '+fmtRel(s.updated_at)+'</span></div>':'')
+      +'<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><i class="fas fa-circle-check" style="color:'+(s.is_active?'var(--green)':'var(--t4)')+';width:16px;font-size:.78rem"></i><span style="font-size:.72rem;color:var(--t3)">Currently '+(s.is_active?'visible to customers':'hidden from customers')+'</span></div>'
+      +'</div>'
+      +(s.description?'<div style="font-size:.7rem;color:var(--t3);line-height:1.6;margin-bottom:16px;padding:10px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px">'+esc(s.description)+'</div>':'')
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">'
+      +'<button onclick="this.closest(\'.nd-overlay\').remove();adminOpenEditService(\''+esc(s.id)+'\')" style="display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;background:var(--gold-a8);border:1px solid var(--gold-a25);border-radius:12px;color:var(--gold);font-size:.72rem;font-weight:600;cursor:pointer"><i class="fas fa-pen"></i> Edit</button>'
+      +'<button onclick="adminToggleServiceVisibility(\''+esc(s.id)+'\','+(!s.is_active)+',this)" style="display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;background:rgba(77,158,255,.1);border:1px solid rgba(77,158,255,.3);border-radius:12px;color:#5aaeff;font-size:.72rem;font-weight:600;cursor:pointer"><i class="fas fa-eye'+(s.is_active?'-slash':'')+'"></i> '+(s.is_active?'Hide':'Show')+'</button>'
+      +'</div>'
+      +'<button onclick="adminDeleteServiceById(\''+esc(s.id)+'\',\''+esc((s.name||'').replace(/'/g,"\\'"))+'\')" style="width:100%;padding:11px;background:rgba(224,80,80,.1);border:1px solid rgba(224,80,80,.3);border-radius:12px;color:var(--red);font-size:.72rem;font-weight:600;cursor:pointer;margin-bottom:8px"><i class="fas fa-trash"></i> Delete Service</button>'
+      +'<button onclick="this.closest(\'.nd-overlay\').remove()" style="width:100%;padding:11px;background:var(--bg4);border:1px solid var(--bd);border-radius:12px;color:var(--t2);font-size:.76rem;cursor:pointer">Close</button>'
+      +'</div>';
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+  }catch(e){ toast(e.message||'Failed to load service details.','er'); }
+}
+window.adminViewServiceDetail = adminViewServiceDetail;
+
+async function adminToggleServiceVisibility(svcId, makeActive, btn){
+  try{
+    const { error } = await sb.from('services').update({is_active:makeActive, updated_at:new Date().toISOString()}).eq('id',svcId);
+    if (error) throw error;
+    toast(makeActive?'Service is now visible to customers ✅':'Service hidden from customers','ok');
+    document.querySelector(".nd-overlay")?.remove();
+    await adminLoadServices();
+    await loadServices();
+  }catch(e){ toast(e.message||'Failed to update visibility.','er'); }
+}
+window.adminToggleServiceVisibility = adminToggleServiceVisibility;
+
+function adminDeleteServiceById(svcId, name){
+  popup('Delete Service','Permanently remove "'+name+'" from the catalogue? This cannot be undone.','nf',[
+    {label:'Cancel', fn:null, style:'btn-ghost'},
+    {label:'Delete', style:'btn-outline', fn: async ()=>{
+      try{
+        const { error } = await sb.from('services').delete().eq('id', svcId);
+        if (error) throw error;
+        toast('Service deleted.','nf');
+        document.querySelector(".nd-overlay")?.remove();
+        await adminLoadServices();
+        await loadServices();
+      }catch(e){ toast(e.message||'Delete failed.','er'); }
+    }}
+  ]);
+}
+window.adminDeleteServiceById = adminDeleteServiceById;
+
+/* ── LOYALTY ADMIN TAB ───────────────────────────────────────────── */
+let _loyaltyFilter = 'all';
+let _loyaltyRows = [];
+
+function buildLoyaltyRows(){
+  const users = _allUsers||[];
+  return users.map(u=>{
+    const referredCount = users.filter(x=>u.referral_code && x.referred_by_code===u.referral_code).length;
+    const creditedCount = users.filter(x=>u.referral_code && x.referred_by_code===u.referral_code && x.referral_credited).length;
+    return {
+      id:u.id, name:u.full_name||u.email||'Unknown', code:u.referral_code||'—',
+      points:u.loyalty_points||0, referredCount, creditedCount
+    };
+  });
+}
+
+async function adminLoadLoyalty(){
+  const el = $('admin-loyalty-list');
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center;padding:20px"><span class="spin"></span></div>';
+  try{
+    if (!_allUsers.length) await adminLoadAll();
+    _loyaltyRows = buildLoyaltyRows();
+    const totalPts = _loyaltyRows.reduce((s,r)=>s+r.points,0);
+    const totalRefs = _loyaltyRows.reduce((s,r)=>s+r.referredCount,0);
+    $('loy-total-pts') && ($('loy-total-pts').textContent = totalPts.toLocaleString());
+    $('loy-total-refs') && ($('loy-total-refs').textContent = totalRefs);
+    renderLoyaltyList(_loyaltyFilter);
+  }catch(e){ el.innerHTML = `<div style="color:var(--red);font-size:.76rem;padding:16px">Failed to load loyalty data: ${esc(e.message)}</div>`; }
+}
+window.adminLoadLoyalty = adminLoadLoyalty;
+
+function filterLoyalty(f, el){
+  _loyaltyFilter = f;
+  document.querySelectorAll('#asec-adminloyalty .req-filter-pill').forEach(p=>p.classList.remove('on'));
+  el?.classList.add('on');
+  renderLoyaltyList(f);
+}
+window.filterLoyalty = filterLoyalty;
+
+function renderLoyaltyList(filter){
+  const el = $('admin-loyalty-list');
+  if (!el) return;
+  let rows = _loyaltyRows.slice();
+  if (filter === 'top') rows = rows.filter(r=>r.referredCount>0).sort((a,b)=>b.referredCount-a.referredCount);
+  else if (filter === 'active') rows = rows.filter(r=>r.creditedCount>0).sort((a,b)=>b.creditedCount-a.creditedCount);
+  else rows = rows.sort((a,b)=>b.points-a.points);
+  if (!rows.length){ el.innerHTML = '<div class="empty-state" style="padding:30px"><i class="fas fa-star"></i><p>No loyalty data to show.</p></div>'; return; }
+  el.innerHTML = rows.slice(0,50).map(r=>{
+    const tier = r.points>=500?{l:'Platinum',c:'var(--gold)'}:r.points>=200?{l:'Gold',c:'#ffc81e'}:r.points>=100?{l:'Silver',c:'#c0c0c0'}:{l:'Bronze',c:'#cd7f32'};
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r)">'
+      +'<div style="width:34px;height:34px;border-radius:9px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.8rem;flex-shrink:0"><i class="fas fa-star"></i></div>'
+      +'<div style="flex:1;min-width:0">'
+      +'<div style="font-size:.76rem;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(r.name)+'</div>'
+      +'<div style="font-size:.6rem;color:var(--t4);margin-top:1px">Code: '+esc(r.code)+' · '+r.referredCount+' referred ('+r.creditedCount+' credited)</div>'
+      +'</div>'
+      +'<div style="text-align:right;flex-shrink:0">'
+      +'<div style="font-family:var(--fd);font-size:1rem;color:var(--gold)">'+r.points+' pts</div>'
+      +'<div style="font-size:.5rem;color:'+tier.c+';text-transform:uppercase;letter-spacing:.06em;margin-top:1px">'+tier.l+'</div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+window.renderLoyaltyList = renderLoyaltyList;
+
+/* ── ADMIN LOGS TAB ──────────────────────────────────────────────── */
+let _logsFilter = 'all';
+let _logsRows = [];
+
+async function adminLoadLogs(){
+  const el = $('admin-logs-list');
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center;padding:20px"><span class="spin"></span></div>';
+  if (!_allUsers.length) { try { await adminLoadAll(); } catch(e){} }
+  const userName = id => (_allUsers||[]).find(u=>u.id===id)?.full_name || (_allUsers||[]).find(u=>u.id===id)?.email || 'Unknown';
+
+  const [auditRes, sysRes, notifRes] = await Promise.allSettled([
+    sb.from('admin_audit_log').select('*').order('created_at',{ascending:false}).limit(80),
+    sb.from('system_events').select('*').order('created_at',{ascending:false}).limit(80),
+    sb.from('notifications').select('*').eq('category','request').order('created_at',{ascending:false}).limit(80)
+  ]);
+
+  const audit = (auditRes.value?.data||[]).map(r=>({
+    _cat:'admin', created_at:r.created_at, icon:'fa-shield-halved', color:'var(--red)',
+    title: (r.action||'action').replace(/_/g,' '),
+    detail: `${userName(r.admin_id)} · ${r.target_table||''} ${r.target_id?('#'+String(r.target_id).slice(0,8)):''}`
+  }));
+  const sys = (sysRes.value?.data||[]).map(r=>({
+    _cat:'account', created_at:r.created_at, icon:'fa-user-gear', color:'#5aaeff',
+    title: (r.event_type||'event').replace(/_/g,' '),
+    detail: `${userName(r.user_id)} · ${r.description||''}`
+  }));
+  const ord = (notifRes.value?.data||[]).map(r=>({
+    _cat:'order', created_at:r.created_at, icon:'fa-list-check', color:'var(--gold)',
+    title: r.title||'Order update',
+    detail: `${userName(r.user_id)} · ${r.body||''}`
+  }));
+
+  _logsRows = [...audit, ...sys, ...ord].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  renderLogsList(_logsFilter);
+}
+window.adminLoadLogs = adminLoadLogs;
+
+function filterLogs(f, el){
+  _logsFilter = f;
+  document.querySelectorAll('#asec-logs .req-filter-pill').forEach(p=>p.classList.remove('on'));
+  el?.classList.add('on');
+  renderLogsList(f);
+}
+window.filterLogs = filterLogs;
+
+function renderLogsList(filter){
+  const el = $('admin-logs-list');
+  if (!el) return;
+  const rows = filter==='all' ? _logsRows : _logsRows.filter(r=>r._cat===filter);
+  if (!rows.length){ el.innerHTML = '<div class="empty-state" style="padding:30px"><i class="fas fa-clock-rotate-left"></i><p>No activity recorded yet.</p></div>'; return; }
+  el.innerHTML = rows.slice(0,100).map(r=>`
+    <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r)">
+      <div style="width:30px;height:30px;border-radius:8px;background:${r.color}18;border:1px solid ${r.color}44;display:flex;align-items:center;justify-content:center;color:${r.color};font-size:.7rem;flex-shrink:0;margin-top:1px"><i class="fas ${r.icon}"></i></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.74rem;font-weight:600;color:var(--t1);text-transform:capitalize">${esc(r.title)}</div>
+        <div style="font-size:.62rem;color:var(--t4);margin-top:2px">${esc(r.detail)}</div>
+      </div>
+      <div style="font-size:.56rem;color:var(--t4);flex-shrink:0;white-space:nowrap">${fmtRel(r.created_at)}</div>
+    </div>`).join('');
+}
+window.renderLogsList = renderLogsList;
+
 function adminOpenSvcEditor(){
   const ed = $('admin-svc-editor');
   if (!ed) return;
@@ -5917,14 +6261,15 @@ async function adminSaveService(){
     if (_editingSvcId) {
       const { error } = await sb.from('services').update({
         name, description:desc, price_label:price, icon, category:cat,
-        sort_order:sort, is_active:active
+        sort_order:sort, is_active:active, updated_at:new Date().toISOString()
       }).eq('id', _editingSvcId);
       if (error) throw error;
       toast('Service updated ✅','ok');
     } else {
       const { error } = await sb.from('services').insert({
         name, description:desc, price_label:price, icon, category:cat,
-        sort_order:sort, is_active:active
+        sort_order:sort, is_active:active,
+        created_by:_user?.id||null, created_at:new Date().toISOString(), updated_at:new Date().toISOString()
       });
       if (error) throw error;
       toast('Service added ✅','ok');
@@ -6204,6 +6549,7 @@ async function adminSetAgentStatus(id, status){
         await sb.from('notifications').insert({
           user_id: app.user_id,
           type: 'agent_approved',
+          category: 'system',
           title: '🎉 Agent Application Approved!',
           body: 'Congratulations! Your NovaDeskOnline Agent application has been approved. Your account is now active.',
           read: false,
@@ -6380,11 +6726,21 @@ async function sendStatusNotification(req, newStatus){
     await sb.from('notifications').insert({
       user_id: req.user_id,
       type: 'status_update',
+      category: 'request',
+      ref_table: 'service_requests',
+      ref_id: req.id,
       title: `${info.emoji} ${info.label}`,
       body: `Your "${req.service_name}" request is now: ${info.label}.${newStatus==='completed'?' Thank you! 🎉':newStatus==='ready'?' Please come collect it. 📦':''}`,
       read: false,
       created_at: new Date().toISOString()
     });
+    if (newStatus === 'completed') {
+      sb.from('notifications').insert({
+        user_id: req.user_id, type:'review_prompt', category:'request', ref_table:'service_requests', ref_id:req.id,
+        title:'⭐ How was it?', body:`Got a sec? Rate your "${req.service_name}" service — totally optional.`,
+        read:false, created_at:new Date().toISOString()
+      }).catch(()=>{});
+    }
 
     // 2 — WhatsApp message (opens in new tab for admin to send)
     if (user?.whatsapp_number) {
@@ -6562,12 +6918,19 @@ window.adminSaveNewInstitution = adminSaveNewInstitution;
 /* ── LEGAL ─────────────────────────────────────────────────────── */
 async function adminLoadLegal(){
   try{
-    const{data}=await sb.from('app_settings').select('key,value').in('key',['terms_content','privacy_content']);
+    const{data,error}=await sb.from('app_settings').select('key,value,updated_at').in('key',['terms_content','privacy_content']);
+    if(error) throw error;
     if(data) data.forEach(row=>{
-      if(row.key==='terms_content'){const el=$('adm-terms-content');if(el)el.value=row.value||'';}
-      if(row.key==='privacy_content'){const el=$('adm-privacy-content');if(el)el.value=row.value||'';}
+      if(row.key==='terms_content'){
+        const el=$('adm-terms-content');if(el)el.value=row.value||'';
+        const le=$('adm-terms-lastedit'); if(le) le.textContent = row.updated_at ? 'Last edited '+fmtRel(row.updated_at) : 'Never edited';
+      }
+      if(row.key==='privacy_content'){
+        const el=$('adm-privacy-content');if(el)el.value=row.value||'';
+        const le=$('adm-privacy-lastedit'); if(le) le.textContent = row.updated_at ? 'Last edited '+fmtRel(row.updated_at) : 'Never edited';
+      }
     });
-  }catch(e){toast('Could not load legal content','er');}
+  }catch(e){toast('Could not load legal content: '+(e.message||''),'er');}
   try{
     const{data:consents}=await sb.from('user_consents').select('user_id,type,accepted_at').order('accepted_at',{ascending:false}).limit(30);
     const logEl=$('adm-consent-log');
@@ -6584,13 +6947,48 @@ window.adminLoadLegal = adminLoadLegal;
 async function adminSaveLegal(type){
   const key=type==='terms'?'terms_content':'privacy_content';
   const val=$(type==='terms'?'adm-terms-content':'adm-privacy-content')?.value||'';
+  const btn=$(type==='terms'?'adm-terms-savebtn':'adm-privacy-savebtn');
+  const msgEl=$(type==='terms'?'adm-terms-savemsg':'adm-privacy-savemsg');
+  const label = type==='terms'?'Terms & Conditions':'Privacy Policy';
+  if (msgEl) msgEl.style.display='none';
+  if (btn){ btn.disabled=true; btn.innerHTML='<span class="spin"></span> Saving…'; }
   try{
+    // Fetch the previous value first so we can log a real diff, even if no DB trigger exists yet
+    const { data: prevRow } = await sb.from('app_settings').select('value').eq('key',key).maybeSingle();
     const{error}=await sb.from('app_settings').upsert({key,value:val,updated_at:new Date().toISOString()},{onConflict:'key'});
     if(error)throw error;
-    toast(`${type==='terms'?'Terms & Conditions':'Privacy Policy'} saved ✅`,'ok');
-  }catch(e){toast(e.message||'Save failed','er');}
+    try {
+      await sb.from('legal_edit_history').insert({
+        doc_key:key, old_value:prevRow?.value||null, new_value:val,
+        edited_by:_user?.id||null, edited_by_name:_profile?.full_name||'Admin', edited_at:new Date().toISOString()
+      });
+    } catch(histErr) { /* ok if this table doesn't exist yet — the save itself already succeeded */ }
+    toast(`${label} saved ✅`,'ok',3500);
+    if (msgEl){ msgEl.style.display='block'; msgEl.textContent='✅ Saved successfully just now.'; }
+    const le=$(type==='terms'?'adm-terms-lastedit':'adm-privacy-lastedit');
+    if (le) le.textContent = 'Last edited just now';
+  }catch(e){
+    toast(e.message||'Save failed','er');
+    if (msgEl){ msgEl.style.display='block'; msgEl.style.background='rgba(224,80,80,.08)'; msgEl.style.borderColor='rgba(224,80,80,.25)'; msgEl.style.color='var(--red)'; msgEl.textContent='❌ '+(e.message||'Save failed.'); }
+  }finally{
+    if (btn){ btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Save '+(type==='terms'?'Terms':'Privacy'); }
+  }
 }
 window.adminSaveLegal = adminSaveLegal;
+
+async function adminShowLegalHistory(key, label){
+  popup(label+' — Edit History', 'Loading…', 'nf', [{label:'Close', fn:null, style:'btn-ghost'}]);
+  try{
+    const { data, error } = await sb.from('legal_edit_history').select('edited_by_name,edited_at').eq('doc_key',key).order('edited_at',{ascending:false}).limit(20);
+    if (error) throw error;
+    const html = (data&&data.length) ? data.map(h=>`• ${fmt(h.edited_at)} — ${esc(h.edited_by_name||'Admin')}`).join('\n')
+                                      : 'No edit history recorded yet. History starts tracking from your next save.';
+    popup(label+' — Edit History', html, 'nf', [{label:'Close', fn:null, style:'btn-ghost'}]);
+  }catch(e){
+    popup(label+' — Edit History', 'History isn\'t available yet — run the schema_upgrade.sql migration to enable it.', 'nf', [{label:'Close', fn:null, style:'btn-ghost'}]);
+  }
+}
+window.adminShowLegalHistory = adminShowLegalHistory;
 
 /* ── SECURITY TAB ──────────────────────────────────────────────── */
 let _secSelectedUserId = null;
@@ -6666,6 +7064,11 @@ async function secResetSelectedUser(){
             new_password: pw
           });
           if(error) throw error;
+
+          // Stamp password_changed_at so admin panels reflect the reset
+          await sb.from('profiles').update({password_changed_at:new Date().toISOString()}).eq('id',_secSelectedUserId).catch(()=>{});
+          const uu = (_allUsers||[]).find(x=>x.id===_secSelectedUserId);
+          if (uu) uu.password_changed_at = new Date().toISOString();
 
           // Log the action
           await sb.from('admin_audit_log').insert({
@@ -6886,7 +7289,7 @@ async function adminSetAdStatus(id, status){
     // If approved, notify agent via in-app notification
     if(status==='active'){
       const{data:ad}=await sb.from('advertisements').select('agent_id,title').eq('id',id).single();
-      if(ad?.agent_id) await sb.from('notifications').insert({user_id:ad.agent_id,type:'ad_approved',title:'🎉 Ad Approved!',body:'Your ad "'+ad.title+'" is now live on NovaDeskOnline.',read:false,created_at:new Date().toISOString()}).catch(()=>{});
+      if(ad?.agent_id) await sb.from('notifications').insert({user_id:ad.agent_id,type:'ad_approved',category:'promo',title:'🎉 Ad Approved!',body:'Your ad "'+ad.title+'" is now live on NovaDeskOnline.',read:false,created_at:new Date().toISOString()}).catch(()=>{});
     }
     toast('Ad status: '+status+' ✅','ok');
     adminLoadAds();
@@ -6910,18 +7313,18 @@ async function loadHomeAds(){
   try{
     if(!sb) return;
     const now = new Date().toISOString();
-    const{data}=await sb.from('advertisements').select('*').eq('status','active').or('runs_until.is.null,runs_until.gte.'+now).order('created_at',{ascending:false}).limit(5);
-    if(!data?.length) return;
+    const{data,error}=await sb.from('advertisements').select('*').eq('status','active').or('runs_until.is.null,runs_until.gte.'+now).order('created_at',{ascending:false}).limit(5);
+    if(error||!data?.length) return; // table missing or no active ads — section stays hidden, no error shown on the home page
     const sec=$('home-ads-section'), list=$('home-ads-list');
     if(!sec||!list) return;
     list.innerHTML = data.map(a=>`
-      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:14px;overflow:hidden;position:relative" ${a.link_url?'onclick="window.open(\''+esc(a.link_url)+'\',\'_blank\')" style="cursor:pointer;background:var(--bg3);border:1px solid var(--bd);border-radius:14px;overflow:hidden;position:relative"':''}>
+      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:14px;overflow:hidden;position:relative;${a.link_url?'cursor:pointer':''}" ${a.link_url?`onclick="window.open('${esc(a.link_url)}','_blank')"`:''}>
         <span style="position:absolute;top:8px;right:8px;font-size:.48rem;background:rgba(0,0,0,.7);color:var(--t4);padding:2px 6px;border-radius:4px;font-weight:700;letter-spacing:.06em">SPONSORED</span>
-        ${a.image_url?'<img src="'+esc(a.image_url)+'" style="width:100%;height:140px;object-fit:cover" onerror="this.style.display=\'none\'">':''}
+        ${a.image_url?`<img src="${esc(a.image_url)}" style="width:100%;height:140px;object-fit:cover" onerror="this.style.display='none'">`:''}
         <div style="padding:12px">
-          <div style="font-size:.8rem;font-weight:700;color:var(--t1);margin-bottom:4px">'+esc(a.title||'')+'</div>
-          ${a.body?'<div style="font-size:.7rem;color:var(--t3);line-height:1.55">'+esc(a.body)+'</div>':''}
-          ${a.cta_label&&a.link_url?'<div style="display:inline-block;margin-top:10px;padding:7px 16px;background:var(--gold);color:#000;border-radius:20px;font-size:.68rem;font-weight:700">'+esc(a.cta_label)+'</div>':''}
+          <div style="font-size:.8rem;font-weight:700;color:var(--t1);margin-bottom:4px">${esc(a.title||'')}</div>
+          ${a.body?`<div style="font-size:.7rem;color:var(--t3);line-height:1.55">${esc(a.body)}</div>`:''}
+          ${a.cta_label&&a.link_url?`<div style="display:inline-block;margin-top:10px;padding:7px 16px;background:var(--gold);color:#000;border-radius:20px;font-size:.68rem;font-weight:700">${esc(a.cta_label)}</div>`:''}
         </div>
       </div>`).join('');
     sec.style.display='block';
@@ -7114,22 +7517,27 @@ function openRatingModal(){_curRating=0;renderStars(0);const c=$('rating-comment
 
 /* ── HOME REVIEWS ─────────────────────────────────── */
 async function loadHomeReviews(){
+  const carousel = document.getElementById('reviews-carousel');
+  const dotsEl = document.getElementById('reviews-dots');
+  if (!carousel) return;
   try {
     if (!sb) { setTimeout(loadHomeReviews, 2000); return; }
-    const res = await sb
-      .from('feedback')
-      .select('rating,comment,created_at,user_id')
-      .not('rating','is',null)
-      .order('created_at', { ascending: false })
-      .limit(8);
-    const data = res?.data ?? null;
-    const error = res?.error ?? null;
-    if (error) { console.warn('Reviews error:', error.message||String(error)); return; }
-    if (!data || !data.length) return;
 
-    const section = $('home-reviews-section');
-    const list = $('home-reviews-list');
-    if (!section || !list) return;
+    // Pull from both sources: general "Share Your Experience" feedback,
+    // and optional per-order ratings — merged so the carousel never stays empty
+    const [fbRes, rvRes] = await Promise.all([
+      sb.from('feedback').select('rating,comment,created_at,user_id').not('rating','is',null).order('created_at',{ascending:false}).limit(8),
+      sb.from('reviews').select('rating,comment,created_at,user_id,user_name,service_name').eq('visible',true).order('created_at',{ascending:false}).limit(8).then(r=>r).catch(()=>({data:null}))
+    ]);
+    const fb = (fbRes?.data||[]).map(r=>({...r, _name:null, _svc:null}));
+    const rv = (rvRes?.data||[]).map(r=>({...r, _name:r.user_name, _svc:r.service_name}));
+    const data = [...fb, ...rv].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,8);
+
+    if (!data.length) {
+      carousel.innerHTML = `<div style="flex:0 0 100%;background:var(--bg3);border:1px solid var(--bd);border-radius:16px;padding:20px;text-align:center;color:var(--t4);font-size:.72rem">No reviews yet — be the first to share your experience!</div>`;
+      if (dotsEl) dotsEl.innerHTML = '';
+      return;
+    }
 
     const stars = n => '★'.repeat(Math.max(0,Math.min(5,n))) + '☆'.repeat(Math.max(0,5-n));
     const ago = ts => {
@@ -7139,34 +7547,29 @@ async function loadHomeReviews(){
       return Math.floor(d/365)+'yr ago';
     };
 
-    const carousel = document.getElementById('reviews-carousel');
-    const dotsEl = document.getElementById('reviews-dots');
-    if (!carousel) return;
-
     carousel.innerHTML = data.map((r,i) => {
-      const init = r.user_id ? r.user_id.slice(0,2).toUpperCase() : 'A';
+      const name = r._name || 'Customer';
+      const init = name.slice(0,2).toUpperCase();
       return `<div style="flex:0 0 260px;scroll-snap-align:start;background:var(--bg3);border:1px solid var(--bd);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:36px;height:36px;border-radius:50%;background:var(--gold-a8);border:1.5px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--gold);flex-shrink:0">${init}</div>
-          <div><div style="font-size:.72rem;font-weight:600;color:var(--t1)">Customer</div><div style="font-size:.58rem;color:var(--t4)">${ago(r.created_at)}</div></div>
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--gold-a8);border:1.5px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--gold);flex-shrink:0">${esc(init)}</div>
+          <div><div style="font-size:.72rem;font-weight:600;color:var(--t1)">${esc(name)}${r._svc?` · <span style="color:var(--t4);font-weight:400">${esc(r._svc)}</span>`:''}</div><div style="font-size:.58rem;color:var(--t4)">${ago(r.created_at)}</div></div>
         </div>
         <div style="color:#ffc81e;font-size:.85rem;letter-spacing:2px">${stars(r.rating)}</div>
-        <div style="font-size:.72rem;color:var(--t2);line-height:1.65;flex:1;font-style:italic">${r.comment?`"${r.comment.substring(0,120)}${r.comment.length>120?'…':''}"`: '<span style="color:var(--t4)">No comment</span>'}</div>
+        <div style="font-size:.72rem;color:var(--t2);line-height:1.65;flex:1;font-style:italic">${r.comment?`"${esc(r.comment.substring(0,120))}${r.comment.length>120?'…':''}"`: '<span style="color:var(--t4)">No comment</span>'}</div>
       </div>`;
     }).join('');
 
-    // Dot indicators
     if (dotsEl) {
       dotsEl.innerHTML = data.map((_,i)=>`<div style="width:6px;height:6px;border-radius:50%;background:${i===0?'var(--gold)':'var(--bd2)'};transition:background .2s;cursor:pointer" onclick="document.getElementById('reviews-carousel').scrollTo({left:${i}*270,behavior:'smooth'})"></div>`).join('');
-      // Update dots on scroll
       carousel.addEventListener('scroll',()=>{
         const idx = Math.round(carousel.scrollLeft/270);
         dotsEl.querySelectorAll('div').forEach((d,i)=>d.style.background=i===idx?'var(--gold)':'var(--bd2)');
       },{passive:true});
     }
-
-    section.style.display = '';
-  } catch(e){}
+  } catch(e) {
+    carousel.innerHTML = `<div style="flex:0 0 100%;background:var(--bg3);border:1px solid var(--bd);border-radius:16px;padding:20px;text-align:center;color:var(--t4);font-size:.72rem">Couldn't load reviews right now.</div>`;
+  }
 }
 window.loadHomeReviews = loadHomeReviews;
 function setRating(n){_curRating=n;renderStars(n);}
@@ -8367,7 +8770,7 @@ function acctTab(name) {
     } else renderLoyaltyTab();
   }
   if (name==='notifs')    renderNotifsTab('all');
-  if (name==='settings')  populateSettingsTab();
+  if (name==='settings')  { populateSettingsTab(); if(typeof alRefreshSettingsUI==='function') alRefreshSettingsUI(); }
   if (name==='profile')   renderProfileTab();
   if (name==='notes')     renderAcctNotes();
 }
@@ -8477,6 +8880,7 @@ function renderMyReqsList(filter) {
       <div class="my-req-btns">
         ${r.status==='completed'?`<button class="btn btn-gold btn-xs" onclick="generateReceipt('${r.id}','${esc(r.service_name)}','${esc(_profile?.full_name||'Customer')}')"><i class="fas fa-file-pdf"></i> Receipt</button>`:''}
         ${(r.file_urls && JSON.parse(r.file_urls||'[]').length)?`<button class="btn btn-ghost btn-xs" onclick="viewReqFiles('${r.id}')"><i class="fas fa-paperclip"></i> Files</button>`:''}
+        ${r.status==='completed' && !_myReviewedIds.has(r.id) ? `<button class="btn btn-outline btn-xs" onclick="openReviewModal('${r.id}','${esc(r.service_name)}')" style="color:var(--gold);border-color:var(--gold-a45)"><i class="fas fa-star"></i> Rate (optional)</button>` : ''}
         <button class="btn btn-ghost btn-xs" onclick="openSvcByName('${esc(r.service_name)}')"><i class="fas fa-redo"></i> Reorder</button>
       </div>
     </div>`).join('');
@@ -8543,6 +8947,53 @@ window.shareRefLink = shareRefLink;
 
 /* ── NOTIFICATIONS TAB ──────────────────────────────────────────── */
 let _notifFilter = 'all';
+let _activeAdsCache = null; // cached active ads for the Promos filter
+
+// Classify a notification into request / promo / system regardless of
+// which raw `type` string it was saved with (old rows + new rows both work)
+function notifCategory(n) {
+  if (n.category) return n.category === 'promotion' ? 'promo' : n.category;
+  const t = n.type || '';
+  if (['ad_approved','new_ad','coupon','promo'].includes(t)) return 'promo';
+  if (['agent_approved','account_created','password_changed','role_change','login','system'].includes(t)) return 'system';
+  return 'request';
+}
+
+// Build "system" entries straight from the profile so this tab is useful
+// even before any system_events/notifications rows exist for this user
+function getSyntheticSystemEvents() {
+  if (!_profile) return [];
+  const out = [];
+  if (_profile.created_at) out.push({ id:'sys-created', read:true, _synthetic:true,
+    title:'✅ Account Created', body:'Your NovaDeskOnline account was created.', created_at:_profile.created_at });
+  if (_profile.password_changed_at) out.push({ id:'sys-pwd', read:true, _synthetic:true,
+    title:'🔑 Password Changed', body:'Your password was last changed on '+fmt(_profile.password_changed_at)+'.', created_at:_profile.password_changed_at });
+  if (_profile.last_visit) out.push({ id:'sys-visit', read:true, _synthetic:true,
+    title:'🕒 Last Visit', body:'You were last active on '+fmt(_profile.last_visit)+'.', created_at:_profile.last_visit });
+  if (_user?.last_sign_in_at) out.push({ id:'sys-signin', read:true, _synthetic:true,
+    title:'🔓 Last Sign In', body:'Signed in on '+fmt(_user.last_sign_in_at)+'.', created_at:_user.last_sign_in_at });
+  return out;
+}
+
+// Pull active ads and softly personalize ordering by matching the user's
+// most-requested service names against ad title/body text
+async function getPersonalizedPromos() {
+  if (_activeAdsCache) return _activeAdsCache;
+  try {
+    const now = new Date().toISOString();
+    const { data } = await sb.from('advertisements').select('*').eq('status','active')
+      .or('runs_until.is.null,runs_until.gte.'+now).order('created_at',{ascending:false}).limit(10);
+    const myServices = (_reqs||[]).map(r=>(r.service_name||'').toLowerCase());
+    const scored = (data||[]).map(ad=>{
+      const text = ((ad.title||'')+' '+(ad.body||'')).toLowerCase();
+      const relevant = myServices.some(s => s && text.includes(s.split(' ')[0]));
+      return { ...ad, _relevant: relevant };
+    }).sort((a,b)=> (b._relevant - a._relevant));
+    _activeAdsCache = scored;
+    return scored;
+  } catch(e) { return []; }
+}
+
 function filterNotifs(f, el) {
   _notifFilter = f;
   document.querySelectorAll('#apanel-notifs .req-filter-pill').forEach(p=>p.classList.remove('on'));
@@ -8550,25 +9001,52 @@ function filterNotifs(f, el) {
   renderNotifsTab(f);
 }
 window.filterNotifs = filterNotifs;
-function renderNotifsTab(filter) {
+
+async function renderNotifsTab(filter) {
   const el = $('notifs-tab-list');
   if (!el) return;
-  const list = filter==='all' ? _notifs : _notifs.filter(n=>n.type===filter);
-  if (!list.length) {
-    el.innerHTML=`<div class="empty-state"><i class="fas fa-bell-slash"></i><h3>No notifications</h3><p>${filter==='all'?'You\'re all caught up!':'No '+filter+' notifications'}</p></div>`;
-    return;
+  const cat = filter === 'promotion' ? 'promo' : filter;
+  const icons = { request:'fa-list-check', system:'fa-gear', promo:'fa-tag' };
+
+  // Requests + system + real promo notifications, always available instantly
+  let items = (cat==='all' ? _notifs : _notifs.filter(n=>notifCategory(n)===cat))
+    .map(n => ({...n, _cat: notifCategory(n)}));
+  if (cat==='all' || cat==='system') items = items.concat(getSyntheticSystemEvents().map(n=>({...n,_cat:'system'})));
+  items.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+
+  const renderList = (extraPromoCards) => {
+    const promoCards = (cat==='all' || cat==='promo') ? (extraPromoCards||[]) : [];
+    if (!items.length && !promoCards.length) {
+      el.innerHTML = `<div class="empty-state"><i class="fas fa-bell-slash"></i><h3>No notifications</h3><p>${filter==='all'?'You\'re all caught up!':'No '+filter+' notifications yet'}</p></div>`;
+      return;
+    }
+    const notifHtml = items.map(n => `
+      <div class="notif-item ${n.read?'':'unread'}" ${n._synthetic?'':`onclick="markNotifRead('${n.id}',this)"`}>
+        <div class="notif-icon ${n._cat}"><i class="fas ${icons[n._cat]||'fa-bell'}"></i></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.76rem;font-weight:${n.read?'500':'700'};color:var(--t1);margin-bottom:2px">${esc(n.title)}</div>
+          <div style="font-size:.66rem;color:var(--t3);line-height:1.5">${esc(n.body)}</div>
+          <div style="font-size:.58rem;color:var(--t4);margin-top:4px">${fmtRel(n.created_at)}</div>
+        </div>
+        ${!n.read && !n._synthetic ? `<div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:4px"></div>` : ''}
+      </div>`).join('');
+    const promoHtml = promoCards.map(ad => `
+      <div class="notif-item" style="cursor:${ad.link_url?'pointer':'default'}" ${ad.link_url?`onclick="window.open('${esc(ad.link_url)}','_blank')"`:''}>
+        <div class="notif-icon promo"><i class="fas ${ad._relevant?'fa-star':'fa-tag'}"></i></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.76rem;font-weight:700;color:var(--t1);margin-bottom:2px">${ad._relevant?'⭐ ':''}${esc(ad.title)}</div>
+          <div style="font-size:.66rem;color:var(--t3);line-height:1.5">${esc(ad.body||'')}</div>
+          <div style="font-size:.58rem;color:var(--t4);margin-top:4px">${fmtRel(ad.created_at)}${ad._relevant?' · Picked for your past orders':''}</div>
+        </div>
+      </div>`).join('');
+    el.innerHTML = promoHtml + notifHtml;
+  };
+
+  renderList([]);
+  if (cat==='all' || cat==='promo') {
+    const ads = await getPersonalizedPromos();
+    if (_notifFilter === filter) renderList(ads); // guard against a stale async render if user switched tabs
   }
-  const icons = {request:'fa-list-check',system:'fa-gear',promotion:'fa-tag',general:'fa-bell'};
-  el.innerHTML = list.map(n=>`
-    <div class="notif-item ${n.read?'':'unread'}" onclick="markNotifRead('${n.id}',this)">
-      <div class="notif-icon ${n.type}"><i class="fas ${icons[n.type]||'fa-bell'}"></i></div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:.76rem;font-weight:${n.read?'500':'700'};color:var(--t1);margin-bottom:2px">${esc(n.title)}</div>
-        <div style="font-size:.66rem;color:var(--t3);line-height:1.5">${esc(n.body)}</div>
-        <div style="font-size:.58rem;color:var(--t4);margin-top:4px">${fmtRel(n.created_at)}</div>
-      </div>
-      ${!n.read?`<div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:4px"></div>`:''}
-    </div>`).join('');
 }
 async function markNotifRead(id, el) {
   const n = _notifs.find(x=>x.id===id);
@@ -9719,9 +10197,16 @@ function setReviewStar(n){
 async function submitReview(){
   if(!_rvwStar){toast('Select a rating','er');return;}
   try{
-    await sb.from('reviews').insert({request_id:_rvwReqId,user_id:_user?.id,rating:_rvwStar,comment:$('review-comment')?.value||'',created_at:new Date().toISOString()});
+    const req = (_reqs||[]).find(r=>r.id===_rvwReqId);
+    await sb.from('reviews').insert({
+      request_id:_rvwReqId, user_id:_user?.id, rating:_rvwStar, comment:$('review-comment')?.value||'',
+      service_id:req?.service_id||null, service_name:req?.service_name||null,
+      user_name:_profile?.full_name||null, visible:true, created_at:new Date().toISOString()
+    });
     closeModal('review-modal');
     toast('Review submitted! Thank you ⭐','ok');
+    _myReviewedIds.add(_rvwReqId);
+    if(typeof renderMyReqsList==='function') renderMyReqsList(_reqFilter||'all');
   }catch(e){toast(e.message||'Failed','er');}
 }
 window.openReviewModal=openReviewModal; window.setReviewStar=setReviewStar; window.submitReview=submitReview;
@@ -9912,6 +10397,7 @@ function showOrderDetail(r, isAdmin){
 
   const overlay = document.createElement('div');
   overlay.style.cssText='position:fixed;inset:0;z-index:9850;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)';
+  overlay.className='nd-overlay';
 
   let statusBtns = '';
   if(isAdmin){
@@ -9958,7 +10444,7 @@ function showOrderDetail(r, isAdmin){
     +'</div>'
     +contactBtns
     +(isAdmin?'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px">'+statusBtns+'</div>':'')
-    +'<button onclick="this.closest(\'[style*=\\\"position:fixed\\\"]\').remove()" style="width:100%;padding:12px;background:var(--bg4);border:1px solid var(--bd);border-radius:12px;color:var(--t2);font-size:.76rem;cursor:pointer">Close</button>'
+    +'<button onclick="this.closest(\'.nd-overlay\').remove()" style="width:100%;padding:12px;background:var(--bg4);border:1px solid var(--bd);border-radius:12px;color:var(--t2);font-size:.76rem;cursor:pointer">Close</button>'
     +'</div>';
 
   document.body.appendChild(overlay);
@@ -10002,6 +10488,192 @@ function sendMyOrderWhatsApp(id){
   window.open('https://wa.me/'+waNum+'?text='+msg,'_blank');
 }
 window.sendMyOrderWhatsApp = sendMyOrderWhatsApp;
+
+/* ═══════════════════════════════════════════════════════════════
+   APP LOCK — optional PIN + biometric gate, device-local only
+   ═══════════════════════════════════════════════════════════════ */
+const AL_KEY_ENABLED = 'nd_applock_enabled';
+const AL_KEY_PINHASH = 'nd_applock_pin_hash';
+const AL_KEY_BIOCRED = 'nd_applock_bio_cred_id';
+let _alMode = 'unlock';   // 'unlock' | 'setup1' | 'setup2'
+let _alBuffer = '';
+let _alFirstPin = '';
+
+async function alSha256(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function alRenderDots(){
+  const el = $('applock-dots'); if (!el) return;
+  const n = _alMode==='unlock' ? 6 : 6;
+  el.innerHTML = Array.from({length:n}).map((_,i)=>
+    `<div style="width:14px;height:14px;border-radius:50%;border:1.5px solid var(--gold-a45);background:${i<_alBuffer.length?'var(--gold)':'transparent'}"></div>`
+  ).join('');
+}
+function alRenderKeypad(){
+  const el = $('applock-keypad'); if (!el) return;
+  const keys = ['1','2','3','4','5','6','7','8','9','','0','⌫'];
+  el.innerHTML = keys.map(k=>{
+    if (k==='') return '<div></div>';
+    if (k==='⌫') return `<button onclick="alKeyPress('back')" style="width:64px;height:64px;border-radius:50%;background:var(--bg3);border:1px solid var(--bd);color:var(--t2);font-size:1.1rem;cursor:pointer">⌫</button>`;
+    return `<button onclick="alKeyPress('${k}')" style="width:64px;height:64px;border-radius:50%;background:var(--bg3);border:1px solid var(--bd);color:var(--t1);font-size:1.2rem;font-weight:600;cursor:pointer">${k}</button>`;
+  }).join('');
+}
+function alKeyPress(k){
+  const errEl = $('applock-err'); if (errEl) errEl.style.display='none';
+  if (k==='back'){ _alBuffer = _alBuffer.slice(0,-1); alRenderDots(); return; }
+  if (_alBuffer.length>=6) return;
+  _alBuffer += k;
+  alRenderDots();
+  if (_alBuffer.length===6) setTimeout(alSubmitPin, 150);
+}
+window.alKeyPress = alKeyPress;
+
+async function alSubmitPin(){
+  const errEl = $('applock-err');
+  if (_alMode==='unlock'){
+    const hash = await alSha256(_alBuffer);
+    if (hash === localStorage.getItem(AL_KEY_PINHASH)){
+      $('applock-screen').style.display='none';
+    } else {
+      if (errEl){ errEl.textContent='Incorrect PIN — try again.'; errEl.style.display='block'; }
+      _alBuffer=''; alRenderDots();
+    }
+  } else if (_alMode==='setup1'){
+    _alFirstPin = _alBuffer;
+    _alBuffer=''; _alMode='setup2';
+    $('applock-screen') && ($('applock-screen').querySelector('div[style*="font-family:var(--fd)"]').textContent = 'Confirm your PIN');
+    alRenderDots();
+  } else if (_alMode==='setup2'){
+    if (_alBuffer !== _alFirstPin){
+      if (errEl){ errEl.textContent="PINs didn't match — start again."; errEl.style.display='block'; }
+      _alBuffer=''; _alFirstPin=''; _alMode='setup1';
+      alRenderDots();
+      return;
+    }
+    const hash = await alSha256(_alBuffer);
+    localStorage.setItem(AL_KEY_PINHASH, hash);
+    localStorage.setItem(AL_KEY_ENABLED, '1');
+    $('applock-screen').style.display='none';
+    toast('App Lock enabled ✅','ok');
+    alRefreshSettingsUI();
+  }
+}
+
+function toggleAppLockSetting(){
+  const enabled = localStorage.getItem(AL_KEY_ENABLED)==='1';
+  if (enabled){
+    localStorage.removeItem(AL_KEY_ENABLED);
+    localStorage.removeItem(AL_KEY_PINHASH);
+    localStorage.removeItem(AL_KEY_BIOCRED);
+    toast('App Lock disabled','nf');
+    alRefreshSettingsUI();
+  } else {
+    startAppLockSetup();
+  }
+}
+window.toggleAppLockSetting = toggleAppLockSetting;
+
+function startAppLockSetup(){
+  _alMode='setup1'; _alBuffer=''; _alFirstPin='';
+  const scr = $('applock-screen');
+  if (!scr) return;
+  scr.style.display='flex';
+  const titleEl = scr.querySelector('div[style*="font-family:var(--fd)"]');
+  if (titleEl) titleEl.textContent = 'Set your PIN';
+  const bioBtn = $('applock-bio-unlock-btn'); if (bioBtn) bioBtn.style.display='none';
+  alRenderDots(); alRenderKeypad();
+}
+window.startAppLockSetup = startAppLockSetup;
+
+function alRefreshSettingsUI(){
+  const enabled = localStorage.getItem(AL_KEY_ENABLED)==='1';
+  const hasBio = !!localStorage.getItem(AL_KEY_BIOCRED);
+  const toggle = $('applock-toggle');
+  if (toggle) toggle.classList.toggle('on', enabled);
+  const details = $('applock-details');
+  if (details) details.style.display = enabled ? 'block' : 'none';
+  const statusLine = $('applock-status-line');
+  if (statusLine) statusLine.textContent = enabled ? `PIN set${hasBio?' · Biometric enabled':''}` : 'PIN not set';
+  const pinBtnLabel = $('applock-pin-btn-label');
+  if (pinBtnLabel) pinBtnLabel.textContent = enabled ? 'Change PIN' : 'Set PIN';
+  const bioBtn = $('applock-bio-btn');
+  if (bioBtn) bioBtn.style.display = (window.PublicKeyCredential) ? 'flex' : 'none';
+}
+window.alRefreshSettingsUI = alRefreshSettingsUI;
+
+// Biometric enrollment — local device only, no server round-trip needed
+// since this only gates app *opening*, not account authentication.
+async function registerAppLockBiometric(){
+  if (!window.PublicKeyCredential){ toast('Biometric unlock is not supported on this device/browser.','er'); return; }
+  if (localStorage.getItem(AL_KEY_ENABLED)!=='1'){ toast('Set a PIN first.','er'); return; }
+  try{
+    const cred = await navigator.credentials.create({
+      publicKey: {
+        challenge: crypto.getRandomValues(new Uint8Array(32)),
+        rp: { name: 'NovaDeskOnline' },
+        user: { id: crypto.getRandomValues(new Uint8Array(16)), name: _profile?.email||'user', displayName: _profile?.full_name||'User' },
+        pubKeyCredParams: [{alg:-7,type:'public-key'},{alg:-257,type:'public-key'}],
+        authenticatorSelection: { authenticatorAttachment:'platform', userVerification:'required' },
+        timeout: 60000
+      }
+    });
+    if (cred){
+      const idB64 = btoa(String.fromCharCode(...new Uint8Array(cred.rawId)));
+      localStorage.setItem(AL_KEY_BIOCRED, idB64);
+      toast('Biometric unlock enabled ✅','ok');
+      alRefreshSettingsUI();
+    }
+  }catch(e){ toast('Could not enable biometric unlock: '+(e.message||'cancelled'),'er'); }
+}
+window.registerAppLockBiometric = registerAppLockBiometric;
+
+async function tryAppLockBiometric(){
+  const idB64 = localStorage.getItem(AL_KEY_BIOCRED);
+  if (!idB64 || !window.PublicKeyCredential) return;
+  try{
+    const rawId = Uint8Array.from(atob(idB64), c=>c.charCodeAt(0));
+    const assertion = await navigator.credentials.get({
+      publicKey: {
+        challenge: crypto.getRandomValues(new Uint8Array(32)),
+        allowCredentials: [{ id: rawId, type:'public-key' }],
+        userVerification: 'required',
+        timeout: 60000
+      }
+    });
+    if (assertion) $('applock-screen').style.display='none';
+  }catch(e){ /* user cancelled or failed — stay on PIN screen */ }
+}
+window.tryAppLockBiometric = tryAppLockBiometric;
+
+// Call on boot and whenever the app becomes visible again (tab/app resume)
+function checkAppLockOnBoot(){
+  const enabled = localStorage.getItem(AL_KEY_ENABLED)==='1';
+  const scr = $('applock-screen');
+  if (!scr) return;
+  if (!enabled){ scr.style.display='none'; return; }
+  _alMode='unlock'; _alBuffer='';
+  scr.style.display='flex';
+  const titleEl = scr.querySelector('div[style*="font-family:var(--fd)"]');
+  if (titleEl) titleEl.textContent = 'NovaDeskOnline is locked';
+  alRenderDots(); alRenderKeypad();
+  const bioBtn = $('applock-bio-unlock-btn');
+  if (bioBtn){
+    const hasBio = !!localStorage.getItem(AL_KEY_BIOCRED);
+    bioBtn.style.display = hasBio ? 'block' : 'none';
+    if (hasBio) tryAppLockBiometric(); // offer biometric immediately, falls back to PIN on cancel/fail
+  }
+}
+window.checkAppLockOnBoot = checkAppLockOnBoot;
+
+document.addEventListener('visibilitychange', ()=>{
+  if (document.visibilityState==='visible') checkAppLockOnBoot();
+});
+document.addEventListener('DOMContentLoaded', ()=>{
+  checkAppLockOnBoot();
+  alRefreshSettingsUI();
+});
 </script>
 
 <!-- ══ SERVICE EDITOR (body-level, not inside admin panel) ════════ -->
