@@ -41,7 +41,7 @@
   --r:8px;--rl:14px;--rxl:20px;
   --ease:cubic-bezier(.4,0,.2,1);
   --top:56px;--nav:64px;
-  --zi:50;--zs:200;--zm:400;--zt:600;
+  --zi:50;--zs:200;--zm:850;--zt:900;
 }
 :root,[data-theme="dark"]{
   --bg:#0a0f1e;--bg2:#0f1628;--bg3:#152035;--bg4:#1b2a44;--bg5:#213354;
@@ -185,7 +185,7 @@ body.pwa-showing #screens{padding-top:calc(var(--top) + 68px)}
 @keyframes tOut{to{opacity:0;transform:translateY(-4px)}}
 
 /* ── POPUP ALERTS ───────────────────────────────────────────────── */
-#popup-overlay{position:fixed;inset:0;z-index:800;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s var(--ease)}
+#popup-overlay{position:fixed;inset:0;z-index:900;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s var(--ease)}
 #popup-overlay.on{opacity:1;pointer-events:all}
 .popup-box{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rxl);max-width:340px;width:100%;padding:0;overflow:hidden;transform:scale(.94) translateY(8px);transition:transform .25s var(--ease);box-shadow:0 20px 60px rgba(0,0,0,.7)}
 #popup-overlay.on .popup-box{transform:scale(1) translateY(0)}
@@ -196,7 +196,8 @@ body.pwa-showing #screens{padding-top:calc(var(--top) + 68px)}
 .popup-icon.nf{background:var(--gold-a8);color:var(--gold);border:1px solid var(--gold-a25)}
 .popup-ttl{font-family:var(--fd);font-size:1.1rem;color:var(--t1);margin-bottom:4px}
 .popup-msg{font-size:.78rem;color:var(--t3);line-height:1.65}
-.popup-acts{padding:0 16px 16px;display:flex;gap:8px;justify-content:flex-end}
+.popup-acts{padding:0 16px 16px;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.popup-acts .btn{flex:1 1 auto;min-width:fit-content;white-space:nowrap}
 
 /* ── BUTTONS ────────────────────────────────────────────────────── */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 22px;font-family:var(--fb);font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;border:none;border-radius:var(--r);cursor:pointer;transition:all .2s var(--ease);white-space:nowrap;-webkit-tap-highlight-color:transparent}
@@ -661,6 +662,18 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 [data-theme="light"] .theme-toggle::before{content:'☀️'}
 [data-theme="light"] .theme-toggle::after{transform:translateX(22px);background:linear-gradient(135deg,#ff9500,#ffcc00);box-shadow:0 2px 6px rgba(255,165,0,.5)}
 [data-theme="dark"] .theme-toggle::after{transform:translateX(0)}
+.nd-switch{width:48px;height:26px;background:var(--bg4);border:1.5px solid var(--bd2);border-radius:13px;position:relative;cursor:pointer;transition:background .25s,border-color .25s;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.nd-switch::after{content:'';position:absolute;top:2.5px;left:3px;width:19px;height:19px;border-radius:50%;background:var(--t4);transition:transform .25s cubic-bezier(.34,1.56,.64,1),background .25s}
+.nd-switch.on{background:var(--gold-a25);border-color:var(--gold-a45)}
+.nd-switch.on::after{transform:translateX(21px);background:var(--gold)}
+.set-card{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px}
+.set-card-hd{font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--t2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.set-card-hd i{color:var(--gold);width:14px;text-align:center}
+.set-row{display:flex;align-items:center;gap:12px;padding:6px 0}
+.set-row-icon{width:32px;height:32px;border-radius:9px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.72rem;flex-shrink:0}
+.set-row-body{flex:1;min-width:0}
+.set-row-ttl{font-size:.76rem;font-weight:500;color:var(--t1)}
+.set-row-sub{font-size:.62rem;color:var(--t3);margin-top:2px;line-height:1.4}
 
 /* ── HERO WITH PHOTO BG ── */
 .hero-banner{margin:16px;border-radius:var(--rl);overflow:hidden;position:relative;min-height:180px;border:1px solid var(--bd)}
@@ -1640,6 +1653,8 @@ body.admin-open .acct-tabs{ pointer-events:none; }
   </div>
 
   <main id="screens">
+    <div id="offline-bar" style="display:none;position:sticky;top:0;z-index:70;align-items:center;justify-content:center;padding:8px 16px;background:#3a2200;color:#ffc107;font-size:.66rem;font-weight:600;text-align:center"></div>
+    <div id="nd-breadcrumb" style="display:none;position:sticky;top:0;z-index:60;align-items:center;gap:4px;padding:8px 16px;background:var(--bg2);border-bottom:1px solid var(--bd);font-size:.66rem;overflow-x:auto;white-space:nowrap;scrollbar-width:none"></div>
     <section class="scr on" id="scr-home">
       <!-- HERO -->
       <div class="hero2">
@@ -1887,6 +1902,21 @@ body.admin-open .acct-tabs{ pointer-events:none; }
           <div class="op-tile-sub">Sites · PWAs · Shops · Care</div>
           <span class="op-tile-count">4 services</span>
         </div>
+        <!-- Submit an Ad -->
+        <div style="grid-column:1/-1;background:linear-gradient(135deg,#2a1a00,#1a1000);border:1px solid var(--gold-a25);border-radius:var(--rl);padding:16px;cursor:pointer" onclick="openSubmitAdModal()">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:48px;height:48px;border-radius:14px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gold);font-size:1.2rem"><i class="fas fa-bullhorn"></i></div>
+            <div style="flex:1">
+              <div style="font-size:.82rem;font-weight:700;color:var(--gold);margin-bottom:2px">Submit an Ad</div>
+              <div style="font-size:.62rem;color:var(--t3)">Advertise your business on our home page</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;background:var(--gold-a8);border:1px solid var(--gold-a25);padding:6px 10px;border-radius:20px;flex-shrink:0">
+              <span style="font-size:.6rem;font-weight:700;color:var(--gold)">Submit</span>
+              <i class="fas fa-arrow-right" style="font-size:.52rem;color:var(--gold)"></i>
+            </div>
+          </div>
+        </div>
+
         <!-- SciFi Networks -->
         <div id="scifi-tile" data-url="https://sci-fi-networks-fyr8.vercel.app/" style="grid-column:1/-1;background:linear-gradient(135deg,#030a1a,#050f24);border:1px solid rgba(0,200,255,.25);border-radius:var(--rl);padding:16px;cursor:pointer;transition:border-color .2s;-webkit-tap-highlight-color:transparent"
              onclick="window.open(this.dataset.url,'_blank')"
@@ -2335,22 +2365,21 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 
         <!-- ═══ SETTINGS TAB ═══ -->
         <div class="acct-tab-body" id="apanel-settings">
-          <!-- Profile photo section -->
-          <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px">
-            <div style="font-size:.7rem;font-weight:600;color:var(--t2);margin-bottom:12px"><i class="fas fa-camera" style="color:var(--gold);margin-right:6px"></i>Profile Photo</div>
-            <div style="display:flex;align-items:center;gap:14px">
-              <div class="acct-avatar" onclick="document.getElementById('ava-file2').click()" id="settings-ava" style="width:60px;height:60px;font-size:1.4rem;cursor:pointer;flex-shrink:0"><span id="settings-initials">ND</span></div>
+
+          <!-- Profile card: photo + basic info merged -->
+          <div class="set-card">
+            <div class="set-card-hd"><i class="fas fa-user-pen"></i>Profile</div>
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+              <div class="acct-avatar" onclick="document.getElementById('ava-file2').click()" id="settings-ava" style="width:56px;height:56px;font-size:1.3rem;cursor:pointer;flex-shrink:0;position:relative">
+                <span id="settings-initials">ND</span>
+                <div style="position:absolute;bottom:-2px;right:-2px;width:20px;height:20px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;border:2px solid var(--bg3)"><i class="fas fa-camera" style="font-size:.5rem;color:#000"></i></div>
+              </div>
               <input type="file" id="ava-file2" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
-              <div>
-                <div style="font-size:.76rem;font-weight:500;color:var(--t1)" id="settings-name-display">User</div>
-                <div style="font-size:.64rem;color:var(--t3);margin-top:2px">Tap photo to change</div>
-                <button class="btn btn-outline btn-xs" style="margin-top:8px" onclick="document.getElementById('ava-file2').click()"><i class="fas fa-camera"></i> Change Photo</button>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:.8rem;font-weight:600;color:var(--t1)" id="settings-name-display">User</div>
+                <div style="font-size:.62rem;color:var(--t4);margin-top:2px">Tap your photo to change it</div>
               </div>
             </div>
-          </div>
-          <!-- Edit profile form -->
-          <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px">
-            <div style="font-size:.7rem;font-weight:600;color:var(--t2);margin-bottom:12px"><i class="fas fa-user-pen" style="color:var(--gold);margin-right:6px"></i>Edit Profile</div>
             <div class="fg"><label class="flbl">Full Name</label><input class="fi" id="set-name" type="text" placeholder="Your full name"></div>
             <div class="fg"><label class="flbl">WhatsApp <span class="req">*</span></label><input class="fi" id="set-wa" type="tel" placeholder="0712345678"></div>
             <div class="fg"><label class="flbl">Alt Phone</label><input class="fi" id="set-alt" type="tel" placeholder="Backup number (optional)"></div>
@@ -2358,9 +2387,21 @@ body.admin-open .acct-tabs{ pointer-events:none; }
             <div id="set-profile-err" class="ferr" style="margin-bottom:10px"></div>
             <button class="btn btn-gold btn-full" id="set-profile-btn" onclick="saveSettingsProfile()"><i class="fas fa-check"></i> Save Profile</button>
           </div>
+
+          <!-- Email -->
+          <div class="set-card">
+            <div class="set-card-hd"><i class="fas fa-envelope"></i>Email Address</div>
+            <div style="font-size:.68rem;color:var(--t3);margin-bottom:10px">Current: <span style="color:var(--t1);font-weight:600" id="set-current-email">—</span></div>
+            <div class="fg"><label class="flbl">New Email</label><input class="fi" id="set-new-email" type="email" placeholder="your.new@email.com"></div>
+            <div id="set-email-err" class="ferr" style="margin-bottom:10px"></div>
+            <div id="set-email-ok" style="display:none;font-size:.68rem;color:var(--green);padding:9px;background:rgba(50,180,100,.07);border:1px solid rgba(50,180,100,.2);border-radius:6px;margin-bottom:10px"></div>
+            <button class="btn btn-outline btn-full" id="set-email-btn" onclick="requestEmailChange()"><i class="fas fa-paper-plane"></i> Send Confirmation</button>
+            <div style="font-size:.6rem;color:var(--t4);margin-top:8px;line-height:1.5"><i class="fas fa-circle-info"></i> We'll send a confirmation link to your new address. Depending on your account's security settings, your current email may also get a notice about this change.</div>
+          </div>
+
           <!-- Change password -->
-          <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px">
-            <div style="font-size:.7rem;font-weight:600;color:var(--t2);margin-bottom:12px"><i class="fas fa-lock" style="color:var(--gold);margin-right:6px"></i>Change Password</div>
+          <div class="set-card">
+            <div class="set-card-hd"><i class="fas fa-lock"></i>Change Password</div>
             <div class="fg" style="position:relative"><label class="flbl">Current Password <span class="req">*</span></label><input class="fi" id="set-cur-pw" type="password" placeholder="Your current password" style="padding-right:42px"><button type="button" onclick="togglePw('set-cur-pw','set-cur-eye')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="set-cur-eye"><i class="fas fa-eye"></i></button></div>
             <div class="fg" style="position:relative"><label class="flbl">New Password <span class="req">*</span></label><input class="fi" id="set-pw" type="password" placeholder="Min. 8 characters" style="padding-right:42px"><button type="button" onclick="togglePw('set-pw','set-pw-eye')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="set-pw-eye"><i class="fas fa-eye"></i></button></div>
             <div class="fg" style="position:relative"><label class="flbl">Confirm New Password <span class="req">*</span></label><input class="fi" id="set-pw2" type="password" placeholder="Repeat new password" style="padding-right:42px"><button type="button" onclick="togglePw('set-pw2','set-pw2-eye')" style="position:absolute;right:10px;bottom:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:.8rem" id="set-pw2-eye"><i class="fas fa-eye"></i></button></div>
@@ -2368,30 +2409,47 @@ body.admin-open .acct-tabs{ pointer-events:none; }
             <div id="set-pw-ok" style="display:none;font-size:.72rem;color:var(--green);padding:9px;background:rgba(50,180,100,.07);border:1px solid rgba(50,180,100,.2);border-radius:6px;margin-bottom:10px"><i class="fas fa-check-circle"></i> Password changed successfully!</div>
             <button class="btn btn-gold btn-full" id="set-pw-btn" onclick="saveSettingsPassword()"><i class="fas fa-key"></i> Update Password</button>
           </div>
-          <!-- App Lock -->
-          <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px">
-            <div style="font-size:.7rem;font-weight:600;color:var(--t2);margin-bottom:12px"><i class="fas fa-fingerprint" style="color:var(--gold);margin-right:6px"></i>App Lock</div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
-              <div style="display:flex;align-items:center;gap:10px"><i class="fas fa-shield-halved" style="color:var(--gold);width:16px"></i><div><div style="font-size:.78rem;font-weight:500;color:var(--t1)">Require PIN / Biometric</div><div style="font-size:.62rem;color:var(--t3)">Locks the app when you open it — optional, this device only</div></div></div>
-              <div class="theme-toggle" id="applock-toggle" onclick="toggleAppLockSetting()"></div>
+
+          <!-- Security & Privacy: App Lock + Notifications grouped -->
+          <div class="set-card">
+            <div class="set-card-hd"><i class="fas fa-shield-halved"></i>Security &amp; Privacy</div>
+            <div class="set-row">
+              <div class="set-row-icon"><i class="fas fa-fingerprint"></i></div>
+              <div class="set-row-body"><div class="set-row-ttl">Require PIN / Biometric</div><div class="set-row-sub">Locks the app when you open it — optional, this device only</div></div>
+              <div class="nd-switch" id="applock-toggle" onclick="toggleAppLockSetting()"></div>
             </div>
-            <div id="applock-details" style="display:none;margin-top:8px;padding-top:12px;border-top:1px solid var(--bd)">
+            <div id="applock-details" style="display:none;margin:10px 0 4px;padding-top:12px;border-top:1px solid var(--bd)">
               <div style="font-size:.64rem;color:var(--t4);margin-bottom:8px" id="applock-status-line">PIN not set</div>
               <div style="display:flex;gap:8px">
                 <button class="btn btn-outline btn-xs" style="flex:1" onclick="startAppLockSetup()"><i class="fas fa-key"></i> <span id="applock-pin-btn-label">Set PIN</span></button>
                 <button class="btn btn-outline btn-xs" style="flex:1" id="applock-bio-btn" onclick="registerAppLockBiometric()"><i class="fas fa-fingerprint"></i> Enable Biometric</button>
               </div>
             </div>
+            <div class="set-row" style="border-top:1px solid var(--bd);margin-top:6px;padding-top:14px">
+              <div class="set-row-icon"><i class="fas fa-bell"></i></div>
+              <div class="set-row-body"><div class="set-row-ttl">Notifications</div><div class="set-row-sub">Order updates, promos, and system alerts</div></div>
+              <div class="nd-switch on" id="notif-pref-toggle" onclick="toggleNotifPref()"></div>
+            </div>
           </div>
-          <!-- Theme + sign out -->
-          <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px">
-            <div style="font-size:.7rem;font-weight:600;color:var(--t2);margin-bottom:12px"><i class="fas fa-paint-roller" style="color:var(--gold);margin-right:6px"></i>Appearance</div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
-              <div style="display:flex;align-items:center;gap:10px"><i class="fas fa-moon" style="color:var(--gold);width:16px"></i><div><div style="font-size:.78rem;font-weight:500;color:var(--t1)">Dark Mode</div><div style="font-size:.62rem;color:var(--t3)">Toggle app theme</div></div></div>
+
+          <!-- Appearance -->
+          <div class="set-card">
+            <div class="set-card-hd"><i class="fas fa-paint-roller"></i>Appearance</div>
+            <div class="set-row">
+              <div class="set-row-icon"><i class="fas fa-moon"></i></div>
+              <div class="set-row-body"><div class="set-row-ttl">Dark Mode</div><div class="set-row-sub">Toggle app theme</div></div>
               <div class="theme-toggle" onclick="toggleTheme()"></div>
             </div>
           </div>
-          <button class="btn btn-full" style="background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.2);color:var(--red);margin-bottom:80px" onclick="doSignOut()"><i class="fas fa-arrow-right-from-bracket"></i> Sign Out</button>
+
+          <button class="btn btn-full" style="background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.2);color:var(--red);margin-bottom:10px" onclick="doSignOut()"><i class="fas fa-arrow-right-from-bracket"></i> Sign Out</button>
+
+          <!-- Danger zone -->
+          <div class="set-card" style="border-color:rgba(224,80,80,.25);margin-bottom:80px">
+            <div class="set-card-hd" style="color:var(--red)"><i class="fas fa-triangle-exclamation"></i>Danger Zone</div>
+            <div style="font-size:.66rem;color:var(--t3);margin-bottom:12px;line-height:1.6">Deleting your account removes your profile, requests, and saved data permanently. This can't be undone.</div>
+            <button class="btn btn-full" style="background:rgba(224,80,80,.1);border:1px solid rgba(224,80,80,.35);color:var(--red)" onclick="confirmDeleteAccount()"><i class="fas fa-trash"></i> Delete Account</button>
+          </div>
         </div>
 
       </div><!-- /acct-loggedin -->
@@ -2422,13 +2480,13 @@ body.admin-open .acct-tabs{ pointer-events:none; }
               <i class="fas fa-copy" style="color:var(--t4);font-size:.7rem"></i>
             </div>
 
-            <div onclick="navigator.clipboard.writeText('novadeskke@gmail.com').then(()=>toast('Email copied!','ok'))"
+            <div onclick="navigator.clipboard.writeText('Novadeskonline@gmail.com').then(()=>toast('Email copied!','ok'))"
                  style="display:flex;align-items:center;gap:12px;background:var(--bg3);border:1px solid var(--bd);border-radius:14px;padding:13px 16px;cursor:pointer;transition:border-color .2s;-webkit-tap-highlight-color:transparent"
                  onmouseover="this.style.borderColor='var(--gold-a45)'" onmouseout="this.style.borderColor='var(--bd)'">
               <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,165,50,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
                 <i class="fas fa-envelope" style="color:#ffa500;font-size:.85rem"></i>
               </div>
-              <div style="flex:1"><div style="font-size:.72rem;font-weight:600;color:var(--t1)">novadeskke@gmail.com</div><div style="font-size:.6rem;color:var(--t4);margin-top:1px">Email — tap to copy</div></div>
+              <div style="flex:1"><div style="font-size:.72rem;font-weight:600;color:var(--t1)">Novadeskonline@gmail.com</div><div style="font-size:.6rem;color:var(--t4);margin-top:1px">Email — tap to copy</div></div>
               <i class="fas fa-copy" style="color:var(--t4);font-size:.7rem"></i>
             </div>
 
@@ -2739,7 +2797,10 @@ body.admin-open .acct-tabs{ pointer-events:none; }
   <div class="admin-section" id="asec-agents">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
       <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Agent Applications</div>
-      <button class="btn btn-ghost btn-xs" onclick="adminLoadAgents()"><i class="fas fa-rotate-right"></i></button>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-gold btn-xs" onclick="openAddPersonModal('agent')"><i class="fas fa-plus"></i> Add Agent</button>
+        <button class="btn btn-ghost btn-xs" onclick="adminLoadAgents()"><i class="fas fa-rotate-right"></i></button>
+      </div>
     </div>
     <div id="admin-agents-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
       <div style="text-align:center;padding:20px"><span class="spin"></span></div>
@@ -2750,7 +2811,10 @@ body.admin-open .acct-tabs{ pointer-events:none; }
   <div class="admin-section" id="asec-institutions">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
       <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Institution Requests</div>
-      <button class="btn btn-ghost btn-xs" onclick="adminLoadInstitutions()"><i class="fas fa-rotate-right"></i></button>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-gold btn-xs" onclick="openAddPersonModal('institution')"><i class="fas fa-plus"></i> Add Institution</button>
+        <button class="btn btn-ghost btn-xs" onclick="adminLoadInstitutions()"><i class="fas fa-rotate-right"></i></button>
+      </div>
     </div>
     <div id="admin-inst-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px">
       <div style="text-align:center;padding:20px"><span class="spin"></span></div>
@@ -2781,7 +2845,11 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 
   <!-- ── USERS ── -->
   <div class="admin-section" id="asec-users">
-    <div style="position:relative;margin:12px 0 10px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:12px 0 10px">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">All Users</div>
+      <button class="btn btn-gold btn-xs" onclick="openAddPersonModal('user')"><i class="fas fa-plus"></i> Add User</button>
+    </div>
+    <div style="position:relative;margin:0 0 10px">
       <i class="fas fa-search" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--t4);font-size:.75rem"></i>
       <input class="fi" id="admin-user-search" type="search" placeholder="Search by name, ID, phone…" style="padding-left:32px;font-size:.76rem" oninput="adminSearchUsers(this.value)">
     </div>
@@ -2801,7 +2869,10 @@ body.admin-open .acct-tabs{ pointer-events:none; }
   <div class="admin-section" id="asec-ads">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px">
       <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)">Advertisements</div>
-      <button class="btn btn-ghost btn-xs" onclick="adminLoadAds()"><i class="fas fa-rotate-right"></i></button>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-gold btn-xs" onclick="openAddAdModal()"><i class="fas fa-plus"></i> Add Ad</button>
+        <button class="btn btn-ghost btn-xs" onclick="adminLoadAds()"><i class="fas fa-rotate-right"></i></button>
+      </div>
     </div>
     <!-- Pending approval -->
     <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffa500;margin-bottom:8px;display:flex;align-items:center;gap:5px"><i class="fas fa-clock"></i> Pending Approval</div>
@@ -2868,7 +2939,7 @@ body.admin-open .acct-tabs{ pointer-events:none; }
           <button class="btn btn-gold btn-full btn-sm" id="adm-terms-savebtn" onclick="adminSaveLegal('terms')"><i class="fas fa-save"></i> Save Terms</button>
         </div>
         <div style="display:flex;gap:8px;margin-top:8px">
-          <button class="btn btn-outline btn-full btn-sm" onclick="openModal('terms-modal')"><i class="fas fa-eye"></i> Preview</button>
+          <button class="btn btn-outline btn-full btn-sm" onclick="adminPreviewLegal('terms')"><i class="fas fa-eye"></i> Preview</button>
           <button class="btn btn-outline btn-full btn-sm" onclick="adminShowLegalHistory('terms_content','Terms & Conditions')"><i class="fas fa-clock-rotate-left"></i> History</button>
         </div>
       </div>
@@ -2882,7 +2953,7 @@ body.admin-open .acct-tabs{ pointer-events:none; }
           <button class="btn btn-gold btn-full btn-sm" id="adm-privacy-savebtn" onclick="adminSaveLegal('privacy')"><i class="fas fa-save"></i> Save Privacy</button>
         </div>
         <div style="display:flex;gap:8px;margin-top:8px">
-          <button class="btn btn-outline btn-full btn-sm" onclick="openModal('privacy-modal')"><i class="fas fa-eye"></i> Preview</button>
+          <button class="btn btn-outline btn-full btn-sm" onclick="adminPreviewLegal('privacy')"><i class="fas fa-eye"></i> Preview</button>
           <button class="btn btn-outline btn-full btn-sm" onclick="adminShowLegalHistory('privacy_content','Privacy Policy')"><i class="fas fa-clock-rotate-left"></i> History</button>
         </div>
       </div>
@@ -3007,7 +3078,7 @@ body.admin-open .acct-tabs{ pointer-events:none; }
         <div class="fg"><label class="flbl"><i class="fab fa-instagram" style="color:#E1306C;width:16px"></i> Instagram URL</label><input class="fi" id="adm-link-ig" type="url" placeholder="https://instagram.com/NovaDeskOnline"></div>
         <div class="fg"><label class="flbl"><i class="fab fa-tiktok" style="color:#fff;width:16px"></i> TikTok URL</label><input class="fi" id="adm-link-tt" type="url" placeholder="https://tiktok.com/@NovaDeskOnline"></div>
         <div class="fg"><label class="flbl"><i class="fab fa-x-twitter" style="color:#fff;width:16px"></i> X / Twitter URL</label><input class="fi" id="adm-link-x" type="url" placeholder="https://x.com/NovaDeskOnline"></div>
-        <div class="fg"><label class="flbl"><i class="fas fa-envelope" style="color:#ffa500;width:16px"></i> Contact Email</label><input class="fi" id="adm-link-email" type="email" placeholder="novadeskke@gmail.com"></div>
+        <div class="fg"><label class="flbl"><i class="fas fa-envelope" style="color:#ffa500;width:16px"></i> Contact Email</label><input class="fi" id="adm-link-email" type="email" placeholder="Novadeskonline@gmail.com"></div>
         <div class="fg"><label class="flbl"><i class="fas fa-location-dot" style="color:var(--green);width:16px"></i> Maps Link</label><input class="fi" id="adm-link-maps" type="url" placeholder="https://maps.google.com/?q=Kemera+Nyamira"></div>
         <div class="fg"><label class="flbl"><i class="fas fa-globe" style="color:#00c8ff;width:16px"></i> SciFi Networks URL</label><input class="fi" id="adm-link-scifi" type="url" placeholder="https://sci-fi-networks-fyr8.vercel.app/"></div>
         <div class="form-hint">These links power the Contact page buttons automatically.</div>
@@ -3910,6 +3981,7 @@ function openModal(id){
   showOvl();
   document.body.style.overflow = 'hidden';
   _ovlLockTimer = setTimeout(()=>{ _ovlLock=false; }, 600);
+  if(typeof ndPushState==='function') ndPushState();
   // Load dynamic legal content when opening legal modals
   if(id==='terms-modal') loadLegalModal('terms');
   if(id==='privacy-modal') loadLegalModal('privacy');
@@ -3979,15 +4051,21 @@ document.addEventListener('keydown', function(e){
 
 /* ── NAVIGATION ────────────────────────────────────────────────── */
 const NAV_ITEMS = ['home','services','techservices','institution','account','more','contact'];
-function goNav(name) {
+function goNav(name, _fromPopstate) {
   if (name === 'account' && !_user) {
     if (window._guestMode) { renderGuestAccount(); } else { openAuth(); }
+  }
+  const prevScreen = window._currentScreen;
+  if (!_fromPopstate && prevScreen && prevScreen !== name) {
+    _screenHistory.push(prevScreen);
+    if (typeof ndPushState==='function') ndPushState();
   }
   NAV_ITEMS.forEach(n => {
     $(`scr-${n}`)?.classList.toggle('on', n===name);
     $(`ni-${n}`)?.classList.toggle('on', n===name);
   });
   window._currentScreen = name;
+  if (typeof renderBreadcrumb==='function') renderBreadcrumb(name);
   if (name==='account')     renderAccount();
   if (name==='home') { refreshHomeCounts(); renderHomeRecommended(); loadHomeAds().catch(()=>{}); }
   if (name==='institution') renderInstitutionScreen();
@@ -4520,9 +4598,9 @@ function renderAccount(){
 
   if (!loggedIn || !_profile) return;
 
-  // Show Submit Ad button for agents and admins
+  // Show Submit Ad button to any logged-in user now
   const moreAdItem = $('more-submit-ad-item');
-  if(moreAdItem) moreAdItem.style.display = ['agent','admin'].includes(_profile?.role) ? 'flex' : 'none';
+  if(moreAdItem) moreAdItem.style.display = 'flex';
 
 
   // Show admin button in account header
@@ -4534,18 +4612,22 @@ function renderAccount(){
 
   const displayName = _profile.full_name || ndId;
   const initials = displayName.split(' ').map(w=>w[0]?.toUpperCase()||'').join('').substring(0,2) || 'ND';
-  $('acct-initials').textContent = initials;
-  $('acct-name-el').textContent = displayName;
+  const initEl = $('acct-initials'); if (initEl) initEl.textContent = initials;
+  const nameEl = $('acct-name-el'); if (nameEl) nameEl.textContent = displayName;
   // Show the ND user ID under the name — this is the unique user-facing account ID
-  $('acct-id-el').textContent = ndId;
-  $('acct-id-el').style.cursor = 'pointer';
-  $('acct-id-el').title = 'Tap to copy your Account ID';
-  $('acct-id-el').onclick = () => {
-    navigator.clipboard?.writeText(ndId)
-      .then(() => toast('Account ID copied! 📋', 'ok'))
-      .catch(() => toast(ndId, 'nf', 5000));
-  };
-  $('acct-role-chip').innerHTML = `<i class="fas fa-${_profile.role==='admin'?'shield-halved':'star'}"></i> ${_profile.role==='admin'?'Admin':'Member'}`;
+  const idEl = $('acct-id-el');
+  if (idEl) {
+    idEl.textContent = ndId;
+    idEl.style.cursor = 'pointer';
+    idEl.title = 'Tap to copy your Account ID';
+    idEl.onclick = () => {
+      navigator.clipboard?.writeText(ndId)
+        .then(() => toast('Account ID copied! 📋', 'ok'))
+        .catch(() => toast(ndId, 'nf', 5000));
+    };
+  }
+  const roleChip = $('acct-role-chip');
+  if (roleChip) roleChip.innerHTML = `<i class="fas fa-${_profile.role==='admin'?'shield-halved':'star'}"></i> ${_profile.role==='admin'?'Admin':'Member'}`;
   const pts = _profile?.loyalty_points || (_reqs.filter(r=>r.status==='completed').length * 10);
   const ptChip = $('acct-pts-chip');
   if (ptChip) ptChip.innerHTML = `<i class="fas fa-star"></i> ${pts} pts`;
@@ -4786,7 +4868,7 @@ function openSvcReq(svcId){
     dlEl.value = '';
     dlEl.min = new Date().toISOString().split('T')[0];
   }
-  $('upload-file-list').innerHTML = '';
+  const uflEl = $('upload-file-list'); if (uflEl) uflEl.innerHTML = '';
   const errEl = $('svc-req-err');
   if(errEl){ errEl.style.display='none'; errEl.textContent=''; }
   $('svc-req-modal').classList.add('on');
@@ -4839,6 +4921,23 @@ async function submitSvcRequest(){
   const btn = $('svc-req-btn');
   const err = $('svc-req-err');
   if(err){ err.style.display='none'; err.textContent=''; }
+
+  // Offline: queue locally instead of failing, and show it in My Requests as pending sync
+  if (!navigator.onLine) {
+    const queuedReq = {
+      id: 'queued-'+Date.now(), user_id:_user.id, service_id:_currentSvc.id, service_name:_currentSvc.name,
+      description: notes||null, deadline, status:'pending', file_urls:'[]',
+      created_at: new Date().toISOString(), _queued: true
+    };
+    _reqs.unshift(queuedReq);
+    queueOfflineAction({ type:'create_request', payload:{ user_id:_user.id, service_id:_currentSvc.id, service_name:_currentSvc.name, description:notes||null, deadline, status:'pending', file_urls:'[]' }, tempId:queuedReq.id });
+    closeSvcReq();
+    if(typeof renderHomeReqs==='function') renderHomeReqs();
+    if(typeof refreshHomeCounts==='function') refreshHomeCounts();
+    popup('📴 Saved — Will Send When Online', `Your "${_currentSvc.name}" request is saved on this device and will be sent automatically once you're back online.`, 'nf', [{label:'Got it', fn:null, style:'btn-gold'}]);
+    return;
+  }
+
   if(btn){ btn.disabled=true; btn.innerHTML='<span class="spin"></span> Submitting…'; }
   try {
     const { data: req, error: reqErr } = await sb.from('service_requests').insert({
@@ -4864,7 +4963,6 @@ async function submitSvcRequest(){
         await sb.from('service_requests').update({file_urls:JSON.stringify(fileUrls)}).eq('id',req.id);
       }
     }
-    toast("Request submitted! We'll reach you on WhatsApp. 🎉", 'ok', 4000);
     closeSvcReq();
     sb.from('notifications').insert({
       user_id: _user.id, type: 'request_created', category: 'request', ref_table:'service_requests', ref_id:req.id,
@@ -4875,7 +4973,7 @@ async function submitSvcRequest(){
     if(typeof refreshHomeCounts==='function') refreshHomeCounts();
     if(typeof renderHomeReqs==='function') renderHomeReqs();
     if(typeof awardLoyaltyPoints==='function') awardLoyaltyPoints(_user.id, 10);
-    if(typeof showReceiptOffer==='function') setTimeout(()=>showReceiptOffer(req,_profile),600);
+    showOrderSuccessModal(req);
   } catch(e){
     const msg = e?.message||'Submission failed. Please try again.';
     if(err){ err.textContent=msg; err.style.display='block'; }
@@ -4914,7 +5012,7 @@ function handleFileSelect(inp){
 }
 function handleFileDrop(e){
   e.preventDefault();
-  $('upload-zone').classList.remove('drag');
+  $('upload-zone')?.classList.remove('drag');
   const files = Array.from(e.dataTransfer?.files||[]);
   addPendingFiles(files);
 }
@@ -4930,15 +5028,17 @@ function addPendingFiles(files){
 function removePendingFile(i){ _pendingSvcFiles.splice(i,1); renderPendingFiles(); }
 function renderPendingFiles(){
   const list = $('upload-file-list');
+  const prompt = $('upload-zone-prompt');
   if (!list) return;
+  if (prompt) prompt.style.display = _pendingSvcFiles.length ? 'none' : '';
   list.innerHTML = _pendingSvcFiles.map((f,i)=>`
     <div class="upload-file-item">
       <i class="fas ${getFileIcon(f.type)}"></i>
       <span title="${esc(f.name)}">${esc(f.name)}</span>
       <span style="color:var(--t4)">${formatFileSize(f.size)}</span>
-      <button onclick="removePendingFile(${i})" title="Remove"><i class="fas fa-times"></i></button>
+      <button onclick="event.stopPropagation();removePendingFile(${i})" title="Remove"><i class="fas fa-times"></i></button>
     </div>
-  `).join('');
+  `).join('') + (_pendingSvcFiles.length && _pendingSvcFiles.length<5 ? `<div style="text-align:center;font-size:.62rem;color:var(--gold);padding:6px 0 2px">+ Tap to add more files</div>` : '');
 }
 async function uploadFilesToStorage(userId, reqId, files){
   const urls = [];
@@ -5367,7 +5467,7 @@ async function loadAppSettings(){
       instagram: s.link_instagram || 'https://instagram.com/NovaDeskOnline',
       tiktok: s.link_tiktok || 'https://tiktok.com/@NovaDeskOnline',
       x: s.link_x || '',
-      email: s.link_email || 'novadeskke@gmail.com',
+      email: s.link_email || 'Novadeskonline@gmail.com',
       maps: s.link_maps || 'https://maps.google.com/?q=Kemera+Nyamira+Kenya',
       scifi: s.link_scifi || 'https://sci-fi-networks-fyr8.vercel.app/'
     };
@@ -5387,11 +5487,11 @@ function applySiteLinks(){
   const scifiTile = $('scifi-tile'); if (scifiTile && L.scifi) scifiTile.dataset.url = L.scifi;
   setHref('a[href*="maps.google.com/?q=Kemera"]', L.maps);
   // Email — update copy-to-clipboard onclick targets
-  document.querySelectorAll('[onclick*="novadeskke@gmail.com"]').forEach(el=>{
-    el.setAttribute('onclick', el.getAttribute('onclick').replace('novadeskke@gmail.com', L.email));
+  document.querySelectorAll('[onclick*="Novadeskonline@gmail.com"]').forEach(el=>{
+    el.setAttribute('onclick', el.getAttribute('onclick').replace('Novadeskonline@gmail.com', L.email));
   });
   document.querySelectorAll('div').forEach(el=>{
-    if(el.textContent.trim()==='novadeskke@gmail.com' && el.children.length===0) el.textContent = L.email;
+    if(el.textContent.trim()==='Novadeskonline@gmail.com' && el.children.length===0) el.textContent = L.email;
   });
 }
 window.applySiteLinks = applySiteLinks;
@@ -5415,8 +5515,14 @@ async function sendContactMessage2(){
     if(errEl){errEl.textContent='Please fill in your name and message.';errEl.style.display='block';}
     return;
   }
+  const isEmail = contact && contact.includes('@');
   try{
-    if(sb) await sb.from('contact_messages').insert({name,contact,message:msg});
+    if(sb) {
+      const { error } = await sb.from('contact_messages').insert({
+        name, email: isEmail ? contact : null, phone: (!isEmail && contact) ? contact : null, message: msg
+      });
+      if (error) throw error;
+    }
     toast('Message sent! We\'ll get back to you soon.','ok',4000);
     if($('ct2-name')) $('ct2-name').value='';
     if($('ct2-contact')) $('ct2-contact').value='';
@@ -5437,8 +5543,9 @@ async function sendContactMessage(){
   err.style.display='none';
   if (!name) { err.textContent='Please enter your name.'; err.style.display='block'; return; }
   if (!msg) { err.textContent='Please enter a message.'; err.style.display='block'; return; }
+  const isEmail = contact && contact.includes('@');
   try {
-    await sb.from('contact_messages').insert({ name, email: contact||null, phone: contact||null, message: msg });
+    await sb.from('contact_messages').insert({ name, email: isEmail ? contact : null, phone: (!isEmail && contact) ? contact : null, message: msg });
     toast('Message sent! We\'ll get back to you.','ok');
     $('ct-name').value=''; $('ct-contact').value=''; $('ct-msg').value='';
     closeModal('contact-modal');
@@ -5497,6 +5604,7 @@ async function openAdmin(){
   $('admin-panel').classList.add('on');
   document.body.classList.add('admin-open');
   document.body.style.overflow='hidden';
+  if(typeof ndPushState==='function') ndPushState();
   const who = $('admin-who');
   if (who && _profile) who.textContent = (_profile.full_name||'Admin') + ' · ' + (_profile.nd_user_id || '');
   requestNotifPermission();
@@ -5713,7 +5821,11 @@ window.adminFilterUsers = adminFilterUsers;
 function adminSearchReqs(q){ renderAdminReqs(); }
 window.adminSearchReqs = adminSearchReqs;
 
-function adminSearchUsers(q){ renderAdminUsers(); }
+let _userSearchDebounce = null;
+function adminSearchUsers(q){
+  clearTimeout(_userSearchDebounce);
+  _userSearchDebounce = setTimeout(()=>renderAdminUsers(), 180);
+}
 window.adminSearchUsers = adminSearchUsers;
 
 async function adminViewUser(userId){
@@ -5810,6 +5922,227 @@ async function adminViewUser(userId){
   overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
 }
 window.adminViewUser = adminViewUser;
+
+/* ── ADMIN: ADD USER / AGENT / INSTITUTION ──────────────────────── */
+/* ── ADMIN: ADD AD DIRECTLY ──────────────────────────────────────── */
+function openAddAdModal(){
+  const overlay = document.createElement('div');
+  overlay.className = 'nd-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9900;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)';
+  overlay.innerHTML = `
+    <div style="background:var(--bg2);border-radius:24px 24px 0 0;border:1px solid var(--bd);width:100%;max-width:520px;max-height:90dvh;overflow-y:auto;padding:20px 16px 40px">
+      <div style="width:36px;height:4px;background:var(--bd2);border-radius:4px;margin:0 auto 16px"></div>
+      <div style="font-family:var(--fd);font-size:1.05rem;color:var(--t1);margin-bottom:16px"><i class="fas fa-bullhorn" style="color:var(--gold);margin-right:8px"></i>Add Advertisement</div>
+      <div class="fg"><label class="flbl">Title <span class="req">*</span></label><input class="fi" id="aad-title" type="text" placeholder="e.g. 20% off Laminating this week"></div>
+      <div class="fg"><label class="flbl">Body</label><textarea class="fi" id="aad-body" rows="3" placeholder="Short description shown under the title"></textarea></div>
+      <div class="fg"><label class="flbl">Image URL</label><input class="fi" id="aad-image" type="url" placeholder="https://…"></div>
+      <div class="fg"><label class="flbl">Link URL</label><input class="fi" id="aad-link" type="url" placeholder="https:// — where tapping the ad goes"></div>
+      <div class="fg"><label class="flbl">Button Text</label><input class="fi" id="aad-cta" type="text" placeholder="e.g. Order Now"></div>
+      <div class="fg"><label class="flbl">Runs Until <span style="font-size:.6rem;color:var(--t4);text-transform:none">(optional — leave blank to run indefinitely)</span></label><input class="fi" id="aad-until" type="date"></div>
+      <div id="aad-err" class="ferr" style="margin-bottom:10px"></div>
+      <button class="btn btn-gold btn-full" id="aad-submit-btn" onclick="submitAddAd()"><i class="fas fa-check"></i> Publish Ad</button>
+      <button onclick="this.closest('.nd-overlay').remove()" style="width:100%;margin-top:8px;padding:12px;background:var(--bg4);border:1px solid var(--bd);border-radius:12px;color:var(--t2);font-size:.76rem;cursor:pointer">Cancel</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+}
+window.openAddAdModal = openAddAdModal;
+
+async function submitAddAd(){
+  const title = $('aad-title')?.value?.trim();
+  const body = $('aad-body')?.value?.trim();
+  const image_url = $('aad-image')?.value?.trim();
+  const link_url = $('aad-link')?.value?.trim();
+  const cta_label = $('aad-cta')?.value?.trim();
+  const until = $('aad-until')?.value;
+  const err = $('aad-err');
+  const btn = $('aad-submit-btn');
+  if (err) err.style.display='none';
+  if (!title) { if(err){err.textContent='Title is required.';err.style.display='block';} return; }
+  if (btn) { btn.disabled=true; btn.innerHTML='<span class="spin"></span> Publishing…'; }
+  try {
+    const { error } = await sb.from('advertisements').insert({
+      title, body: body||null, image_url: image_url||null, link_url: link_url||null,
+      cta_label: cta_label||null, runs_until: until ? new Date(until).toISOString() : null,
+      status: 'active', reviewed_at: new Date().toISOString(), reviewed_by: _user?.id||null,
+      created_at: new Date().toISOString()
+    });
+    if (error) throw error;
+    toast('Ad published ✅','ok');
+    document.querySelectorAll('.nd-overlay').forEach(o=>o.remove());
+    if (typeof adminLoadAds==='function') adminLoadAds();
+  } catch(e) {
+    if (err) { err.textContent = e.message||'Could not publish ad.'; err.style.display='block'; }
+  } finally {
+    if (btn) { btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Publish Ad'; }
+  }
+}
+window.submitAddAd = submitAddAd;
+
+function openAddPersonModal(role){
+  const roleLabels = {user:'User', agent:'Agent', institution:'Institution'};
+  const label = roleLabels[role] || 'User';
+  const overlay = document.createElement('div');
+  overlay.className = 'nd-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9900;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)';
+  overlay.innerHTML = `
+    <div style="background:var(--bg2);border-radius:24px 24px 0 0;border:1px solid var(--bd);width:100%;max-width:520px;max-height:90dvh;overflow-y:auto;padding:20px 16px 40px">
+      <div style="width:36px;height:4px;background:var(--bd2);border-radius:4px;margin:0 auto 16px"></div>
+      <div style="font-family:var(--fd);font-size:1.05rem;color:var(--t1);margin-bottom:4px"><i class="fas fa-user-plus" style="color:var(--gold);margin-right:8px"></i>Add ${label}</div>
+      <div style="font-size:.66rem;color:var(--t4);margin-bottom:16px">Creates a real account with a temporary password. Share the login details with them so they can sign in and set their own password.</div>
+      <div class="fg"><label class="flbl">Full Name <span class="req">*</span></label><input class="fi" id="ap-name" type="text" placeholder="Full name"></div>
+      <div class="fg"><label class="flbl">Email <span class="req">*</span></label><input class="fi" id="ap-email" type="email" placeholder="email@example.com"></div>
+      <div class="fg"><label class="flbl">WhatsApp <span class="req">*</span></label><input class="fi" id="ap-wa" type="tel" placeholder="0712345678"></div>
+      ${role==='institution' ? '<div class="fg"><label class="flbl">Institution Name <span class="req">*</span></label><input class="fi" id="ap-inst-name" type="text" placeholder="e.g. Kemera High School"></div>' : ''}
+      <div class="fg"><label class="flbl">Temporary Password</label><div style="display:flex;gap:8px"><input class="fi" id="ap-pw" type="text" value="NovaDeskOnline@${new Date().getFullYear()}"><button class="btn btn-ghost btn-sm" onclick="document.getElementById('ap-pw').value='NovaDeskOnline@'+new Date().getFullYear()">Auto</button></div></div>
+      <div id="ap-err" class="ferr" style="margin-bottom:10px"></div>
+      <button class="btn btn-gold btn-full" id="ap-submit-btn" onclick="submitAddPerson('${role}')"><i class="fas fa-check"></i> Create ${label}</button>
+      <button onclick="this.closest('.nd-overlay').remove()" style="width:100%;margin-top:8px;padding:12px;background:var(--bg4);border:1px solid var(--bd);border-radius:12px;color:var(--t2);font-size:.76rem;cursor:pointer">Cancel</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+}
+window.openAddPersonModal = openAddPersonModal;
+
+async function submitAddPerson(role){
+  const name = $('ap-name')?.value?.trim();
+  const email = $('ap-email')?.value?.trim().toLowerCase();
+  const wa = $('ap-wa')?.value?.trim();
+  const pw = $('ap-pw')?.value?.trim();
+  const instName = $('ap-inst-name')?.value?.trim();
+  const err = $('ap-err');
+  const btn = $('ap-submit-btn');
+  if (err) err.style.display='none';
+  if (!name || !email || !wa || !pw || (role==='institution' && !instName)) {
+    if (err) { err.textContent='Please fill in all required fields.'; err.style.display='block'; }
+    return;
+  }
+  if (btn) { btn.disabled=true; btn.innerHTML='<span class="spin"></span> Creating…'; }
+
+  // Pull the clearest possible message out of whatever shape the error takes —
+  // Supabase auth errors, Postgrest errors, and raw network failures all differ.
+  const extractErrMsg = (e) => {
+    if (!e) return 'Unknown error.';
+    const candidates = [e.message, e.error_description, e.msg, e.details, e.hint, e.error];
+    const found = candidates.find(c => typeof c === 'string' && c.trim() && c.trim() !== '{}');
+    if (found) return found + (e.status ? ` (status ${e.status})` : '');
+    try {
+      const props = Object.getOwnPropertyNames(e).filter(k=>k!=='stack');
+      if (props.length) return JSON.stringify(e, props);
+    } catch(_) {}
+    return 'Unknown error — check that email/password sign-ups are enabled in your Supabase Auth settings.';
+  };
+
+  try {
+    // Preferred path: server-side Edge Function using the Admin API, which
+    // creates an already-confirmed user and never triggers an email send —
+    // this is what actually fixes the AuthRetryableFetchError/500 you were hitting.
+    // Falls back to the old client-side signUp() if the function isn't deployed yet.
+    let usedEdgeFn = false;
+    try {
+      const { data: fnData, error: fnError } = await sb.functions.invoke('admin-create-user', {
+        body: { email, password: pw, full_name: name, whatsapp_number: wa, role }
+      });
+      if (fnError) throw fnError;
+      if (fnData?.error) throw new Error(fnData.error);
+      if (fnData?.ok) {
+        usedEdgeFn = true;
+        if (role==='institution') {
+          await sb.from('institution_profiles').insert({
+            user_id:fnData.userId, institution_name:instName, status:'approved', created_at:new Date().toISOString()
+          }).catch(()=>{});
+        }
+        toast(`${role.charAt(0).toUpperCase()+role.slice(1)} account created ✅`,'ok');
+        document.querySelectorAll('.nd-overlay').forEach(o=>o.remove());
+        popup('Account Created', `Share these login details with ${name}:<br><br>Email: ${esc(email)}<br>Password: ${esc(pw)}<br><br>They should sign in and change their password right away.`, 'ok', [
+          {label:'WhatsApp Them', style:'btn-gold', fn:()=>{
+            const waNum = wa.replace(/[^0-9]/g,'');
+            const waFull = waNum.startsWith('0') ? '254'+waNum.slice(1) : waNum.startsWith('254') ? waNum : '254'+waNum;
+            window.open('https://wa.me/'+waFull+'?text='+encodeURIComponent(`Hi ${name}! Your NovaDeskOnline account is ready.\n\nEmail: ${email}\nPassword: ${pw}\n\nPlease log in and change your password.`), '_blank');
+          }},
+          {label:'Close', fn:null, style:'btn-ghost'}
+        ]);
+        if (role==='agent' && typeof adminLoadAgents==='function') adminLoadAgents();
+        if (role==='institution' && typeof adminLoadInstitutions==='function') adminLoadInstitutions();
+        if (typeof adminLoadAll==='function') adminLoadAll();
+      }
+    } catch(edgeFnErr) {
+      // Edge Function not deployed or failed — fall through to the client-side path below
+      usedEdgeFn = false;
+    }
+    if (usedEdgeFn) { if (btn) { btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Create'; } return; }
+
+    // Preserve the admin's current session — signUp() would otherwise switch
+    // the active client session to the newly created account
+    let adminSession = null;
+    try { const { data } = await sb.auth.getSession(); adminSession = data?.session || null; } catch(_) {}
+
+    let signUpRes, lastSignUpErr;
+    for (let attempt=1; attempt<=2; attempt++) {
+      try {
+        signUpRes = await sb.auth.signUp({
+          email, password: pw,
+          options: { data: { full_name: name, whatsapp_number: wa, created_by_admin: true } }
+        });
+        lastSignUpErr = signUpRes.error || null;
+      } catch(signUpThrow) {
+        lastSignUpErr = signUpThrow;
+      }
+      // AuthRetryableFetchError / 5xx are transient — worth one retry before giving up
+      const isRetryable = lastSignUpErr && (lastSignUpErr.name==='AuthRetryableFetchError' || lastSignUpErr.status>=500);
+      if (!lastSignUpErr || !isRetryable) break;
+      if (attempt===1) await new Promise(r=>setTimeout(r, 1200));
+    }
+    if (lastSignUpErr) {
+      const isRetryable = lastSignUpErr.name==='AuthRetryableFetchError' || lastSignUpErr.status>=500;
+      const hint = isRetryable
+        ? ' This is usually Supabase\'s Auth email service failing server-side — check Supabase → Authentication → Settings → Email (confirmations may be ON with no working SMTP configured), or try again in a moment.'
+        : '';
+      throw new Error('Sign-up rejected: ' + extractErrMsg(lastSignUpErr) + hint);
+    }
+    const newUserId = signUpRes.data?.user?.id;
+    if (!newUserId) throw new Error('No account was returned. This usually means email confirmations are required before the account exists — check Supabase → Authentication → Settings.');
+
+    const ndUserId = (typeof generateNdUserId==='function') ? generateNdUserId(newUserId) : ('ND'+Math.random().toString(36).substring(2,10).toUpperCase());
+    const roleValue = role==='agent' ? 'agent' : 'user'; // institutions are 'user' role + an institution_profiles row
+
+    try {
+      const { error: profErr } = await sb.from('profiles').upsert({
+        id:newUserId, nd_user_id:ndUserId, full_name:name, email, whatsapp_number:wa,
+        role:roleValue, created_at:new Date().toISOString()
+      });
+      if (profErr) throw new Error('Account was created, but saving the profile failed: ' + extractErrMsg(profErr));
+    } finally {
+      // Always try to restore the admin's session, even if the profile step failed
+      if (adminSession) { try { await sb.auth.setSession({ access_token:adminSession.access_token, refresh_token:adminSession.refresh_token }); } catch(_) {} }
+    }
+
+    if (role==='institution') {
+      await sb.from('institution_profiles').insert({
+        user_id:newUserId, institution_name:instName, status:'approved', created_at:new Date().toISOString()
+      }).catch(()=>{});
+    }
+
+    toast(`${role.charAt(0).toUpperCase()+role.slice(1)} account created ✅`,'ok');
+    document.querySelectorAll('.nd-overlay').forEach(o=>o.remove());
+    popup('Account Created', `Share these login details with ${name}:<br><br>Email: ${esc(email)}<br>Password: ${esc(pw)}<br><br>They should sign in and change their password right away.`, 'ok', [
+      {label:'WhatsApp Them', style:'btn-gold', fn:()=>{
+        const waNum = wa.replace(/[^0-9]/g,'');
+        const waFull = waNum.startsWith('0') ? '254'+waNum.slice(1) : waNum.startsWith('254') ? waNum : '254'+waNum;
+        window.open('https://wa.me/'+waFull+'?text='+encodeURIComponent(`Hi ${name}! Your NovaDeskOnline account is ready.\n\nEmail: ${email}\nPassword: ${pw}\n\nPlease log in and change your password.`), '_blank');
+      }},
+      {label:'Close', fn:null, style:'btn-ghost'}
+    ]);
+    if (role==='agent' && typeof adminLoadAgents==='function') adminLoadAgents();
+    if (role==='institution' && typeof adminLoadInstitutions==='function') adminLoadInstitutions();
+    if (typeof adminLoadAll==='function') adminLoadAll();
+  } catch(e) {
+    if (err) { err.textContent = extractErrMsg(e); err.style.display='block'; }
+  } finally {
+    if (btn) { btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Create'; }
+  }
+}
+window.submitAddPerson = submitAddPerson;
 
 function adminQuickResetPw(userId, name){
   document.querySelectorAll('.nd-overlay').forEach(o=>o.remove());
@@ -6944,12 +7277,32 @@ async function adminLoadLegal(){
 }
 window.adminLoadLegal = adminLoadLegal;
 
+function adminPreviewLegal(type){
+  const val = $(type==='terms'?'adm-terms-content':'adm-privacy-content')?.value || '';
+  const displayEl = $(type==='terms'?'terms-content-display':'privacy-content-display');
+  if (displayEl) {
+    displayEl.innerHTML = val.trim()
+      ? esc(val).split(/\n{2,}/).map(p=>`<p style="margin-bottom:12px;white-space:pre-wrap">${p}</p>`).join('')
+      : `<p style="color:var(--t4)">Nothing saved yet — write your ${type==='terms'?'Terms & Conditions':'Privacy Policy'} above and hit Save to preview it here.</p>`;
+  }
+  openModal(type==='terms'?'terms-modal':'privacy-modal');
+}
+window.adminPreviewLegal = adminPreviewLegal;
+
 async function adminSaveLegal(type){
   const key=type==='terms'?'terms_content':'privacy_content';
-  const val=$(type==='terms'?'adm-terms-content':'adm-privacy-content')?.value||'';
   const btn=$(type==='terms'?'adm-terms-savebtn':'adm-privacy-savebtn');
   const msgEl=$(type==='terms'?'adm-terms-savemsg':'adm-privacy-savemsg');
   const label = type==='terms'?'Terms & Conditions':'Privacy Policy';
+  const taEl = $(type==='terms'?'adm-terms-content':'adm-privacy-content');
+  // Keep any embedded "Last updated: <date>" line in sync with today automatically
+  const todayStr = new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
+  let val = taEl?.value || '';
+  const lastUpdatedRe = /Last updated:\s*\d{1,2}\s+\w+\s+\d{4}/i;
+  if (lastUpdatedRe.test(val)) {
+    val = val.replace(lastUpdatedRe, 'Last updated: '+todayStr);
+    if (taEl) taEl.value = val; // reflect the synced date back into the textarea too
+  }
   if (msgEl) msgEl.style.display='none';
   if (btn){ btn.disabled=true; btn.innerHTML='<span class="spin"></span> Saving…'; }
   try{
@@ -6981,8 +7334,9 @@ async function adminShowLegalHistory(key, label){
   try{
     const { data, error } = await sb.from('legal_edit_history').select('edited_by_name,edited_at').eq('doc_key',key).order('edited_at',{ascending:false}).limit(20);
     if (error) throw error;
-    const html = (data&&data.length) ? data.map(h=>`• ${fmt(h.edited_at)} — ${esc(h.edited_by_name||'Admin')}`).join('\n')
-                                      : 'No edit history recorded yet. History starts tracking from your next save.';
+    const html = (data&&data.length)
+      ? '<div style="display:flex;flex-direction:column;gap:8px;text-align:left">' + data.map(h=>`<div style="padding:8px 10px;background:var(--bg3);border:1px solid var(--bd);border-radius:8px;font-size:.7rem"><span style="color:var(--t1);font-weight:600">${fmt(h.edited_at)}</span><br><span style="color:var(--t4)">by ${esc(h.edited_by_name||'Admin')}</span></div>`).join('') + '</div>'
+      : 'No edit history recorded yet. History starts tracking from your next save.';
     popup(label+' — Edit History', html, 'nf', [{label:'Close', fn:null, style:'btn-ghost'}]);
   }catch(e){
     popup(label+' — Edit History', 'History isn\'t available yet — run the schema_upgrade.sql migration to enable it.', 'nf', [{label:'Close', fn:null, style:'btn-ghost'}]);
@@ -7222,9 +7576,14 @@ async function adminLoadMessages(){
         </div>
         ${m.email?`<div style="font-size:.62rem;color:var(--t3);margin-bottom:3px"><i class="fas fa-envelope" style="width:12px"></i> ${esc(m.email)}</div>`:''}
         ${m.phone?`<div style="font-size:.62rem;color:var(--t3);margin-bottom:3px"><i class="fas fa-phone" style="width:12px"></i> ${esc(m.phone)}</div>`:''}
+        ${!m.email && !m.phone?`<div style="font-size:.6rem;color:var(--t4);font-style:italic;margin-bottom:3px">No contact info provided</div>`:''}
         ${m.subject?`<div style="font-size:.68rem;font-weight:500;color:var(--t2);margin:6px 0 3px">${esc(m.subject)}</div>`:''}
         <div style="font-size:.72rem;color:var(--t2);line-height:1.6;background:var(--bg4);border-radius:6px;padding:8px;margin-top:6px">${esc(m.message||'')}</div>
-        ${m.email?`<a href="mailto:${esc(m.email)}?subject=Re: ${esc(m.subject||'Your message')}" style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:.64rem;color:var(--gold);text-decoration:none"><i class="fas fa-reply"></i> Reply by email</a>`:''}
+        ${(m.email||m.phone)?`<div style="display:flex;gap:6px;margin-top:10px">
+          ${m.phone?`<a href="tel:${esc(m.phone)}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:8px;background:rgba(77,158,255,.1);border:1px solid rgba(77,158,255,.3);border-radius:8px;color:#5aaeff;font-size:.64rem;font-weight:600;text-decoration:none"><i class="fas fa-phone"></i> Call</a>`:''}
+          ${m.phone?`<a href="https://wa.me/${esc(m.phone.replace(/[^0-9]/g,''))}" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:8px;background:rgba(50,180,100,.1);border:1px solid rgba(50,180,100,.3);border-radius:8px;color:var(--green);font-size:.64rem;font-weight:600;text-decoration:none"><i class="fab fa-whatsapp"></i> WhatsApp</a>`:''}
+          ${m.email?`<a href="mailto:${esc(m.email)}?subject=${encodeURIComponent('Re: '+(m.subject||'Your message to NovaDeskOnline'))}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:8px;background:var(--gold-a8);border:1px solid var(--gold-a25);border-radius:8px;color:var(--gold);font-size:.64rem;font-weight:600;text-decoration:none"><i class="fas fa-envelope"></i> Email</a>`:''}
+        </div>`:''}
       </div>`).join('');
   } catch(e){
     const isMissing=e.message?.includes('schema cache')||e.message?.includes('does not exist')||e.message?.includes('relation');
@@ -7245,17 +7604,19 @@ async function adminLoadAds(){
     const rejected = (data||[]).filter(a=>a.status==='rejected'||a.status==='paused');
 
     const renderAd = (a,showActions=true)=>{
-      const agentName = a.profiles?.full_name||'Unknown Agent';
-      const agentWa   = a.profiles?.whatsapp_number||'';
-      const aRaw=agentWa.replace(/[^0-9]/g,'');
-      const aWa=aRaw.startsWith('0')?'254'+aRaw.slice(1):aRaw.startsWith('254')?aRaw:'254'+aRaw;
+      const subName = a.submitter_name || a.profiles?.full_name || 'Unknown';
+      const subContact = a.submitter_contact || a.profiles?.whatsapp_number || '';
+      const isEmailContact = subContact.includes('@');
+      const rawPhone = subContact.replace(/[^0-9]/g,'');
+      const waNum = rawPhone.startsWith('0')?'254'+rawPhone.slice(1):rawPhone.startsWith('254')?rawPhone:'254'+rawPhone;
       const statusColor={pending:'#ffa500',active:'var(--green)',rejected:'var(--red)',paused:'var(--t4)'}[a.status]||'var(--t3)';
       return '<div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:13px">'
-        +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">'
+        +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">'
         +'<div style="flex:1;min-width:0"><div style="font-size:.78rem;font-weight:700;color:var(--t1)">'+esc(a.title||'Ad')+'</div>'
-        +'<div style="font-size:.6rem;color:var(--t4);margin-top:1px">by '+esc(agentName)+' · '+fmtRel(a.created_at)+'</div></div>'
+        +'<div style="font-size:.6rem;color:var(--t4);margin-top:1px">by '+esc(subName)+' · '+fmtRel(a.created_at)+'</div></div>'
         +'<span style="font-size:.52rem;padding:2px 8px;border-radius:20px;background:'+statusColor+'22;color:'+statusColor+';border:1px solid '+statusColor+'44;flex-shrink:0;margin-left:8px">'+esc(a.status||'pending')+'</span>'
         +'</div>'
+        +(subContact?'<div style="font-size:.62rem;color:var(--t3);margin-bottom:8px"><i class="fas '+(isEmailContact?'fa-envelope':'fa-phone')+'" style="width:14px"></i>'+esc(subContact)+'</div>':'')
         +(a.image_url?'<img src="'+esc(a.image_url)+'" style="width:100%;height:120px;object-fit:cover;border-radius:8px;margin-bottom:8px" onerror="this.style.display=\'none\'">':'')
         +'<div style="font-size:.72rem;color:var(--t2);line-height:1.6;margin-bottom:8px">'+esc(a.body||a.description||'')+'</div>'
         +(a.link_url?'<div style="font-size:.62rem;color:var(--blue);margin-bottom:8px"><i class="fas fa-link" style="width:14px"></i>'+esc(a.link_url)+'</div>':'')
@@ -7264,8 +7625,10 @@ async function adminLoadAds(){
         +(a.status!=='active'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'active\')" style="flex:1;padding:8px;background:rgba(50,180,100,.1);border:1px solid rgba(50,180,100,.3);border-radius:8px;color:var(--green);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-check"></i> Approve</button>':'')
         +(a.status!=='paused'&&a.status==='active'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'paused\')" style="flex:1;padding:8px;background:var(--bg4);border:1px solid var(--bd);border-radius:8px;color:var(--t3);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-pause"></i> Pause</button>':'')
         +(a.status!=='rejected'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'rejected\')" style="flex:1;padding:8px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.25);border-radius:8px;color:var(--red);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-times"></i> Reject</button>':'')
-        +(agentWa?'<a href="https://wa.me/'+aWa+'?text='+encodeURIComponent('Hello! Regarding your ad "'+( a.title||'')+'" on NovaDeskOnline:')+'" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);border-radius:8px;color:#25D366;text-decoration:none;font-size:.64rem;font-weight:600"><i class="fab fa-whatsapp"></i> Agent</a>':'')
+        +(subContact&&!isEmailContact?'<a href="https://wa.me/'+waNum+'?text='+encodeURIComponent('Hello! Regarding your ad "'+( a.title||'')+'" on NovaDeskOnline:')+'" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);border-radius:8px;color:#25D366;text-decoration:none;font-size:.64rem;font-weight:600"><i class="fab fa-whatsapp"></i> WhatsApp</a>':'')
+        +(subContact&&isEmailContact?'<a href="mailto:'+esc(subContact)+'?subject='+encodeURIComponent('Re: your ad "'+(a.title||'')+'"')+'" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:var(--gold-a8);border:1px solid var(--gold-a25);border-radius:8px;color:var(--gold);text-decoration:none;font-size:.64rem;font-weight:600"><i class="fas fa-envelope"></i> Email</a>':'')
         +'<button onclick="adminDeleteAd(\''+esc(a.id)+'\')" style="width:32px;padding:8px;background:rgba(224,80,80,.06);border:1px solid rgba(224,80,80,.2);border-radius:8px;color:var(--red);font-size:.64rem;cursor:pointer"><i class="fas fa-trash"></i></button>'
+        +'<button onclick="adminEditAd(\''+esc(a.id)+'\')" style="width:32px;padding:8px;background:var(--bg4);border:1px solid var(--bd);border-radius:8px;color:var(--t2);font-size:.64rem;cursor:pointer"><i class="fas fa-pen"></i></button>'
         +'</div>':'')
         +'</div>';
     };
@@ -7286,16 +7649,70 @@ window.adminLoadAds = adminLoadAds;
 async function adminSetAdStatus(id, status){
   try{
     await sb.from('advertisements').update({status,reviewed_at:new Date().toISOString(),reviewed_by:_user?.id||null}).eq('id',id);
-    // If approved, notify agent via in-app notification
     if(status==='active'){
-      const{data:ad}=await sb.from('advertisements').select('agent_id,title').eq('id',id).single();
+      const{data:ad}=await sb.from('advertisements').select('agent_id,title,submitter_name,submitter_contact').eq('id',id).single();
       if(ad?.agent_id) await sb.from('notifications').insert({user_id:ad.agent_id,type:'ad_approved',category:'promo',title:'🎉 Ad Approved!',body:'Your ad "'+ad.title+'" is now live on NovaDeskOnline.',read:false,created_at:new Date().toISOString()}).catch(()=>{});
+      // Best-effort email — requires an Edge Function (send-ad-email) to actually deliver
+      sb.functions?.invoke('send-ad-email', { body: { type:'approved', adId:id, name:ad?.submitter_name, contact:ad?.submitter_contact, title:ad?.title } }).catch(()=>{});
     }
     toast('Ad status: '+status+' ✅','ok');
     adminLoadAds();
   }catch(e){ toast(e.message,'er'); }
 }
 window.adminSetAdStatus = adminSetAdStatus;
+
+async function adminEditAd(id){
+  try{
+    const { data: a, error } = await sb.from('advertisements').select('*').eq('id',id).single();
+    if (error||!a) throw error||new Error('Ad not found');
+    const overlay=document.createElement('div');
+    overlay.className='nd-overlay';
+    overlay.style.cssText='position:fixed;inset:0;z-index:9900;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)';
+    overlay.innerHTML=`
+      <div style="background:var(--bg2);border-radius:24px 24px 0 0;border:1px solid var(--bd);width:100%;max-width:520px;max-height:90dvh;overflow-y:auto;padding:20px 16px 40px">
+        <div style="width:36px;height:4px;background:var(--bd2);border-radius:4px;margin:0 auto 16px"></div>
+        <div style="font-family:var(--fd);font-size:1.05rem;color:var(--t1);margin-bottom:16px"><i class="fas fa-pen" style="color:var(--gold);margin-right:8px"></i>Edit Ad</div>
+        <div class="fg"><label class="flbl">Title</label><input class="fi" id="eaad-title" type="text" value="${esc(a.title||'')}"></div>
+        <div class="fg"><label class="flbl">Body</label><textarea class="fi" id="eaad-body" rows="3">${esc(a.body||'')}</textarea></div>
+        <div class="fg"><label class="flbl">Image URL</label><input class="fi" id="eaad-image" type="url" value="${esc(a.image_url||'')}"></div>
+        <div class="fg"><label class="flbl">Link URL</label><input class="fi" id="eaad-link" type="url" value="${esc(a.link_url||'')}"></div>
+        <div class="fg"><label class="flbl">Button Text</label><input class="fi" id="eaad-cta" type="text" value="${esc(a.cta_label||'')}"></div>
+        <div class="fg"><label class="flbl">Runs Until</label><input class="fi" id="eaad-until" type="date" value="${a.runs_until?new Date(a.runs_until).toISOString().slice(0,10):''}"></div>
+        <div id="eaad-err" class="ferr" style="margin-bottom:10px"></div>
+        <button class="btn btn-gold btn-full" id="eaad-save-btn" onclick="submitEditAd('${esc(id)}')"><i class="fas fa-check"></i> Save Changes</button>
+        <button onclick="this.closest('.nd-overlay').remove()" style="width:100%;margin-top:8px;padding:12px;background:var(--bg4);border:1px solid var(--bd);border-radius:12px;color:var(--t2);font-size:.76rem;cursor:pointer">Cancel</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+  }catch(e){ toast(e.message||'Could not load ad.','er'); }
+}
+window.adminEditAd = adminEditAd;
+
+async function submitEditAd(id){
+  const btn=$('eaad-save-btn'), err=$('eaad-err');
+  if (err) err.style.display='none';
+  if (btn){ btn.disabled=true; btn.innerHTML='<span class="spin"></span> Saving…'; }
+  try{
+    const until = $('eaad-until')?.value;
+    const { error } = await sb.from('advertisements').update({
+      title: $('eaad-title')?.value?.trim(),
+      body: $('eaad-body')?.value?.trim()||null,
+      image_url: $('eaad-image')?.value?.trim()||null,
+      link_url: $('eaad-link')?.value?.trim()||null,
+      cta_label: $('eaad-cta')?.value?.trim()||null,
+      runs_until: until ? new Date(until).toISOString() : null
+    }).eq('id', id);
+    if (error) throw error;
+    toast('Ad updated ✅','ok');
+    document.querySelectorAll('.nd-overlay').forEach(o=>o.remove());
+    if (typeof adminLoadAds==='function') adminLoadAds();
+  }catch(e){
+    if (err){ err.textContent=e.message||'Could not save changes.'; err.style.display='block'; }
+  }finally{
+    if (btn){ btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Save Changes'; }
+  }
+}
+window.submitEditAd = submitEditAd;
 
 async function adminDeleteAd(id){
   popup('Delete Ad?','This will permanently remove the advertisement.','er',[
@@ -7333,62 +7750,130 @@ async function loadHomeAds(){
 window.loadHomeAds = loadHomeAds;
 
 /* Agent: submit an ad */
+let _pendingAdImages = [];
 function openSubmitAdModal(){
   if(!_user){ openAuth(); return; }
-  if(!['agent','admin'].includes(_profile?.role)){ toast('Only agents can submit ads. Apply to become an agent first.','nf',4000); return; }
+  _pendingAdImages = [];
   const overlay=document.createElement('div');
+  overlay.className = 'nd-overlay';
   overlay.style.cssText='position:fixed;inset:0;z-index:9900;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)';
   overlay.innerHTML=`
-    <div style="background:var(--bg2);border-radius:24px 24px 0 0;border:1px solid var(--bd);width:100%;max-width:520px;max-height:88dvh;overflow-y:auto;padding:20px 16px 40px">
+    <div style="background:var(--bg2);border-radius:24px 24px 0 0;border:1px solid var(--bd);width:100%;max-width:520px;max-height:90dvh;overflow-y:auto;padding:20px 16px 40px">
       <div style="width:36px;height:4px;background:var(--bd2);border-radius:4px;margin:0 auto 16px"></div>
       <div style="font-family:var(--fd);font-size:1rem;color:var(--t1);margin-bottom:4px">Submit an Ad</div>
       <div style="font-size:.66rem;color:var(--t3);margin-bottom:16px">Ads require admin approval before going live.</div>
-      <div class="fg"><label class="flbl">Ad Title *</label><input class="fi" id="ad-title" type="text" placeholder="e.g. Kemera Wholesale — Best Prices" maxlength="80"></div>
+
+      <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin-bottom:8px">Your Details</div>
+      <div class="fg"><label class="flbl">Your Name <span class="req">*</span></label><input class="fi" id="ad-sub-name" type="text" placeholder="Full name" value="${esc(_profile?.full_name||'')}"></div>
+      <div class="fg"><label class="flbl">How Should We Reach You? <span class="req">*</span></label><input class="fi" id="ad-sub-contact" type="text" placeholder="WhatsApp number or email" value="${esc(_profile?.whatsapp_number||'')}"></div>
+
+      <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin:14px 0 8px">Ad Details</div>
+      <div class="fg"><label class="flbl">Ad Title <span class="req">*</span></label><input class="fi" id="ad-title" type="text" placeholder="e.g. Kemera Wholesale — Best Prices" maxlength="80"></div>
       <div class="fg"><label class="flbl">Ad Body / Description</label><textarea class="fi" id="ad-body" rows="3" placeholder="Short description of what you're advertising…" maxlength="300"></textarea></div>
-      <div class="fg"><label class="flbl">Image URL (optional)</label><input class="fi" id="ad-image" type="url" placeholder="https://…/image.jpg"></div>
+
+      <div class="fg">
+        <label class="flbl">Ad Images <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(upload from phone, up to 5)</span></label>
+        <div class="upload-zone" id="ad-upload-zone" onclick="document.getElementById('ad-file-input').click()">
+          <div id="ad-upload-prompt">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Tap to upload images</p>
+            <span>JPG, PNG — max 10MB each · max 5 images</span>
+          </div>
+          <div id="ad-file-list" class="upload-file-list"></div>
+        </div>
+        <input type="file" id="ad-file-input" multiple accept="image/*" style="display:none" onchange="handleAdFileSelect(this)">
+      </div>
+      <div class="fg"><label class="flbl">Or Paste an Image URL <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(optional, used if no upload)</span></label><input class="fi" id="ad-image" type="url" placeholder="https://…/image.jpg"></div>
+
       <div class="fg"><label class="flbl">Link URL (optional)</label><input class="fi" id="ad-link" type="url" placeholder="https://yoursite.com or wa.me/…"></div>
       <div class="fg"><label class="flbl">Call-to-Action Button Label</label><input class="fi" id="ad-cta" type="text" placeholder="e.g. Shop Now, Call Us, Learn More" maxlength="30"></div>
       <div class="fg"><label class="flbl">Run Until (optional)</label><input class="fi" id="ad-until" type="date"></div>
       <div id="ad-err" style="display:none;color:var(--red);font-size:.7rem;padding:8px 12px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.25);border-radius:8px;margin-bottom:10px"></div>
-      <button onclick="submitAdForm(this)" style="width:100%;padding:14px;background:var(--gold);color:#000;border:none;border-radius:14px;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">
+      <button onclick="submitAdForm(this)" id="ad-submit-btn" style="width:100%;padding:14px;background:var(--gold);color:#000;border:none;border-radius:14px;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">
         <i class="fas fa-paper-plane"></i> Submit for Approval
       </button>
-      <button onclick="this.closest('[style*=position]').remove()" style="width:100%;padding:10px;background:transparent;border:1px solid var(--bd);border-radius:12px;color:var(--t3);font-size:.76rem;cursor:pointer">Cancel</button>
+      <button onclick="this.closest('.nd-overlay').remove()" style="width:100%;padding:10px;background:transparent;border:1px solid var(--bd);border-radius:12px;color:var(--t3);font-size:.76rem;cursor:pointer">Cancel</button>
     </div>`;
   document.body.appendChild(overlay);
   overlay.addEventListener('click',e=>{ if(e.target===overlay) overlay.remove(); });
 }
 window.openSubmitAdModal = openSubmitAdModal;
 
+function handleAdFileSelect(inp){
+  const files = Array.from(inp.files||[]);
+  for (const f of files) {
+    if (_pendingAdImages.length >= 5) { toast('Max 5 images per ad.','er'); break; }
+    _pendingAdImages.push(f);
+  }
+  inp.value='';
+  renderAdFileList();
+}
+window.handleAdFileSelect = handleAdFileSelect;
+function removePendingAdImage(i){ _pendingAdImages.splice(i,1); renderAdFileList(); }
+window.removePendingAdImage = removePendingAdImage;
+function renderAdFileList(){
+  const list = $('ad-file-list');
+  const prompt = $('ad-upload-prompt');
+  if (!list) return;
+  if (prompt) prompt.style.display = _pendingAdImages.length ? 'none' : '';
+  list.innerHTML = _pendingAdImages.map((f,i)=>`
+    <div class="upload-file-item">
+      <i class="fas fa-image"></i>
+      <span title="${esc(f.name)}">${esc(f.name)}</span>
+      <span style="color:var(--t4)">${formatFileSize(f.size)}</span>
+      <button onclick="event.stopPropagation();removePendingAdImage(${i})" title="Remove"><i class="fas fa-times"></i></button>
+    </div>
+  `).join('') + (_pendingAdImages.length && _pendingAdImages.length<5 ? `<div style="text-align:center;font-size:.62rem;color:var(--gold);padding:6px 0 2px">+ Tap to add more images</div>` : '');
+}
+
 async function submitAdForm(btn){
+  const subName=($('ad-sub-name')?.value||'').trim();
+  const subContact=($('ad-sub-contact')?.value||'').trim();
   const title=($('ad-title')?.value||'').trim();
   const body=($('ad-body')?.value||'').trim();
-  const imageUrl=($('ad-image')?.value||'').trim();
+  const imageUrlInput=($('ad-image')?.value||'').trim();
   const linkUrl=($('ad-link')?.value||'').trim();
   const ctaLabel=($('ad-cta')?.value||'').trim();
   const until=($('ad-until')?.value||'');
   const errEl=$('ad-err');
+  if (errEl) errEl.style.display='none';
+  if(!subName||!subContact){ if(errEl){errEl.textContent='Please tell us your name and how to reach you.';errEl.style.display='block';} return; }
   if(!title){ if(errEl){errEl.textContent='Ad title is required.';errEl.style.display='block';} return; }
-  if(errEl) errEl.style.display='none';
   if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> Submitting…';}
   try{
-    await sb.from('advertisements').insert({
+    let imageUrl = imageUrlInput || null;
+    if (_pendingAdImages.length) {
+      const uploaded = await uploadFilesToStorage(_user.id, 'ads-'+Date.now(), _pendingAdImages);
+      if (uploaded.length) imageUrl = uploaded[0].url; // first image is the primary ad image
+    }
+    const { data: inserted, error } = await sb.from('advertisements').insert({
       agent_id:_user.id, title, body:body||null,
-      image_url:imageUrl||null, link_url:linkUrl||null,
+      image_url:imageUrl, link_url:linkUrl||null,
       cta_label:ctaLabel||null,
+      submitter_name:subName, submitter_contact:subContact,
       runs_until:until?new Date(until).toISOString():null,
       status:'pending', created_at:new Date().toISOString()
-    });
-    toast('Ad submitted! Admin will review it shortly. ✅','ok',4000);
-    btn?.closest('[style*="position"]')?.remove();
+    }).select().maybeSingle();
+    if (error) throw error;
+
+    document.querySelectorAll('.nd-overlay').forEach(o=>o.remove());
     // Notify admin
-    await sb.from('notifications').insert({user_id:null,type:'new_ad',title:'📢 New Ad Submitted',body:(_profile?.full_name||'An agent')+' submitted a new ad: "'+title+'".',read:false,created_at:new Date().toISOString()}).catch(()=>{});
+    sb.from('notifications').insert({user_id:null,type:'new_ad',category:'system',title:'📢 New Ad Submitted',body:subName+' submitted a new ad: "'+title+'".',read:false,created_at:new Date().toISOString()}).catch(()=>{});
+    // Best-effort email notice — requires an Edge Function (send-ad-email) to actually deliver;
+    // this silently does nothing if that function isn't deployed yet
+    sb.functions?.invoke('send-ad-email', { body: { type:'submitted', adId: inserted?.id, name: subName, contact: subContact, title } }).catch(()=>{});
+
+    popup('🎉 Ad Submitted!', `Thanks, ${subName}! Your ad "${title}" is now under review. We'll reach out via ${subContact} once it's approved or if we need anything else.`, 'ok', [
+      {label:'Done', fn:null, style:'btn-gold'}
+    ]);
   }catch(e){
     if(errEl){errEl.textContent=e.message||'Failed to submit.';errEl.style.display='block';}
+  }finally{
     if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> Submit for Approval';}
   }
 }
 window.submitAdForm = submitAdForm;
+
 
 async function saveAdminSettings(){
   try { await _requireAdmin(); } catch(e){ toast(e.message,'er'); return; }
@@ -7445,7 +7930,7 @@ async function doForgotPassword(){
   if(!email||!email.includes('@')){if(err){err.textContent='Enter a valid email.';err.style.display='block';}return;}
   btn.disabled=true;btn.innerHTML='<span class="spin"></span> Sending…';
   try{
-    const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.href});
+    const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin + window.location.pathname});
     if(error)throw error;
     if(ok)ok.style.display='block';$('fp-email').value='';
   }catch(e){if(err){err.textContent=e.message||'Could not send reset email.';err.style.display='block';}}
@@ -7525,12 +8010,12 @@ async function loadHomeReviews(){
 
     // Pull from both sources: general "Share Your Experience" feedback,
     // and optional per-order ratings — merged so the carousel never stays empty
-    const [fbRes, rvRes] = await Promise.all([
+    const [fbRes, rvRes] = await Promise.allSettled([
       sb.from('feedback').select('rating,comment,created_at,user_id').not('rating','is',null).order('created_at',{ascending:false}).limit(8),
-      sb.from('reviews').select('rating,comment,created_at,user_id,user_name,service_name').eq('visible',true).order('created_at',{ascending:false}).limit(8).then(r=>r).catch(()=>({data:null}))
+      sb.from('reviews').select('rating,comment,created_at,user_id,user_name,service_name').eq('visible',true).order('created_at',{ascending:false}).limit(8)
     ]);
-    const fb = (fbRes?.data||[]).map(r=>({...r, _name:null, _svc:null}));
-    const rv = (rvRes?.data||[]).map(r=>({...r, _name:r.user_name, _svc:r.service_name}));
+    const fb = (fbRes.value?.data||[]).map(r=>({...r, _name:null, _svc:null}));
+    const rv = (rvRes.value?.data||[]).map(r=>({...r, _name:r.user_name, _svc:r.service_name}));
     const data = [...fb, ...rv].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,8);
 
     if (!data.length) {
@@ -8223,16 +8708,6 @@ window.addEventListener('popstate', ()=>{
       <label class="flbl"><i class="fas fa-calendar-clock" style="color:var(--gold);margin-right:5px"></i>Deadline <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(when do you need this by?)</span></label>
       <input class="fi" id="svc-req-deadline" type="datetime-local">
     </div>
-    <div class="fg" id="svc-req-file-section">
-      <label class="flbl">Attach Files <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(optional)</span></label>
-      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('svc-file-input').click()">
-        <i class="fas fa-cloud-upload-alt"></i>
-        <p>Tap to upload files</p>
-        <span>PDF, Word, JPG, PNG — max 10MB each · max 5 files</span>
-      </div>
-      <input type="file" id="svc-file-input" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.xls,.xlsx" style="display:none" onchange="handleFileSelect(this)">
-      <div id="upload-file-list" class="upload-file-list"></div>
-    </div>
     <div id="svc-req-err" class="ferr" style="margin-bottom:12px;display:none"></div>
     <div style="display:flex;gap:8px;margin-bottom:8px">
       <button class="btn btn-gold" style="flex:2" id="svc-req-btn" onclick="submitSvcRequest()"><i class="fas fa-paper-plane"></i> Submit Request</button>
@@ -8449,6 +8924,19 @@ function loadJsPDF(){
   });
 }
 
+function showOrderSuccessModal(req) {
+  popup(
+    '🎉 Request Submitted!',
+    `Your "${req.service_name}" request is in — we'll reach you on WhatsApp with updates. What would you like to do next?`,
+    'ok',
+    [
+      {label:'Rate This Service', style:'btn-gold', fn:()=>openReviewModal(req.id, req.service_name)},
+      {label:'Request Another Service', style:'btn-outline', fn:()=>goNav('services')},
+      {label:'Close', style:'btn-ghost', fn:null}
+    ]
+  );
+}
+window.showOrderSuccessModal = showOrderSuccessModal;
 function showReceiptOffer(req, profile) {
   const name = profile?.full_name || 'Customer';
   popup(
@@ -8782,12 +9270,13 @@ function renderProfileTab() {
   const dispName = _profile.full_name || ndId;
   const ndIdEl = $('pi-nd-id');
   if (ndIdEl) { ndIdEl.textContent = ndId; ndIdEl.title = 'Tap to copy'; }
-  $('pi-name').textContent    = dispName;
-  $('pi-email').textContent   = _user?.email || '—';
-  $('pi-idnum').textContent   = _profile.id_number || '—';
-  $('pi-wa').textContent      = _profile.whatsapp_number || '—';
-  $('pi-joined').textContent  = fmt(_profile.created_at);
-  $('pi-lastvisit').textContent = fmt(_profile.last_visit || _profile.created_at);
+  const setTxt = (id,val)=>{ const el=$(id); if(el) el.textContent = val; };
+  setTxt('pi-name', dispName);
+  setTxt('pi-email', _user?.email || '—');
+  setTxt('pi-idnum', _profile.id_number || '—');
+  setTxt('pi-wa', _profile.whatsapp_number || '—');
+  setTxt('pi-joined', fmt(_profile.created_at));
+  setTxt('pi-lastvisit', fmt(_profile.last_visit || _profile.created_at));
   // Populate activity timeline
   (function(){
     const actEl = $('pi-activity');
@@ -8882,9 +9371,43 @@ function renderMyReqsList(filter) {
         ${(r.file_urls && JSON.parse(r.file_urls||'[]').length)?`<button class="btn btn-ghost btn-xs" onclick="viewReqFiles('${r.id}')"><i class="fas fa-paperclip"></i> Files</button>`:''}
         ${r.status==='completed' && !_myReviewedIds.has(r.id) ? `<button class="btn btn-outline btn-xs" onclick="openReviewModal('${r.id}','${esc(r.service_name)}')" style="color:var(--gold);border-color:var(--gold-a45)"><i class="fas fa-star"></i> Rate (optional)</button>` : ''}
         <button class="btn btn-ghost btn-xs" onclick="openSvcByName('${esc(r.service_name)}')"><i class="fas fa-redo"></i> Reorder</button>
+        ${(r.status==='pending'||r.status==='in_progress') ? `<button class="btn btn-outline btn-xs" onclick="cancelMyRequest('${r.id}')" style="color:#ffa500;border-color:rgba(255,165,0,.4)"><i class="fas fa-ban"></i> Cancel</button>` : ''}
+        ${(r.status==='cancelled'||r.status==='completed') ? `<button class="btn btn-outline btn-xs" onclick="deleteMyRequest('${r.id}')" style="color:var(--red);border-color:rgba(224,80,80,.4)"><i class="fas fa-trash"></i> Delete</button>` : ''}
       </div>
     </div>`).join('');
 }
+async function cancelMyRequest(reqId){
+  popup('Cancel Request', 'Are you sure you want to cancel this request?', 'er', [
+    {label:'No, keep it', fn:null, style:'btn-ghost'},
+    {label:'Yes, Cancel', style:'btn-outline', fn: async ()=>{
+      try {
+        const { error } = await sb.from('service_requests').update({status:'cancelled', updated_at:new Date().toISOString()}).eq('id', reqId).eq('user_id', _user.id);
+        if (error) throw error;
+        const r = _reqs.find(x=>x.id===reqId); if (r) r.status='cancelled';
+        toast('Request cancelled.','nf');
+        renderMyReqsList(_reqFilter||'all');
+        if(typeof renderHomeReqs==='function') renderHomeReqs();
+      } catch(e){ toast(e.message||'Could not cancel request.','er'); }
+    }}
+  ]);
+}
+window.cancelMyRequest = cancelMyRequest;
+function deleteMyRequest(reqId){
+  popup('Delete Request', 'This removes the request from your history permanently. This cannot be undone.', 'er', [
+    {label:'Cancel', fn:null, style:'btn-ghost'},
+    {label:'Delete', style:'btn-outline', fn: async ()=>{
+      try {
+        const { error } = await sb.from('service_requests').delete().eq('id', reqId).eq('user_id', _user.id);
+        if (error) throw error;
+        _reqs = _reqs.filter(x=>x.id!==reqId);
+        toast('Request deleted.','nf');
+        renderMyReqsList(_reqFilter||'all');
+        if(typeof renderHomeReqs==='function') renderHomeReqs();
+      } catch(e){ toast(e.message||'Could not delete request.','er'); }
+    }}
+  ]);
+}
+window.deleteMyRequest = deleteMyRequest;
 function viewReqFiles(reqId) {
   const req = _reqs.find(r=>r.id===reqId);
   if (!req) return;
@@ -9064,6 +9587,9 @@ function populateSettingsTab() {
   $('set-wa').value    = _profile.whatsapp_number || '';
   $('set-alt').value   = _profile.alt_phone || '';
   $('set-idnum').value = _profile.id_number || '';
+  const curEmailEl = $('set-current-email'); if (curEmailEl) curEmailEl.textContent = _user?.email || '—';
+  const notifToggle = $('notif-pref-toggle');
+  if (notifToggle) notifToggle.classList.toggle('on', _profile.notifications_enabled !== false);
   // Update avatar in settings
   const sAva = $('settings-ava');
   if (sAva) {
@@ -9088,9 +9614,8 @@ async function saveSettingsProfile() {
     const { error } = await sb.from('profiles').update({ full_name:name, whatsapp_number:wa||'', alt_phone:alt||null, updated_at:new Date().toISOString() }).eq('id', _user.id);
     if (error) throw error;
     _profile = { ..._profile, full_name:name, whatsapp_number:wa, alt_phone:alt||null };
-    renderAccount();
-    populateSettingsTab();
     toast('Profile saved! ✅','ok');
+    try { renderAccount(); populateSettingsTab(); } catch(renderErr) { console.warn('Post-save render issue:', renderErr.message); }
   } catch(e) {
     const msg = e.message||'Save failed.';
     if(err){ err.textContent=msg; err.style.display='block'; }
@@ -9125,6 +9650,64 @@ async function saveSettingsPassword() {
   finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-key"></i> Update Password'; }
 }
 window.saveSettingsPassword = saveSettingsPassword;
+
+async function requestEmailChange() {
+  const newEmail = ($('set-new-email')?.value||'').trim().toLowerCase();
+  const err = $('set-email-err'), ok = $('set-email-ok'), btn = $('set-email-btn');
+  if (err) err.style.display='none'; if (ok) ok.style.display='none';
+  if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+    if (err){ err.textContent='Enter a valid email address.'; err.style.display='block'; } return;
+  }
+  if (newEmail === _user?.email) {
+    if (err){ err.textContent="That's already your current email."; err.style.display='block'; } return;
+  }
+  if (btn) { btn.disabled=true; btn.innerHTML='<span class="spin"></span> Sending…'; }
+  try {
+    const { error } = await sb.auth.updateUser({ email: newEmail });
+    if (error) throw error;
+    if (ok) { ok.textContent = `Confirmation link sent to ${newEmail}. Check your inbox (and your current email, if your account has secure email change enabled) to finish the switch.`; ok.style.display='block'; }
+    toast('Confirmation email sent ✅','ok');
+    $('set-new-email').value = '';
+  } catch(e) {
+    if (err){ err.textContent=e.message||'Could not send confirmation.'; err.style.display='block'; }
+  } finally {
+    if (btn) { btn.disabled=false; btn.innerHTML='<i class="fas fa-paper-plane"></i> Send Confirmation'; }
+  }
+}
+window.requestEmailChange = requestEmailChange;
+
+async function toggleNotifPref() {
+  if (!_user || !_profile) return;
+  const toggle = $('notif-pref-toggle');
+  const enabling = _profile.notifications_enabled === false; // was off, turning on now
+  _profile.notifications_enabled = enabling;
+  if (toggle) toggle.classList.toggle('on', enabling);
+  try {
+    await sb.from('profiles').update({ notifications_enabled: enabling }).eq('id', _user.id);
+    toast(enabling ? 'Notifications turned on 🔔' : 'Notifications turned off','ok');
+  } catch(e) {
+    // Revert on failure
+    _profile.notifications_enabled = !enabling;
+    if (toggle) toggle.classList.toggle('on', !enabling);
+    toast('Could not update notification setting.','er');
+  }
+}
+window.toggleNotifPref = toggleNotifPref;
+
+function confirmDeleteAccount() {
+  popup('Delete Account', "This permanently deletes your profile, requests, notes, and saved data. This cannot be undone. Type your WhatsApp number to confirm, or just tap Delete to proceed.", 'er', [
+    {label:'Cancel', fn:null, style:'btn-ghost'},
+    {label:'Delete My Account', style:'btn-outline', fn: async ()=>{
+      try {
+        await sb.from('profiles').update({ role:'deleted', deleted_at:new Date().toISOString() }).eq('id', _user.id).catch(()=>{});
+        try { await sb.rpc('delete_own_account'); } catch(e){ /* RPC may not exist — profile is already marked deleted */ }
+        toast('Your account has been deleted.','nf', 4000);
+        setTimeout(()=>doSignOut(), 1200);
+      } catch(e) { toast(e.message||'Could not delete account. Please contact support.','er'); }
+    }}
+  ]);
+}
+window.confirmDeleteAccount = confirmDeleteAccount;
 
 /* ── NEW PASSWORD (from reset email link) ───────────────────────── */
 function showNewPasswordModal() {
@@ -10331,24 +10914,153 @@ async function logAdminAction(action,details=''){
 window.logAdminAction=logAdminAction;
 
 /* ── FEATURE 36: OFFLINE QUEUE ────────────────────────────────── */
+/* ── PHONE BACK BUTTON + BREADCRUMB NAVIGATION ──────────────────── */
+let _screenHistory = [];
+let _fromPopstate = false;
+
+const NAV_LABELS = { home:'Home', services:'Services', techservices:'Other Products', account:'Account', more:'More', institution:'Institutions' };
+
+function ndPushState(){
+  try { history.pushState({ndNav:Date.now()}, '', location.href); } catch(e){}
+}
+
+function renderBreadcrumb(currentScreen){
+  const el = $('nd-breadcrumb');
+  if (!el) return;
+  const overlayOpen = document.querySelector('.nd-overlay');
+  const modalOpen = document.querySelector('.modal.on, .modal-full.on');
+  const adminOpen = document.body.classList.contains('admin-open');
+  const path = ['Home'];
+  if (currentScreen && currentScreen!=='home') path.push(NAV_LABELS[currentScreen]||currentScreen);
+  if (adminOpen) path.push('Admin Dashboard');
+  if (modalOpen) path.push(modalOpen.getAttribute('aria-label') || 'Details');
+  if (overlayOpen) path.push('Details');
+  if (path.length <= 1) { el.style.display='none'; return; }
+  el.style.display='flex';
+  el.innerHTML = path.map((p,i)=>{
+    const isLast = i===path.length-1;
+    return `<span style="${isLast?'color:var(--gold);font-weight:600':'color:var(--t4);cursor:pointer'}" ${!isLast&&i===0?`onclick="goNav('home')"`:''}>${esc(p)}</span>`
+      + (isLast?'':'<span style="color:var(--t4);margin:0 2px">›</span>');
+  }).join('');
+}
+window.renderBreadcrumb = renderBreadcrumb;
+
+// Any .nd-overlay added directly to <body> should be a back-button-closeable layer
+const _ndOverlayWatcher = new MutationObserver((mutations)=>{
+  for (const m of mutations) {
+    if (m.type!=='childList') continue;
+    m.addedNodes.forEach(n=>{
+      if (n.nodeType===1 && n.classList?.contains('nd-overlay')) {
+        ndPushState();
+        renderBreadcrumb(window._currentScreen);
+      }
+    });
+  }
+});
+_ndOverlayWatcher.observe(document.body, { childList:true });
+
+window.addEventListener('popstate', ()=>{
+  // Priority 1: close the top-most custom overlay
+  const overlay = document.querySelector('.nd-overlay');
+  if (overlay) { overlay.remove(); renderBreadcrumb(window._currentScreen); return; }
+  // Priority 2: close the top-most standard modal
+  const modal = document.querySelector('.modal.on, .modal-full.on');
+  if (modal) { closeModal(modal.id); renderBreadcrumb(window._currentScreen); return; }
+  // Priority 3: close the admin panel
+  if (document.body.classList.contains('admin-open')) { closeAdmin(); renderBreadcrumb(window._currentScreen); return; }
+  // Priority 4: go to the previous bottom-nav screen
+  if (_screenHistory.length) {
+    const prev = _screenHistory.pop();
+    goNav(prev, true);
+    return;
+  }
+  // Nothing left to unwind — let the browser/OS handle it naturally (minimize, exit, etc.)
+});
+
+/* ── FEATURE 36: OFFLINE QUEUE ────────────────────────────────── */
+const OFFLINE_QUEUE_KEY = 'nd_offline_queue';
+
+function getOfflineQueue(){
+  try { return JSON.parse(localStorage.getItem(OFFLINE_QUEUE_KEY)||'[]'); } catch(e){ return []; }
+}
+function saveOfflineQueue(q){
+  try { localStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(q)); } catch(e){}
+}
+function queueOfflineAction(action){
+  const q = getOfflineQueue();
+  q.push({ ...action, queuedAt: new Date().toISOString() });
+  saveOfflineQueue(q);
+  updateOfflineBarCount();
+}
+window.queueOfflineAction = queueOfflineAction;
+
+function updateOfflineBarCount(){
+  const bar = $('offline-bar');
+  if (!bar || navigator.onLine) return;
+  const n = getOfflineQueue().length;
+  bar.innerHTML = `<i class="fas fa-wifi-slash" style="margin-right:6px"></i>Offline — you're viewing cached data${n?` · ${n} action${n>1?'s':''} waiting to sync`:''}`;
+}
+
+async function syncOfflineQueue(){
+  const q = getOfflineQueue();
+  if (!q.length) return;
+  const bar = $('offline-bar');
+  if (bar) { bar.style.display='flex'; bar.innerHTML = `<span class="spin" style="margin-right:6px"></span>Syncing ${q.length} saved action${q.length>1?'s':''}…`; }
+  const remaining = [];
+  let succeeded = 0;
+  for (const action of q) {
+    try {
+      if (action.type === 'create_request') {
+        const { data: req, error } = await sb.from('service_requests').insert(action.payload).select().single();
+        if (error) throw error;
+        _reqs = _reqs.map(r => r.id === action.tempId ? req : r);
+        sb.from('notifications').insert({
+          user_id: req.user_id, type:'request_created', category:'request', ref_table:'service_requests', ref_id:req.id,
+          title:'🆕 Request Created', body:`Your "${req.service_name}" request was received and is pending.`,
+          read:false, created_at:new Date().toISOString()
+        }).catch(()=>{});
+        succeeded++;
+      }
+    } catch(e) {
+      remaining.push(action);
+    }
+  }
+  saveOfflineQueue(remaining);
+  if (bar) {
+    bar.innerHTML = succeeded
+      ? `<i class="fas fa-check" style="color:var(--green);margin-right:6px"></i>Synced ${succeeded} saved action${succeeded>1?'s':''} ✅`
+      : `<i class="fas fa-triangle-exclamation" style="color:#ffa500;margin-right:6px"></i>Some actions couldn't sync yet — will retry`;
+    setTimeout(()=>{ if(bar && !remaining.length) bar.style.display='none'; }, 3000);
+  }
+  if (succeeded) {
+    if(typeof loadMyReqs==='function') loadMyReqs();
+    if(typeof renderHomeReqs==='function') renderHomeReqs();
+    if(typeof refreshHomeCounts==='function') refreshHomeCounts();
+  }
+}
+window.syncOfflineQueue = syncOfflineQueue;
+
 function initOfflineDetect(){
   const bar = $('offline-bar');
   const show = ()=>{
-    if(bar){bar.style.display='flex';bar.innerHTML='<i class="fas fa-wifi-slash" style="margin-right:6px"></i>Offline — showing cached data';}
-    toast('You\'re offline. Showing cached data.','nf',4000);
+    if(bar){ bar.style.display='flex'; }
+    updateOfflineBarCount();
+    toast('You\'re offline. Changes will be saved and synced when you\'re back.','nf',4000);
     if(typeof hapticFeedback==='function') hapticFeedback('double');
   };
-  const hide = ()=>{
+  const hide = async ()=>{
     toast('Back online! Syncing… ✅','ok',3000);
-    if(bar){bar.innerHTML='<i class="fas fa-wifi" style="color:var(--green);margin-right:6px"></i>Back online — syncing…';
-      setTimeout(()=>{ if(bar) bar.style.display='none'; },2800);}
+    if(bar) bar.style.display='flex';
+    await syncOfflineQueue();
     if(typeof loadMyReqs==='function') loadMyReqs().catch(()=>{});
     if(typeof loadHomeReviews==='function') loadHomeReviews().catch(()=>{});
     if(typeof refreshHomeCounts==='function') refreshHomeCounts().catch(()=>{});
+    if(!getOfflineQueue().length && bar) setTimeout(()=>{ bar.style.display='none'; }, 2800);
   };
   window.addEventListener('online', hide);
   window.addEventListener('offline', show);
   if(!navigator.onLine) show();
+  else if (getOfflineQueue().length) syncOfflineQueue();
   // Load any cached data
   try{window._offlineSvcs=JSON.parse(sessionStorage.getItem('nd_svcs')||'[]');}catch(e){}
   try{window._offlineReqs=JSON.parse(sessionStorage.getItem('nd_reqs')||'[]');}catch(e){}
@@ -10427,6 +11139,29 @@ function showOrderDetail(r, isAdmin){
       +'<div><div style="font-size:.72rem;color:'+dlCol+'">Due '+deadline+'</div>'+(isOverdue?'<div style="font-size:.6rem;color:var(--red)">OVERDUE</div>':isDueSoon?'<div style="font-size:.6rem;color:#ffa500">Due soon</div>':'')+'</div></div>';
   }
 
+  let filesHtml = '';
+  try {
+    const files = Array.isArray(r.file_urls) ? r.file_urls : JSON.parse(r.file_urls||'[]');
+    if (files.length) {
+      const fileIcon = (name)=>{ const ext=(name||'').split('.').pop().toLowerCase();
+        if(['jpg','jpeg','png','gif','webp'].includes(ext)) return 'fa-image';
+        if(ext==='pdf') return 'fa-file-pdf'; if(['doc','docx'].includes(ext)) return 'fa-file-word';
+        if(['xls','xlsx'].includes(ext)) return 'fa-file-excel'; return 'fa-file'; };
+      filesHtml = '<div style="margin-bottom:14px"><div style="font-size:.58rem;color:var(--t4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px"><i class="fas fa-paperclip"></i> Attached Files ('+files.length+')</div>'
+        + '<div style="display:flex;flex-direction:column;gap:6px">'
+        + files.map(f=>{
+            const url = typeof f === 'string' ? f : (f.url||'');
+            const fname = typeof f === 'string' ? (f.split('/').pop()||'file') : (f.name||f.url?.split('/').pop()||'file');
+            const isImg = /\.(jpg|jpeg|png|gif|webp)$/i.test(fname);
+            return '<a href="'+esc(url)+'" target="_blank" style="display:flex;align-items:center;gap:9px;padding:8px 10px;background:var(--bg3);border:1px solid var(--bd);border-radius:9px;text-decoration:none">'
+              + (isImg ? '<img src="'+esc(url)+'" style="width:34px;height:34px;border-radius:6px;object-fit:cover;flex-shrink:0" onerror="this.style.display=\'none\'">' : '<div style="width:34px;height:34px;border-radius:6px;background:var(--bg4);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.85rem;flex-shrink:0"><i class="fas '+fileIcon(fname)+'"></i></div>')
+              + '<span style="flex:1;min-width:0;font-size:.68rem;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(fname)+'</span>'
+              + '<i class="fas fa-arrow-up-right-from-square" style="color:var(--t4);font-size:.6rem"></i></a>';
+          }).join('')
+        + '</div></div>';
+    }
+  } catch(e) { /* file_urls missing or malformed — just skip the section */ }
+
   overlay.innerHTML = '<div style="background:var(--bg2);border-radius:24px 24px 0 0;border:1px solid var(--bd);width:100%;max-width:520px;max-height:88dvh;overflow-y:auto;padding:20px 16px 40px">'
     +'<div style="width:36px;height:4px;background:var(--bd2);border-radius:4px;margin:0 auto 16px"></div>'
     +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">'
@@ -10442,6 +11177,7 @@ function showOrderDetail(r, isAdmin){
     +((r.description||r.details)?'<div style="padding:9px 12px;background:var(--bg3);border:1px solid var(--bd);border-radius:10px"><div style="font-size:.58rem;color:var(--t4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Notes</div><div style="font-size:.72rem;color:var(--t2);line-height:1.6">'+esc(r.description||r.details||'')+'</div></div>':'')
     +(r.admin_notes?'<div style="padding:9px 12px;background:rgba(201,168,76,.05);border:1px solid var(--gold-a25);border-radius:10px"><div style="font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Admin Notes</div><div style="font-size:.72rem;color:var(--t2);line-height:1.6">'+esc(r.admin_notes)+'</div></div>':'')
     +'</div>'
+    +filesHtml
     +contactBtns
     +(isAdmin?'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px">'+statusBtns+'</div>':'')
     +'<button onclick="this.closest(\'.nd-overlay\').remove()" style="width:100%;padding:12px;background:var(--bg4);border:1px solid var(--bd);border-radius:12px;color:var(--t2);font-size:.76rem;cursor:pointer">Close</button>'
@@ -10506,7 +11242,7 @@ async function alSha256(str){
 
 function alRenderDots(){
   const el = $('applock-dots'); if (!el) return;
-  const n = _alMode==='unlock' ? 6 : 6;
+  const n = 4;
   el.innerHTML = Array.from({length:n}).map((_,i)=>
     `<div style="width:14px;height:14px;border-radius:50%;border:1.5px solid var(--gold-a45);background:${i<_alBuffer.length?'var(--gold)':'transparent'}"></div>`
   ).join('');
@@ -10523,10 +11259,10 @@ function alRenderKeypad(){
 function alKeyPress(k){
   const errEl = $('applock-err'); if (errEl) errEl.style.display='none';
   if (k==='back'){ _alBuffer = _alBuffer.slice(0,-1); alRenderDots(); return; }
-  if (_alBuffer.length>=6) return;
+  if (_alBuffer.length>=4) return;
   _alBuffer += k;
   alRenderDots();
-  if (_alBuffer.length===6) setTimeout(alSubmitPin, 150);
+  if (_alBuffer.length===4) setTimeout(alSubmitPin, 150);
 }
 window.alKeyPress = alKeyPress;
 
