@@ -1642,6 +1642,14 @@ body.admin-open .acct-tabs{ pointer-events:none; }
   </header>
 
   <!-- APP LOCK SCREEN — shown on load/resume only if the user enabled it on this device -->
+  <!-- MAINTENANCE SCREEN — shown to everyone except admins when maintenance mode is on -->
+  <div id="maintenance-screen" style="display:none;position:fixed;inset:0;z-index:99998;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center">
+    <div style="width:72px;height:72px;border-radius:20px;background:rgba(255,165,0,.1);border:1px solid rgba(255,165,0,.3);display:flex;align-items:center;justify-content:center;color:#ffa500;font-size:2rem;margin-bottom:20px"><i class="fas fa-screwdriver-wrench"></i></div>
+    <div style="font-family:var(--fd);font-size:1.3rem;color:var(--t1);margin-bottom:8px">We'll Be Right Back</div>
+    <div id="maintenance-msg" style="font-size:.8rem;color:var(--t3);max-width:320px;line-height:1.6;margin-bottom:20px">We're doing some quick maintenance — back shortly!</div>
+    <a href="https://wa.me/254111923477" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:24px;color:#25D366;text-decoration:none;font-size:.78rem;font-weight:600"><i class="fab fa-whatsapp"></i> Message us on WhatsApp</a>
+  </div>
+
   <div id="applock-screen" style="display:none;position:fixed;inset:0;z-index:99999;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:24px">
     <div style="width:64px;height:64px;border-radius:18px;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.6rem;margin-bottom:18px"><i class="fas fa-fingerprint"></i></div>
     <div style="font-family:var(--fd);font-size:1.1rem;color:var(--t1);margin-bottom:4px">NovaDeskOnline is locked</div>
@@ -3082,6 +3090,16 @@ body.admin-open .acct-tabs{ pointer-events:none; }
         <div class="fg"><label class="flbl"><i class="fas fa-location-dot" style="color:var(--green);width:16px"></i> Maps Link</label><input class="fi" id="adm-link-maps" type="url" placeholder="https://maps.google.com/?q=Kemera+Nyamira"></div>
         <div class="fg"><label class="flbl"><i class="fas fa-globe" style="color:#00c8ff;width:16px"></i> SciFi Networks URL</label><input class="fi" id="adm-link-scifi" type="url" placeholder="https://sci-fi-networks-fyr8.vercel.app/"></div>
         <div class="form-hint">These links power the Contact page buttons automatically.</div>
+      </div>
+      <div style="background:rgba(224,80,80,.05);border:1px solid rgba(224,80,80,.25);border-radius:var(--rl);padding:16px;margin-bottom:12px">
+        <div style="font-size:.7rem;font-weight:700;color:var(--red);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-triangle-exclamation"></i> Maintenance Mode</div>
+        <div class="set-row">
+          <div class="set-row-icon" style="background:rgba(224,80,80,.1);border-color:rgba(224,80,80,.3);color:var(--red)"><i class="fas fa-power-off"></i></div>
+          <div class="set-row-body"><div class="set-row-ttl">Close the app to customers</div><div class="set-row-sub">Shows a maintenance screen to everyone except admins</div></div>
+          <div class="nd-switch" id="maint-mode-toggle" onclick="toggleMaintenanceMode()"></div>
+        </div>
+        <div class="fg" style="margin-top:12px"><label class="flbl">Message shown to visitors</label><textarea class="fi" id="adm-maint-msg" rows="2" placeholder="We're doing some quick maintenance — back shortly!"></textarea></div>
+        <div class="form-hint">Toggle takes effect immediately for everyone currently browsing.</div>
       </div>
       <button class="btn btn-gold btn-full" onclick="saveAdminSettings()" style="padding:13px;font-size:.78rem;margin-bottom:80px"><i class="fas fa-check"></i> Save All Settings</button>
     </div>
@@ -5460,6 +5478,11 @@ async function loadAppSettings(){
     setVal('adm-link-email', s.link_email);
     setVal('adm-link-maps', s.link_maps);
     setVal('adm-link-scifi', s.link_scifi);
+    setVal('adm-maint-msg', s.maintenance_message);
+    const maintToggle = $('maint-mode-toggle');
+    if (maintToggle) maintToggle.classList.toggle('on', s.maintenance_mode==='true');
+    checkMaintenanceMode(s);
+    subscribeMaintenanceMode();
 
     // Apply links live across the app (Contact page, footer, etc.)
     window._siteLinks = {
@@ -7875,6 +7898,59 @@ async function submitAdForm(btn){
 window.submitAdForm = submitAdForm;
 
 
+/* ── MAINTENANCE MODE ────────────────────────────────────────────── */
+async function toggleMaintenanceMode(){
+  try { await _requireAdmin(); } catch(e){ toast(e.message,'er'); return; }
+  const current = _appSettings?.maintenance_mode === 'true';
+  const next = !current;
+  const toggle = $('maint-mode-toggle');
+  if (next) {
+    popup('⚠️ Close App to Customers?', 'This immediately shows a maintenance screen to every visitor except admins. You can turn it back on anytime from here.', 'er', [
+      {label:'Cancel', fn:null, style:'btn-ghost'},
+      {label:'Yes, Close It', style:'btn-outline', fn: async ()=>{
+        await sb.from('app_settings').upsert({key:'maintenance_mode', value:'true', updated_at:new Date().toISOString()});
+        _appSettings.maintenance_mode = 'true';
+        if (toggle) toggle.classList.add('on');
+        toast('Maintenance mode is ON — customers now see the closed screen.','nf',4000);
+      }}
+    ]);
+  } else {
+    await sb.from('app_settings').upsert({key:'maintenance_mode', value:'false', updated_at:new Date().toISOString()});
+    _appSettings.maintenance_mode = 'false';
+    if (toggle) toggle.classList.remove('on');
+    toast('Maintenance mode is OFF — app is open again ✅','ok');
+  }
+}
+window.toggleMaintenanceMode = toggleMaintenanceMode;
+
+function checkMaintenanceMode(s){
+  const isOn = s?.maintenance_mode === 'true';
+  const isAdmin = _profile?.role==='admin' || _profile?.role==='superadmin';
+  const overlay = $('maintenance-screen');
+  if (!overlay) return;
+  if (isOn && !isAdmin) {
+    const msgEl = $('maintenance-msg');
+    if (msgEl) msgEl.textContent = s.maintenance_message || "We're doing some quick maintenance — back shortly!";
+    overlay.style.display = 'flex';
+  } else {
+    overlay.style.display = 'none';
+  }
+}
+window.checkMaintenanceMode = checkMaintenanceMode;
+
+let _maintChannel = null;
+function subscribeMaintenanceMode(){
+  if (_maintChannel || !sb) return;
+  _maintChannel = sb.channel('novadesk-maintenance')
+    .on('postgres_changes', { event:'*', schema:'public', table:'app_settings', filter:'key=eq.maintenance_mode' }, payload=>{
+      const val = payload.new?.value;
+      _appSettings = _appSettings || {};
+      _appSettings.maintenance_mode = val;
+      checkMaintenanceMode(_appSettings);
+    })
+    .subscribe();
+}
+
 async function saveAdminSettings(){
   try { await _requireAdmin(); } catch(e){ toast(e.message,'er'); return; }
   const ann  = $('adm-announcement')?.value||'';
@@ -7888,6 +7964,7 @@ async function saveAdminSettings(){
   const linkEmail = $('adm-link-email')?.value||'';
   const linkMaps  = $('adm-link-maps')?.value||'';
   const linkScifi = $('adm-link-scifi')?.value||'';
+  const maintMsg = $('adm-maint-msg')?.value||'';
   try {
     const upserts = [
       {key:'announcement', value:ann},
@@ -7899,7 +7976,8 @@ async function saveAdminSettings(){
       {key:'link_x', value:linkX},
       {key:'link_email', value:linkEmail},
       {key:'link_maps', value:linkMaps},
-      {key:'link_scifi', value:linkScifi}
+      {key:'link_scifi', value:linkScifi},
+      {key:'maintenance_message', value:maintMsg}
     ];
     for (const row of upserts) {
       await sb.from('app_settings').upsert({...row, updated_at:new Date().toISOString()});
@@ -8399,31 +8477,6 @@ async function init(){
   onAuthStateChange();
 }
 
-async function registerServiceWorker() {
-  if (!('serviceWorker' in navigator)) return;
-  try {
-    const reg = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
-    log.info('[SW] Registered:', reg.scope);
-    reg.addEventListener('updatefound', () => {
-      const newWorker = reg.installing;
-      newWorker?.addEventListener('statechange', () => {
-        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          // New version available
-          toast('Update available — refresh to get the latest version 🔄', 'nf', 6000);
-        }
-      });
-    });
-    // Register periodic sync
-    if ('periodicSync' in reg) {
-      try {
-        await reg.periodicSync.register('check-request-status', { minInterval: 24*60*60*1000 });
-      } catch(e) {}
-    }
-  } catch(e) {
-    log.warn('[SW] Registration failed:', e);
-  }
-}
-window.registerServiceWorker = registerServiceWorker;
 
 document.addEventListener('DOMContentLoaded', init);
 
@@ -10447,6 +10500,7 @@ async function registerServiceWorker(){
     });
   } catch(e){ log.warn('[SW] Registration failed:',e.message); }
 }
+window.registerServiceWorker = registerServiceWorker;
 
 window.triggerPWAInstall = triggerPWAInstall;
 window.dismissPWABanner  = dismissPWABanner;

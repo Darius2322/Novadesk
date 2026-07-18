@@ -1,86 +1,94 @@
-/* NovaDeskOnline Service Worker v2 */
-const CACHE = 'novadesk-v2';
-const OFFLINE_URL = '/';
+// sw.js — NovaDeskOnline Service Worker
+//
+// DEPLOYMENT: this file must sit at the ROOT of your site, next to
+// index.html (e.g. https://novadesk-self.vercel.app/sw.js), because
+// navigator.serviceWorker.register('/sw.js', {scope:'/'}) in the app
+// expects it there. If you're on Vercel, just drop this file in the
+// same folder you deploy index.html from.
+//
+// WHY THIS FIXES "This site can't be reached" WHEN OFFLINE:
+// Without a service worker actually caching the app shell, the browser
+// has nothing to show when there's no network — hence the native
+// ERR_FAILED error page you saw. This worker caches index.html (and a
+// few other assets) on first visit, then serves that cached copy
+// whenever the network is unavailable, so the installed PWA always
+// opens to something instead of a browser error.
 
-const PRECACHE = [
+const CACHE_VERSION = 'novadesk-v1';
+const APP_SHELL = [
   '/',
   '/index.html',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/manifest.json'
 ];
 
-/* ── INSTALL: cache core assets ── */
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting())
+// ── INSTALL: cache the app shell up front ──────────────────────────
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_VERSION).then((cache) => cache.addAll(APP_SHELL))
   );
+  self.skipWaiting();
 });
 
-/* ── ACTIVATE: clean old caches ── */
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
+// ── ACTIVATE: drop old cache versions ────────────────────────────────
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k !== CACHE_VERSION).map((k) => caches.delete(k)))
+    )
   );
+  self.clients.claim();
 });
 
-/* ── FETCH: network-first, fallback to cache ── */
-self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
-  const url = new URL(e.request.url);
+// ── FETCH: network-first for navigation (so users get the latest
+//    version when online), falling back to cache when offline ───────
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  if (request.method !== 'GET') return;
 
-  // Skip cross-origin requests (Supabase, CDN, etc.)
-  if (url.origin !== self.location.origin) return;
+  const isNavigation = request.mode === 'navigate';
 
-  e.respondWith(
-    fetch(e.request)
-      .then(res => {
-        if (res && res.status === 200) {
-          const clone = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
-        }
-        return res;
+  if (isNavigation) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          // Keep the cached shell fresh with whatever we just fetched
+          const copy = response.clone();
+          caches.open(CACHE_VERSION).then((cache) => cache.put('/index.html', copy));
+          return response;
+        })
+        .catch(() =>
+          caches.match('/index.html').then((cached) => cached || caches.match('/'))
+        )
+    );
+    return;
+  }
+
+  // Other same-origin GET requests: try cache first (fast + works
+  // offline), fall back to network, and cache whatever we fetch
+  if (new URL(request.url).origin === self.location.origin) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        if (cached) return cached;
+        return fetch(request).then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy));
+          return response;
+        }).catch(() => cached);
       })
-      .catch(() => caches.match(e.request).then(r => r || caches.match(OFFLINE_URL)))
-  );
+    );
+  }
 });
 
-/* ── PUSH NOTIFICATIONS ── */
-self.addEventListener('push', e => {
-  const data = e.data?.json() || {};
-  const title = data.title || 'NovaDeskOnline';
-  const opts = {
-    body: data.body || 'You have a new update.',
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
-    tag: data.tag || 'nd-push',
-    renotify: true,
-    vibrate: [60, 50, 100, 50, 60],
-    data: { url: data.url || '/' }
-  };
-  e.waitUntil(self.registration.showNotification(title, opts));
-});
-
-/* ── NOTIFICATION CLICK: open app ── */
-self.addEventListener('notificationclick', e => {
-  e.notification.close();
-  const target = e.notification.data?.url || '/';
-  e.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
-      for (const c of list) {
-        if (c.url.includes(self.location.origin) && 'focus' in c) {
-          c.postMessage({ type: 'NAVIGATE', url: target });
-          return c.focus();
-        }
+// ── Simple push-notification click handling (optional, used if you
+//    later add web push — safe no-op otherwise) ─────────────────────
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window' }).then((clientList) => {
+      if (clientList.length > 0) {
+        clientList[0].postMessage({ type: 'navigate' });
+        return clientList[0].focus();
       }
-      return clients.openWindow(target);
+      return self.clients.openWindow('/');
     })
   );
-});
-
-/* ── MESSAGE: skip waiting on update ── */
-self.addEventListener('message', e => {
-  if (e.data?.type === 'SKIP_WAITING') self.skipWaiting();
 });
