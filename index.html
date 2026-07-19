@@ -666,6 +666,12 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 .nd-switch::after{content:'';position:absolute;top:2.5px;left:3px;width:19px;height:19px;border-radius:50%;background:var(--t4);transition:transform .25s cubic-bezier(.34,1.56,.64,1),background .25s}
 .nd-switch.on{background:var(--gold-a25);border-color:var(--gold-a45)}
 .nd-switch.on::after{transform:translateX(21px);background:var(--gold)}
+@keyframes maintPulse{0%{transform:scale(.85);opacity:.9}100%{transform:scale(1.7);opacity:0}}
+@keyframes maintWiggle{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+@keyframes maintFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-14px) rotate(12deg)}}
+@keyframes maintSpinSlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes maintBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes maintSpinFast{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .set-card{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;margin-bottom:12px}
 .set-card-hd{font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--t2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .set-card-hd i{color:var(--gold);width:14px;text-align:center}
@@ -1643,11 +1649,26 @@ body.admin-open .acct-tabs{ pointer-events:none; }
 
   <!-- APP LOCK SCREEN — shown on load/resume only if the user enabled it on this device -->
   <!-- MAINTENANCE SCREEN — shown to everyone except admins when maintenance mode is on -->
-  <div id="maintenance-screen" style="display:none;position:fixed;inset:0;z-index:99998;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center">
-    <div style="width:72px;height:72px;border-radius:20px;background:rgba(255,165,0,.1);border:1px solid rgba(255,165,0,.3);display:flex;align-items:center;justify-content:center;color:#ffa500;font-size:2rem;margin-bottom:20px"><i class="fas fa-screwdriver-wrench"></i></div>
+  <div id="maintenance-screen" style="display:none;position:fixed;inset:0;z-index:99998;background:radial-gradient(ellipse at 50% 30%,rgba(255,165,0,.06),transparent 60%),var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow:hidden">
+    <!-- Floating background gears -->
+    <div style="position:absolute;top:12%;left:8%;font-size:2.2rem;color:rgba(255,165,0,.06);animation:maintFloat 7s ease-in-out infinite"><i class="fas fa-gear"></i></div>
+    <div style="position:absolute;bottom:15%;right:10%;font-size:1.6rem;color:rgba(255,165,0,.08);animation:maintFloat 5.5s ease-in-out infinite .8s"><i class="fas fa-gear"></i></div>
+    <div style="position:absolute;top:20%;right:14%;font-size:1.2rem;color:rgba(255,165,0,.05);animation:maintSpinSlow 12s linear infinite"><i class="fas fa-gear"></i></div>
+
+    <!-- Interactive: tap the wrench to see a wink -->
+    <div onclick="maintenanceWrenchTap(this)" style="position:relative;width:100px;height:100px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:24px">
+      <div style="position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(255,165,0,.3);animation:maintPulse 2.4s ease-out infinite"></div>
+      <div style="position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(255,165,0,.25);animation:maintPulse 2.4s ease-out infinite .8s"></div>
+      <div style="position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(255,165,0,.2);animation:maintPulse 2.4s ease-out infinite 1.6s"></div>
+      <div id="maint-wrench-icon" style="width:72px;height:72px;border-radius:20px;background:rgba(255,165,0,.1);border:1px solid rgba(255,165,0,.3);display:flex;align-items:center;justify-content:center;color:#ffa500;font-size:1.9rem;transition:transform .3s"><i class="fas fa-screwdriver-wrench" style="animation:maintWiggle 3s ease-in-out infinite"></i></div>
+    </div>
+
     <div style="font-family:var(--fd);font-size:1.3rem;color:var(--t1);margin-bottom:8px">We'll Be Right Back</div>
-    <div id="maintenance-msg" style="font-size:.8rem;color:var(--t3);max-width:320px;line-height:1.6;margin-bottom:20px">We're doing some quick maintenance — back shortly!</div>
-    <a href="https://wa.me/254111923477" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:24px;color:#25D366;text-decoration:none;font-size:.78rem;font-weight:600"><i class="fab fa-whatsapp"></i> Message us on WhatsApp</a>
+    <div id="maintenance-msg" style="font-size:.8rem;color:var(--t3);max-width:320px;line-height:1.6;margin-bottom:8px">We're doing some quick maintenance — back shortly!</div>
+    <div id="maint-tap-hint" style="font-size:.6rem;color:var(--t4);margin-bottom:20px;opacity:.7">psst — tap the icon above 👆</div>
+    <a href="https://wa.me/254111923477" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:24px;color:#25D366;text-decoration:none;font-size:.78rem;font-weight:600;animation:maintBounce 3s ease-in-out infinite">
+      <i class="fab fa-whatsapp"></i> Message us on WhatsApp
+    </a>
   </div>
 
   <div id="applock-screen" style="display:none;position:fixed;inset:0;z-index:99999;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:24px">
@@ -2435,8 +2456,8 @@ body.admin-open .acct-tabs{ pointer-events:none; }
             </div>
             <div class="set-row" style="border-top:1px solid var(--bd);margin-top:6px;padding-top:14px">
               <div class="set-row-icon"><i class="fas fa-bell"></i></div>
-              <div class="set-row-body"><div class="set-row-ttl">Notifications</div><div class="set-row-sub">Order updates, promos, and system alerts</div></div>
-              <div class="nd-switch on" id="notif-pref-toggle" onclick="toggleNotifPref()"></div>
+              <div class="set-row-body"><div class="set-row-ttl">Device Notifications</div><div class="set-row-sub">Real push alerts on this device for order updates, promos, and system alerts</div></div>
+              <div class="nd-switch" id="notif-pref-toggle" onclick="toggleNotifPref()"></div>
             </div>
           </div>
 
@@ -4076,7 +4097,7 @@ function goNav(name, _fromPopstate) {
   const prevScreen = window._currentScreen;
   if (!_fromPopstate && prevScreen && prevScreen !== name) {
     _screenHistory.push(prevScreen);
-    if (typeof ndPushState==='function') ndPushState();
+    if (typeof ndPushState==='function') ndPushState(name);
   }
   NAV_ITEMS.forEach(n => {
     $(`scr-${n}`)?.classList.toggle('on', n===name);
@@ -4121,7 +4142,7 @@ function openAuth(){
   $('auth-modal').classList.add('on');
   showOvl();
 }
-function closeAuth(){ const am=$('auth-modal'); if(am) am.classList.remove('on'); hideOvl(); _ovlLock=false; }
+function closeAuth(){ const am=$('auth-modal'); if(am) am.classList.remove('on'); hideOvl(); _ovlLock=false; if(typeof checkMaintenanceMode==='function') checkMaintenanceMode(_appSettings); }
 function authTab(t){
   ['signin','register','institution','resetpw'].forEach(tab=>{
     const te=$('tab-'+tab), pe=$('panel-'+tab);
@@ -4401,10 +4422,16 @@ window._execSignOut = _execSignOut;
 /* ── AUTH STATE CHANGE ─────────────────────────────────────────── */
 function onAuthStateChange(){
   if (!sb) return;
+  // Detect a password-recovery link from the URL itself — Supabase always includes
+  // type=recovery when redirecting from a "reset password" email, regardless of
+  // which auth event actually fires first (this varies by client version).
+  const urlParams = new URLSearchParams(window.location.hash.replace('#','?') || window.location.search);
+  window._isPasswordRecovery = urlParams.get('type') === 'recovery';
+
   sb.auth.onAuthStateChange(async (event, session) => {
     _user = session?.user || null;
 
-    if (event === 'PASSWORD_RECOVERY') {
+    if (event === 'PASSWORD_RECOVERY' || (window._isPasswordRecovery && session?.user)) {
       // Load profile if we have a session so user details show correctly
       if (session?.user) {
         _user = session.user;
@@ -4444,6 +4471,12 @@ function onAuthStateChange(){
       // Navigate to account tab for everyone (admin included)
       goNav('account');
       acctTab('profile');
+      if (typeof checkMaintenanceMode==='function') checkMaintenanceMode(_appSettings);
+      if (window._pendingAdminOpen) {
+        window._pendingAdminOpen = false;
+        if (_profile?.role==='admin') { setTimeout(()=>openAdmin(), 300); }
+        else { toast('This account doesn\'t have admin access.','er'); }
+      }
       return;
     }
 
@@ -4461,6 +4494,7 @@ function onAuthStateChange(){
       renderHomeRecommended();
       loadHomeAds().catch(()=>{});
       subscribeRealtime();
+      if (typeof checkMaintenanceMode==='function') checkMaintenanceMode(_appSettings);
     }
   });
 }
@@ -5602,7 +5636,12 @@ function maybeOpenAdmin(){
   _adminClickTimer = setTimeout(()=>{ _adminClickCount=0; }, 1500);
   if (_adminClickCount >= 5) {
     _adminClickCount=0;
-    if (!_user) { toast('Sign in as admin first.','er'); return; }
+    if (!_user) {
+      toast('Sign in to continue…','nf');
+      window._pendingAdminOpen = true; // openAdmin() will auto-fire after a successful admin login
+      openAuth();
+      return;
+    }
     if (_profile?.role!=='admin' && !_adminUnlocked) {
       const code = prompt('Admin access code:');
       if (code !== ADMIN_SECRET) { toast('Incorrect code.','er'); return; }
@@ -7536,6 +7575,31 @@ function schemaErrHtml(tableName){
 }
 window.schemaErrHtml = schemaErrHtml;
 
+async function adminToggleReviewVisibility(id, makeVisible){
+  try{
+    const { error } = await sb.from('feedback').update({visible:makeVisible}).eq('id',id);
+    if (error) throw error;
+    toast(makeVisible?'Review shown ✅':'Review hidden','ok');
+    adminLoadReviews();
+  }catch(e){ toast(e.message||'Could not update review.','er'); }
+}
+window.adminToggleReviewVisibility = adminToggleReviewVisibility;
+
+function adminDeleteReview(id){
+  popup('Delete Review','This permanently removes this review. This cannot be undone.','er',[
+    {label:'Cancel', fn:null, style:'btn-ghost'},
+    {label:'Delete', style:'btn-outline', fn: async ()=>{
+      try{
+        const { error } = await sb.from('feedback').delete().eq('id',id);
+        if (error) throw error;
+        toast('Review deleted.','nf');
+        adminLoadReviews();
+      }catch(e){ toast(e.message||'Could not delete review.','er'); }
+    }}
+  ]);
+}
+window.adminDeleteReview = adminDeleteReview;
+
 async function adminLoadReviews(){
   const rl = $('admin-reviews-list');
   if (!rl) return;
@@ -7561,17 +7625,21 @@ async function adminLoadReviews(){
             <a href="https://wa.me/${uWaNum}?text=${uMsg}" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:7px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);border-radius:8px;color:#25D366;text-decoration:none;font-size:.64rem;font-weight:600"><i class="fab fa-whatsapp"></i> WhatsApp</a>
            </div>`
         : '';
-      return `<div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:13px">
+      return `<div style="background:var(--bg3);border:1px solid ${r.visible===false?'rgba(224,80,80,.3)':'var(--bd)'};border-radius:var(--r);padding:13px;${r.visible===false?'opacity:.6':''}">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
           <div style="width:34px;height:34px;border-radius:50%;background:var(--gold-a8);border:1px solid var(--gold-a25);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--gold);flex-shrink:0">${user?.avatar_url ? `<img src="${esc(user.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : init}</div>
           <div style="flex:1">
-            <div style="font-size:.76rem;font-weight:600;color:var(--t1)">${esc(name)}</div>
+            <div style="font-size:.76rem;font-weight:600;color:var(--t1)">${esc(name)}${r.visible===false?' <span style="font-size:.54rem;color:var(--red);font-weight:400">(hidden)</span>':''}</div>
             <div style="font-size:.58rem;color:var(--t4)">${fmtRel(r.created_at)}</div>
           </div>
           <div style="font-size:.9rem;color:#ffc81e;letter-spacing:1px">${stars(r.rating)}</div>
         </div>
         ${r.comment ? `<div style="font-size:.72rem;color:var(--t2);line-height:1.6;font-style:italic;padding:8px 10px;background:var(--bg4);border-radius:8px">"${esc(r.comment)}"</div>` : '<div style="font-size:.66rem;color:var(--t4)">No comment left</div>'}
         ${contactBtns}
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button onclick="adminToggleReviewVisibility('${esc(r.id)}',${r.visible===false})" style="flex:1;padding:7px;background:var(--bg4);border:1px solid var(--bd);border-radius:8px;color:var(--t2);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-eye${r.visible===false?'':'-slash'}"></i> ${r.visible===false?'Show':'Hide'}</button>
+          <button onclick="adminDeleteReview('${esc(r.id)}')" style="flex:1;padding:7px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.25);border-radius:8px;color:var(--red);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-trash"></i> Delete</button>
+        </div>
       </div>`;
     }).join('');
   } catch(e){
@@ -7620,8 +7688,18 @@ async function adminLoadAds(){
   const pEl=$('admin-ads-pending'), aEl=$('admin-ads-active'), rEl=$('admin-ads-rejected');
   [pEl,aEl,rEl].forEach(el=>{ if(el) el.innerHTML='<div style="text-align:center;padding:14px"><span class="spin"></span></div>'; });
   try{
-    const{data,error}=await sb.from('advertisements').select('*,profiles(full_name,whatsapp_number,nd_user_id)').order('created_at',{ascending:false});
+    // Fetch ads and profiles separately and join client-side — avoids depending on
+    // PostgREST recognizing the agent_id -> profiles relationship, which can lag
+    // behind right after creating the table (shows as a confusing schema-cache error).
+    const{data,error}=await sb.from('advertisements').select('*').order('created_at',{ascending:false});
     if(error) throw error;
+    const agentIds = [...new Set((data||[]).map(a=>a.agent_id).filter(Boolean))];
+    let profilesById = {};
+    if (agentIds.length) {
+      const { data: profs } = await sb.from('profiles').select('id,full_name,whatsapp_number,nd_user_id').in('id', agentIds);
+      (profs||[]).forEach(p => profilesById[p.id] = p);
+    }
+    (data||[]).forEach(a => { a.profiles = profilesById[a.agent_id] || null; });
     const pending  = (data||[]).filter(a=>a.status==='pending');
     const active   = (data||[]).filter(a=>a.status==='active');
     const rejected = (data||[]).filter(a=>a.status==='rejected'||a.status==='paused');
@@ -7660,10 +7738,10 @@ async function adminLoadAds(){
     if(aEl) aEl.innerHTML = active.length  ? active.map(a=>renderAd(a,true)).join('')  : '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No active ads</div>';
     if(rEl) rEl.innerHTML = rejected.length? rejected.map(a=>renderAd(a,false)).join(''): '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No rejected ads</div>';
   }catch(e){
-    const isTableMissing = e.message?.includes('schema cache')||e.message?.includes('does not exist')||e.message?.includes('relation');
+    const isTableMissing = e.message?.includes('does not exist') || (e.message?.includes('schema cache') && e.message?.includes('table'));
     const msg = isTableMissing
       ? schemaErrHtml('advertisements')
-      : '<div style="color:var(--red);font-size:.72rem;padding:10px">'+esc(e.message)+'</div>';
+      : '<div style="color:var(--red);font-size:.72rem;padding:10px">'+esc(e.message)+' <div style="margin-top:6px;color:var(--t4)">If this mentions "relationship" or "schema cache", run <code>NOTIFY pgrst, \'reload schema\';</code> in your Supabase SQL Editor to force it to refresh.</div></div>';
     [pEl,aEl,rEl].forEach(el=>{ if(el) el.innerHTML=msg; });
   }
 }
@@ -7938,6 +8016,30 @@ function checkMaintenanceMode(s){
 }
 window.checkMaintenanceMode = checkMaintenanceMode;
 
+const MAINT_TAP_MESSAGES = [
+  "Still working on it… 🔧",
+  "Almost there, promise! ⚙️",
+  "Tightening a few bolts…",
+  "Okay okay, we see you tapping 👀",
+  "Patience, young padawan ✨",
+  "Beep boop, maintenance in progress 🤖"
+];
+let _maintTapCount = 0;
+function maintenanceWrenchTap(el){
+  _maintTapCount++;
+  el.style.transform = 'rotate(' + (_maintTapCount%2===0?'20deg':'-20deg') + ') scale(1.1)';
+  setTimeout(()=>{ el.style.transform = 'rotate(0deg) scale(1)'; }, 220);
+  const icon = el.querySelector('i');
+  if (icon) { icon.style.animation='none'; icon.style.animation='maintSpinFast .5s ease-out'; }
+  const hint = $('maint-tap-hint');
+  if (hint) {
+    hint.style.opacity = '1';
+    hint.textContent = MAINT_TAP_MESSAGES[_maintTapCount % MAINT_TAP_MESSAGES.length];
+  }
+  if (navigator.vibrate) navigator.vibrate(15);
+}
+window.maintenanceWrenchTap = maintenanceWrenchTap;
+
 let _maintChannel = null;
 function subscribeMaintenanceMode(){
   if (_maintChannel || !sb) return;
@@ -8089,7 +8191,7 @@ async function loadHomeReviews(){
     // Pull from both sources: general "Share Your Experience" feedback,
     // and optional per-order ratings — merged so the carousel never stays empty
     const [fbRes, rvRes] = await Promise.allSettled([
-      sb.from('feedback').select('rating,comment,created_at,user_id').not('rating','is',null).order('created_at',{ascending:false}).limit(8),
+      sb.from('feedback').select('rating,comment,created_at,user_id').not('rating','is',null).or('visible.is.null,visible.eq.true').order('created_at',{ascending:false}).limit(8),
       sb.from('reviews').select('rating,comment,created_at,user_id,user_name,service_name').eq('visible',true).order('created_at',{ascending:false}).limit(8)
     ]);
     const fb = (fbRes.value?.data||[]).map(r=>({...r, _name:null, _svc:null}));
@@ -8447,6 +8549,11 @@ async function init(){
   if ($('cr-year')) $('cr-year').textContent = new Date().getFullYear();
   initOfflineDetect();
   window._currentScreen = 'home';
+  // Deep-link support: if the URL already has #/screen (bookmark, refresh, share), open it
+  const bootHashMatch = location.hash.match(/^#\/(\w+)/);
+  if (bootHashMatch && NAV_ITEMS.includes(bootHashMatch[1]) && bootHashMatch[1] !== 'home') {
+    setTimeout(()=>{ if(typeof goNav==='function') goNav(bootHashMatch[1], true); }, 50);
+  }
 
   // ④ Register SW in background — don't await, don't block UI
   registerServiceWorker().catch(()=>{});
@@ -9642,7 +9749,16 @@ function populateSettingsTab() {
   $('set-idnum').value = _profile.id_number || '';
   const curEmailEl = $('set-current-email'); if (curEmailEl) curEmailEl.textContent = _user?.email || '—';
   const notifToggle = $('notif-pref-toggle');
-  if (notifToggle) notifToggle.classList.toggle('on', _profile.notifications_enabled !== false);
+  if (notifToggle) {
+    // Only show "on" if the DB flag is set AND the browser actually has an active push subscription
+    if (_profile.notifications_enabled === false || !('serviceWorker' in navigator)) {
+      notifToggle.classList.remove('on');
+    } else {
+      navigator.serviceWorker.ready.then(reg => reg.pushManager.getSubscription()).then(sub => {
+        notifToggle.classList.toggle('on', !!sub && Notification.permission==='granted');
+      }).catch(()=> notifToggle.classList.remove('on'));
+    }
+  }
   // Update avatar in settings
   const sAva = $('settings-ava');
   if (sAva) {
@@ -9729,17 +9845,70 @@ async function requestEmailChange() {
 }
 window.requestEmailChange = requestEmailChange;
 
+const VAPID_PUBLIC_KEY = 'BBh0geYDxz3lQS-zQbuYIWzklPM34DKyiSceKoFc72Rn31myBs_K6hhGQbmzldHq3QVsPe8GNkMEayg-KFYqTGo';
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const raw = atob(base64);
+  return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+}
+
 async function toggleNotifPref() {
   if (!_user || !_profile) return;
   const toggle = $('notif-pref-toggle');
   const enabling = _profile.notifications_enabled === false; // was off, turning on now
+
+  if (enabling) {
+    // Turning ON: ask for real device notification permission and subscribe
+    if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+      toast('Push notifications aren\'t supported on this browser/device.','er');
+      return;
+    }
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        toast('Notification permission was denied. You can re-enable it in your browser/site settings.','er');
+        return;
+      }
+      const reg = await navigator.serviceWorker.ready;
+      let sub = await reg.pushManager.getSubscription();
+      if (!sub) {
+        sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+        });
+      }
+      const subJson = sub.toJSON();
+      await sb.from('push_subscriptions').upsert({
+        user_id: _user.id, endpoint: subJson.endpoint,
+        p256dh: subJson.keys.p256dh, auth: subJson.keys.auth,
+        created_at: new Date().toISOString()
+      }, { onConflict: 'endpoint' });
+    } catch(e) {
+      toast('Could not enable device notifications: '+(e.message||'unknown error'),'er');
+      return;
+    }
+  } else {
+    // Turning OFF: unsubscribe this device and remove its stored subscription
+    try {
+      if ('serviceWorker' in navigator) {
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.getSubscription();
+        if (sub) {
+          await sb.from('push_subscriptions').delete().eq('endpoint', sub.endpoint).catch(()=>{});
+          await sub.unsubscribe();
+        }
+      }
+    } catch(e) { /* non-fatal — still proceed to flip the preference off */ }
+  }
+
   _profile.notifications_enabled = enabling;
   if (toggle) toggle.classList.toggle('on', enabling);
   try {
     await sb.from('profiles').update({ notifications_enabled: enabling }).eq('id', _user.id);
-    toast(enabling ? 'Notifications turned on 🔔' : 'Notifications turned off','ok');
+    toast(enabling ? 'Device notifications turned on 🔔' : 'Device notifications turned off','ok');
   } catch(e) {
-    // Revert on failure
     _profile.notifications_enabled = !enabling;
     if (toggle) toggle.classList.toggle('on', !enabling);
     toast('Could not update notification setting.','er');
@@ -9788,6 +9957,7 @@ async function doSetNewPassword() {
       await loadProfile().catch(()=>{});
     }
     closeModal('new-pw-modal');
+    window._isPasswordRecovery = false;
     toast('Password updated successfully! You are now logged in. ✅','ok',4000);
     renderAccount();
     goNav('account');
@@ -10974,8 +11144,16 @@ let _fromPopstate = false;
 
 const NAV_LABELS = { home:'Home', services:'Services', techservices:'Other Products', account:'Account', more:'More', institution:'Institutions' };
 
-function ndPushState(){
-  try { history.pushState({ndNav:Date.now()}, '', location.href); } catch(e){}
+function ndPushState(screenName){
+  try {
+    const name = screenName || window._currentScreen || 'home';
+    const newHash = '#/' + name;
+    if (location.hash !== newHash) {
+      history.pushState({ndNav:Date.now(), screen:name}, '', newHash);
+    } else {
+      history.pushState({ndNav:Date.now(), screen:name}, '', location.href);
+    }
+  } catch(e){}
 }
 
 function renderBreadcrumb(currentScreen){
