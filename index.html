@@ -2252,6 +2252,7 @@ body.admin-open .acct-tabs{ pointer-events:none; }
           <div id="acct-admin-btn-wrap" style="display:none;width:100%;padding:10px 16px 0">
             <button onclick="openAdmin()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;background:linear-gradient(135deg,rgba(224,80,80,.15),rgba(224,80,80,.08));border:1px solid rgba(224,80,80,.4);border-radius:var(--rl);color:var(--red);font-size:.76rem;font-weight:700;cursor:pointer;letter-spacing:.04em;transition:all .2s">
               <i class="fas fa-gauge-high"></i> Admin Dashboard
+              <span id="admin-btn-badge" style="display:none;background:var(--red);color:#fff;font-size:.58rem;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:4px">0</span>
               <i class="fas fa-arrow-right" style="font-size:.6rem;margin-left:auto"></i>
             </button>
           </div>
@@ -2459,6 +2460,11 @@ body.admin-open .acct-tabs{ pointer-events:none; }
               <div class="set-row-body"><div class="set-row-ttl">Device Notifications</div><div class="set-row-sub">Real push alerts on this device for order updates, promos, and system alerts</div></div>
               <div class="nd-switch" id="notif-pref-toggle" onclick="toggleNotifPref()"></div>
             </div>
+            <div class="set-row" style="border-top:1px solid var(--bd);margin-top:6px;padding-top:14px">
+              <div class="set-row-icon"><i class="fas fa-volume-high"></i></div>
+              <div class="set-row-body"><div class="set-row-ttl">Notification Sound</div><div class="set-row-sub">Play a sound when a new alert arrives, this device only</div></div>
+              <div class="nd-switch on" id="notif-sound-toggle" onclick="toggleNotifSound()"></div>
+            </div>
           </div>
 
           <!-- Appearance -->
@@ -2602,7 +2608,7 @@ body.admin-open .acct-tabs{ pointer-events:none; }
     <button class="ni on" id="ni-home" onclick="goNav('home')"><i class="fas fa-house"></i><span>Home</span></button>
     <button class="ni" id="ni-services" onclick="goNav('services')"><i class="fas fa-concierge-bell"></i><span>Services</span></button>
     <button class="ni" id="ni-techservices" onclick="goNav('techservices')"><i class="fas fa-boxes-stacked"></i><span>Other Products</span></button>
-    <button class="ni" id="ni-account" onclick="goNav('account')"><i class="fas fa-circle-user"></i><span>Account</span></button>
+    <button class="ni" id="ni-account" onclick="goNav('account')" style="position:relative"><i class="fas fa-circle-user"></i><span>Account</span><span id="ni-account-badge" style="display:none;position:absolute;top:2px;right:calc(50% - 20px);width:8px;height:8px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg2)"></span></button>
     <button class="ni" id="ni-more" onclick="goNav('more')"><i class="fas fa-ellipsis"></i><span>More</span></button>
     <button class="ni" id="ni-contact-mobile" onclick="goNav('contact')" style="display:none"><i class="fas fa-headset"></i><span>Contact</span></button>
     <!-- Desktop-only sidebar extras -->
@@ -4242,6 +4248,7 @@ async function doRegister(){
           whatsapp_number: wa,
           alt_phone: alt || null,
           referral_code: ndUserId,
+          referred_by_code: refCode || null,
         }, { onConflict: 'id' });
       } catch(e) {}
     }
@@ -4653,6 +4660,7 @@ function renderAccount(){
   // Show Submit Ad button to any logged-in user now
   const moreAdItem = $('more-submit-ad-item');
   if(moreAdItem) moreAdItem.style.display = 'flex';
+  if (typeof updateMenuBadges==='function') updateMenuBadges();
 
 
   // Show admin button in account header
@@ -5388,7 +5396,29 @@ function renderNotifCount(){
     badge.style.display = unread > 0 ? 'flex' : 'none';
     badge.textContent = unread > 9 ? '9+' : unread;
   }
+  const navBadge = $('ni-account-badge');
+  if (navBadge) navBadge.style.display = unread > 0 ? 'block' : 'none';
 }
+
+// Badge on the Admin Dashboard button — counts pending ads, unread contact
+// messages, and pending agent/institution applications needing review
+async function updateMenuBadges(){
+  if (!sb || !_profile || !['admin','superadmin'].includes(_profile.role)) return;
+  try {
+    const [ads, agents, insts] = await Promise.allSettled([
+      sb.from('advertisements').select('id',{count:'exact',head:true}).eq('status','pending'),
+      sb.from('agent_applications').select('id',{count:'exact',head:true}).eq('status','pending'),
+      sb.from('institution_requests').select('id',{count:'exact',head:true}).eq('status','pending'),
+    ]);
+    const total = (ads.value?.count||0) + (agents.value?.count||0) + (insts.value?.count||0);
+    const badge = $('admin-btn-badge');
+    if (badge) {
+      badge.style.display = total > 0 ? 'inline-block' : 'none';
+      badge.textContent = total > 9 ? '9+' : total;
+    }
+  } catch(e) { /* tables may not exist yet on this project — fail silently */ }
+}
+window.updateMenuBadges = updateMenuBadges;
 function toggleNotifPanel(){
   openModal('notif-panel');
   renderNotifPanel();
@@ -5611,6 +5641,44 @@ async function sendContactMessage(){
 
 /* ── REALTIME ──────────────────────────────────────────────────── */
 let _realtimeChannel = null;
+/* ── NOTIFICATION SOUND ──────────────────────────────────────────── */
+function playNotifSound(){
+  if (localStorage.getItem('nd_notif_sound') === 'off') return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const t = ctx.currentTime;
+    [880, 1108].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, t + i*0.12);
+      gain.gain.linearRampToValueAtTime(0.15, t + i*0.12 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + i*0.12 + 0.25);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t + i*0.12);
+      osc.stop(t + i*0.12 + 0.3);
+    });
+  } catch(e) {}
+}
+window.playNotifSound = playNotifSound;
+
+function toggleNotifSound(){
+  const isOff = localStorage.getItem('nd_notif_sound') === 'off';
+  const toggle = $('notif-sound-toggle');
+  if (isOff) {
+    localStorage.removeItem('nd_notif_sound');
+    if (toggle) toggle.classList.add('on');
+    playNotifSound();
+    toast('Notification sound on 🔊','ok');
+  } else {
+    localStorage.setItem('nd_notif_sound', 'off');
+    if (toggle) toggle.classList.remove('on');
+    toast('Notification sound off','nf');
+  }
+}
+window.toggleNotifSound = toggleNotifSound;
+
 function subscribeRealtime(){
   if (!_user || !sb) return;
   if (_realtimeChannel) _realtimeChannel.unsubscribe();
@@ -5619,6 +5687,8 @@ function subscribeRealtime(){
       _notifs.unshift(payload.new);
       renderNotifCount();
       toast(payload.new.title, 'nf', 4000);
+      playNotifSound();
+      if (typeof updateMenuBadges==='function') updateMenuBadges();
     })
     .on('postgres_changes', { event:'UPDATE', schema:'public', table:'service_requests', filter:`user_id=eq.${_user.id}` }, payload=>{
       _reqs = _reqs.map(r=>r.id===payload.new.id?payload.new:r);
@@ -7726,8 +7796,7 @@ async function adminLoadAds(){
         +(a.status!=='active'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'active\')" style="flex:1;padding:8px;background:rgba(50,180,100,.1);border:1px solid rgba(50,180,100,.3);border-radius:8px;color:var(--green);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-check"></i> Approve</button>':'')
         +(a.status!=='paused'&&a.status==='active'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'paused\')" style="flex:1;padding:8px;background:var(--bg4);border:1px solid var(--bd);border-radius:8px;color:var(--t3);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-pause"></i> Pause</button>':'')
         +(a.status!=='rejected'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'rejected\')" style="flex:1;padding:8px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.25);border-radius:8px;color:var(--red);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-times"></i> Reject</button>':'')
-        +(subContact&&!isEmailContact?'<a href="https://wa.me/'+waNum+'?text='+encodeURIComponent('Hello! Regarding your ad "'+( a.title||'')+'" on NovaDeskOnline:')+'" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);border-radius:8px;color:#25D366;text-decoration:none;font-size:.64rem;font-weight:600"><i class="fab fa-whatsapp"></i> WhatsApp</a>':'')
-        +(subContact&&isEmailContact?'<a href="mailto:'+esc(subContact)+'?subject='+encodeURIComponent('Re: your ad "'+(a.title||'')+'"')+'" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:var(--gold-a8);border:1px solid var(--gold-a25);border-radius:8px;color:var(--gold);text-decoration:none;font-size:.64rem;font-weight:600"><i class="fas fa-envelope"></i> Email</a>':'')
+        +(subContact?'<button onclick="adminContactAdOwner(\''+esc(subName.replace(/'/g,"\\'"))+'\',\''+esc(subContact.replace(/'/g,"\\'"))+'\',\''+esc((a.title||'').replace(/'/g,"\\'"))+'\')" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:rgba(77,158,255,.08);border:1px solid rgba(77,158,255,.25);border-radius:8px;color:#5aaeff;font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-address-book"></i> Contact</button>':'')
         +'<button onclick="adminDeleteAd(\''+esc(a.id)+'\')" style="width:32px;padding:8px;background:rgba(224,80,80,.06);border:1px solid rgba(224,80,80,.2);border-radius:8px;color:var(--red);font-size:.64rem;cursor:pointer"><i class="fas fa-trash"></i></button>'
         +'<button onclick="adminEditAd(\''+esc(a.id)+'\')" style="width:32px;padding:8px;background:var(--bg4);border:1px solid var(--bd);border-radius:8px;color:var(--t2);font-size:.64rem;cursor:pointer"><i class="fas fa-pen"></i></button>'
         +'</div>':'')
@@ -7736,7 +7805,7 @@ async function adminLoadAds(){
 
     if(pEl) pEl.innerHTML = pending.length ? pending.map(a=>renderAd(a,true)).join('') : '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No pending ads</div>';
     if(aEl) aEl.innerHTML = active.length  ? active.map(a=>renderAd(a,true)).join('')  : '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No active ads</div>';
-    if(rEl) rEl.innerHTML = rejected.length? rejected.map(a=>renderAd(a,false)).join(''): '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No rejected ads</div>';
+    if(rEl) rEl.innerHTML = rejected.length? rejected.map(a=>renderAd(a,true)).join(''): '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No rejected ads</div>';
   }catch(e){
     const isTableMissing = e.message?.includes('does not exist') || (e.message?.includes('schema cache') && e.message?.includes('table'));
     const msg = isTableMissing
@@ -7746,6 +7815,26 @@ async function adminLoadAds(){
   }
 }
 window.adminLoadAds = adminLoadAds;
+
+function adminContactAdOwner(name, contact, title){
+  const isEmail = contact.includes('@');
+  const rawPhone = contact.replace(/[^0-9]/g,'');
+  const waNum = rawPhone.startsWith('0') ? '254'+rawPhone.slice(1) : rawPhone.startsWith('254') ? rawPhone : '254'+rawPhone;
+  const btns = [];
+  if (!isEmail) {
+    btns.push({label:'📞 Call '+name, style:'btn-outline', fn:()=>{ window.location.href='tel:'+contact; }});
+    btns.push({label:'💬 WhatsApp '+name, style:'btn-gold', fn:()=>{
+      window.open('https://wa.me/'+waNum+'?text='+encodeURIComponent('Hello '+name+'! Regarding your ad "'+title+'" on NovaDeskOnline:'), '_blank');
+    }});
+  } else {
+    btns.push({label:'✉️ Email '+name, style:'btn-gold', fn:()=>{
+      window.open('mailto:'+contact+'?subject='+encodeURIComponent('Re: your ad "'+title+'"'), '_blank');
+    }});
+  }
+  btns.push({label:'Close', fn:null, style:'btn-ghost'});
+  popup('Contact '+name, 'Reach out about their ad "'+title+'":', 'nf', btns);
+}
+window.adminContactAdOwner = adminContactAdOwner;
 
 async function adminSetAdStatus(id, status){
   try{
@@ -8538,7 +8627,13 @@ async function init(){
   // ③ URL param handling
   (function(){
     const p = new URLSearchParams(window.location.search);
-    const r = p.get('ref'); if(r) localStorage.setItem('nd-ref', r);
+    const r = p.get('ref');
+    if (r) {
+      localStorage.setItem('nd-ref', r);
+      setTimeout(()=>{
+        if (!_user) { openAuth(); authTab('register'); toast('You were invited! Sign up to get started 🎉','nf',4000); }
+      }, 800);
+    }
     const screen = p.get('screen'); if(screen) setTimeout(()=>goNav(screen), 1500);
     const action = p.get('action'); if(action==='request') setTimeout(()=>goNav('services'), 1600);
   })();
@@ -9749,6 +9844,8 @@ function populateSettingsTab() {
   $('set-idnum').value = _profile.id_number || '';
   const curEmailEl = $('set-current-email'); if (curEmailEl) curEmailEl.textContent = _user?.email || '—';
   const notifToggle = $('notif-pref-toggle');
+  const soundToggle = $('notif-sound-toggle');
+  if (soundToggle) soundToggle.classList.toggle('on', localStorage.getItem('nd_notif_sound') !== 'off');
   if (notifToggle) {
     // Only show "on" if the DB flag is set AND the browser actually has an active push subscription
     if (_profile.notifications_enabled === false || !('serviceWorker' in navigator)) {
@@ -11146,6 +11243,10 @@ const NAV_LABELS = { home:'Home', services:'Services', techservices:'Other Produ
 
 function ndPushState(screenName){
   try {
+    // Never touch the URL while it's carrying a Supabase auth callback
+    // (password recovery tokens, etc) — rewriting the hash could wipe them
+    // out before Supabase's client has a chance to parse them.
+    if (/access_token|type=recovery|error=/.test(location.hash)) return;
     const name = screenName || window._currentScreen || 'home';
     const newHash = '#/' + name;
     if (location.hash !== newHash) {
