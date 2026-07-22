@@ -2351,6 +2351,7 @@ body.admin-open .acct-tabs{ pointer-events:none; }
             </div>
             <div class="loyalty-prog-bar"><div class="loyalty-prog-fill" id="loyalty-prog-fill" style="width:0%"></div></div>
             <div class="loyalty-prog-lbl" id="loyalty-prog-lbl">0 / 100 pts to Silver</div>
+            <div id="loyalty-referred-by" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(167,139,250,.15);font-size:.66rem;color:var(--t3)"><i class="fas fa-gift" style="color:#a78bfa;margin-right:5px"></i><span id="loyalty-referred-by-text"></span></div>
           </div>
           <!-- Tiers -->
           <div style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t4);margin-bottom:8px">Tier Benefits</div>
@@ -3220,7 +3221,10 @@ body.admin-open .acct-tabs{ pointer-events:none; }
     <div class="auth-panel" id="panel-register">
       <div style="background:linear-gradient(135deg,rgba(50,180,100,.08),rgba(50,180,100,.03));border:1px solid rgba(50,180,100,.2);border-radius:var(--rl);padding:12px;margin-bottom:14px;display:flex;align-items:center;gap:10px">
         <div style="width:38px;height:38px;border-radius:10px;background:rgba(50,180,100,.12);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:1rem;flex-shrink:0"><i class="fas fa-user-plus"></i></div>
-        <div><div style="font-size:.8rem;font-weight:600;color:var(--t1)">Create Your Account</div><div style="font-size:.62rem;color:var(--t3)">Free · Earn loyalty points · Track requests</div></div>
+        <div><div style="font-size:.8rem;font-weight:600;color:var(--t1)">Create Your Account</div><div style="font-size:.62rem;color:var(--t3)">Sign up free to enjoy the app — earn loyalty points and track your requests</div></div>
+      </div>
+      <div id="reg-referred-banner" style="display:none;background:var(--gold-a8);border:1px solid var(--gold-a25);border-radius:var(--rl);padding:11px 14px;margin-bottom:14px;font-size:.72rem;color:var(--gold)">
+        <i class="fas fa-gift" style="margin-right:6px"></i><span id="reg-referred-text"></span>
       </div>
       <!-- Google sign up -->
       <button type="button" onclick="doGoogleSignIn()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;background:var(--bg4);border:1px solid var(--bd);border-radius:var(--r);cursor:pointer;font-size:.76rem;font-weight:500;color:var(--t1);margin-bottom:12px">
@@ -4156,7 +4160,26 @@ function authTab(t){
     if(pe){pe.style.display=tab===t?'block':'none';}
   });
   // 'resetpw' has no visible tab button – just show its panel
+  if (t === 'register') checkReferralBanner();
 }
+
+async function checkReferralBanner(){
+  const banner = $('reg-referred-banner'), textEl = $('reg-referred-text');
+  if (!banner || !textEl) return;
+  const p = new URLSearchParams(window.location.search);
+  const refCode = p.get('ref') || localStorage.getItem('nd-ref') || '';
+  if (!refCode || !sb) { banner.style.display = 'none'; return; }
+  try {
+    const { data } = await sb.from('profiles').select('full_name').eq('referral_code', refCode).maybeSingle();
+    if (data?.full_name) {
+      textEl.textContent = `You were invited by ${data.full_name}! Sign up and they'll earn loyalty points.`;
+      banner.style.display = 'block';
+    } else {
+      banner.style.display = 'none';
+    }
+  } catch(e) { banner.style.display = 'none'; }
+}
+window.checkReferralBanner = checkReferralBanner;
 function togglePw(inputId, btnId){
   const inp = $(inputId);
   const btn = $(btnId);
@@ -4222,12 +4245,30 @@ async function doRegister(){
     // Check for referral code in URL
     const urlParams = new URLSearchParams(window.location.search);
     const refCode = urlParams.get('ref') || localStorage.getItem('nd-ref') || '';
-    
-    const { data, error } = await sb.auth.signUp({
-      email, password: pw,
-      options: { data: { full_name: name, id_number: idNum, whatsapp_number: wa, alt_phone: alt || null, referred_by_code: refCode || null } }
-    });
-    if (error) throw error;
+
+    const extractErrMsg = (e) => {
+      if (!e) return 'Unknown error.';
+      const candidates = [e.message, e.error_description, e.msg, e.details];
+      const found = candidates.find(c => typeof c === 'string' && c.trim() && c.trim() !== '{}');
+      return found ? found + (e.status ? ` (status ${e.status})` : '') : 'Unknown error.';
+    };
+
+    let data, lastSignUpErr;
+    for (let attempt=1; attempt<=2; attempt++) {
+      const res = await sb.auth.signUp({
+        email, password: pw,
+        options: { data: { full_name: name, id_number: idNum, whatsapp_number: wa, alt_phone: alt || null, referred_by_code: refCode || null } }
+      }).catch(e => ({ error: e }));
+      data = res.data; lastSignUpErr = res.error || null;
+      const isRetryable = lastSignUpErr && (lastSignUpErr.name==='AuthRetryableFetchError' || lastSignUpErr.status>=500);
+      if (!lastSignUpErr || !isRetryable) break;
+      if (attempt===1) await new Promise(r=>setTimeout(r, 1200));
+    }
+    if (lastSignUpErr) {
+      const isRetryable = lastSignUpErr.name==='AuthRetryableFetchError' || lastSignUpErr.status>=500;
+      const hint = isRetryable ? ' Our sign-up service is having a temporary issue — please try again in a moment, or contact us on WhatsApp if this keeps happening.' : '';
+      throw new Error(extractErrMsg(lastSignUpErr) + hint);
+    }
     
     // Clear referral from storage
     localStorage.removeItem('nd-ref');
@@ -4431,9 +4472,11 @@ function onAuthStateChange(){
   if (!sb) return;
   // Detect a password-recovery link from the URL itself — Supabase always includes
   // type=recovery when redirecting from a "reset password" email, regardless of
-  // which auth event actually fires first (this varies by client version).
-  const urlParams = new URLSearchParams(window.location.hash.replace('#','?') || window.location.search);
-  window._isPasswordRecovery = urlParams.get('type') === 'recovery';
+  // which auth event actually fires first (this varies by client version, and by
+  // whether the implicit flow (#hash) or PKCE flow (?query) is in use).
+  const hashParams = new URLSearchParams(window.location.hash.replace(/^#\/?/, ''));
+  const queryParams = new URLSearchParams(window.location.search);
+  window._isPasswordRecovery = hashParams.get('type') === 'recovery' || queryParams.get('type') === 'recovery';
 
   sb.auth.onAuthStateChange(async (event, session) => {
     _user = session?.user || null;
@@ -4733,6 +4776,18 @@ function renderLoyaltyPoints() {
     } else {
       fillEl.style.width = '100%';
       lblEl.textContent = `${pts} pts — Maximum tier reached! 🎉`;
+    }
+  }
+  const refBanner = $('loyalty-referred-by'), refText = $('loyalty-referred-by-text');
+  if (refBanner && refText) {
+    if (_profile?.referred_by_code && sb) {
+      sb.from('profiles').select('full_name').eq('referral_code', _profile.referred_by_code).maybeSingle()
+        .then(({data}) => {
+          if (data?.full_name) { refText.textContent = `You were referred by ${data.full_name}`; refBanner.style.display = 'block'; }
+          else refBanner.style.display = 'none';
+        }).catch(()=>{ refBanner.style.display = 'none'; });
+    } else {
+      refBanner.style.display = 'none';
     }
   }
 }
