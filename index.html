@@ -4589,7 +4589,7 @@ async function loadProfile(){
         try {
           const {data:refUser} = await sb.from('profiles').select('id').eq('referral_code',_profile.referred_by_code).single();
           if (refUser) {
-            await sb.rpc('increment_loyalty',{p_user_id:refUser.id,p_points:20});
+            await sb.rpc('increment_loyalty',{user_id:refUser.id,points:20});
             await sb.from('profiles').update({referral_credited:true}).eq('id',_user.id);
           }
         } catch(e) {}
@@ -7843,7 +7843,7 @@ async function adminLoadAds(){
         +'<span style="font-size:.52rem;padding:2px 8px;border-radius:20px;background:'+statusColor+'22;color:'+statusColor+';border:1px solid '+statusColor+'44;flex-shrink:0;margin-left:8px">'+esc(a.status||'pending')+'</span>'
         +'</div>'
         +(subContact?'<div style="font-size:.62rem;color:var(--t3);margin-bottom:8px"><i class="fas '+(isEmailContact?'fa-envelope':'fa-phone')+'" style="width:14px"></i>'+esc(subContact)+'</div>':'')
-        +(a.image_url?'<img src="'+esc(a.image_url)+'" style="width:100%;height:120px;object-fit:cover;border-radius:8px;margin-bottom:8px" onerror="this.style.display=\'none\'">':'')
+        +renderAdMedia(a, 120)
         +'<div style="font-size:.72rem;color:var(--t2);line-height:1.6;margin-bottom:8px">'+esc(a.body||a.description||'')+'</div>'
         +(a.link_url?'<div style="font-size:.62rem;color:var(--blue);margin-bottom:8px"><i class="fas fa-link" style="width:14px"></i>'+esc(a.link_url)+'</div>':'')
         +(a.runs_until?'<div style="font-size:.6rem;color:var(--t4);margin-bottom:8px"><i class="fas fa-calendar-clock" style="width:14px;color:'+statusColor+'"></i>Runs until: '+new Date(a.runs_until).toLocaleDateString('en-KE')+'</div>':'')
@@ -7982,7 +7982,7 @@ async function loadHomeAds(){
     list.innerHTML = data.map(a=>`
       <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:14px;overflow:hidden;position:relative;${a.link_url?'cursor:pointer':''}" ${a.link_url?`onclick="window.open('${esc(a.link_url)}','_blank')"`:''}>
         <span style="position:absolute;top:8px;right:8px;font-size:.48rem;background:rgba(0,0,0,.7);color:var(--t4);padding:2px 6px;border-radius:4px;font-weight:700;letter-spacing:.06em">SPONSORED</span>
-        ${a.image_url?`<img src="${esc(a.image_url)}" style="width:100%;height:140px;object-fit:cover" onerror="this.style.display='none'">`:''}
+        ${renderAdMedia(a, 140).replace('<video ', '<video onclick="event.stopPropagation()" ')}
         <div style="padding:12px">
           <div style="font-size:.8rem;font-weight:700;color:var(--t1);margin-bottom:4px">${esc(a.title||'')}</div>
           ${a.body?`<div style="font-size:.7rem;color:var(--t3);line-height:1.55">${esc(a.body)}</div>`:''}
@@ -7995,6 +7995,29 @@ async function loadHomeAds(){
 window.loadHomeAds = loadHomeAds;
 
 /* Agent: submit an ad */
+// Renders an ad's media (photos and/or videos) — falls back to the legacy
+// single image_url if no media array is present
+function renderAdMedia(ad, heightPx){
+  const h = heightPx || 140;
+  let items = [];
+  try { items = Array.isArray(ad.media) ? ad.media : JSON.parse(ad.media || '[]'); } catch(e) { items = []; }
+  if (!items.length && ad.image_url) items = [{url: ad.image_url, type:'image'}];
+  if (!items.length) return '';
+  const single = items.length === 1;
+  const one = (m) => m.type === 'video'
+    ? `<video src="${esc(m.url)}" controls muted playsinline style="width:100%;height:${h}px;object-fit:cover;border-radius:8px;background:#000"></video>`
+    : `<img src="${esc(m.url)}" style="width:100%;height:${h}px;object-fit:cover;border-radius:8px" onerror="this.style.display='none'">`;
+  if (single) return `<div style="margin-bottom:8px">${one(items[0])}</div>`;
+  const uid = 'adm-'+Math.random().toString(36).slice(2,9);
+  return `<div style="margin-bottom:8px">
+    <div id="${uid}" style="display:flex;gap:6px;overflow-x:auto;scroll-snap-type:x mandatory;border-radius:8px">
+      ${items.map(m=>`<div style="flex:0 0 100%;scroll-snap-align:start">${one(m)}</div>`).join('')}
+    </div>
+    <div style="text-align:center;font-size:.56rem;color:var(--t4);margin-top:3px">${items.length} items — swipe to see more</div>
+  </div>`;
+}
+window.renderAdMedia = renderAdMedia;
+
 let _pendingAdImages = [];
 function openSubmitAdModal(){
   if(!_user){ openAuth(); return; }
@@ -8017,16 +8040,16 @@ function openSubmitAdModal(){
       <div class="fg"><label class="flbl">Ad Body / Description</label><textarea class="fi" id="ad-body" rows="3" placeholder="Short description of what you're advertising…" maxlength="300"></textarea></div>
 
       <div class="fg">
-        <label class="flbl">Ad Images <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(upload from phone, up to 5)</span></label>
+        <label class="flbl">Ad Photos &amp; Videos <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(upload from phone, up to 5)</span></label>
         <div class="upload-zone" id="ad-upload-zone" onclick="document.getElementById('ad-file-input').click()">
           <div id="ad-upload-prompt">
             <i class="fas fa-cloud-upload-alt"></i>
-            <p>Tap to upload images</p>
-            <span>JPG, PNG — max 10MB each · max 5 images</span>
+            <p>Tap to upload photos or videos</p>
+            <span>JPG, PNG, MP4 — max 25MB each · max 5 files</span>
           </div>
           <div id="ad-file-list" class="upload-file-list"></div>
         </div>
-        <input type="file" id="ad-file-input" multiple accept="image/*" style="display:none" onchange="handleAdFileSelect(this)">
+        <input type="file" id="ad-file-input" multiple accept="image/*,video/*" style="display:none" onchange="handleAdFileSelect(this)">
       </div>
       <div class="fg"><label class="flbl">Or Paste an Image URL <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(optional, used if no upload)</span></label><input class="fi" id="ad-image" type="url" placeholder="https://…/image.jpg"></div>
 
@@ -8047,7 +8070,8 @@ window.openSubmitAdModal = openSubmitAdModal;
 function handleAdFileSelect(inp){
   const files = Array.from(inp.files||[]);
   for (const f of files) {
-    if (_pendingAdImages.length >= 5) { toast('Max 5 images per ad.','er'); break; }
+    if (_pendingAdImages.length >= 5) { toast('Max 5 files per ad.','er'); break; }
+    if (f.size > 25*1024*1024) { toast(`${f.name} is over 25MB.`,'er'); continue; }
     _pendingAdImages.push(f);
   }
   inp.value='';
@@ -8063,12 +8087,12 @@ function renderAdFileList(){
   if (prompt) prompt.style.display = _pendingAdImages.length ? 'none' : '';
   list.innerHTML = _pendingAdImages.map((f,i)=>`
     <div class="upload-file-item">
-      <i class="fas fa-image"></i>
+      <i class="fas ${f.type.startsWith('video/')?'fa-video':'fa-image'}"></i>
       <span title="${esc(f.name)}">${esc(f.name)}</span>
       <span style="color:var(--t4)">${formatFileSize(f.size)}</span>
       <button onclick="event.stopPropagation();removePendingAdImage(${i})" title="Remove"><i class="fas fa-times"></i></button>
     </div>
-  `).join('') + (_pendingAdImages.length && _pendingAdImages.length<5 ? `<div style="text-align:center;font-size:.62rem;color:var(--gold);padding:6px 0 2px">+ Tap to add more images</div>` : '');
+  `).join('') + (_pendingAdImages.length && _pendingAdImages.length<5 ? `<div style="text-align:center;font-size:.62rem;color:var(--gold);padding:6px 0 2px">+ Tap to add more</div>` : '');
 }
 
 async function submitAdForm(btn){
@@ -8087,13 +8111,18 @@ async function submitAdForm(btn){
   if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> Submitting…';}
   try{
     let imageUrl = imageUrlInput || null;
+    let media = [];
     if (_pendingAdImages.length) {
       const uploaded = await uploadFilesToStorage(_user.id, 'ads-'+Date.now(), _pendingAdImages);
-      if (uploaded.length) imageUrl = uploaded[0].url; // first image is the primary ad image
+      media = uploaded.map((u, i) => ({ url: u.url, type: _pendingAdImages[i]?.type?.startsWith('video/') ? 'video' : 'image' }));
+      const firstImage = media.find(m => m.type === 'image');
+      if (firstImage) imageUrl = firstImage.url; // legacy single-image fallback stays populated
+    } else if (imageUrl) {
+      media = [{ url: imageUrl, type: 'image' }];
     }
     const { data: inserted, error } = await sb.from('advertisements').insert({
       agent_id:_user.id, title, body:body||null,
-      image_url:imageUrl, link_url:linkUrl||null,
+      image_url:imageUrl, media, link_url:linkUrl||null,
       cta_label:ctaLabel||null,
       submitter_name:subName, submitter_contact:subContact,
       runs_until:until?new Date(until).toISOString():null,
@@ -10597,8 +10626,8 @@ function injectManifestFallback(){
   // If manifest.json isn't served (local file mode), inject one via blob
   if (document.querySelector('link[rel="manifest"]')) {
     const existingLink = document.querySelector('link[rel="manifest"]');
-    // Try fetching — if it fails, inject inline
-    fetch(existingLink.href).catch(()=>{
+    // fetch() only rejects on network failures, NOT on 404s — check response.ok too
+    fetch(existingLink.href).then(res => { if (!res.ok) throw new Error('manifest not found'); }).catch(()=>{
       const manifest = {
         name: 'NovaDeskOnline',
         short_name: 'NovaDeskOnline',
