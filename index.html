@@ -1758,7 +1758,8 @@ body.admin-open .acct-tabs{ pointer-events:none; }
         <div class="h-sect-head">
           <span class="h-sect-ttl" style="display:flex;align-items:center;gap:6px"><span style="font-size:.52rem;background:var(--gold);color:#000;padding:2px 6px;border-radius:4px;font-weight:700">AD</span> Sponsored</span>
         </div>
-        <div id="home-ads-list" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="home-ads-list" style="display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch"></div>
+        <div id="home-ads-dots" style="display:flex;gap:5px;justify-content:center;margin-top:8px"></div>
       </div>
 
       <!-- CATEGORY TILES -->
@@ -2242,6 +2243,7 @@ body.admin-open .acct-tabs{ pointer-events:none; }
             <div class="acct-avatar-edit"><i class="fas fa-camera" style="margin-right:4px"></i> Change</div>
           </div>
           <input type="file" id="ava-file" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
+          <div id="acct-greeting" style="font-size:.68rem;color:var(--gold);margin-bottom:2px;font-weight:600;letter-spacing:.03em"></div>
           <div class="acct-name" id="acct-name-el">User</div>
           <div class="acct-id" id="acct-id-el">ID: —</div>
           <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;justify-content:center">
@@ -4170,9 +4172,10 @@ async function checkReferralBanner(){
   const refCode = p.get('ref') || localStorage.getItem('nd-ref') || '';
   if (!refCode || !sb) { banner.style.display = 'none'; return; }
   try {
-    const { data } = await sb.from('profiles').select('full_name').eq('referral_code', refCode).maybeSingle();
-    if (data?.full_name) {
-      textEl.textContent = `You were invited by ${data.full_name}! Sign up and they'll earn loyalty points.`;
+    const { data } = await sb.rpc('get_referrer_by_code', { code: refCode });
+    const referrer = Array.isArray(data) ? data[0] : data;
+    if (referrer?.full_name) {
+      textEl.textContent = `You were invited by ${referrer.full_name}! Sign up and they'll earn loyalty points.`;
       banner.style.display = 'block';
     } else {
       banner.style.display = 'none';
@@ -4478,6 +4481,25 @@ function onAuthStateChange(){
   const queryParams = new URLSearchParams(window.location.search);
   window._isPasswordRecovery = hashParams.get('type') === 'recovery' || queryParams.get('type') === 'recovery';
 
+  // Newer Supabase recovery emails link to a token_hash + type=recovery pair
+  // instead of an auto-detected session — detectSessionInUrl does NOT handle
+  // this format, so without this explicit exchange, the link just leaves you
+  // "logged in" with no real session and a blank profile (exactly what you saw).
+  const tokenHash = queryParams.get('token_hash') || hashParams.get('token_hash');
+  const otpType = queryParams.get('type') || hashParams.get('type');
+  if (tokenHash && otpType === 'recovery') {
+    window._isPasswordRecovery = true;
+    sb.auth.verifyOtp({ token_hash: tokenHash, type: 'recovery' }).then(async ({data, error}) => {
+      if (error) { toast('This reset link has expired or already been used. Please request a new one.','er',6000); return; }
+      if (data?.session?.user) {
+        _user = data.session.user;
+        await loadProfile().catch(()=>{});
+        renderAccount();
+        showNewPasswordModal();
+      }
+    });
+  }
+
   sb.auth.onAuthStateChange(async (event, session) => {
     _user = session?.user || null;
 
@@ -4587,8 +4609,9 @@ async function loadProfile(){
       // Credit referrer if this is first login and was referred
       if (_profile.referred_by_code && !_profile.referral_credited) {
         try {
-          const {data:refUser} = await sb.from('profiles').select('id').eq('referral_code',_profile.referred_by_code).single();
-          if (refUser) {
+          const {data:refData} = await sb.rpc('get_referrer_by_code', {code:_profile.referred_by_code});
+          const refUser = Array.isArray(refData) ? refData[0] : refData;
+          if (refUser?.id) {
             await sb.rpc('increment_loyalty',{user_id:refUser.id,points:20});
             await sb.from('profiles').update({referral_credited:true}).eq('id',_user.id);
           }
@@ -4717,6 +4740,13 @@ function renderAccount(){
   const initials = displayName.split(' ').map(w=>w[0]?.toUpperCase()||'').join('').substring(0,2) || 'ND';
   const initEl = $('acct-initials'); if (initEl) initEl.textContent = initials;
   const nameEl = $('acct-name-el'); if (nameEl) nameEl.textContent = displayName;
+  const greetEl = $('acct-greeting');
+  if (greetEl) {
+    const hr = new Date().getHours();
+    const timeGreeting = hr < 5 ? 'Good night' : hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : hr < 21 ? 'Good evening' : 'Good night';
+    const firstName = (_profile.full_name || '').trim().split(' ')[0];
+    greetEl.textContent = firstName ? `${timeGreeting}, ${firstName} 👋` : `${timeGreeting} 👋`;
+  }
   // Show the ND user ID under the name — this is the unique user-facing account ID
   const idEl = $('acct-id-el');
   if (idEl) {
@@ -4781,9 +4811,10 @@ function renderLoyaltyPoints() {
   const refBanner = $('loyalty-referred-by'), refText = $('loyalty-referred-by-text');
   if (refBanner && refText) {
     if (_profile?.referred_by_code && sb) {
-      sb.from('profiles').select('full_name').eq('referral_code', _profile.referred_by_code).maybeSingle()
+      sb.rpc('get_referrer_by_code', { code: _profile.referred_by_code })
         .then(({data}) => {
-          if (data?.full_name) { refText.textContent = `You were referred by ${data.full_name}`; refBanner.style.display = 'block'; }
+          const referrer = Array.isArray(data) ? data[0] : data;
+          if (referrer?.full_name) { refText.textContent = `You were referred by ${referrer.full_name}`; refBanner.style.display = 'block'; }
           else refBanner.style.display = 'none';
         }).catch(()=>{ refBanner.style.display = 'none'; });
     } else {
@@ -6113,6 +6144,7 @@ window.adminViewUser = adminViewUser;
 /* ── ADMIN: ADD USER / AGENT / INSTITUTION ──────────────────────── */
 /* ── ADMIN: ADD AD DIRECTLY ──────────────────────────────────────── */
 function openAddAdModal(){
+  _pendingAdImages = [];
   const overlay = document.createElement('div');
   overlay.className = 'nd-overlay';
   overlay.style.cssText = 'position:fixed;inset:0;z-index:9900;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)';
@@ -6122,7 +6154,19 @@ function openAddAdModal(){
       <div style="font-family:var(--fd);font-size:1.05rem;color:var(--t1);margin-bottom:16px"><i class="fas fa-bullhorn" style="color:var(--gold);margin-right:8px"></i>Add Advertisement</div>
       <div class="fg"><label class="flbl">Title <span class="req">*</span></label><input class="fi" id="aad-title" type="text" placeholder="e.g. 20% off Laminating this week"></div>
       <div class="fg"><label class="flbl">Body</label><textarea class="fi" id="aad-body" rows="3" placeholder="Short description shown under the title"></textarea></div>
-      <div class="fg"><label class="flbl">Image URL</label><input class="fi" id="aad-image" type="url" placeholder="https://…"></div>
+      <div class="fg">
+        <label class="flbl">Photos &amp; Videos <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(upload from phone, up to 5)</span></label>
+        <div class="upload-zone" id="ad-upload-zone" onclick="document.getElementById('ad-file-input').click()">
+          <div id="ad-upload-prompt">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Tap to upload photos or videos</p>
+            <span>JPG, PNG, MP4 — max 25MB each · max 5 files</span>
+          </div>
+          <div id="ad-file-list" class="upload-file-list"></div>
+        </div>
+        <input type="file" id="ad-file-input" multiple accept="image/*,video/*" style="display:none" onchange="handleAdFileSelect(this)">
+      </div>
+      <div class="fg"><label class="flbl">Or Paste an Image URL <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(optional, used if no upload)</span></label><input class="fi" id="aad-image" type="url" placeholder="https://…"></div>
       <div class="fg"><label class="flbl">Link URL</label><input class="fi" id="aad-link" type="url" placeholder="https:// — where tapping the ad goes"></div>
       <div class="fg"><label class="flbl">Button Text</label><input class="fi" id="aad-cta" type="text" placeholder="e.g. Order Now"></div>
       <div class="fg"><label class="flbl">Runs Until <span style="font-size:.6rem;color:var(--t4);text-transform:none">(optional — leave blank to run indefinitely)</span></label><input class="fi" id="aad-until" type="date"></div>
@@ -6148,8 +6192,18 @@ async function submitAddAd(){
   if (!title) { if(err){err.textContent='Title is required.';err.style.display='block';} return; }
   if (btn) { btn.disabled=true; btn.innerHTML='<span class="spin"></span> Publishing…'; }
   try {
+    let finalImageUrl = image_url || null;
+    let media = [];
+    if (_pendingAdImages.length) {
+      const uploaded = await uploadFilesToStorage(_user.id, 'ads-'+Date.now(), _pendingAdImages);
+      media = uploaded.map((u, i) => ({ url: u.url, type: _pendingAdImages[i]?.type?.startsWith('video/') ? 'video' : 'image' }));
+      const firstImage = media.find(m => m.type === 'image');
+      if (firstImage) finalImageUrl = firstImage.url;
+    } else if (finalImageUrl) {
+      media = [{ url: finalImageUrl, type: 'image' }];
+    }
     const { error } = await sb.from('advertisements').insert({
-      title, body: body||null, image_url: image_url||null, link_url: link_url||null,
+      title, body: body||null, image_url: finalImageUrl, media, link_url: link_url||null,
       cta_label: cta_label||null, runs_until: until ? new Date(until).toISOString() : null,
       status: 'active', reviewed_at: new Date().toISOString(), reviewed_by: _user?.id||null,
       created_at: new Date().toISOString()
@@ -7809,6 +7863,8 @@ async function adminLoadMessages(){
 window.adminLoadMessages = adminLoadMessages;
 
 /* ── ADVERTISEMENTS SYSTEM ─────────────────────────────────────── */
+let _adsCache = [];
+
 async function adminLoadAds(){
   const pEl=$('admin-ads-pending'), aEl=$('admin-ads-active'), rEl=$('admin-ads-rejected');
   [pEl,aEl,rEl].forEach(el=>{ if(el) el.innerHTML='<div style="text-align:center;padding:14px"><span class="spin"></span></div>'; });
@@ -7825,42 +7881,8 @@ async function adminLoadAds(){
       (profs||[]).forEach(p => profilesById[p.id] = p);
     }
     (data||[]).forEach(a => { a.profiles = profilesById[a.agent_id] || null; });
-    const pending  = (data||[]).filter(a=>a.status==='pending');
-    const active   = (data||[]).filter(a=>a.status==='active');
-    const rejected = (data||[]).filter(a=>a.status==='rejected'||a.status==='paused');
-
-    const renderAd = (a,showActions=true)=>{
-      const subName = a.submitter_name || a.profiles?.full_name || 'Unknown';
-      const subContact = a.submitter_contact || a.profiles?.whatsapp_number || '';
-      const isEmailContact = subContact.includes('@');
-      const rawPhone = subContact.replace(/[^0-9]/g,'');
-      const waNum = rawPhone.startsWith('0')?'254'+rawPhone.slice(1):rawPhone.startsWith('254')?rawPhone:'254'+rawPhone;
-      const statusColor={pending:'#ffa500',active:'var(--green)',rejected:'var(--red)',paused:'var(--t4)'}[a.status]||'var(--t3)';
-      return '<div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:13px">'
-        +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">'
-        +'<div style="flex:1;min-width:0"><div style="font-size:.78rem;font-weight:700;color:var(--t1)">'+esc(a.title||'Ad')+'</div>'
-        +'<div style="font-size:.6rem;color:var(--t4);margin-top:1px">by '+esc(subName)+' · '+fmtRel(a.created_at)+'</div></div>'
-        +'<span style="font-size:.52rem;padding:2px 8px;border-radius:20px;background:'+statusColor+'22;color:'+statusColor+';border:1px solid '+statusColor+'44;flex-shrink:0;margin-left:8px">'+esc(a.status||'pending')+'</span>'
-        +'</div>'
-        +(subContact?'<div style="font-size:.62rem;color:var(--t3);margin-bottom:8px"><i class="fas '+(isEmailContact?'fa-envelope':'fa-phone')+'" style="width:14px"></i>'+esc(subContact)+'</div>':'')
-        +renderAdMedia(a, 120)
-        +'<div style="font-size:.72rem;color:var(--t2);line-height:1.6;margin-bottom:8px">'+esc(a.body||a.description||'')+'</div>'
-        +(a.link_url?'<div style="font-size:.62rem;color:var(--blue);margin-bottom:8px"><i class="fas fa-link" style="width:14px"></i>'+esc(a.link_url)+'</div>':'')
-        +(a.runs_until?'<div style="font-size:.6rem;color:var(--t4);margin-bottom:8px"><i class="fas fa-calendar-clock" style="width:14px;color:'+statusColor+'"></i>Runs until: '+new Date(a.runs_until).toLocaleDateString('en-KE')+'</div>':'')
-        +(showActions?'<div style="display:flex;gap:6px;flex-wrap:wrap">'
-        +(a.status!=='active'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'active\')" style="flex:1;padding:8px;background:rgba(50,180,100,.1);border:1px solid rgba(50,180,100,.3);border-radius:8px;color:var(--green);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-check"></i> Approve</button>':'')
-        +(a.status!=='paused'&&a.status==='active'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'paused\')" style="flex:1;padding:8px;background:var(--bg4);border:1px solid var(--bd);border-radius:8px;color:var(--t3);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-pause"></i> Pause</button>':'')
-        +(a.status!=='rejected'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'rejected\')" style="flex:1;padding:8px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.25);border-radius:8px;color:var(--red);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-times"></i> Reject</button>':'')
-        +(subContact?'<button onclick="adminContactAdOwner(\''+esc(subName.replace(/'/g,"\\'"))+'\',\''+esc(subContact.replace(/'/g,"\\'"))+'\',\''+esc((a.title||'').replace(/'/g,"\\'"))+'\')" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:rgba(77,158,255,.08);border:1px solid rgba(77,158,255,.25);border-radius:8px;color:#5aaeff;font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-address-book"></i> Contact</button>':'')
-        +'<button onclick="adminDeleteAd(\''+esc(a.id)+'\')" style="width:32px;padding:8px;background:rgba(224,80,80,.06);border:1px solid rgba(224,80,80,.2);border-radius:8px;color:var(--red);font-size:.64rem;cursor:pointer"><i class="fas fa-trash"></i></button>'
-        +'<button onclick="adminEditAd(\''+esc(a.id)+'\')" style="width:32px;padding:8px;background:var(--bg4);border:1px solid var(--bd);border-radius:8px;color:var(--t2);font-size:.64rem;cursor:pointer"><i class="fas fa-pen"></i></button>'
-        +'</div>':'')
-        +'</div>';
-    };
-
-    if(pEl) pEl.innerHTML = pending.length ? pending.map(a=>renderAd(a,true)).join('') : '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No pending ads</div>';
-    if(aEl) aEl.innerHTML = active.length  ? active.map(a=>renderAd(a,true)).join('')  : '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No active ads</div>';
-    if(rEl) rEl.innerHTML = rejected.length? rejected.map(a=>renderAd(a,true)).join(''): '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No rejected ads</div>';
+    _adsCache = data || [];
+    renderAdsLists();
   }catch(e){
     const isTableMissing = e.message?.includes('does not exist') || (e.message?.includes('schema cache') && e.message?.includes('table'));
     const msg = isTableMissing
@@ -7871,19 +7893,63 @@ async function adminLoadAds(){
 }
 window.adminLoadAds = adminLoadAds;
 
-function adminContactAdOwner(name, contact, title){
-  const isEmail = contact.includes('@');
-  const rawPhone = contact.replace(/[^0-9]/g,'');
+// Renders the 3 ad sections straight from the in-memory cache — instant,
+// no network round-trip. Called after every optimistic status/delete change.
+function renderAdsLists(){
+  const pEl=$('admin-ads-pending'), aEl=$('admin-ads-active'), rEl=$('admin-ads-rejected');
+  const data = _adsCache;
+  const pending  = data.filter(a=>a.status==='pending');
+  const active   = data.filter(a=>a.status==='active');
+  const rejected = data.filter(a=>a.status==='rejected'||a.status==='paused');
+
+  const renderAd = (a,showActions=true)=>{
+    const subName = a.submitter_name || a.profiles?.full_name || 'Unknown';
+    const subContact = a.submitter_contact || a.profiles?.whatsapp_number || '';
+    const isEmailContact = subContact.includes('@');
+    const statusColor={pending:'#ffa500',active:'var(--green)',rejected:'var(--red)',paused:'var(--t4)'}[a.status]||'var(--t3)';
+    return '<div style="background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:13px">'
+      +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">'
+      +'<div style="flex:1;min-width:0"><div style="font-size:.78rem;font-weight:700;color:var(--t1)">'+esc(a.title||'Ad')+'</div>'
+      +'<div style="font-size:.6rem;color:var(--t4);margin-top:1px">by '+esc(subName)+' · '+fmtRel(a.created_at)+'</div></div>'
+      +'<span style="font-size:.52rem;padding:2px 8px;border-radius:20px;background:'+statusColor+'22;color:'+statusColor+';border:1px solid '+statusColor+'44;flex-shrink:0;margin-left:8px">'+esc(a.status||'pending')+'</span>'
+      +'</div>'
+      +(subContact?'<div style="font-size:.62rem;color:var(--t3);margin-bottom:8px"><i class="fas '+(isEmailContact?'fa-envelope':'fa-phone')+'" style="width:14px"></i>'+esc(subContact)+'</div>':'')
+      +renderAdMedia(a, 120)
+      +'<div style="font-size:.72rem;color:var(--t2);line-height:1.6;margin-bottom:8px">'+esc(a.body||a.description||'')+'</div>'
+      +(a.link_url?'<div style="font-size:.62rem;color:var(--blue);margin-bottom:8px"><i class="fas fa-link" style="width:14px"></i>'+esc(a.link_url)+'</div>':'')
+      +(a.runs_until?'<div style="font-size:.6rem;color:var(--t4);margin-bottom:8px"><i class="fas fa-calendar-clock" style="width:14px;color:'+statusColor+'"></i>Runs until: '+new Date(a.runs_until).toLocaleDateString('en-KE')+'</div>':'')
+      +(showActions?'<div style="display:flex;gap:6px;flex-wrap:wrap">'
+      +(a.status!=='active'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'active\')" style="flex:1;padding:8px;background:rgba(50,180,100,.1);border:1px solid rgba(50,180,100,.3);border-radius:8px;color:var(--green);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-check"></i> Approve</button>':'')
+      +(a.status!=='paused'&&a.status==='active'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'paused\')" style="flex:1;padding:8px;background:var(--bg4);border:1px solid var(--bd);border-radius:8px;color:var(--t3);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-pause"></i> Pause</button>':'')
+      +(a.status!=='rejected'?'<button onclick="adminSetAdStatus(\''+esc(a.id)+'\',\'rejected\')" style="flex:1;padding:8px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.25);border-radius:8px;color:var(--red);font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-times"></i> Reject</button>':'')
+      +(subContact?'<button onclick="adminContactAdOwner(\''+esc(subName.replace(/'/g,"\\'"))+'\',\''+esc(subContact.replace(/'/g,"\\'"))+'\',\''+esc((a.title||'').replace(/'/g,"\\'"))+'\',\''+esc((a.submitter_email||'').replace(/'/g,"\\'"))+'\')" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:rgba(77,158,255,.08);border:1px solid rgba(77,158,255,.25);border-radius:8px;color:#5aaeff;font-size:.64rem;font-weight:600;cursor:pointer"><i class="fas fa-address-book"></i> Contact</button>':'')
+      +'<button onclick="adminDeleteAd(\''+esc(a.id)+'\')" style="width:32px;padding:8px;background:rgba(224,80,80,.06);border:1px solid rgba(224,80,80,.2);border-radius:8px;color:var(--red);font-size:.64rem;cursor:pointer"><i class="fas fa-trash"></i></button>'
+      +'<button onclick="adminEditAd(\''+esc(a.id)+'\')" style="width:32px;padding:8px;background:var(--bg4);border:1px solid var(--bd);border-radius:8px;color:var(--t2);font-size:.64rem;cursor:pointer"><i class="fas fa-pen"></i></button>'
+      +'</div>':'')
+      +'</div>';
+  };
+
+  if(pEl) pEl.innerHTML = pending.length ? pending.map(a=>renderAd(a,true)).join('') : '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No pending ads</div>';
+  if(aEl) aEl.innerHTML = active.length  ? active.map(a=>renderAd(a,true)).join('')  : '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No active ads</div>';
+  if(rEl) rEl.innerHTML = rejected.length? rejected.map(a=>renderAd(a,true)).join(''): '<div style="font-size:.72rem;color:var(--t4);text-align:center;padding:12px">No rejected ads</div>';
+}
+window.renderAdsLists = renderAdsLists;
+
+function adminContactAdOwner(name, contact, title, email){
+  const rawPhone = (contact||'').replace(/[^0-9]/g,'');
   const waNum = rawPhone.startsWith('0') ? '254'+rawPhone.slice(1) : rawPhone.startsWith('254') ? rawPhone : '254'+rawPhone;
+  const hasPhone = !!rawPhone && !contact.includes('@');
+  const emailAddr = email || (contact && contact.includes('@') ? contact : '');
   const btns = [];
-  if (!isEmail) {
+  if (hasPhone) {
     btns.push({label:'📞 Call '+name, style:'btn-outline', fn:()=>{ window.location.href='tel:'+contact; }});
     btns.push({label:'💬 WhatsApp '+name, style:'btn-gold', fn:()=>{
       window.open('https://wa.me/'+waNum+'?text='+encodeURIComponent('Hello '+name+'! Regarding your ad "'+title+'" on NovaDeskOnline:'), '_blank');
     }});
-  } else {
-    btns.push({label:'✉️ Email '+name, style:'btn-gold', fn:()=>{
-      window.open('mailto:'+contact+'?subject='+encodeURIComponent('Re: your ad "'+title+'"'), '_blank');
+  }
+  if (emailAddr) {
+    btns.push({label:'✉️ Email '+name, style: hasPhone ? 'btn-outline' : 'btn-gold', fn:()=>{
+      window.open('mailto:'+emailAddr+'?subject='+encodeURIComponent('Re: your ad "'+title+'"'), '_blank');
     }});
   }
   btns.push({label:'Close', fn:null, style:'btn-ghost'});
@@ -7892,17 +7958,25 @@ function adminContactAdOwner(name, contact, title){
 window.adminContactAdOwner = adminContactAdOwner;
 
 async function adminSetAdStatus(id, status){
+  // Optimistic update — reflect the change instantly, no waiting on the network
+  const ad = _adsCache.find(a=>a.id===id);
+  const prevStatus = ad?.status;
+  if (ad) { ad.status = status; renderAdsLists(); }
+  toast('Ad status: '+status+' ✅','ok');
   try{
-    await sb.from('advertisements').update({status,reviewed_at:new Date().toISOString(),reviewed_by:_user?.id||null}).eq('id',id);
+    const { error } = await sb.from('advertisements').update({status,reviewed_at:new Date().toISOString(),reviewed_by:_user?.id||null}).eq('id',id);
+    if (error) throw error;
     if(status==='active'){
-      const{data:ad}=await sb.from('advertisements').select('agent_id,title,submitter_name,submitter_contact').eq('id',id).single();
-      if(ad?.agent_id) await sb.from('notifications').insert({user_id:ad.agent_id,type:'ad_approved',category:'promo',title:'🎉 Ad Approved!',body:'Your ad "'+ad.title+'" is now live on NovaDeskOnline.',read:false,created_at:new Date().toISOString()}).catch(()=>{});
+      const{data:adRow}=await sb.from('advertisements').select('agent_id,title,submitter_name,submitter_contact').eq('id',id).single();
+      if(adRow?.agent_id) await sb.from('notifications').insert({user_id:adRow.agent_id,type:'ad_approved',category:'promo',title:'🎉 Ad Approved!',body:'Your ad "'+adRow.title+'" is now live on NovaDeskOnline.',read:false,created_at:new Date().toISOString()}).catch(()=>{});
       // Best-effort email — requires an Edge Function (send-ad-email) to actually deliver
-      sb.functions?.invoke('send-ad-email', { body: { type:'approved', adId:id, name:ad?.submitter_name, contact:ad?.submitter_contact, title:ad?.title } }).catch(()=>{});
+      sb.functions?.invoke('send-ad-email', { body: { type:'approved', adId:id, name:adRow?.submitter_name, contact:adRow?.submitter_contact, title:adRow?.title } }).catch(()=>{});
     }
-    toast('Ad status: '+status+' ✅','ok');
-    adminLoadAds();
-  }catch(e){ toast(e.message,'er'); }
+  }catch(e){
+    // Revert on failure so the UI never lies about what's actually saved
+    if (ad && prevStatus) { ad.status = prevStatus; renderAdsLists(); }
+    toast('Could not save: '+e.message,'er');
+  }
 }
 window.adminSetAdStatus = adminSetAdStatus;
 
@@ -7963,8 +8037,18 @@ async function adminDeleteAd(id){
   popup('Delete Ad?','This will permanently remove the advertisement.','er',[
     {label:'Cancel',fn:null,style:'btn-ghost'},
     {label:'Delete',style:'btn-outline',fn:async()=>{
-      try{ await sb.from('advertisements').delete().eq('id',id); toast('Ad deleted','nf'); adminLoadAds(); }
-      catch(e){ toast(e.message,'er'); }
+      // Optimistic: remove instantly, restore if the delete actually fails
+      const idx = _adsCache.findIndex(a=>a.id===id);
+      const removed = idx>-1 ? _adsCache.splice(idx,1)[0] : null;
+      renderAdsLists();
+      toast('Ad deleted','nf');
+      try{
+        const { error } = await sb.from('advertisements').delete().eq('id',id);
+        if (error) throw error;
+      }catch(e){
+        if (removed) { _adsCache.splice(idx,0,removed); renderAdsLists(); }
+        toast('Could not delete: '+e.message,'er');
+      }
     }}
   ]);
 }
@@ -7980,15 +8064,33 @@ async function loadHomeAds(){
     const sec=$('home-ads-section'), list=$('home-ads-list');
     if(!sec||!list) return;
     list.innerHTML = data.map(a=>`
-      <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:14px;overflow:hidden;position:relative;${a.link_url?'cursor:pointer':''}" ${a.link_url?`onclick="window.open('${esc(a.link_url)}','_blank')"`:''}>
-        <span style="position:absolute;top:8px;right:8px;font-size:.48rem;background:rgba(0,0,0,.7);color:var(--t4);padding:2px 6px;border-radius:4px;font-weight:700;letter-spacing:.06em">SPONSORED</span>
-        ${renderAdMedia(a, 140).replace('<video ', '<video onclick="event.stopPropagation()" ')}
+      <div style="flex:0 0 82%;scroll-snap-align:start;background:var(--bg3);border:1px solid var(--bd);border-radius:14px;overflow:hidden;position:relative;${a.link_url?'cursor:pointer':''}" ${a.link_url?`onclick="window.open('${esc(a.link_url)}','_blank')"`:''}>
+        <span style="position:absolute;top:8px;right:8px;font-size:.48rem;background:rgba(0,0,0,.7);color:var(--t4);padding:2px 6px;border-radius:4px;font-weight:700;letter-spacing:.06em;z-index:2">SPONSORED</span>
+        ${renderAdMedia(a, 140).replace('<video ', '<video onclick="event.stopPropagation()" ') || `<div style="height:100px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bg4),var(--bg3));color:var(--t4);font-size:1.4rem"><i class="fas fa-bullhorn"></i></div>`}
         <div style="padding:12px">
           <div style="font-size:.8rem;font-weight:700;color:var(--t1);margin-bottom:4px">${esc(a.title||'')}</div>
           ${a.body?`<div style="font-size:.7rem;color:var(--t3);line-height:1.55">${esc(a.body)}</div>`:''}
           ${a.cta_label&&a.link_url?`<div style="display:inline-block;margin-top:10px;padding:7px 16px;background:var(--gold);color:#000;border-radius:20px;font-size:.68rem;font-weight:700">${esc(a.cta_label)}</div>`:''}
         </div>
       </div>`).join('');
+    const dotsEl = $('home-ads-dots');
+    if (dotsEl) {
+      if (data.length > 1) {
+        dotsEl.style.display = 'flex';
+        dotsEl.innerHTML = data.map((_,i)=>`<div style="width:6px;height:6px;border-radius:50%;background:${i===0?'var(--gold)':'var(--bd2)'}"></div>`).join('');
+        let scrollTimer;
+        list.onscroll = () => {
+          clearTimeout(scrollTimer);
+          scrollTimer = setTimeout(()=>{
+            const cardWidth = list.firstElementChild?.offsetWidth || 1;
+            const idx = Math.round(list.scrollLeft / (cardWidth + 10));
+            dotsEl.querySelectorAll('div').forEach((d,i)=>{ d.style.background = i===idx ? 'var(--gold)' : 'var(--bd2)'; });
+          }, 80);
+        };
+      } else {
+        dotsEl.style.display = 'none';
+      }
+    }
     sec.style.display='block';
   }catch(e){ console.warn('Ads load error:',e.message); }
 }
@@ -8033,7 +8135,8 @@ function openSubmitAdModal(){
 
       <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin-bottom:8px">Your Details</div>
       <div class="fg"><label class="flbl">Your Name <span class="req">*</span></label><input class="fi" id="ad-sub-name" type="text" placeholder="Full name" value="${esc(_profile?.full_name||'')}"></div>
-      <div class="fg"><label class="flbl">How Should We Reach You? <span class="req">*</span></label><input class="fi" id="ad-sub-contact" type="text" placeholder="WhatsApp number or email" value="${esc(_profile?.whatsapp_number||'')}"></div>
+      <div class="fg"><label class="flbl">WhatsApp / Phone <span class="req">*</span></label><input class="fi" id="ad-sub-contact" type="text" placeholder="WhatsApp number" value="${esc(_profile?.whatsapp_number||'')}"></div>
+      <div class="fg"><label class="flbl">Email <span style="font-size:.6rem;color:var(--t4);text-transform:none;letter-spacing:0">(optional, so we can also email you)</span></label><input class="fi" id="ad-sub-email" type="email" placeholder="your@email.com" value="${esc(_profile?.email||_user?.email||'')}"></div>
 
       <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin:14px 0 8px">Ad Details</div>
       <div class="fg"><label class="flbl">Ad Title <span class="req">*</span></label><input class="fi" id="ad-title" type="text" placeholder="e.g. Kemera Wholesale — Best Prices" maxlength="80"></div>
@@ -8098,6 +8201,7 @@ function renderAdFileList(){
 async function submitAdForm(btn){
   const subName=($('ad-sub-name')?.value||'').trim();
   const subContact=($('ad-sub-contact')?.value||'').trim();
+  const subEmail=($('ad-sub-email')?.value||'').trim();
   const title=($('ad-title')?.value||'').trim();
   const body=($('ad-body')?.value||'').trim();
   const imageUrlInput=($('ad-image')?.value||'').trim();
@@ -8106,7 +8210,7 @@ async function submitAdForm(btn){
   const until=($('ad-until')?.value||'');
   const errEl=$('ad-err');
   if (errEl) errEl.style.display='none';
-  if(!subName||!subContact){ if(errEl){errEl.textContent='Please tell us your name and how to reach you.';errEl.style.display='block';} return; }
+  if(!subName||!subContact){ if(errEl){errEl.textContent='Please tell us your name and WhatsApp/phone.';errEl.style.display='block';} return; }
   if(!title){ if(errEl){errEl.textContent='Ad title is required.';errEl.style.display='block';} return; }
   if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> Submitting…';}
   try{
@@ -8124,7 +8228,7 @@ async function submitAdForm(btn){
       agent_id:_user.id, title, body:body||null,
       image_url:imageUrl, media, link_url:linkUrl||null,
       cta_label:ctaLabel||null,
-      submitter_name:subName, submitter_contact:subContact,
+      submitter_name:subName, submitter_contact:subContact, submitter_email:subEmail||null,
       runs_until:until?new Date(until).toISOString():null,
       status:'pending', created_at:new Date().toISOString()
     }).select().maybeSingle();
